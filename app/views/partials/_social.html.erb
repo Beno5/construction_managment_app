@@ -1,0 +1,21 @@
+<!-- Twitter -->
+<meta name="twitter:card" content="<%= content_for?(:twitter_card) ? yield(:twitter_card) : 'summary_large_image' %>">
+<meta name="twitter:site" content="@YourPlaceholderHandle">
+<meta name="twitter:creator" content="@YourPlaceholderHandle">
+<meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : 'Placeholder Title' %>">
+<meta name="twitter:description" content="<%= content_for?(:description) ? yield(:description) : 'Placeholder Description' %>">
+<meta name="twitter:image" content="/placeholder-twitter-image.jpg">
+
+<!-- Facebook -->
+<meta property="og:url" content="<%= request.original_url %>">
+<meta property="og:title" content="<%= content_for?(:title) ? yield(:title) : 'Placeholder Title' %>">
+<meta property="og:description" content="<%= content_for?(:description) ? yield(:description) : 'Placeholder Description' %>">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/placeholder-facebook-image.jpg">
+
+
+
+<!-- Napomena:
+
+Zamenite "@YourTwitterHandle" i "/path-to-default-image.jpg" sa svojim vrednostima.
+Možete koristiti Rails content_for za dinamičko postavljanje naslova, opisa i slika. -->

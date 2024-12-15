@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="dark">
   <head>
-    <title>ConstructionManagmentApp</title>
+    <title>ConstructionManagementApp</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-
+    
+    <!-- CSS Files -->
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    
+    <!-- Header partial equivalent -->
+    <%= render "partials/header" %>
   </head>
-
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="bg-gray-50 dark:bg-gray-800 <%= 'bg-white dark:bg-gray-900' if params[:white_bg] %>">
+    <!-- Main Content -->
+    <div id="main-content">
       <%= yield %>
-    </main>
+    </div>
   </body>
 </html>

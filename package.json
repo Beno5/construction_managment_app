@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "flowbite": "^2.5.2"
+  },
+  "scripts": {
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets"
   }
 }

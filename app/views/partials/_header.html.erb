@@ -1,0 +1,35 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="<%= content_for?(:description) ? yield(:description) : 'Default description for ConstructionManagementApp' %>">
+<meta name="author" content="Your Author Name">
+<meta name="generator" content="Rails <%= Rails.version %>">
+
+<title><%= content_for?(:title) ? yield(:title) : 'ConstructionManagementApp' %></title>
+
+<link rel="canonical" href="<%= request.original_url %>">
+
+<% if content_for?(:robots) %>
+  <meta name="robots" content="<%= yield(:robots) %>">
+<% end %>
+
+<!-- CSS -->
+<%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+
+<!-- Favicons -->
+<%= render "partials/favicons" %>
+
+<!-- Social Media Meta -->
+<%= render "partials/social" %>
+
+<!-- Analytics -->
+<%= render "partials/analytics" %>
+
+<script>
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark')
+    }
+</script>
