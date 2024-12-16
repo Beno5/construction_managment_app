@@ -54,7 +54,13 @@ gem "bootsnap", require: false
 # mygems
 gem 'inline_svg'
 gem 'sassc-rails'
-gem 'jsbundling-rails'
+gem "devise"
+
+group :development do
+  gem 'rubocop', require: false
+  gem 'rubocop-rails', require: false # Za Ruby on Rails specifične stilove
+  gem 'rubocop-performance', require: false # Za optimizacije performansi
+end
 
 
 

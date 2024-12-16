@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="flex justify-between items-center px-4 py-2 text-gray-800 border border-gray-200 border-dashed rounded dark:text-gray-400 dark:border-gray-600">
     <h2 class="text-2xl font-extrabold">Projekat id: A</h2>
- <!-- Veći naslov -->
+    <!-- Veći naslov -->
     <span class="text-sm font-semibold text-gray-600 dark:text-gray-400">Broj aktivnosti: 2</span>
   </div>
   <!-- Projekt Parametri -->
@@ -21,20 +21,23 @@
     </button>
   </div>
   <!-- Dropdown Button -->
-  <button id="dropdownMenuButton" data-dropdown-toggle="dropdownMenu" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button">
+  <!-- Button za otvaranje dropdown-a -->
+  <div class="flex justify-end px-4 py-2 border border-gray-200 border-dashed rounded dark:border-gray-600">
+  <button id="dropdownMenuButton-<%= card_number %>>%" data-dropdown-toggle="dropdownMenu-<%= card_number %>" class="inline-flex justify-end p-2 ...">
     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
       <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
     </svg>
   </button>
-  <!-- Dropdown Menu -->
-  <div id="dropdownMenu" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuButton">
-      <li>
-        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
-      </li>
-      <li>
-        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a>
-      </li>
-    </ul>
+  <!-- Dropdown sadržaj -->
+    <div id="dropdownMenu-<%= card_number %>" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 ...">
+      <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuButton">
+        <li>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
+        </li>
+        <li>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

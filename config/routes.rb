@@ -1,8 +1,12 @@
 Rails.application.routes.draw do
+  # Devise rute
+  devise_for :users, controllers: {
+    registrations: 'users/registrations'
+  }
+
+  # Ostale potrebne rute
   get 'pages/home'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Defines the root path route ("/")
+  # Root stranica aplikacije
   root to: 'pages#home'
-
 end

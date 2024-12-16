@@ -1,0 +1,19 @@
+inherit_from:
+  - .rubocop_todo.yml
+
+require:
+  - rubocop-rails
+  - rubocop-performance
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2 # Postavi verziju Ruby-ja koju koristiš
+  Exclude:
+    - 'db/schema.rb' # Ignoriše schema fajl
+    - 'config/**/*'  # Ignoriše fajlove u config folderu
+
+Metrics/LineLength:
+  Max: 120 # Postavi maksimalnu dužinu linije koda na 120 karaktera
+
+Rails:
+  Enabled: true
