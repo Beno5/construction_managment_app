@@ -21,8 +21,20 @@
       <% end %>
     </div>
     <!-- Main Content -->
-    <div id="main-content">
-      <%= yield %>
-    </div>
+    <% if controller_name == "sessions" || controller_name == "registrations" || controller_name == "passwords" %>
+      <!-- Auth-specific layout -->
+      <div class="flex items-center justify-center min-h-screen">
+        <%= yield %>
+      </div>
+    <% else %>
+      <!-- Default layout with sidebar, navbar, and content -->
+      <%= render "partials/navbar" %>
+      <div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
+        <%= render "partials/sidebar" %>
+        <div id="main-content" class="relative w-full h-full overflow-y-auto bg-gray-50 lg:ml-64 dark:bg-gray-900">
+          <%= yield %>
+        </div>
+      </div>
+    <% end %>
   </body>
 </html>

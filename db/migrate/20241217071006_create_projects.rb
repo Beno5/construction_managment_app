@@ -12,7 +12,6 @@ class CreateProjects < ActiveRecord::Migration[7.0]
       t.text :description
       t.string :attachment
       t.integer :status, default: 0
-      t.references :user, null: false, foreign_key: true
 
       t.timestamps
     end
