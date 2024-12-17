@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  project_type: MyString
+  address: MyString
+  project_manager: MyString
+  planned_start_date: 2024-12-17
+  planned_end_date: 2024-12-17
+  project_duration: MyString
+  estimated_cost: 9.99
+  description: MyText
+  attachment: MyString
+  status: MyString
+  user: one
+
+two:
+  name: MyString
+  project_type: MyString
+  address: MyString
+  project_manager: MyString
+  planned_start_date: 2024-12-17
+  planned_end_date: 2024-12-17
+  project_duration: MyString
+  estimated_cost: 9.99
+  description: MyText
+  attachment: MyString
+  status: MyString
+  user: two
