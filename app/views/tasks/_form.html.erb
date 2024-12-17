@@ -1,0 +1,88 @@
+<div class="p-4 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+  <!-- Header -->
+  <div class="flex items-start justify-between border-b pb-4 mb-4 dark:border-gray-700">
+    <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
+      <%= @task.persisted? ? "Edit Task" : "Create New Task" %>
+    </h3>
+  </div>
+  <!-- Task Form -->
+  <%= form_with(model: [@project, @task], local: true) do |f| %>
+    <div class="grid grid-cols-6 gap-6">
+      <!-- Description -->
+      <div class="col-span-6 sm:col-span-3">
+        <%= f.label :description, "Opis aktivnosti", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= f.text_field :description, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+      </div>
+      <!-- Quantity -->
+      <div class="col-span-6 sm:col-span-3">
+        <%= f.label :quantity, "Količina", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= f.number_field :quantity, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      </div>
+      <!-- Unit -->
+      <div class="col-span-6 sm:col-span-3">
+        <%= f.label :unit, "Jedinica mere", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= f.text_field :unit, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      </div>
+      <!-- Planned Start Date -->
+      <div class="col-span-6 sm:col-span-3">
+        <%= f.label :planned_start, "Planirani početak radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= f.date_field :planned_start, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      </div>
+      <!-- Planned End Date -->
+      <div class="col-span-6 sm:col-span-3">
+        <%= f.label :planned_end, "Planirani kraj radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= f.date_field :planned_end, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      </div>
+      <!-- Duration -->
+      <div class="col-span-6 sm:col-span-3">
+        <%= f.label :duration, "Predviđeno vreme trajanja aktivnosti", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= f.text_field :duration, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      </div>
+      <!-- Planned Cost -->
+      <div class="col-span-6 sm:col-span-3">
+        <%= f.label :planned_cost, "Planirani troškovi aktivnosti (€)", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= f.number_field :planned_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      </div>
+    </div>
+    <!-- Submit Button -->
+    <div class="flex items-center justify-end pt-6 border-t border-gray-200 rounded-b dark:border-gray-700">
+      <%= f.submit @task.persisted? ? "Update Task" : "Create Task", class: "text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" %>
+    </div>
+  <% end %>
+</div>
+<!-- Modal - Prikazuje se ako je show_modal parametar true -->
+<% if params[:show_modal] %>
+  <div id="task-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+      <!-- Modal Header -->
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">
+        Uspješno ste dodali aktivnost!
+      </h2>
+      <!-- Buttons -->
+      <div class="flex justify-between space-x-4">
+        <!-- Dodaj još aktivnosti -->
+        <%= link_to "Dodaj još aktivnosti", new_project_task_path(@project),
+        class: "bg-primary-600 text-white font-medium px-4 py-2 rounded-lg shadow-md hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 transition-colors" %>
+        <!-- Vrati se na projekat -->
+        <%= link_to "Vrati se na projekat", project_path(@project),
+        class: "bg-blue-600 text-white font-medium px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition-colors" %>
+        <!-- Pregled svih projekata -->
+        <%= link_to "Pregled svih projekata", projects_path,
+        class: "bg-gray-600 text-white font-medium px-4 py-2 rounded-lg shadow-md hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 transition-colors" %>
+      </div>
+    </div>
+  </div>
+  <!-- Script to Close Modal -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const modal = document.getElementById("task-modal");
+      if (modal) {
+        modal.addEventListener("click", function(event) {
+          if (event.target === modal) {
+            modal.style.display = "none";
+          }
+        });
+      }
+    });
+  </script>
+<% end %>

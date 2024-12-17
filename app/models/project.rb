@@ -1,4 +1,6 @@
 class Project < ApplicationRecord
+  has_many :tasks, dependent: :destroy
+
   require 'date'
 
   enum :status, { pending: 0, active: 1, completed: 2, canceled: 3 }
