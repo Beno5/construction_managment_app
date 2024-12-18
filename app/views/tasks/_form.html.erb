@@ -25,18 +25,13 @@
       </div>
       <!-- Planned Start Date -->
       <div class="col-span-6 sm:col-span-3">
-        <%= f.label :planned_start, "Planirani početak radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-        <%= f.date_field :planned_start, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+        <%= f.label :planned_start_date, "Planirani početak radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= f.date_field :planned_start_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
       </div>
       <!-- Planned End Date -->
       <div class="col-span-6 sm:col-span-3">
-        <%= f.label :planned_end, "Planirani kraj radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-        <%= f.date_field :planned_end, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-      </div>
-      <!-- Duration -->
-      <div class="col-span-6 sm:col-span-3">
-        <%= f.label :duration, "Predviđeno vreme trajanja aktivnosti", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-        <%= f.text_field :duration, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+        <%= f.label :planned_end_date, "Planirani kraj radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= f.date_field :planned_end_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
       </div>
       <!-- Planned Cost -->
       <div class="col-span-6 sm:col-span-3">

@@ -21,7 +21,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_17_183416) do
     t.string "project_manager"
     t.date "planned_start_date"
     t.date "planned_end_date"
-    t.string "project_duration"
     t.decimal "estimated_cost"
     t.text "description"
     t.string "attachment"
@@ -34,9 +33,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_17_183416) do
     t.string "description"
     t.integer "quantity"
     t.string "unit"
-    t.date "planned_start"
-    t.date "planned_end"
-    t.string "duration"
+    t.date "planned_start_date"
+    t.date "planned_end_date"
     t.decimal "planned_cost"
     t.bigint "project_id", null: false
     t.datetime "created_at", null: false

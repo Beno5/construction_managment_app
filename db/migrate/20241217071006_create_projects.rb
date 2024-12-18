@@ -7,7 +7,6 @@ class CreateProjects < ActiveRecord::Migration[7.0]
       t.string :project_manager
       t.date :planned_start_date
       t.date :planned_end_date
-      t.string :project_duration
       t.decimal :estimated_cost
       t.text :description
       t.string :attachment

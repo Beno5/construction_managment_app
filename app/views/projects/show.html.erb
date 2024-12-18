@@ -70,10 +70,10 @@
                   <%= task.unit %>
                 </td>
                 <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                  <%= task.planned_start.strftime("%d.%m.%Y") if task.planned_start %>
+                  <%= task.planned_start_date.strftime("%d.%m.%Y") if task.planned_start_date %>
                 </td>
                 <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                  <%= task.planned_end.strftime("%d.%m.%Y") if task.planned_end %>
+                  <%= task.planned_end_date.strftime("%d.%m.%Y") if task.planned_end_date %>
                 </td>
                 <td class="p-4 text-base font-normal text-gray-900 dark:text-white">
                   <div class="flex items-center">
@@ -99,3 +99,43 @@
     </div>
   </div>
 </div>
+
+<div class="max-w-none mx-auto">
+  <div id="gantt_here" class="w-full h-[600px] overflow-hidden"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
+
+  // Prikaz samo meseci
+  gantt.config.scales = [
+    { unit: "month", step: 1, format: "%F %Y" }
+  ];
+
+  // Prilagodba vremenskog raspona
+  gantt.attachEvent("onLoadEnd", function () {
+    const tasks = gantt.getTaskByTime(); // Dohvati sve zadatke u trenutnom rasponu
+    if (tasks.length > 0) {
+      const minDate = gantt.getTaskStart(tasks[0].id); // Početak prvog zadatka
+      const maxDate = gantt.date.add(minDate, 1, "year"); // Godinu dana unapred od prvog datuma
+
+      gantt.config.start_date = minDate;
+      gantt.config.end_date = maxDate;
+      gantt.render(); // Ponovo renderuj grafikon sa novim rasponom
+    }
+  });
+
+  // Inicijalizacija Gantt-a
+  gantt.init("gantt_here");
+  gantt.load("/api/data");
+
+  // Sinhronizacija sa backend-om
+  var dp = new gantt.dataProcessor("/api");
+  dp.init(gantt);
+  dp.setTransactionMode("REST");
+});
+
+
+
+</script>

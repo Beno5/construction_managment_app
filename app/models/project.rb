@@ -14,6 +14,22 @@ class Project < ApplicationRecord
   # Callbacks
   before_save :calculate_duration
 
+  def calculate_duration
+    return unless planned_start_date.present? && planned_end_date.present?
+  
+    months = ((planned_end_date.year * 12) + planned_end_date.month) - ((planned_start_date.year * 12) + planned_start_date.month)
+    months
+  end
+
+  def earliest_start_date
+    tasks.minimum(:planned_start_date)
+  end
+  
+  def latest_end_date
+    tasks.maximum(:planned_end_date)
+  end
+  
+
   private
 
   def end_date_after_start_date
@@ -22,10 +38,4 @@ class Project < ApplicationRecord
     errors.add(:planned_end_date, "cannot be earlier than the start date")
   end
 
-  def calculate_duration
-    return unless planned_start_date.present? && planned_end_date.present?
-
-    months = ((planned_end_date.year * 12) + planned_end_date.month) - ((planned_start_date.year * 12) + planned_start_date.month)
-    self.project_duration = "#{months} months"
-  end
 end

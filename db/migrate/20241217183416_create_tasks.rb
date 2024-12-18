@@ -4,9 +4,8 @@ class CreateTasks < ActiveRecord::Migration[7.0]
       t.string :description
       t.integer :quantity
       t.string :unit
-      t.date :planned_start
-      t.date :planned_end
-      t.string :duration
+      t.date :planned_start_date
+      t.date :planned_end_date
       t.decimal :planned_cost
       t.references :project, null: false, foreign_key: true
 

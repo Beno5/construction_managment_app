@@ -6,7 +6,6 @@ one:
   unit: MyString
   planned_start: 2024-12-17
   planned_end: 2024-12-17
-  duration: MyString
   planned_cost: 9.99
   project: one
 
@@ -16,6 +15,5 @@ two:
   unit: MyString
   planned_start: 2024-12-17
   planned_end: 2024-12-17
-  duration: MyString
   planned_cost: 9.99
   project: two
