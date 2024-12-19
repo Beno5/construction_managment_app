@@ -54,6 +54,8 @@ gem "bootsnap", require: false
 # mygems
 gem 'inline_svg'
 gem "devise"
+gem 'redis'
+
 
 group :development do
   gem 'rubocop', require: false
