@@ -53,7 +53,6 @@ gem "bootsnap", require: false
 
 # mygems
 gem 'inline_svg'
-gem 'sassc-rails'
 gem "devise"
 
 group :development do
