@@ -9,7 +9,7 @@ class GanttController < ApplicationController
           id: task.id,
           text: task.text,
           start_date: task.start_date.strftime("%Y-%m-%d %H:%M:%S"),
-          duration: task.calculate_duration ,
+          duration: task.calculate_duration,
           progress: task.progress,
           parent: task.parent || 0
         }
