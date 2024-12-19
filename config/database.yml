@@ -13,6 +13,4 @@ test:
 
 production:
   <<: *default
-  database: construction_management_production # Database name for the production environment
-  username: production_user # Database username for the production environment
-  password: <%= ENV["DATABASE_PASSWORD"] %> # Database password fetched from environment variables
+  url: <%= ENV['DATABASE_URL'] %> # Use DATABASE_URL for production
