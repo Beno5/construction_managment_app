@@ -55,6 +55,8 @@ gem "bootsnap", require: false
 gem 'inline_svg'
 gem "devise"
 gem 'redis'
+gem 'dotenv-rails', groups: [:development, :test]
+
 
 
 group :development do
