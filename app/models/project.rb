@@ -1,4 +1,7 @@
 class Project < ApplicationRecord
+  include CustomFields
+
+  belongs_to :business
   has_many :tasks, dependent: :destroy
 
   require 'date'
@@ -16,19 +19,17 @@ class Project < ApplicationRecord
 
   def calculate_duration
     return unless planned_start_date.present? && planned_end_date.present?
-  
-    months = ((planned_end_date.year * 12) + planned_end_date.month) - ((planned_start_date.year * 12) + planned_start_date.month)
-    months
+
+    ((planned_end_date.year * 12) + planned_end_date.month) - ((planned_start_date.year * 12) + planned_start_date.month)
   end
 
   def earliest_start_date
     tasks.minimum(:planned_start_date)
   end
-  
+
   def latest_end_date
     tasks.maximum(:planned_end_date)
   end
-  
 
   private
 
@@ -37,5 +38,4 @@ class Project < ApplicationRecord
 
     errors.add(:planned_end_date, "cannot be earlier than the start date")
   end
-
 end

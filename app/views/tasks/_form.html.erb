@@ -1,12 +1,16 @@
-<div class="p-4 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-  <!-- Header -->
-  <div class="flex items-start justify-between border-b pb-4 mb-4 dark:border-gray-700">
-    <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
-      <%= @task.persisted? ? "Edit Task" : "Create New Task" %>
-    </h3>
-  </div>
+<%= render 'partials/header1', 
+           title: @task.persisted? ? "Edit Task" : "New Task",
+           model_name: "Tasks",
+           search_path: nil,
+           new_path: nil,
+           additional_crumbs: [
+             { name: "Projects", path: business_projects_path(@current_business) },
+             { name: @project.name, path: business_project_path(@current_business, @project) },
+             (@task.persisted? ? { name: @task.description, path: business_project_task_path(@current_business, @project, @task) } : { name: "New Task", path: nil })
+           ] %>
+
   <!-- Task Form -->
-  <%= form_with(model: [@project, @task], local: true) do |f| %>
+  <%= form_with(model: [@current_business, @project, @task], local: true) do |f| %>    
     <div class="grid grid-cols-6 gap-6">
       <!-- Description -->
       <div class="col-span-6 sm:col-span-3">
@@ -56,13 +60,13 @@
       <!-- Buttons -->
       <div class="flex justify-between space-x-4">
         <!-- Dodaj još aktivnosti -->
-        <%= link_to "Dodaj još aktivnosti", new_project_task_path(@project),
+        <%= link_to "Dodaj još aktivnosti", new_business_project_task_path(@current_business, @project),
         class: "bg-primary-600 text-white font-medium px-4 py-2 rounded-lg shadow-md hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 transition-colors" %>
         <!-- Vrati se na projekat -->
-        <%= link_to "Vrati se na projekat", project_path(@project),
+        <%= link_to "Vrati se na projekat", business_project_path(@current_business, @project),
         class: "bg-blue-600 text-white font-medium px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition-colors" %>
         <!-- Pregled svih projekata -->
-       </div>
+      </div>
     </div>
   </div>
   <!-- Script to Close Modal -->

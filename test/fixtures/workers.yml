@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  first_name: MyString
+  last_name: MyString
+  profession: MyString
+  description: MyText
+  hired_on: 2024-12-25
+  salary: 9.99
+  hourly_rate: 9.99
+  contract_hours_per_month: 1
+  phone_number: MyString
+  custom_fields: 
+
+two:
+  first_name: MyString
+  last_name: MyString
+  profession: MyString
+  description: MyText
+  hired_on: 2024-12-25
+  salary: 9.99
+  hourly_rate: 9.99
+  contract_hours_per_month: 1
+  phone_number: MyString
+  custom_fields: 

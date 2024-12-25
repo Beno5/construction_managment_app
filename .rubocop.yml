@@ -7,13 +7,41 @@ require:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.2 # Postavi verziju Ruby-ja koju koristiš
+  TargetRubyVersion: 3.2
   Exclude:
-    - 'db/schema.rb' # Ignoriše schema fajl
-    - 'config/**/*'  # Ignoriše fajlove u config folderu
+    - 'db/schema.rb'          # Ignoriše schema fajl
+    - 'config/**/*'           # Ignoriše fajlove u config folderu
+    - 'bin/**/*'              # Ignoriše bin fajlove
+    - 'node_modules/**/*'     # Ignoriše Node.js module
+    - 'vendor/**/*'           # Ignoriše vendor folder
+    - 'log/**/*'              # Ignoriše log fajlove
+    - 'tmp/**/*'              # Ignoriše privremene fajlove
+    - '*.lock'                # Ignoriše lock fajlove poput Gemfile.lock
+    - '*.min.js'              # Ignoriše minifikovane JS fajlove
+    - '*.bundle.js'           # Ignoriše JS bundle fajlove
+    - 'public/**/*'           # Ignoriše statičke fajlove u public folderu
+    - '**/*.html.erb'         # Opcionalno: Ignoriše ERB fajlove ako ne želite provjeru u njima
 
 Metrics/LineLength:
-  Max: 120 # Postavi maksimalnu dužinu linije koda na 120 karaktera
+  Max: 120                   # Maksimalna dužina linije
 
 Rails:
-  Enabled: true
+  Enabled: true              # Omogućava pravila specifična za Rails
+
+Style/FrozenStringLiteralComment:
+  Enabled: false             # Isključuje pravilo za zamrznute stringove
+
+Layout/IndentationWidth:
+  Width: 2                   # Podesi uvlačenje na 2 razmaka
+
+Performance/CollectionLiteralInLoop:
+  Enabled: false             # Isključuje upozorenja za literale u petljama
+
+Metrics/MethodLength:
+  Max: 15                    # Maksimalna dužina metoda
+
+Metrics/ClassLength:
+  Max: 200                   # Maksimalna dužina klase
+
+Metrics/BlockLength:
+  Max: 20                    # Maksimalna dužina bloka
