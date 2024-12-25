@@ -1,33 +1,16 @@
-<div class="p-6 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-  <!-- Breadcrumbs -->
-  <%= render "partials/breadcrumbs" %>
-  <!-- Title and Search/Buttons -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-    <!-- Title -->
-    <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white mb-4 sm:mb-0">
-      <%= @project.name %>
-    </h1>
-    <!-- Search and Add New Task -->
-    <div class="flex justify-between items-center space-x-3">
-      <!-- Search -->
-      <form action="#" method="GET" class="lg:pr-3">
-        <label for="task-search" class="sr-only">Search</label>
-        <div class="relative">
-          <input type="text" name="search" id="task-search" placeholder="Search for tasks" 
-            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-        </div>
-      </form>
-      <!-- Add New Task Button -->
-      <%= link_to new_project_task_path(@project), class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" do %>
-        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
-        </svg>
-        Dodaj Aktivnost
-      <% end %>
-    </div>
-  </div>
-</div>
-<div class="flex flex-col ">
+<%= render 'partials/header1', 
+           title: @project.name, 
+           model_name: "Tasks", 
+           search_path: business_project_tasks_path(@current_business, @project), 
+           new_path: new_business_project_task_path(@current_business, @project),
+           additional_crumbs: [
+             { name: "Projects", path: business_projects_path(@current_business) },
+             { name: @project.name, path: business_project_path(@current_business, @project) }
+           ] %>
+
+
+
+<div class="flex flex-col">
   <div class="overflow-x-auto">
     <div class="inline-block align-middle w-full" style="width: -webkit-fill-available;">
       <div class="overflow-hidden shadow">
@@ -83,13 +66,13 @@
                 </td>
                 <td class="p-4 space-x-2 whitespace-nowrap">
                   <!-- Edit Button -->
-                  <%= link_to edit_project_task_path(@project, task), 
-        class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" do %>
+                  <%= link_to edit_business_project_task_path(@current_business, @project, task), 
+                    class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" do %>
                     <span>Uredi</span>
                   <% end %>
                   <!-- Delete Button -->
-                  <%= link_to "Obriši", project_task_path(@project, task), method: :delete, data: { turbo_method: :delete, turbo_confirm: "Da li ste sigurni da želite obrisati aktivnost?" }, 
-        class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900" %>
+                  <%= link_to "Obriši", business_project_task_path(@current_business, @project, task), method: :delete, data: { turbo_method: :delete, turbo_confirm: "Da li ste sigurni da želite obrisati aktivnost?" }, 
+                    class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900" %>
                 </td>
               </tr>
             <% end %>
@@ -105,37 +88,23 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
-
-  // Prikaz samo meseci
-  gantt.config.scales = [
-    { unit: "month", step: 1, format: "%F %Y" }
-  ];
-
-  // Prilagodba vremenskog raspona
-  gantt.attachEvent("onLoadEnd", function () {
-    const tasks = gantt.getTaskByTime(); // Dohvati sve zadatke u trenutnom rasponu
-    if (tasks.length > 0) {
-      const minDate = gantt.getTaskStart(tasks[0].id); // Početak prvog zadatka
-      const maxDate = gantt.date.add(minDate, 1, "year"); // Godinu dana unapred od prvog datuma
-
-      gantt.config.start_date = minDate;
-      gantt.config.end_date = maxDate;
-      gantt.render(); // Ponovo renderuj grafikon sa novim rasponom
-    }
+  document.addEventListener("DOMContentLoaded", function () {
+    gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
+    gantt.config.scales = [{ unit: "month", step: 1, format: "%F %Y" }];
+    gantt.attachEvent("onLoadEnd", function () {
+      const tasks = gantt.getTaskByTime();
+      if (tasks.length > 0) {
+        const minDate = gantt.getTaskStart(tasks[0].id);
+        const maxDate = gantt.date.add(minDate, 1, "year");
+        gantt.config.start_date = minDate;
+        gantt.config.end_date = maxDate;
+        gantt.render();
+      }
+    });
+    gantt.init("gantt_here");
+    gantt.load("/api/data");
+    var dp = new gantt.dataProcessor("/api");
+    dp.init(gantt);
+    dp.setTransactionMode("REST");
   });
-
-  // Inicijalizacija Gantt-a
-  gantt.init("gantt_here");
-  gantt.load("/api/data");
-
-  // Sinhronizacija sa backend-om
-  var dp = new gantt.dataProcessor("/api");
-  dp.init(gantt);
-  dp.setTransactionMode("REST");
-});
-
-
-
 </script>

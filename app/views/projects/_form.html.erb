@@ -1,12 +1,18 @@
-<div class="p-4 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-  <!-- Header -->
-  <div class="flex items-start justify-between border-b pb-4 mb-4 dark:border-gray-700">
-    <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">
-      <%= project.persisted? ? "Edit Project" : "Create New Project" %>
-    </h3>
-  </div>
+<%= render 'partials/header1', 
+           title: "Edit Project",
+           model_name: "Projects",
+           search_path: nil,
+           new_path: nil,
+           additional_crumbs: [
+             { name: "Projects", path: business_projects_path(@current_business) },
+             { name: @project.name, path: business_project_path(@current_business, @project) }
+           ] %>
+
+
+
+
   <!-- Project Form -->
-  <%= form_with model: project, local: true do |f| %>
+  <%= form_with model: [@current_business, project], local: true do |f| %>
     <div class="grid grid-cols-6 gap-6">
       <!-- Project Name -->
       <div class="col-span-6 sm:col-span-3">

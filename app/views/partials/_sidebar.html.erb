@@ -29,7 +29,7 @@
           </li>
           <!-- Projects -->
           <li>
-            <%= link_to projects_path, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
+            <%= link_to business_projects_path(@current_business), class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
               <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm2 4h4v4H6V6z"></path>
               </svg>
@@ -38,7 +38,7 @@
           </li>
           <!-- Finances -->
           <li>
-            <%= link_to projects_path, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 pointer-events-none opacity-50 cursor-not-allowed" do %>
+            <%= link_to business_projects_path(@current_business), class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 pointer-events-none opacity-50 cursor-not-allowed" do %>
               <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 8c0 2.21-1.79 4-4 4S4 10.21 4 8 5.79 4 8 4s4 1.79 4 4z"></path>
                 <path d="M6 13a7 7 0 118 0H6z"></path>
@@ -48,16 +48,25 @@
           </li>
           <!-- Workers -->
           <li>
-            <%= link_to projects_path, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 pointer-events-none opacity-50 cursor-not-allowed" do %>
+            <%= link_to business_projects_path(@current_business), class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 pointer-events-none opacity-50 cursor-not-allowed" do %>
               <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9 7a3 3 0 100-6 3 3 0 000 6zM2 15a6 6 0 0112 0H2z"></path>
               </svg>
               <span class="ml-3">Workers</span>
             <% end %>
           </li>
+          <!-- Businesses -->
+          <li>
+            <%= link_to businesses_path, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
+              <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.5 8a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm8 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm-4.5 4a4 4 0 00-6 0v2h12v-2a4 4 0 00-6 0z"></path>
+              </svg>
+              <span class="ml-3">Businesses</span>
+            <% end %>
+          </li>
           <!-- Settings -->
           <li>
-            <%= link_to projects_path, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 pointer-events-none opacity-50 cursor-not-allowed" do %>
+            <%= link_to business_projects_path(@current_business), class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 pointer-events-none opacity-50 cursor-not-allowed" do %>
               <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm4 3h4v4H8V5z" clip-rule="evenodd"></path>
               </svg>

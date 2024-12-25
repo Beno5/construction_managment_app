@@ -21,12 +21,12 @@
   <!-- Button Centriran -->
   <div class="flex flex-col items-center px-4 py-4 border border-gray-200 border-dashed rounded dark:border-gray-600">
   <!-- Dodaj Aktivnost -->
-  <%= link_to new_project_task_path(project), class: "w-2/3 bg-primary-600 text-white text-center px-4 py-2 mb-4 rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 transition" do %>
+  <%= link_to new_business_project_task_path(@current_business, project), class: "w-2/3 bg-primary-600 text-white text-center px-4 py-2 mb-4 rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 transition" do %>
     + Dodaj Aktivnost
   <% end %>
 
   <!-- Pregled Aktivnosti -->
-  <%= link_to project_path(project), class: "w-2/3 bg-gray-200 text-gray-800 text-center px-4 py-2 mt-2 rounded-lg hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 transition" do %>
+  <%= link_to business_project_path(@current_business, project), class: "w-2/3 bg-gray-200 text-gray-800 text-center px-4 py-2 mt-2 rounded-lg hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 transition" do %>
     📋 Pregled Aktivnosti
   <% end %>
 </div>
@@ -43,10 +43,10 @@
     <div id="dropdownMenu-<%= project.id %>" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 ...">
       <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuButton">
         <li>
-          <%= link_to "Edit", edit_project_path(project), class: "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+          <%= link_to "Edit", edit_business_project_path(@current_business, project), class: "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
         </li>
         <li>
-          <%= link_to "Delete", project_path(project), data: { turbo_method: :delete, turbo_confirm: "Da li ste sigurni da želite obrisati projekat?" }, class: "block px-4 py-2 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+          <%= link_to "Delete", business_project_path(@current_business, project), data: { turbo_method: :delete, turbo_confirm: "Da li ste sigurni da želite obrisati projekat?" }, class: "block px-4 py-2 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
         </li>
       </ul>
     </div>

@@ -1,55 +1,51 @@
 class ProjectsController < ApplicationController
+  before_action :set_current_business
   before_action :set_project, only: [:show, :edit, :update, :destroy]
 
-  # Display all projects
   def index
-    @projects = Project.all
+    @projects = @current_business.projects
   end
 
-  # Display a single project
   def show; end
 
-  # Show the form for creating a new project
   def new
-    @project = Project.new
+    @project = @current_business.projects.new
   end
 
-  # Show the form for editing a project
   def edit; end
 
-  # Create a new project
   def create
-    @project = Project.new(project_params)
+    @project = @current_business.projects.new(project_params)
     if @project.save
-      redirect_to projects_url, notice: 'Project was successfully created.'
+      redirect_to business_projects_url(@current_business), notice: 'Project was successfully created.'
     else
       render :new, status: :unprocessable_entity
     end
   end
 
-  # Update an existing project
   def update
     if @project.update(project_params)
-      redirect_to projects_url, notice: 'Project was successfully updated.'
+      redirect_to business_projects_url(@current_business), notice: 'Project was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
-  # Delete a project
   def destroy
     @project.destroy
-    redirect_to projects_url, notice: 'Project was successfully deleted.'
+    redirect_to business_projects_url(@current_business), notice: 'Project was successfully deleted.'
   end
 
   private
 
-  # Find the project by ID
-  def set_project
-    @project = Project.find(params[:id])
+  def set_current_business
+    @current_business = current_user.businesses.find(params[:business_id])
   end
 
-  # Allow only permitted parameters for a project
+  def set_project
+    @project = @current_business.projects.find(params[:id])
+  end
+
   def project_params
     params.require(:project).permit(
       :name,

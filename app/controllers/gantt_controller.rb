@@ -4,7 +4,7 @@ class GanttController < ApplicationController
     links = Link.all
 
     render json: {
-      data: tasks.map { |task|
+      data: tasks.map do |task|
         {
           id: task.id,
           text: task.text,
@@ -13,15 +13,15 @@ class GanttController < ApplicationController
           progress: task.progress,
           parent: task.parent || 0
         }
-      },
-      links: links.map { |link|
+      end,
+      links: links.map do |link|
         {
           id: link.id,
           source: link.source,
           target: link.target,
           type: link.link_type
         }
-      }
+      end
     }
   end
 end

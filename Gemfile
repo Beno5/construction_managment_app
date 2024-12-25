@@ -56,6 +56,10 @@ gem 'inline_svg'
 gem "devise"
 gem 'redis'
 gem 'dotenv-rails', groups: [:development, :test]
+gem 'faker'
+gem 'byebug'
+
+
 
 
 
