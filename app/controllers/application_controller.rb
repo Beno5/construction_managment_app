@@ -4,6 +4,11 @@ class ApplicationController < ActionController::Base
   before_action :set_current_business, if: :user_signed_in?
   helper_method :current_business
 
+    # Redirekcija nakon uspješne prijave
+    def after_sign_in_path_for(resource)
+      businesses_path
+    end
+
   # Centralizovani metod za postavljanje poslovanja
   def set_business
     @business = current_user.businesses.find(params[:business_id])
