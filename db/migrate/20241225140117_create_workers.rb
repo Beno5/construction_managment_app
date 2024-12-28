@@ -10,7 +10,7 @@ class CreateWorkers < ActiveRecord::Migration[7.0]
       t.decimal :hourly_rate
       t.integer :contract_hours_per_month
       t.string :phone_number
-      t.jsonb :custom_fields
+      t.jsonb :custom_fields, default: {}
 
       t.timestamps
     end

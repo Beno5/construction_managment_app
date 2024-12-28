@@ -2,8 +2,8 @@ module CustomFields
   extend ActiveSupport::Concern
 
   included do
-    # Default JSONB za custom_fields
     before_save :initialize_custom_fields
+    before_save :sanitize_custom_fields
   end
 
   # Postavljanje custom field-a
@@ -33,5 +33,10 @@ module CustomFields
   # Inicijalizacija default vrednosti za custom_fields ako su prazni
   def initialize_custom_fields
     self.custom_fields ||= {}
+  end
+
+  # Sanitacija custom_fields: uklanjanje praznih vrijednosti
+  def sanitize_custom_fields
+    self.custom_fields = custom_fields.reject { |_, v| v.blank? }
   end
 end

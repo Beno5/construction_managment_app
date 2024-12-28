@@ -1,0 +1,50 @@
+<div id="custom-fields-container">
+  <% custom_fields.each_with_index do |(key, value), index| %>
+    <div class="flex items-center space-x-2 mb-2" data-custom-field-index="<%= index %>">
+      <%= text_field_tag "task[custom_fields][#{index}][key]", key, placeholder: "Key", class: "shadow-sm bg-gray-200 border border-gray-300 text-gray-500 sm:text-sm rounded-lg p-2.5 w-32" %>
+      <%= text_field_tag "task[custom_fields][#{index}][value]", value, placeholder: "Value", class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5" %>
+      <button type="button" class="text-red-600 hover:text-red-800" onclick="removeCustomField(this)">Remove</button>
+    </div>
+  <% end %>
+</div>
+<button type="button" id="add-custom-field" class="text-white bg-primary-600 hover:bg-primary-700 rounded-lg px-4 py-2 mt-4">Add Custom Field</button>
+
+<script>
+document.addEventListener("turbo:load", setupCustomFields);
+
+function setupCustomFields() {
+  const container = document.getElementById("custom-fields-container");
+  const addButton = document.getElementById("add-custom-field");
+
+  if (!container || !addButton) return;
+
+  // Uklanjanje prethodnih event listenera (sprečavanje dupliranja)
+  addButton.removeEventListener("click", handleAddCustomField);
+  addButton.addEventListener("click", handleAddCustomField);
+}
+
+function handleAddCustomField() {
+  const container = document.getElementById("custom-fields-container");
+  const currentFields = container.querySelectorAll('div[data-custom-field-index]');
+  const index = currentFields.length; // Broj trenutnih polja
+
+  // Kreiraj novo polje
+  const newField = document.createElement("div");
+  newField.setAttribute("data-custom-field-index", index);
+  newField.classList.add("flex", "items-center", "space-x-2", "mb-2");
+
+  newField.innerHTML = `
+    <input type="text" name="task[custom_fields][${index}][key]" placeholder="Key" class="shadow-sm bg-gray-200 border border-gray-300 text-gray-500 sm:text-sm rounded-lg p-2.5 w-32">
+    <input type="text" name="task[custom_fields][${index}][value]" placeholder="Value" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5">
+    <button type="button" class="text-red-600 hover:text-red-800" onclick="removeCustomField(this)">Remove</button>
+  `;
+
+  container.appendChild(newField);
+}
+
+function removeCustomField(button) {
+  const field = button.parentElement;
+  field.remove();
+}
+
+</script>

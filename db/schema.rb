@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_27_232356) do
     t.string "name"
     t.string "address"
     t.string "phone_number"
+    t.jsonb "custom_fields", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
@@ -30,6 +31,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_27_232356) do
     t.string "machine_type"
     t.text "description"
     t.boolean "is_occupied"
+    t.jsonb "custom_fields", default: {}
     t.bigint "business_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -46,7 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_27_232356) do
     t.decimal "estimated_cost"
     t.text "description"
     t.string "attachment"
-    t.jsonb "custom_fields"
+    t.jsonb "custom_fields", default: {}
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -62,7 +64,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_27_232356) do
     t.date "planned_start_date"
     t.date "planned_end_date"
     t.decimal "planned_cost"
-    t.jsonb "custom_fields"
+    t.jsonb "custom_fields", default: {}
     t.bigint "project_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -92,7 +94,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_27_232356) do
     t.decimal "hourly_rate"
     t.integer "contract_hours_per_month"
     t.string "phone_number"
-    t.jsonb "custom_fields"
+    t.jsonb "custom_fields", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "business_id", null: false

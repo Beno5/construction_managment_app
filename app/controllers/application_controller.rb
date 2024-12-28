@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   rescue ActiveRecord::RecordNotFound
     redirect_to businesses_path, alert: "Business not found."
   end
-
+  
   private
 
   def current_business
