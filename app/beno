@@ -1,0 +1,2 @@
+heroku pg:reset -a constr-man-app
+heroku run rake db:migrate db:seed -a constr-man-app
