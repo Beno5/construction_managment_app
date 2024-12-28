@@ -6,6 +6,7 @@ class CreateMachines < ActiveRecord::Migration[7.0]
       t.string :machine_type
       t.text :description
       t.boolean :is_occupied
+      t.jsonb :custom_fields, default: {}
       t.references :business, null: false, foreign_key: true
 
       t.timestamps

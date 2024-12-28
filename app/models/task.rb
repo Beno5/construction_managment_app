@@ -1,5 +1,4 @@
 class Task < ApplicationRecord
-  include CustomFields
   belongs_to :project
 
   # Validacije
