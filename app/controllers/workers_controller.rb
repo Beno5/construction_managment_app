@@ -2,33 +2,22 @@ class WorkersController < ApplicationController
   before_action :set_business
   before_action :set_worker, only: [:show, :edit, :update, :destroy]
 
-  # List all workers for the current business
   def index
-    @workers = @business.workers
-    # Breadcrumbs automatski dodaje:
-    # Businesses → Test Business → Workers
+    @workers = current_business.workers.search(params[:search])
+    respond_to do |format|
+      format.html # standardna HTML stranica
+      format.turbo_stream # odgovori sa Turbo Stream-om za live update
+    end
   end
 
-  # Display a single worker
-  def show
-    # Breadcrumbs automatski dodaje:
-    # Businesses → Test Business → Workers → John Doe
-  end
+  def show; end
 
-  # Show the form for creating a new worker
   def new
     @worker = @business.workers.new
-    # Breadcrumbs automatski dodaje:
-    # Businesses → Test Business → Workers → New Worker
   end
 
-  # Show the form for editing a worker
-  def edit
-    # Breadcrumbs automatski dodaje:
-    # Businesses → Test Business → Workers → Edit Worker
-  end
+  def edit; end
 
-  # Create a new worker
   def create
     @worker = @business.workers.new(worker_params)
     if @worker.save
@@ -38,7 +27,6 @@ class WorkersController < ApplicationController
     end
   end
 
-  # Update an existing worker
   def update
     if @worker.update(worker_params)
       redirect_to business_workers_path(@business), notice: 'Worker was successfully updated.'
@@ -47,7 +35,6 @@ class WorkersController < ApplicationController
     end
   end
 
-  # Delete a worker
   def destroy
     @worker.destroy
     redirect_to business_workers_path(@business), notice: 'Worker was successfully deleted.'
@@ -55,30 +42,12 @@ class WorkersController < ApplicationController
 
   private
 
-  # Set the current business
-  def set_business
-    @business = current_user.businesses.find(params[:business_id])
-    # Breadcrumbs automatski dodaje "Test Business"
-  end
-
-  # Find the worker within the current business
   def set_worker
     @worker = @business.workers.find(params[:id])
-    # Breadcrumbs automatski dodaje "John Doe" za radnika
   end
 
-  # Allow only permitted parameters for a worker
   def worker_params
-    params.require(:worker).permit(
-      :first_name,
-      :last_name,
-      :profession,
-      :description,
-      :hired_on,
-      :salary,
-      :hourly_rate,
-      :contract_hours_per_month,
-      :phone_number
-    )
+    params.require(:worker).permit(:first_name, :last_name, :profession, :description, :hired_on, :salary,
+                                   :hourly_rate, :contract_hours_per_month, :phone_number)
   end
 end

@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
   devise_for :users
-  root to: "projects#index"
+  root to: "businesses#index"
 
   # Business routes
   resources :businesses do
+    resources :machines
     member do
       post :select # Ruta za odabir poslovanja
     end

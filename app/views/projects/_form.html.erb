@@ -1,68 +1,65 @@
 <%= render 'partials/header1', 
-           title: "Edit Project",
+           title: @project.persisted? ? "Edit #{@project.name}" : "New Project",
            model_name: "Projects",
            search_path: nil,
            new_path: nil,
            additional_crumbs: [
              { name: "Projects", path: business_projects_path(@current_business) },
-             { name: @project.name, path: business_project_path(@current_business, @project) }
+             (@project.persisted? ? { name: @project.name, path: business_project_path(@current_business, @project) } : { name: "New Project", path: nil })
            ] %>
 
-
-
-
-  <!-- Project Form -->
-  <%= form_with model: [@current_business, project], local: true do |f| %>
-    <div class="grid grid-cols-6 gap-6">
-      <!-- Project Name -->
-      <div class="col-span-6 sm:col-span-3">
-        <%= f.label :name, "Project Name", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-        <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
-      </div>
-      <!-- Project Type -->
-      <div class="col-span-6 sm:col-span-3">
-        <%= f.label :project_type, "Project Type", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-        <%= f.text_field :project_type, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-      </div>
-      <!-- Address -->
-      <div class="col-span-6 sm:col-span-3">
-        <%= f.label :address, "Project Address", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-        <%= f.text_field :address, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-      </div>
-      <!-- Project Manager -->
-      <div class="col-span-6 sm:col-span-3">
-        <%= f.label :project_manager, "Project Manager", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-        <%= f.text_field :project_manager, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-      </div>
-      <!-- Planned Start Date -->
-      <div class="col-span-6 sm:col-span-3">
-        <%= f.label :planned_start_date, "Planned Start Date", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-        <%= f.date_field :planned_start_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
-      </div>
-      <!-- Planned End Date -->
-      <div class="col-span-6 sm:col-span-3">
-        <%= f.label :planned_end_date, "Planned End Date", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-        <%= f.date_field :planned_end_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
-      </div>
-      <!-- Estimated Cost -->
-      <div class="col-span-6 sm:col-span-3">
-        <%= f.label :estimated_cost, "Estimated Cost (€)", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-        <%= f.number_field :estimated_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
-      </div>
-      <!-- Status -->
-      <div class="col-span-6 sm:col-span-3">
-        <%= f.label :status, "Project Status", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-        <%= f.select :status, Project.statuses.keys, {}, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
-      </div>
-      <!-- Description -->
-      <div class="col-span-6">
-        <%= f.label :description, "Project Description", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-        <%= f.text_area :description, rows: 4, class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" %>
-      </div>
+<!-- Project Form -->
+<%= form_with model: [@current_business, project], local: true do |f| %>
+  <div class="grid grid-cols-6 gap-6">
+    <!-- Project Name -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :name, "Project Name", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
-    <!-- Submit Button -->
-    <div class="flex items-center justify-end pt-6 border-t border-gray-200 rounded-b dark:border-gray-700">
-      <%= f.submit project.persisted? ? "Update Project" : "Create Project", class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>
+    <!-- Project Type -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :project_type, "Project Type", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :project_type, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
-  <% end %>
+    <!-- Address -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :address, "Project Address", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :address, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Project Manager -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :project_manager, "Project Manager", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :project_manager, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Planned Start Date -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :planned_start_date, "Planned Start Date", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.date_field :planned_start_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
+    </div>
+    <!-- Planned End Date -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :planned_end_date, "Planned End Date", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.date_field :planned_end_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
+    </div>
+    <!-- Estimated Cost -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :estimated_cost, "Estimated Cost (€)", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.number_field :estimated_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
+    </div>
+    <!-- Status -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :status, "Project Status", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.select :status, Project.statuses.keys, {}, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
+    </div>
+    <!-- Description -->
+    <div class="col-span-6">
+      <%= f.label :description, "Project Description", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_area :description, rows: 4, class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" %>
+    </div>
+  </div>
+  <!-- Submit Button -->
+  <div class="flex items-center justify-end pt-6 border-t border-gray-200 rounded-b dark:border-gray-700">
+    <%= f.submit project.persisted? ? "Update Project" : "Create Project", class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>
+  </div>
+<% end %>
 </div>

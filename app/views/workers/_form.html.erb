@@ -1,0 +1,59 @@
+<%= render 'partials/header1', 
+           title: @worker.persisted? ? "Edit #{@worker.first_name} #{@worker.last_name}" : "New Worker",
+           model_name: "Workers",
+           search_path: nil,
+           new_path: nil,
+           additional_crumbs: [
+             { name: "Workers", path: business_workers_path(@current_business) },
+             (@worker.persisted? ? { name: "#{@worker.first_name} #{@worker.last_name}", path: business_worker_path(@current_business, @worker) } : { name: "New Worker", path: nil })
+           ] %>
+
+
+<%= form_with model: [@current_business, worker], local: true do |f| %>
+  <div class="grid grid-cols-6 gap-6">
+    <!-- First Name -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :first_name, "First Name", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :first_name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Last Name -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :last_name, "Last Name", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :last_name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Profession -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :profession, "Profession", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :profession, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Salary -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :salary, "Monthly Salary (€)", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.number_field :salary, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Hourly Rate -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :hourly_rate, "Hourly Rate (€)", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.number_field :hourly_rate, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Hired On -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :hired_on, "Hired On", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.date_field :hired_on, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Contract Hours -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :contract_hours_per_month, "Contract Hours (per month)", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.number_field :contract_hours_per_month, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Description -->
+    <div class="col-span-6 sm:col-span-6">
+      <%= f.label :description, "Description", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_area :description, rows: 4, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+  </div>
+  <!-- Submit Button -->
+  <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
+    <%= f.submit @worker.persisted? ? "Update Worker" : "Create Worker", class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>
+  </div>
+<% end %>
