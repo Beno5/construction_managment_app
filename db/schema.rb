@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_25_183601) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_27_232356) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,6 +22,18 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_25_183601) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_businesses_on_user_id"
+  end
+
+  create_table "machines", force: :cascade do |t|
+    t.string "name"
+    t.string "category"
+    t.string "machine_type"
+    t.text "description"
+    t.boolean "is_occupied"
+    t.bigint "business_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["business_id"], name: "index_machines_on_business_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -43,6 +55,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_25_183601) do
   end
 
   create_table "tasks", force: :cascade do |t|
+    t.string "name"
     t.string "description"
     t.integer "quantity"
     t.string "unit"
@@ -87,6 +100,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_25_183601) do
   end
 
   add_foreign_key "businesses", "users"
+  add_foreign_key "machines", "businesses"
   add_foreign_key "projects", "businesses"
   add_foreign_key "tasks", "projects"
   add_foreign_key "workers", "businesses"

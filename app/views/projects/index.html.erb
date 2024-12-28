@@ -2,12 +2,15 @@
            title: "Projects", 
            model_name: "Projects", 
            search_path: business_projects_path(@current_business), 
-           new_path: new_business_project_path(@current_business) %>
+           new_path: new_business_project_path(@current_business),
+           frame_id: "projects-frame",
+           additional_crumbs: [
+             { name: "Projects", path: business_projects_path(@current_business) }
+           ] %>
 
-  <div class="p-4">
-    <div class="grid grid-cols-1 px-4 pt-6 xl:grid-cols-3 xl:gap-4 dark:bg-gray-900">
-      <% Project.all.each do |project| %>
-        <%= render partial: "partials/card", locals: { project: project }%>
-      <% end %>
-    </div>
+  <div class="grid grid-cols-1 xl:grid-cols-3 xl:gap-4 dark:bg-gray-900">
+    <% @projects.each do |project| %>
+      <%= render partial: "partials/card", locals: { project: project }%>
+    <% end %>
   </div>
+

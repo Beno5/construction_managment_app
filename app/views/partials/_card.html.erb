@@ -26,9 +26,15 @@
   <% end %>
 
   <!-- Pregled Aktivnosti -->
-  <%= link_to business_project_path(@current_business, project), class: "w-2/3 bg-gray-200 text-gray-800 text-center px-4 py-2 mt-2 rounded-lg hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 transition" do %>
-    📋 Pregled Aktivnosti
-  <% end %>
+ <%= link_to business_project_path(@current_business, project),
+            class: "w-2/3 bg-gray-200 text-gray-800 text-center px-4 py-2 mt-2 rounded-lg hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 transition",
+            data: { turbo: "false" } do %>
+  📋 Pregled Aktivnosti
+<% end %>
+
+
+
+
 </div>
 
   <!-- Dropdown Button -->

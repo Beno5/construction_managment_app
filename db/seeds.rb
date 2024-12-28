@@ -43,6 +43,7 @@ business = Business.create!(
     task_end_date = Faker::Date.between(from: task_start_date, to: planned_end_date)
 
     Task.create!(
+      name: Faker::Lorem.sentence(word_count: 3),
       description: Faker::Lorem.sentence,
       quantity: Faker::Number.between(from: 1, to: 100),
       unit: %w[kg m3 pcs].sample,
@@ -69,4 +70,15 @@ business = Business.create!(
       business: business
     )
   end
+end
+
+10.times do
+  Machine.create!(
+    name: Faker::Appliance.equipment,
+    category: Faker::Appliance.brand,
+    description: Faker::Lorem.sentence,
+    is_occupied: [true, false].sample,
+    machine_type: Faker::Construction.heavy_equipment,
+    business: Business.first # Ili postavi odgovarajući business
+  )
 end

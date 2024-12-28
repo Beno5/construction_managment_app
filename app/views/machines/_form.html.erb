@@ -1,0 +1,44 @@
+<%= render 'partials/header1', 
+           title: @machine.persisted? ? "Edit #{@machine.name}" : "New Machine",
+           model_name: "Machines",
+           search_path: nil,
+           new_path: nil,
+           additional_crumbs: [
+             { name: "Machines", path: business_machines_path(@current_business) },
+             (@machine.persisted? ? { name: @machine.name, path: business_machine_path(@current_business, @machine) } : { name: "New Machine", path: nil })
+           ] %>
+
+
+<%= form_with model: [@current_business, @machine], local: true do |f| %>
+  <div class="grid grid-cols-6 gap-6">
+    <!-- Name -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :name, "Machine Name", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+    </div>
+    <!-- Category -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :category, "Category", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :category, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Machine Type -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :machine_type, "Machine Type", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :machine_type, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Description -->
+    <div class="col-span-6">
+      <%= f.label :description, "Description", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_area :description, rows: 4, class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+    </div>
+    <!-- Is Occupied -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :is_occupied, "Is Occupied?", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.check_box :is_occupied, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+  </div>
+  <!-- Submit Button -->
+  <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
+    <%= f.submit @machine.persisted? ? "Update Machine" : "Create Machine", class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>
+  </div>
+<% end %>
