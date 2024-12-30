@@ -7,3 +7,4 @@ import "custom/constants"; // Constants should load early if reused
 import "custom/dark-mode"; // Handles dark mode logic
 import "custom/sidebar"; // Sidebar logic
 import "custom/flash"; // Sidebar logic
+import "custom/modals";

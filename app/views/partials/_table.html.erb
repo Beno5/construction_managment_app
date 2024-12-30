@@ -1,10 +1,60 @@
-<div class="overflow-x-auto">
-  <table class="min-w-full bg-white dark:bg-gray-800">
-    <thead class="bg-gray-100 dark:bg-gray-700">
-      <%= yield :table_headers %>
-    </thead>
-    <tbody class="bg-white dark:bg-gray-800">
-      <%= yield :table_body %>
-    </tbody>
-  </table>
-</div>
+<% if turbo_frame_id.present? %>
+  <turbo-frame id="<%= turbo_frame_id %>">
+  <% end %>
+  <div class="flex flex-col">
+    <div class="overflow-x-auto">
+      <div class="inline-block align-middle w-full" style="width: -webkit-fill-available;">
+        <div class="overflow-hidden shadow">
+          <table class="w-full divide-y divide-gray-200 table-auto dark:divide-gray-600">
+            <thead class="bg-gray-100 dark:bg-gray-700">
+              <tr>
+                <% columns.each do |header, _| %>
+                  <th class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                    <%= header %>
+                  </th>
+                <% end %>
+                <th class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                  Akcije
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+              <% collection.each do |item| %>
+                <tr id="row_<%= item.id %>" class="hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <% columns.each do |_, attr| %>
+                    <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400">
+                      <% if attr.is_a?(Proc) %>
+                        <%= attr.call(item) %>
+                      <% elsif attr == :custom_fields && item.custom_fields.present? %>
+                        <% custom_fields = JSON.parse(item.custom_fields.to_json) rescue {} %>
+                        <%= render 'modals/modal_custom_fields', custom_fields: custom_fields %>
+                        <button type="button" class="text-blue-600 hover:underline open-modal" data-fields="<%= custom_fields.to_json %>">
+                          View
+                        </button>
+                      <% elsif attr == :custom_fields %>
+                        <span class="text-gray-400">None</span>
+                      <% else %>
+                        <%= item.send(attr) %>
+                      <% end %>
+                    </td>
+                  <% end %>
+                  <td class="p-4 space-x-2 whitespace-nowrap">
+                    <%= link_to 'Edit', edit_path.call(item), data: { turbo: false }, class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800" %>
+                    <%= link_to 'Delete', delete_path.call(item), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-800" %>
+                    <% if actions.present? %>
+                      <% actions.each do |action| %>
+                        <%= action.call(item) %>
+                      <% end %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% if turbo_frame_id.present? %>
+  </turbo-frame>
+<% end %>

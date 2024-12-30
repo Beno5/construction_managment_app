@@ -1,0 +1,23 @@
+<div id="custom-fields-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900 bg-opacity-50 modal">
+  <div class="relative w-full max-w-xl h-auto bg-white rounded-lg shadow-lg dark:bg-gray-800">
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Custom Fields</h2>
+    </div>
+    <div id="modal-content" class="p-6 max-h-[70vh] overflow-y-auto">
+      <% if custom_fields.present? %>
+        <ul>
+          <% custom_fields.each do |key, value| %>
+            <li class="mb-2"><strong><%= key %>:</strong> <%= value %></li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="text-gray-500 dark:text-gray-400">No custom fields available.</p>
+      <% end %>
+    </div>
+    <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-700">
+      <button type="button" class="close-modal px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
+        Close
+      </button>
+    </div>
+  </div>
+</div>

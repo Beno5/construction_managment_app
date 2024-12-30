@@ -1,0 +1,14 @@
+<%= turbo_stream.replace "workers-frame", partial: "partials/table", locals: {
+  collection: @workers,
+  columns: {
+    "Ime" => :first_name,
+    "Prezime" => :last_name,
+    "Profesija" => :profession,
+    "Datum Zapošljavanja" => ->(worker) { worker.hired_on&.strftime("%d.%m.%Y") },
+    "Custom Polja" => :custom_fields
+  },
+  turbo_frame_id: "workers-frame",
+  edit_path: ->(worker) { edit_business_worker_path(current_business, worker) },
+  delete_path: ->(worker) { business_worker_path(current_business, worker) },
+  actions: []
+} %>

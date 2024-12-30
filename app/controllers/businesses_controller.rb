@@ -1,4 +1,6 @@
 class BusinessesController < ApplicationController
+  include ActionView::RecordIdentifier
+
   before_action :set_business, only: [:show, :edit, :update, :destroy]
   skip_before_action :set_current_business, only: [:select]
 
@@ -6,8 +8,8 @@ class BusinessesController < ApplicationController
     @businesses = current_user.businesses.search(params[:search])
 
     respond_to do |format|
-      format.html
-      format.turbo_stream
+      format.html # Renderuje standardni HTML za klasične prelaze
+      format.turbo_stream # Renderuje Turbo Stream za pretragu
     end
   end
 
@@ -36,7 +38,13 @@ class BusinessesController < ApplicationController
 
   def destroy
     @business.destroy
-    redirect_to businesses_path, notice: "Business deleted successfully."
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.remove("row_#{@business.id}")
+      end
+      format.html { redirect_to businesses_path, notice: "Business deleted successfully." }
+    end
   end
 
   def select

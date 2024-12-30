@@ -1,4 +1,6 @@
 class TasksController < ApplicationController
+  include ActionView::RecordIdentifier
+
   before_action :set_business
   before_action :set_project
   before_action :set_task, only: %i[edit update destroy]
@@ -29,11 +31,16 @@ class TasksController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
-  
 
   def destroy
     @task.destroy
-    redirect_to business_project_tasks_path(@business, @project), notice: 'Task was successfully deleted.'
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.remove("row_#{@task.id}")
+      end
+      format.html { redirect_to business_project_path(@business, @project), notice: 'Task was successfully deleted.' }
+    end
   end
 
   private
@@ -46,10 +53,9 @@ class TasksController < ApplicationController
     @task = @project.tasks.find(params[:id])
   end
 
-
   def task_params
     params.require(:task).permit(
-      :name, :description, :quantity, :unit, 
+      :name, :description, :quantity, :unit,
       :planned_start_date, :planned_end_date, :planned_cost,
       custom_fields: [:key, :value]
     ).tap do |whitelisted|
@@ -65,5 +71,4 @@ class TasksController < ApplicationController
       end
     end
   end
-  
 end

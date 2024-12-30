@@ -1,125 +1,23 @@
 <%= render 'partials/header1', 
-           title: "Tasks", 
+           title: @project.name, 
            model_name: "Tasks", 
-           search_path: business_project_tasks_path(@current_business, @project), 
+           search_path: business_project_path(@current_business, @project), 
            new_path: new_business_project_task_path(@current_business, @project),
-           frame_id: "tasks-frame",
            additional_crumbs: [
              { name: "Projects", path: business_projects_path(@current_business) },
              { name: @project.name, path: business_project_path(@current_business, @project) }
            ] %>
-<div id="custom-fields-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900 bg-opacity-50">
-  <div class="relative w-full max-w-xl h-auto bg-white rounded-lg shadow-lg dark:bg-gray-800">
-    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Custom Fields</h2>
-    </div>
-    <div id="modal-content" class="p-6 max-h-[70vh] overflow-y-auto">
-      <!-- Custom fields content will be dynamically inserted here -->
-    </div>
-    <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-700">
-      <button type="button" id="close-modal" class="px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
-        Close
-      </button>
-    </div>
-  </div>
-</div>
-
-
-
-<div class="flex flex-col">
-  <div class="overflow-x-auto">
-    <div class="inline-block align-middle w-full" style="width: -webkit-fill-available;">
-      <div class="overflow-hidden shadow">
-        <table class="w-full divide-y divide-gray-200 table-auto dark:divide-gray-600">
-          <thead class="bg-gray-100 dark:bg-gray-700">
-            <tr>
-              <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Naziv</th>
-              <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Količina</th>
-              <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Jedinica Mere</th>
-              <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Planirani Početak</th>
-              <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Planirani Kraj</th>
-              <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Custom Fields</th>
-              <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Akcije</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-            <% @tasks.each do |task| %>
-              <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
-                <td class="p-4 text-base font-normal text-gray-900 dark:text-white"><%= task.description %></td>
-                <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400"><%= task.quantity %></td>
-                <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400"><%= task.unit %></td>
-                <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400"><%= task.planned_start_date.strftime("%d.%m.%Y") if task.planned_start_date %></td>
-                <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400"><%= task.planned_end_date.strftime("%d.%m.%Y") if task.planned_end_date %></td>
-                <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400">
-                  <% if task.custom_fields.present? %>
-                    <button type="button" class="text-blue-600 hover:underline open-modal" data-fields="<%= task.custom_fields.to_json %>">
-                      View
-                    </button>
-                  <% else %>
-                    <span class="text-gray-400">None</span>
-                  <% end %>
-                </td>
-                <td class="p-4 space-x-2 whitespace-nowrap">
-                  <%= link_to "Edit", edit_business_project_task_path(@current_business, @project, task), class: "btn btn-primary" %>
-                  <%= link_to "Delete", business_project_task_path(@current_business, @project, task), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="max-w-none mx-auto">
-  <div id="gantt_here" class="w-full h-[600px] overflow-hidden"></div>
-</div>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
-    gantt.config.scales = [{ unit: "month", step: 1, format: "%F %Y" }];
-    gantt.attachEvent("onLoadEnd", function () {
-      const tasks = gantt.getTaskByTime();
-      if (tasks.length > 0) {
-        const minDate = gantt.getTaskStart(tasks[0].id);
-        const maxDate = gantt.date.add(minDate, 1, "year");
-        gantt.config.start_date = minDate;
-        gantt.config.end_date = maxDate;
-        gantt.render();
-      }
-    });
-    gantt.init("gantt_here");
-    gantt.load("/api/data");
-    var dp = new gantt.dataProcessor("/api");
-    dp.init(gantt);
-    dp.setTransactionMode("REST");
-  });
-
-  document.addEventListener("turbo:load", function () {
-  const modal = document.getElementById("custom-fields-modal");
-  const modalContent = document.getElementById("modal-content");
-  const closeModalButton = document.getElementById("close-modal");
-
-  document.querySelectorAll(".open-modal").forEach((button) => {
-    button.addEventListener("click", function () {
-      const fields = JSON.parse(this.dataset.fields);
-      modalContent.innerHTML = Object.entries(fields)
-        .map(([key, value]) => `<p><strong>${key}:</strong> ${value}</p>`)
-        .join("");
-      modal.classList.remove("hidden");
-    });
-  });
-
-  closeModalButton.addEventListener("click", function () {
-    modal.classList.add("hidden");
-  });
-
-  // Optional: Close modal on outside click
-  modal.addEventListener("click", function (event) {
-    if (event.target === modal) {
-      modal.classList.add("hidden");
-    }
-  });
-});
-
-</script>
+<%= render 'partials/table', 
+           collection: @tasks, 
+           columns: {
+             "Naziv" => :description,
+             "Količina" => :quantity,
+             "Jedinica" => :unit,
+             "Planirani Početak" => ->(task) { task.planned_start_date&.strftime("%d.%m.%Y") },
+             "Planirani Kraj" => ->(task) { task.planned_end_date&.strftime("%d.%m.%Y") },
+             "Custom Polja" => :custom_fields
+           },
+           turbo_frame_id: "tasks-frame",
+           edit_path: ->(task) { edit_business_project_task_path(@current_business, @project, task) },
+           delete_path: ->(task) { business_project_task_path(@current_business, @project, task) },
+           actions: [] %>
