@@ -27,6 +27,6 @@
   </div>
   <!-- Submit Button -->
   <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
-    <%= f.submit @business.persisted? ? "Update Business" : "Create Business", class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>
+    <%= f.submit @business.persisted? ? "Update Business" : "Create Business", data: { turbo: false }, class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>
   </div>
 <% end %>

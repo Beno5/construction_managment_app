@@ -6,43 +6,16 @@
            additional_crumbs: [
              { name: "Workers", path: business_workers_path }
            ] %>
-<turbo-frame id="workers-frame">
-  <div class="flex flex-col">
-    <div class="overflow-x-auto">
-      <div class="inline-block align-middle w-full" style="width: -webkit-fill-available;">
-        <div class="overflow-hidden shadow">
-          <table class="w-full divide-y divide-gray-200 table-auto dark:divide-gray-600">
-            <thead class="bg-gray-100 dark:bg-gray-700">
-              <tr>
-                <th class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">First Name</th>
-                <th class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Last Name</th>
-                <th class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Profession</th>
-                <th class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Hired On</th>
-                <th class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-              <% @workers.each do |worker| %>
-                <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <td class="p-4 text-base font-normal text-gray-900 dark:text-white"><%= worker.first_name %></td>
-                  <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400"><%= worker.last_name %></td>
-                  <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400"><%= worker.profession %></td>
-                  <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400">
-                    <%= worker.hired_on.strftime("%d.%m.%Y") if worker.hired_on %>
-                  </td>
-                  <td class="p-4 space-x-2 whitespace-nowrap">
-                    <%= link_to 'Edit', edit_business_worker_path(@current_business, worker),
-                        class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" %>
-                    <%= link_to 'Delete', business_worker_path(@current_business, worker), method: :delete,
-                        data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-                        class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900" %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</turbo-frame>
+<%= render 'partials/table', 
+           collection: @workers, 
+           columns: {
+             "Ime" => :first_name, 
+             "Prezime" => :last_name, 
+             "Profesija" => :profession, 
+             "Datum Zapošljavanja" => ->(worker) { worker.hired_on&.strftime("%d.%m.%Y") }, 
+             "Custom Polja" => :custom_fields
+           },
+           turbo_frame_id: "workers-frame",
+           edit_path: ->(worker) { edit_business_worker_path(@current_business, worker) },
+           delete_path: ->(worker) { business_worker_path(@current_business, worker) },
+           actions: [] %>

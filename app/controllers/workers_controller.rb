@@ -1,12 +1,14 @@
 class WorkersController < ApplicationController
+  include ActionView::RecordIdentifier
+
   before_action :set_business
   before_action :set_worker, only: [:show, :edit, :update, :destroy]
 
   def index
     @workers = current_business.workers.search(params[:search])
     respond_to do |format|
-      format.html # standardna HTML stranica
-      format.turbo_stream # odgovori sa Turbo Stream-om za live update
+      format.html # Renderuje standardni HTML za klasične prelaze
+      format.turbo_stream # Renderuje Turbo Stream za pretragu
     end
   end
 
@@ -36,8 +38,15 @@ class WorkersController < ApplicationController
   end
 
   def destroy
+    @worker = current_business.workers.find(params[:id])
     @worker.destroy
-    redirect_to business_workers_path(@business), notice: 'Worker was successfully deleted.'
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.remove("row_#{@worker.id}")
+      end
+      format.html { redirect_to business_workers_path(current_business), notice: "Worker was successfully deleted." }
+    end
   end
 
   private
@@ -47,7 +56,21 @@ class WorkersController < ApplicationController
   end
 
   def worker_params
-    params.require(:worker).permit(:first_name, :last_name, :profession, :description, :hired_on, :salary,
-                                   :hourly_rate, :contract_hours_per_month, :phone_number)
+    params.require(:worker).permit(
+      :first_name, :last_name, :profession, :description, :hired_on,
+      :salary, :hourly_rate, :contract_hours_per_month, :phone_number,
+      custom_fields: [:key, :value]
+    ).tap do |whitelisted|
+      if params[:worker][:custom_fields]
+        # Transformacija custom fields u hash
+        transformed_custom_fields = params[:worker][:custom_fields].to_unsafe_h.each_with_object({}) do |(_, field), hash|
+          hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
+        end
+        whitelisted[:custom_fields] = transformed_custom_fields
+      else
+        # Ako `custom_fields` nije prisutan, postavi ga na prazan hash
+        whitelisted[:custom_fields] = {}
+      end
+    end
   end
 end

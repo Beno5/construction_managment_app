@@ -1,0 +1,20 @@
+<%= turbo_stream.replace "businesses-frame", partial: "partials/table", locals: {
+  collection: @businesses,
+  columns: {
+    "Naziv" => :name,
+    "Adresa" => :address,
+    "Broj Telefona" => :phone_number
+  },
+  turbo_frame_id: "businesses-frame",
+  edit_path: ->(business) { edit_business_path(business) },
+  delete_path: ->(business) { business_path(business) },
+  actions: [
+    ->(business) {
+      if current_business == business
+        content_tag(:span, "Selektovan", class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg")
+      else
+        button_to 'Izaberi', select_business_path(business), method: :post, class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+      end
+    }
+  ]
+} %>

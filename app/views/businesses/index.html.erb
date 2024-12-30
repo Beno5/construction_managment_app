@@ -4,61 +4,22 @@
            search_path: businesses_path, 
            new_path: new_business_path,
            additional_crumbs: [] %>
-<turbo-frame id="businesses-frame">
-  <div class="flex flex-col">
-    <div class="overflow-x-auto">
-      <div class="inline-block align-middle w-full" style="width: -webkit-fill-available;">
-        <div class="overflow-hidden shadow">
-          <table class="w-full divide-y divide-gray-200 table-auto dark:divide-gray-600">
-            <thead class="bg-gray-100 dark:bg-gray-700">
-              <tr>
-                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                  Naziv
-                </th>
-                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                  Adresa
-                </th>
-                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                  Broj Telefona
-                </th>
-                <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                  Akcije
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-              <% @businesses.each do |business| %>
-                <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <td class="p-4 text-base font-normal text-gray-900 dark:text-white overflow-hidden truncate max-w-[200px]">
-                    <%= business.name %>
-                  </td>
-                  <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400 overflow-hidden truncate max-w-[100px]">
-                    <%= business.address %>
-                  </td>
-                  <td class="p-4 text-base font-normal text-gray-500 dark:text-gray-400 overflow-hidden truncate max-w-[100px]">
-                    <%= business.phone_number %>
-                  </td>
-                  <td class="p-4 space-x-2 whitespace-nowrap">
-                    <% if current_business == business %>
-                      <span class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg">
-                        Selektovan
-                      </span>
-                    <% else %>
-                      <%= button_to 'Izaberi', select_business_path(business), method: :post, 
-                        class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800" %>
-                    <% end %>
-                    <%= link_to 'Uredi', edit_business_path(business), 
-                      class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" %>
-                    <%= link_to 'Obriši', business, method: :delete, 
-                      data: { turbo_method: :delete, turbo_confirm: "Jeste li sigurni?" }, 
-                      class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900" %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</turbo-frame>
+<%= render 'partials/table', 
+           collection: @businesses, 
+           columns: {
+             "Naziv" => :name, 
+             "Adresa" => :address, 
+             "Broj Telefona" => :phone_number
+           },
+           turbo_frame_id: "businesses-frame",
+           edit_path: ->(business) { edit_business_path(business) },
+           delete_path: ->(business) { business_path(business) },
+           actions: [
+             ->(business) {
+               if current_business == business
+                 content_tag(:span, "Selektovan", class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg")
+               else
+                 button_to 'Izaberi', select_business_path(business), method: :post, class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+               end
+             }
+           ] %>

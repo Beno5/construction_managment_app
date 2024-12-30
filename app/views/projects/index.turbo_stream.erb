@@ -1,0 +1,7 @@
+<%= turbo_stream.replace "projects-frame" do %>
+  <div class="grid grid-cols-1 xl:grid-cols-3 xl:gap-4 dark:bg-gray-900">
+    <% @projects.each do |project| %>
+      <%= render partial: "partials/card", locals: { project: project } %>
+    <% end %>
+  </div>
+<% end %>

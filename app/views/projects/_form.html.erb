@@ -7,7 +7,6 @@
              { name: "Projects", path: business_projects_path(@current_business) },
              (@project.persisted? ? { name: @project.name, path: business_project_path(@current_business, @project) } : { name: "New Project", path: nil })
            ] %>
-
 <!-- Project Form -->
 <%= form_with model: [@current_business, project], local: true do |f| %>
   <div class="grid grid-cols-6 gap-6">
@@ -56,10 +55,14 @@
       <%= f.label :description, "Project Description", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_area :description, rows: 4, class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" %>
     </div>
+    <div class="col-span-6">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Custom Fields</h3>
+      <%= render 'partials/custom_fields', custom_fields: @project.custom_fields, model: 'project' %>
+    </div>
   </div>
   <!-- Submit Button -->
   <div class="flex items-center justify-end pt-6 border-t border-gray-200 rounded-b dark:border-gray-700">
-    <%= f.submit project.persisted? ? "Update Project" : "Create Project", class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>
+    <%= f.submit project.persisted? ? "Update Project" : "Create Project", data: { turbo: false }, class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>
   </div>
 <% end %>
 </div>

@@ -1,13 +1,14 @@
 class MachinesController < ApplicationController
-  before_action :set_business # Postavi @business iz ApplicationController
+  include ActionView::RecordIdentifier
+
+  before_action :set_business
   before_action :set_machine, only: [:show, :edit, :update, :destroy]
 
   def index
-    @machines = @business.machines.search(params[:search])
-
+    @machines = current_business.machines.search(params[:search])
     respond_to do |format|
-      format.html
-      format.turbo_stream
+      format.html # Renderuje standardni HTML za klasične prelaze
+      format.turbo_stream # Renderuje Turbo Stream za pretragu
     end
   end
 
@@ -22,7 +23,7 @@ class MachinesController < ApplicationController
   def create
     @machine = @business.machines.new(machine_params)
     if @machine.save
-      redirect_to business_machines_path(@business), notice: "Machine was successfully created."
+      redirect_to business_machines_path(@business), notice: 'Machine was successfully created.'
     else
       render :new, status: :unprocessable_entity
     end
@@ -30,15 +31,22 @@ class MachinesController < ApplicationController
 
   def update
     if @machine.update(machine_params)
-      redirect_to business_machines_path(@business), notice: "Machine was successfully updated."
+      redirect_to business_machines_path(@business), notice: 'Machine was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
+    @machine = current_business.machines.find(params[:id])
     @machine.destroy
-    redirect_to business_machines_path(@business), notice: "Machine was successfully deleted."
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.remove("row_#{@machine.id}")
+      end
+      format.html { redirect_to business_machines_path(current_business), notice: "Machine was successfully deleted." }
+    end
   end
 
   private
@@ -48,6 +56,18 @@ class MachinesController < ApplicationController
   end
 
   def machine_params
-    params.require(:machine).permit(:name, :category, :description, :is_occupied, :hourly_rate)
+    params.require(:machine).permit(
+      :name, :category, :machine_type, :is_occupied,
+      custom_fields: [:key, :value]
+    ).tap do |whitelisted|
+      if params[:machine][:custom_fields]
+        transformed_custom_fields = params[:machine][:custom_fields].to_unsafe_h.each_with_object({}) do |(_, field), hash|
+          hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
+        end
+        whitelisted[:custom_fields] = transformed_custom_fields
+      else
+        whitelisted[:custom_fields] = {}
+      end
+    end
   end
 end
