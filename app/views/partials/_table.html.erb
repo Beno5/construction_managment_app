@@ -27,8 +27,8 @@
                         <%= attr.call(item) %>
                       <% elsif attr == :custom_fields && item.custom_fields.present? %>
                         <% custom_fields = JSON.parse(item.custom_fields.to_json) rescue {} %>
-                        <%= render 'modals/modal_custom_fields', custom_fields: custom_fields %>
-                        <button type="button" class="text-blue-600 hover:underline open-modal" data-fields="<%= custom_fields.to_json %>">
+                        <%= render 'modals/modal_custom_fields', custom_fields: custom_fields, item: item %>
+                        <button type="button" class="text-blue-600 hover:underline open-modal" data-target="custom-fields-modal-<%= item.id %>">
                           View
                         </button>
                       <% elsif attr == :custom_fields %>
