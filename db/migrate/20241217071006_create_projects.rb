@@ -9,7 +9,6 @@ class CreateProjects < ActiveRecord::Migration[7.0]
       t.date :planned_end_date
       t.decimal :estimated_cost
       t.text :description
-      t.string :attachment
       t.jsonb :custom_fields, default: {}
       t.integer :status, default: 0
 

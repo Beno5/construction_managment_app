@@ -3,6 +3,8 @@ class Project < ApplicationRecord
 
   belongs_to :business
   has_many :tasks, dependent: :destroy
+  has_many_attached :documents
+
 
   require 'date'
 
