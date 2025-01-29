@@ -12,7 +12,12 @@ Rails.application.routes.draw do
     # Nested routes for projects and workers
     resources :projects do
       resources :tasks
+      member do
+        delete :remove_document # Povezano sa specifičnim projektom, tako da koristimo `member`
+      end
     end
+    
+
     resources :workers
   end
 

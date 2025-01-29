@@ -8,7 +8,7 @@
              (@project.persisted? ? { name: @project.name, path: business_project_path(@current_business, @project) } : { name: "New Project", path: nil })
            ] %>
 <!-- Project Form -->
-<%= form_with model: [@current_business, project], local: true do |f| %>
+<%= form_with model: [@current_business, project], local: true, html: { multipart: true } do |f| %>
   <div class="grid grid-cols-6 gap-6">
     <!-- Project Name -->
     <div class="col-span-6 sm:col-span-3">
@@ -55,6 +55,41 @@
       <%= f.label :description, "Project Description", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_area :description, rows: 4, class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" %>
     </div>
+   
+
+  <!-- Custom File Upload Button -->
+    <div class="col-span-6 sm:col-span-3">
+  <%= f.label :documents, "Upload Documents", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+
+  <!-- Custom File Upload Button -->
+  <div class="flex items-center space-x-3">
+    <%= f.file_field :documents, multiple: true, accept: "image/*, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                 class: "hidden", id: "file-upload" %>
+    <label for="file-upload" class="cursor-pointer text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5 ml-2">
+      Choose Files
+    </label>
+  </div>
+
+  <!-- Display selected files before save -->
+  <h3 class="text-md font-medium text-gray-900 dark:text-white mt-4">Selected Files</h3>
+  <ul id="selected-files-list" class="mt-2 space-y-2"></ul>
+
+  <!-- Display already uploaded documents -->
+  <% if @project.documents.attached? %>
+    <h3 class="text-md font-medium text-gray-900 dark:text-white mt-4">Uploaded Documents</h3>
+    <ul id="uploaded-files-list" class="mt-2 space-y-2">
+      <% @project.documents.each do |document| %>
+        <li id="document-<%= document.id %>" class="flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-2 rounded-md">
+          <a href="<%= url_for(document) %>" target="_blank" class="text-blue-600 hover:underline"><%= document.filename %></a>
+          <%= link_to "Remove", remove_document_business_project_path(@current_business, @project, document_id: document.id), 
+                      method: :delete, 
+                      data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this document?" },
+                      class: "text-red-600 hover:text-red-800 text-sm font-medium ml-4" %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
     <div class="col-span-6">
       <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Custom Fields</h3>
       <%= render 'partials/custom_fields', custom_fields: @project.custom_fields, model: 'project' %>
@@ -66,3 +101,54 @@
   </div>
 <% end %>
 </div>
+<script>
+document.addEventListener("turbo:load", function () {
+  const fileInput = document.getElementById("file-upload");
+  const fileList = document.getElementById("selected-files-list");
+  const uploadedFilesList = document.getElementById("uploaded-files-list");
+  let selectedFiles = [];
+
+  if (!fileInput || !fileList) return;
+
+  fileInput.addEventListener("change", function () {
+    const existingFiles = new Set();
+
+    // Prikupljanje već uploadovanih fajlova
+    if (uploadedFilesList) {
+      uploadedFilesList.querySelectorAll("a").forEach(link => {
+        existingFiles.add(link.textContent.trim());
+      });
+    }
+
+    fileList.innerHTML = ""; // Očisti prikaz odabranih fajlova
+    selectedFiles = Array.from(fileInput.files);
+
+    selectedFiles.forEach((file, index) => {
+      if (existingFiles.has(file.name)) {
+        alert(`File "${file.name}" is already uploaded!`);
+        return;
+      }
+
+      const listItem = document.createElement("li");
+      listItem.classList.add("flex", "items-center", "justify-between", "bg-gray-100", "dark:bg-gray-700", "p-2", "rounded-md");
+      listItem.innerHTML = `
+        <span class="text-gray-900 dark:text-white">${file.name}</span>
+        <button type="button" class="text-red-600 hover:text-red-800 text-sm font-medium ml-4 remove-file" data-index="${index}">Remove</button>
+      `;
+      fileList.appendChild(listItem);
+    });
+  });
+
+  fileList.addEventListener("click", function (event) {
+    if (event.target.classList.contains("remove-file")) {
+      const index = event.target.dataset.index;
+      selectedFiles = selectedFiles.filter((_, i) => i != index);
+      const dataTransfer = new DataTransfer();
+      selectedFiles.forEach(file => dataTransfer.items.add(file));
+      fileInput.files = dataTransfer.files; // Ažuriraj input fajlove
+
+      event.target.closest("li").remove(); // Ukloni iz liste prikaza
+    }
+  });
+});
+</script>

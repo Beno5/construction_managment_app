@@ -38,12 +38,25 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    if @project.update(project_params)
+    if @project.update(project_params.except(:documents)) # Ažuriraj sve osim dokumenata
+      if params[:project][:documents].present?
+        existing_filenames = @project.documents.map { |doc| doc.filename.to_s }
+  
+        params[:project][:documents].each do |new_file|
+          # Provjera da li je fajl validan i da nije duplikat
+          if new_file.is_a?(ActionDispatch::Http::UploadedFile) && !existing_filenames.include?(new_file.original_filename)
+            @project.documents.attach(new_file) # Dodaj nove fajlove
+          end
+        end
+      end
+  
       redirect_to business_projects_url(@business), notice: 'Project was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
     end
   end
+  
+  
 
   def destroy
     @project = @business.projects.find(params[:id])
@@ -55,6 +68,32 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def remove_document
+    @project = @business.projects.find(params[:id])
+    document = @project.documents.find_by(id: params[:document_id])
+  
+    if document
+      document.purge
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.remove("document-#{params[:document_id]}")
+        end
+        format.html { redirect_to edit_business_project_path(@business, @project), notice: "Document deleted successfully." }
+      end
+    else
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("document-#{params[:document_id]}", 
+            partial: "partials/error_message", 
+            locals: { message: "Document not found." })
+        end
+        format.html { redirect_to edit_business_project_path(@business, @project), alert: "Document not found." }
+      end
+    end
+  end
+  
+  
+
   private
 
   def set_project
@@ -65,7 +104,7 @@ class ProjectsController < ApplicationController
     params.require(:project).permit(
       :name, :project_type, :address, :project_manager,
       :planned_start_date, :planned_end_date, :estimated_cost,
-      :description, :status, :attachment,
+      :description, :status, documents: [],
       custom_fields: [:key, :value]
     ).tap do |whitelisted|
       if params[:project][:custom_fields]

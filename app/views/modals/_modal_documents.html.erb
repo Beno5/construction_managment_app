@@ -1,0 +1,30 @@
+<div id="documents-modal-<%= project.id %>" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900 bg-opacity-50 modal">
+  <div class="relative w-full max-w-xl h-auto bg-white rounded-lg shadow-lg dark:bg-gray-800">
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Project Documents</h2>
+    </div>
+    <div class="p-6 max-h-[70vh] overflow-y-auto">
+      <% if documents.any? %>
+        <ul>
+          <% project.documents.each do |doc| %>
+            <li id="document-<%= doc.id %>" class="flex justify-between items-center mb-2">
+              <a href="<%= url_for(doc) %>" target="_blank" class="text-primary-600 hover:underline">
+                📄 <%= doc.filename %>
+              </a>
+              <%= link_to "🗑", remove_document_business_project_path(@current_business, project, document_id: doc.id),
+                  method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                  class: "text-red-500 hover:underline" %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="text-gray-500 dark:text-gray-400">No documents attached.</p>
+      <% end %>
+    </div>
+    <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-700">
+      <button type="button" class="close-modal px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
