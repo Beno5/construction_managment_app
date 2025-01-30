@@ -18,10 +18,10 @@
     </p>
     <% if project.custom_fields.present? %>
       <!-- Dugme za otvaranje modala -->
-      <% custom_fields = JSON.parse(item.custom_fields.to_json) rescue {} %>
+      <% custom_fields = JSON.parse(project.custom_fields.to_json) rescue {} %>
       <%= render 'modals/modal_custom_fields', custom_fields: custom_fields, item: project %>
       <button type="button" class="text-blue-600 hover:underline open-modal" data-target="custom-fields-modal-<%= project.id %>">
-        View
+        View Custom fields
       </button>
     <% end %>
     <% if project.documents.attached? %>

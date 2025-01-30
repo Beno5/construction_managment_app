@@ -26,8 +26,14 @@ class Task < ApplicationRecord
   private
 
   def end_date_after_start_date
-    return unless planned_start_date && planned_end_date && planned_end_date < planned_start_date
-
-    errors.add(:planned_end_date, "ne može biti pre planiranog početka radova")
+    return if planned_start_date.blank? || planned_end_date.blank?
+  
+    if planned_end_date.is_a?(Integer)
+      self.planned_end_date = planned_start_date + planned_end_date.days
+    end
+  
+    if planned_end_date < planned_start_date
+      errors.add(:planned_end_date, "must be after start date")
+    end
   end
 end

@@ -1,23 +1,37 @@
 document.addEventListener("DOMContentLoaded", function () {
-    gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
-    gantt.config.scales = [{ unit: "month", step: 1, format: "%F %Y" }];
+  gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
+  gantt.init("gantt_here");
+
+  const projectId = document.getElementById("gantt_here").dataset.projectId;
+  gantt.load(`/api/gantt/project/${projectId}/data`);
+
+  const dp = new gantt.dataProcessor(`/api/tasks`);
+  dp.init(gantt);
+  dp.setTransactionMode("REST");
+
+  gantt.attachEvent("onAfterTaskUpdate", function (id, task) {
+    const endDate = gantt.date.add(task.start_date, task.duration, "day"); // ✅ Prvo izračunaj
   
-    gantt.attachEvent("onLoadEnd", function () {
-      const tasks = gantt.getTaskByTime();
-      if (tasks.length > 0) {
-        const minDate = gantt.getTaskStart(tasks[0].id);
-        const maxDate = gantt.date.add(minDate, 1, "year");
-        gantt.config.start_date = minDate;
-        gantt.config.end_date = maxDate;
-        gantt.render();
+    const updatedData = {
+      task: {
+        text: task.text,
+        start_date: gantt.date.date_to_str("%Y-%m-%d %H:%i:%s")(task.start_date),
+        end_date: gantt.date.date_to_str("%Y-%m-%d %H:%i:%s")(endDate), // ✅ Ispravno dodato
+        duration: task.duration,
+        progress: task.progress
       }
-    });
+    };
   
-    gantt.init("gantt_here");
-    gantt.load("/api/data");
+    console.log("🔄 PUT API CALL: /api/tasks/" + id);
+    console.log("📦 Payload:", updatedData);
   
-    const dp = new gantt.dataProcessor("/api");
-    dp.init(gantt);
-    dp.setTransactionMode("REST");
-  });
-  
+    fetch(`/api/tasks/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedData),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("✅ API Response:", data))
+      .catch((error) => console.error("❌ Error updating task:", error));
+  });  
+});

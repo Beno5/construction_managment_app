@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_01_29_085317) do
+ActiveRecord::Schema[7.0].define(version: 2025_01_30_190934) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,6 +51,14 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_29_085317) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_businesses_on_user_id"
+  end
+
+  create_table "links", force: :cascade do |t|
+    t.integer "source_id"
+    t.integer "target_id"
+    t.string "link_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "machines", force: :cascade do |t|
@@ -95,6 +103,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_29_085317) do
     t.bigint "project_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "progress", default: "0.0"
     t.index ["project_id"], name: "index_tasks_on_project_id"
   end
 

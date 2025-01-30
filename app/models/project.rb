@@ -3,6 +3,8 @@ class Project < ApplicationRecord
 
   belongs_to :business
   has_many :tasks, dependent: :destroy
+  has_many :links, -> { distinct }, foreign_key: :source_id, class_name: "Link"
+
   has_many_attached :documents
 
 
