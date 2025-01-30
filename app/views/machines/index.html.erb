@@ -16,7 +16,9 @@
                machine.is_occupied ? 
                  content_tag(:span, "Zauzeto", class: "inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-red-100 text-red-800") : 
                  content_tag(:span, "Dostupno", class: "inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-green-100 text-green-800")
-             }
+             },
+            "Custom Polja" => :custom_fields
+
            },
            turbo_frame_id: "machines-frame",
            edit_path: ->(machine) { edit_business_machine_path(@current_business, machine) },

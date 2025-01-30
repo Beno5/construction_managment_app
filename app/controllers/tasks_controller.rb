@@ -18,7 +18,7 @@ class TasksController < ApplicationController
   def create
     @task = @project.tasks.new(task_params)
     if @task.save
-      redirect_to business_project_path(@business, @project), notice: 'Task was successfully created.'
+      redirect_to business_project_path(@business, @project), notice: "Task was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -26,7 +26,7 @@ class TasksController < ApplicationController
 
   def update
     if @task.update(task_params)
-      redirect_to business_project_path(@business, @project), notice: 'Task was successfully updated.'
+      redirect_to business_project_path(@business, @project), notice: "Task was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -34,12 +34,9 @@ class TasksController < ApplicationController
 
   def destroy
     @task.destroy
-
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.remove("row_#{@task.id}")
-      end
-      format.html { redirect_to business_project_path(@business, @project), notice: 'Task was successfully deleted.' }
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@task)) }
+      format.html { redirect_to business_project_path(@business, @project), notice: "Task was successfully deleted." }
     end
   end
 
@@ -50,7 +47,7 @@ class TasksController < ApplicationController
   end
 
   def set_task
-    @task = @project.tasks.find(params[:id])
+    @task = Task.find_by(id: params[:id])
   end
 
   def task_params
@@ -60,13 +57,11 @@ class TasksController < ApplicationController
       custom_fields: [:key, :value]
     ).tap do |whitelisted|
       if params[:task][:custom_fields]
-        # Transformacija custom fields u hash
         transformed_custom_fields = params[:task][:custom_fields].to_unsafe_h.each_with_object({}) do |(_, field), hash|
           hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
         end
         whitelisted[:custom_fields] = transformed_custom_fields
       else
-        # Ako `custom_fields` nije prisutan, postavi ga na prazan hash
         whitelisted[:custom_fields] = {}
       end
     end
