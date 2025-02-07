@@ -14,3 +14,10 @@
  *= require_self
  */
 
+ .gantt_grid_head_add {
+    display: none !important;
+  }
+ .gantt_add  {
+    display: none !important;
+  }
+  

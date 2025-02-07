@@ -22,17 +22,8 @@ Rails.application.routes.draw do
 
   # API routes for Gantt
   namespace :api do
-    get "gantt/:type/:id/data", to: "gantt#data"
-  
-    resources :tasks, only: [] do
-      collection do
-        post :create_api
-        put ":id", to: "tasks#update_api"  # ✅ Ispravljen put
-        delete ":id", to: "tasks#destroy_api"
-      end
-    end
-  
-    resources :links, only: [:create, :update, :destroy]
+    get "gantt/project/:id/data", to: "gantt#data" # Samo učitavanje podataka
+
+    resources :links, only: [:create, :destroy] # Samo kreiranje i brisanje linkova
   end
-  
 end
