@@ -1,14 +1,11 @@
 module Api
   class GanttController < ApplicationController
     def data
-      case params[:type]
-      when "project"
-        project = Project.find(params[:id])
-        tasks = project.tasks
-        links = project.links
-      else
-        return render json: { error: "Invalid Gantt type" }, status: :bad_request
-      end
+      project = Project.find_by(id: params[:id])
+      return render json: { error: "Project not found" }, status: :not_found unless project
+
+      tasks = project.tasks
+      links = Link.where(source_id: tasks.pluck(:id)) # Pronađi linkove samo za ovaj projekat
 
       render json: {
         data: tasks.map do |task|

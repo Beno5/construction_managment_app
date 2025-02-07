@@ -62,3 +62,8 @@ module Api
     
   end
 end
+
+
+# Napravio si da radi gant medjutim imas problem sa parametrima kada salje, moras to izgleda rucno.
+# Kada se pomjera da update kako treba, mozda za pocetak da napravis da se vidi samo i povezuje a da se vrijeme edituje gore.
+# Takodjer ni link ne radi, znaci generalno taj api nije dobar tj interakcija na gantu. 
