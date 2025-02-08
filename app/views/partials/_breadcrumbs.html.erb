@@ -23,7 +23,7 @@
           <% if index == additional_crumbs.size - 1 %>
             <span class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500" aria-current="page"><%= crumb[:name] %></span>
           <% else %>
-            <%= link_to crumb[:name], crumb[:path], class: "ml-1 text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-300 dark:hover:text-white" %>
+            <%= link_to crumb[:name], crumb[:path], class: "ml-1 text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-300 dark:hover:text-white", data: { turbo: "false" }  %>
           <% end %>
         </div>
       </li>

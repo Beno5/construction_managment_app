@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return; // Ako element ne postoji, ne pokrećemo Gantt
   }
 
+
   gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
 
   // Skala - prikazujemo mjesece
@@ -19,6 +20,8 @@ document.addEventListener("DOMContentLoaded", function () {
   gantt.config.drag_progress = false;
   gantt.config.drag_links = true; // ✅ Dozvoljeno povezivanje taskova
   gantt.config.date_grid = "%d.%m.%Y"; // Format datuma u tabeli (gridu)
+  gantt.config.lightbox = false;
+
 
   gantt.init("gantt_here");
 
@@ -26,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
   gantt.load(`/api/gantt/project/${projectId}/data`);
 
   let selectedLinkId = null;
+  
 
   // Pamti ID linka pre nego što se otvori modal
   gantt.attachEvent("onBeforeLinkDelete", function (id) {
