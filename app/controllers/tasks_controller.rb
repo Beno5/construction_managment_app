@@ -11,13 +11,26 @@ class TasksController < ApplicationController
 
   def new
     @task = @project.tasks.new
+    @workers = @current_business.workers
+    @machines = @current_business.machines
+    @selected_workers = []
+    @selected_machines = []
   end
 
-  def edit; end
+  def edit
+    @task = @project.tasks.find(params[:id])
+    @workers = @current_business.workers
+    @machines = @current_business.machines
+    @selected_workers = @task.activities.where(activity_type: :worker).pluck(:activityable_id) || []
+    @selected_machines = @task.activities.where(activity_type: :machine).pluck(:activityable_id) || []
+    @selected_workers_names = @workers.where(id: @selected_workers).map(&:full_name).join(', ')
+    @selected_machines_names = @machines.where(id: @selected_machines).map(&:name).join(', ')
+  end
 
   def create
     @task = @project.tasks.new(task_params)
     if @task.save
+      update_task_activities(@task, params[:worker_ids], params[:machine_ids])
       redirect_to business_project_path(@business, @project), notice: "Task was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -26,6 +39,7 @@ class TasksController < ApplicationController
 
   def update
     if @task.update(task_params)
+      update_task_activities(@task, params[:worker_ids], params[:machine_ids])
       redirect_to business_project_path(@business, @project), notice: "Task was successfully updated."
     else
       render :edit, status: :unprocessable_entity
@@ -65,5 +79,27 @@ class TasksController < ApplicationController
         whitelisted[:custom_fields] = {}
       end
     end
+  end
+
+  def update_task_activities(task, worker_ids, machine_ids)
+    update_activity_type(task, worker_ids, 'worker', 'Worker')
+    update_activity_type(task, machine_ids, 'machine', 'Machine')
+  end
+
+  def update_activity_type(task, entity_ids, activity_type, activityable_type)
+    current_ids = task.activities.where(activity_type: activity_type).pluck(:activityable_id)
+    entity_ids = entity_ids&.map(&:to_i) || []
+
+    new_ids = entity_ids - current_ids
+    old_ids = current_ids - entity_ids
+
+    # Kreiranje novih aktivnosti
+    new_ids.each do |id|
+      task.activities.create(activity_type: activity_type, start_date: task.planned_start_date,
+                             end_date: task.planned_end_date, activityable_id: id, activityable_type: activityable_type)
+    end
+
+    # Brisanje nepotrebnih aktivnosti
+    task.activities.where(activity_type: activity_type, activityable_id: old_ids).destroy_all
   end
 end

@@ -1,5 +1,6 @@
 class Task < ApplicationRecord
   belongs_to :project
+  has_many :activities
 
   # Validacije
   validates :description, :quantity, :unit, :planned_start_date, :planned_end_date, :planned_cost, presence: true
@@ -27,13 +28,11 @@ class Task < ApplicationRecord
 
   def end_date_after_start_date
     return if planned_start_date.blank? || planned_end_date.blank?
-  
-    if planned_end_date.is_a?(Integer)
-      self.planned_end_date = planned_start_date + planned_end_date.days
-    end
-  
-    if planned_end_date < planned_start_date
-      errors.add(:planned_end_date, "must be after start date")
-    end
+
+    self.planned_end_date = planned_start_date + planned_end_date.days if planned_end_date.is_a?(Integer)
+
+    return unless planned_end_date < planned_start_date
+
+    errors.add(:planned_end_date, "must be after start date")
   end
 end
