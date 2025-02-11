@@ -41,7 +41,7 @@ class ProjectsController < ApplicationController
     if @project.update(project_params.except(:documents)) # Ažuriraj sve osim dokumenata
       if params[:project][:documents].present?
         existing_filenames = @project.documents.map { |doc| doc.filename.to_s }
-  
+
         params[:project][:documents].each do |new_file|
           # Provjera da li je fajl validan i da nije duplikat
           if new_file.is_a?(ActionDispatch::Http::UploadedFile) && !existing_filenames.include?(new_file.original_filename)
@@ -49,14 +49,12 @@ class ProjectsController < ApplicationController
           end
         end
       end
-  
+
       redirect_to business_projects_url(@business), notice: 'Project was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
     end
   end
-  
-  
 
   def destroy
     @project = @business.projects.find(params[:id])
@@ -71,28 +69,28 @@ class ProjectsController < ApplicationController
   def remove_document
     @project = @business.projects.find(params[:id])
     document = @project.documents.find_by(id: params[:document_id])
-  
+
     if document
       document.purge
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.remove("document-#{params[:document_id]}")
         end
-        format.html { redirect_to edit_business_project_path(@business, @project), notice: "Document deleted successfully." }
+        format.html do
+          redirect_to edit_business_project_path(@business, @project), notice: "Document deleted successfully."
+        end
       end
     else
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("document-#{params[:document_id]}", 
-            partial: "partials/error_message", 
-            locals: { message: "Document not found." })
+          render turbo_stream: turbo_stream.replace("document-#{params[:document_id]}",
+                                                    partial: "partials/error_message",
+                                                    locals: { message: "Document not found." })
         end
         format.html { redirect_to edit_business_project_path(@business, @project), alert: "Document not found." }
       end
     end
   end
-  
-  
 
   private
 
@@ -105,7 +103,7 @@ class ProjectsController < ApplicationController
       :name, :project_type, :address, :project_manager,
       :planned_start_date, :planned_end_date, :estimated_cost,
       :description, :status, documents: [],
-      custom_fields: [:key, :value]
+                             custom_fields: [:key, :value]
     ).tap do |whitelisted|
       if params[:project][:custom_fields]
         transformed_custom_fields = params[:project][:custom_fields].to_unsafe_h.each_with_object({}) do |(_, field), hash|

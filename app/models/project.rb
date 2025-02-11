@@ -7,7 +7,6 @@ class Project < ApplicationRecord
 
   has_many_attached :documents
 
-
   require 'date'
 
   enum :status, { pending: 0, active: 1, completed: 2, canceled: 3 }

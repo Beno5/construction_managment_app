@@ -17,19 +17,19 @@ module Api
     # ✅ Ažuriranje taska (pomicanje na novi datum)
     def update_api
       task_params = params.require(:task).permit(:text, :start_date, :end_date, :duration, :progress)
-    
+
       # Parsiraj datume
       start_date = DateTime.strptime(task_params[:start_date], "%Y-%m-%d %H:%M:%S") if task_params[:start_date].present?
       end_date = DateTime.strptime(task_params[:end_date], "%Y-%m-%d %H:%M:%S") if task_params[:end_date].present?
-    
+
       # Ažuriraj task
-      if @task.update(description: task_params[:text], planned_start_date: start_date, planned_end_date: end_date, progress: task_params[:progress])
+      if @task.update(description: task_params[:text], planned_start_date: start_date, planned_end_date: end_date,
+                      progress: task_params[:progress])
         render json: { action: "updated", task: @task }
       else
         render json: { action: "error", errors: @task.errors.full_messages }, status: :unprocessable_entity
       end
     end
-    
 
     # ✅ Brisanje taska kroz API
     def destroy_api
@@ -45,7 +45,7 @@ module Api
     # ⏳ Dohvati task po ID-ju
     def set_task
       @task = Task.find_by(id: params[:id])
-      return render json: { error: "Task not found" }, status: :not_found unless @task
+      render json: { error: "Task not found" }, status: :not_found unless @task
     end
 
     # 🛠 Obradi parametre
@@ -59,11 +59,9 @@ module Api
         end
       end
     end
-    
   end
 end
 
-
 # Napravio si da radi gant medjutim imas problem sa parametrima kada salje, moras to izgleda rucno.
 # Kada se pomjera da update kako treba, mozda za pocetak da napravis da se vidi samo i povezuje a da se vrijeme edituje gore.
-# Takodjer ni link ne radi, znaci generalno taj api nije dobar tj interakcija na gantu. 
+# Takodjer ni link ne radi, znaci generalno taj api nije dobar tj interakcija na gantu.

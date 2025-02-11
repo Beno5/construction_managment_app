@@ -1,5 +1,6 @@
 class Machine < ApplicationRecord
   belongs_to :business
+  has_many :activities, as: :activityable
 
   # Validations
   validates :name, presence: true
