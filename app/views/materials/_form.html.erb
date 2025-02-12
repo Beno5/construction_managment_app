@@ -1,0 +1,53 @@
+<%= render 'partials/header1', 
+           title: @material.persisted? ? "Uredi #{@material.name}" : "Novi Materijal",
+           model_name: "Materijali",
+           search_path: nil,
+           new_path: nil,
+           additional_crumbs: [
+             { name: "Materijali", path: business_materials_path(@current_business) },
+             (@material.persisted? ? { name: @material.name, path: business_material_path(@current_business, @material) } : { name: "Novi Materijal", path: nil })
+           ] %>
+
+<%= form_with model: [@current_business, @material], local: true do |f| %>
+  <div class="grid grid-cols-6 gap-6">
+    <!-- Naziv -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :name, "Naziv materijala", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+    </div>
+
+    <!-- Cijena po jedinici -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :price_per_unit, "Cijena po jedinici", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.number_field :price_per_unit, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+
+    <!-- Jedinica mjere -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :unit_of_measure, "Jedinica mjere", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.select :unit_of_measure, 
+          options_for_select(['kg', 'komad', 'litra', 'metar', 'paket'], @material.unit_of_measure), 
+          { include_blank: "Odaberite jedinicu" }, 
+          class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+
+    <!-- Opis -->
+    <div class="col-span-6">
+      <%= f.label :description, "Opis", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_area :description, rows: 3, class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+    </div>
+
+    <!-- Custom Polja -->
+    <div class="col-span-6">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Dodatna Polja</h3>
+      <%= render 'partials/custom_fields', custom_fields: @material.custom_fields, model: 'material' %>
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+  <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
+    <%= f.submit @material.persisted? ? "Ažuriraj Materijal" : "Kreiraj Materijal", 
+                 data: { turbo: false }, 
+                 class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>
+  </div>
+<% end %>

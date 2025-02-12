@@ -1,0 +1,22 @@
+<%= render 'partials/header1', 
+           title: "Materijali", 
+           model_name: "Materijali", 
+           search_path: business_materials_path(@current_business), 
+           new_path: new_business_material_path(@current_business),
+           additional_crumbs: [
+             { name: "Materijali", path: business_materials_path(@current_business) }
+           ] %>
+
+<%= render 'partials/table', 
+           collection: @materials, 
+           columns: {
+             "Naziv" => :name,
+             "Cijena/JM" => ->(material) { number_to_currency(material.price_per_unit, unit: "€") },
+             "Jedinica" => :unit_of_measure,
+             "Opis" => :description,
+             "Dodatna Polja" => :custom_fields
+           },
+           turbo_frame_id: "materials-frame",
+           edit_path: ->(material) { edit_business_material_path(@current_business, material) },
+           delete_path: ->(material) { business_material_path(@current_business, material) },
+           actions: [] %>
