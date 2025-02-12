@@ -13,8 +13,10 @@ class TasksController < ApplicationController
     @task = @project.tasks.new
     @workers = @current_business.workers
     @machines = @current_business.machines
+    @materials = @current_business.materials
     @selected_workers = []
     @selected_machines = []
+    @selected_materials = []
   end
 
   def edit
