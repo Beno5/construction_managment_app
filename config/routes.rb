@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  get 'materials/index'
+  get 'materials/show'
+  get 'materials/new'
+  get 'materials/create'
+  get 'materials/edit'
+  get 'materials/update'
+  get 'materials/destroy'
   devise_for :users
   root to: "businesses#index"
 
@@ -18,6 +25,7 @@ Rails.application.routes.draw do
     end
 
     resources :workers
+    resources :materials
   end
 
   # API routes for Gantt

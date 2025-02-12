@@ -1,0 +1,12 @@
+<%= turbo_stream.replace "materials-frame", partial: "partials/table", locals: {
+  collection: @materials,
+  columns: {
+    "Naziv" => :name,
+    "Cijena/JM" => ->(material) { number_to_currency(material.price_per_unit, unit: "€") },
+    "Jedinica" => :unit_of_measure
+  },
+  turbo_frame_id: "materials-frame",
+  edit_path: ->(material) { edit_business_material_path(current_business, material) },
+  delete_path: ->(material) { business_material_path(current_business, material) },
+  actions: []
+} %>

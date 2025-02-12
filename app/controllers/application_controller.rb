@@ -30,11 +30,18 @@ class ApplicationController < ActionController::Base
       session[:current_business_id] = @current_business.id if @current_business
     elsif session[:current_business_id]
       @current_business = current_user.businesses.find_by(id: session[:current_business_id])
+      # Ako ne postoji business sa tim ID-om, obriši session
+      unless @current_business
+        session.delete(:current_business_id)
+        @current_business = current_user.businesses.first
+        session[:current_business_id] = @current_business.id if @current_business
+      end
     else
       @current_business = current_user.businesses.first
       session[:current_business_id] = @current_business.id if @current_business
     end
   end
+
 
   # Devise dodatna konfiguracija
   protected

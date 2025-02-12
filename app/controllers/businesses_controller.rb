@@ -61,6 +61,15 @@ class BusinessesController < ApplicationController
 
   def set_business
     @business = current_user.businesses.find_by(id: params[:id])
+    if params[:business_id].present?
+      @business = current_user.businesses.find_by(id: params[:business_id])
+      session[:current_business_id] = @business.id if @business
+    elsif session[:current_business_id]
+      @business = current_user.businesses.find_by(id: session[:current_business_id])
+    else
+      @business = current_user.businesses.first
+      session[:current_business_id] = @business.id if @business
+    end
     return if @business
 
     redirect_to businesses_path, alert: "Business not found."
