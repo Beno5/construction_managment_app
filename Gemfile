@@ -59,9 +59,7 @@ gem 'dotenv-rails', groups: [:development, :test]
 gem 'faker'
 gem 'byebug'
 gem 'aws-sdk-s3', '~> 1.48', require: false
-
-
-
+gem 'rails-erd'
 
 
 

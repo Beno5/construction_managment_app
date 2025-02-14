@@ -3,13 +3,12 @@ class Project < ApplicationRecord
 
   belongs_to :business
   has_many :tasks, dependent: :destroy
-  has_many :links, -> { distinct }, foreign_key: :source_id, class_name: "Link"
 
   has_many_attached :documents
 
   require 'date'
 
-  enum :status, { pending: 0, active: 1, completed: 2, canceled: 3 }
+  enum :status, { pending: 0, active: 1, completed: 2, canceled: 3, paused: 4 }
 
   # Validations
   validates :name, :project_type, :address, :project_manager, :planned_start_date, :planned_end_date, presence: true
