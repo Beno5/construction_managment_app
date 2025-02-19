@@ -57,8 +57,8 @@ class WorkersController < ApplicationController
 
   def worker_params
     params.require(:worker).permit(
-      :first_name, :last_name, :profession, :description, :hired_on,
-      :salary, :hourly_rate, :contract_hours_per_month, :phone_number,
+      :first_name, :last_name, :profession, :description, :phone_number,
+      :unit_of_measure, :price_per_unit, :is_team,
       custom_fields: [:key, :value]
     ).tap do |whitelisted|
       if params[:worker][:custom_fields]

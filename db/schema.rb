@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_12_204526) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_12_202145) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -44,6 +44,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_12_204526) do
 
   create_table "activities", force: :cascade do |t|
     t.integer "activity_type"
+    t.integer "quantity"
     t.date "start_date"
     t.date "end_date"
     t.bigint "task_id"
@@ -51,17 +52,21 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_12_204526) do
     t.string "activityable_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "quantity"
   end
 
   create_table "businesses", force: :cascade do |t|
     t.string "name"
     t.string "address"
     t.string "phone_number"
+    t.string "vat_number"
+    t.string "registration_number"
+    t.string "owner_first_name"
+    t.string "owner_last_name"
     t.jsonb "custom_fields", default: {}
+    t.integer "currency"
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_businesses_on_user_id"
   end
 
@@ -75,10 +80,10 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_12_204526) do
 
   create_table "machines", force: :cascade do |t|
     t.string "name"
-    t.string "category"
-    t.string "machine_type"
     t.text "description"
-    t.boolean "is_occupied"
+    t.integer "unit_of_measure", default: 0, null: false
+    t.decimal "price_per_unit", precision: 10, scale: 2
+    t.decimal "fixed_costs", precision: 10, scale: 2
     t.jsonb "custom_fields", default: {}
     t.bigint "business_id", null: false
     t.datetime "created_at", null: false
@@ -88,9 +93,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_12_204526) do
 
   create_table "materials", force: :cascade do |t|
     t.string "name"
-    t.decimal "price_per_unit"
-    t.string "unit_of_measure"
     t.text "description"
+    t.decimal "price_per_unit", precision: 10, scale: 2
+    t.integer "unit_of_measure", default: 0, null: false
     t.jsonb "custom_fields", default: {}
     t.bigint "business_id", null: false
     t.datetime "created_at", null: false
@@ -100,19 +105,23 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_12_204526) do
 
   create_table "projects", force: :cascade do |t|
     t.string "name"
-    t.string "project_type"
+    t.text "description"
     t.string "address"
     t.string "project_manager"
     t.date "planned_start_date"
     t.date "planned_end_date"
-    t.decimal "estimated_cost"
-    t.text "description"
-    t.jsonb "custom_fields", default: {}
+    t.decimal "planned_cost"
+    t.date "real_start_date"
+    t.date "real_end_date"
+    t.decimal "real_cost"
     t.integer "status", default: 0
+    t.jsonb "custom_fields", default: {}
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "business_id", null: false
     t.index ["business_id"], name: "index_projects_on_business_id"
+    t.index ["user_id"], name: "index_projects_on_user_id"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -149,11 +158,10 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_12_204526) do
     t.string "last_name"
     t.string "profession"
     t.text "description"
-    t.date "hired_on"
-    t.decimal "salary"
-    t.decimal "hourly_rate"
-    t.integer "contract_hours_per_month"
     t.string "phone_number"
+    t.integer "unit_of_measure", default: 0, null: false
+    t.decimal "price_per_unit", precision: 10, scale: 2
+    t.boolean "is_team", default: false
     t.jsonb "custom_fields", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -167,6 +175,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_12_204526) do
   add_foreign_key "machines", "businesses"
   add_foreign_key "materials", "businesses"
   add_foreign_key "projects", "businesses"
+  add_foreign_key "projects", "users"
   add_foreign_key "tasks", "projects"
   add_foreign_key "workers", "businesses"
 end

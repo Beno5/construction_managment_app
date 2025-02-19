@@ -2,15 +2,10 @@ class Machine < ApplicationRecord
   belongs_to :business
   has_many :activities, as: :activityable
 
+  enum :unit_of_measure, { hourly: 0, daily: 1, weekly: 2, monthly: 3, per_task: 4 }
+
   # Validations
   validates :name, presence: true
-
-  # Scopes
-  scope :available, -> { where(is_occupied: false) }
-  scope :occupied, -> { where(is_occupied: true) }
-
-  # Methods
-  def toggle_occupation!
-    update(is_occupied: !is_occupied)
-  end
+  validates :price_per_unit, numericality: { greater_than_or_equal_to: 0 }
+  validates :fixed_costs, numericality: { greater_than_or_equal_to: 0 }
 end

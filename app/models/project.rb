@@ -2,6 +2,7 @@ class Project < ApplicationRecord
   include CustomFields
 
   belongs_to :business
+  belongs_to :user
   has_many :tasks, dependent: :destroy
 
   has_many_attached :documents
@@ -11,8 +12,8 @@ class Project < ApplicationRecord
   enum :status, { pending: 0, active: 1, completed: 2, canceled: 3, paused: 4 }
 
   # Validations
-  validates :name, :project_type, :address, :project_manager, :planned_start_date, :planned_end_date, presence: true
-  validates :estimated_cost, numericality: { greater_than_or_equal_to: 0 }
+  validates :name, :address, :project_manager, :planned_start_date, :planned_end_date, presence: true
+  validates :real_cost, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :status, presence: true
   validate :end_date_after_start_date
 
