@@ -7,6 +7,7 @@
              { name: "Machines", path: business_machines_path(@current_business) },
              (@machine.persisted? ? { name: @machine.name, path: business_machine_path(@current_business, @machine) } : { name: "New Machine", path: nil })
            ] %>
+
 <%= form_with model: [@current_business, @machine], local: true do |f| %>
   <div class="grid grid-cols-6 gap-6">
     <!-- Name -->
@@ -14,31 +15,38 @@
       <%= f.label :name, "Machine Name", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
-    <!-- Category -->
+
+    <!-- Unit of Measure -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :category, "Category", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :category, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.label :unit_of_measure, "Unit of Measure", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.select :unit_of_measure, Machine.unit_of_measures.keys.map { |key| [key.humanize, key] }, {}, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
-    <!-- Machine Type -->
+
+    <!-- Price Per Unit -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :machine_type, "Machine Type", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :machine_type, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.label :price_per_unit, "Cijena po jedinici (#{@machine.business.currency_symbol})", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.number_field :price_per_unit, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
+
+    <!-- Fixed Costs -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :fixed_costs, "Fixed Costs  (#{@machine.business.currency_symbol})", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.number_field :fixed_costs, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+
     <!-- Description -->
     <div class="col-span-6">
       <%= f.label :description, "Description", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_area :description, rows: 4, class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+      <%= f.text_area :description, rows: 4, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
-    <!-- Is Occupied -->
-    <div class="col-span-6 sm:col-span-3">
-      <%= f.label :is_occupied, "Is Occupied?", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.check_box :is_occupied, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600" %>
-    </div>
+
+    <!-- Custom Fields -->
     <div class="col-span-6">
       <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Custom Fields</h3>
       <%= render 'partials/custom_fields', custom_fields: @machine.custom_fields, model: 'machine' %>
     </div>
   </div>
+
   <!-- Submit Button -->
   <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
     <%= f.submit @machine.persisted? ? "Update Machine" : "Create Machine", data: { turbo: false }, class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>

@@ -2,8 +2,10 @@
   collection: @materials,
   columns: {
     "Naziv" => :name,
-    "Cijena/JM" => ->(material) { number_to_currency(material.price_per_unit, unit: "€") },
-    "Jedinica" => :unit_of_measure
+    "Cijena po jedinici" => ->(material) { "#{material.price_per_unit} #{material.business.currency_symbol}" }, 
+    "Jedinica mjere" => :unit_of_measure,
+    "Opis" => :description,
+    "Custom Polja" => :custom_fields
   },
   turbo_frame_id: "materials-frame",
   edit_path: ->(material) { edit_business_material_path(current_business, material) },

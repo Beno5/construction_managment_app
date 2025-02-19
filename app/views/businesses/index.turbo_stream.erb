@@ -1,10 +1,17 @@
 <%= turbo_stream.replace "businesses-frame", partial: "partials/table", locals: {
   collection: @businesses,
   columns: {
-    "Naziv" => :name,
-    "Adresa" => :address,
-    "Broj Telefona" => :phone_number
-  },
+  "Naziv" => :name, 
+  "Adresa" => :address, 
+  "Broj Telefona" => :phone_number,
+  "PIB" => :vat_number,
+  "Matični Broj" => :registration_number,
+  "Ime Vlasnika" => :owner_first_name,
+  "Prezime Vlasnika" => :owner_last_name,
+  "Valuta" => ->(business) { business.currency&.capitalize }
+
+},
+
   turbo_frame_id: "businesses-frame",
   edit_path: ->(business) { edit_business_path(business) },
   delete_path: ->(business) { business_path(business) },

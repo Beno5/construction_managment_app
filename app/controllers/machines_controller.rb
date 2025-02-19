@@ -57,7 +57,7 @@ class MachinesController < ApplicationController
 
   def machine_params
     params.require(:machine).permit(
-      :name, :category, :machine_type, :is_occupied,
+      :name, :unit_of_measure, :price_per_unit, :fixed_costs, :description,
       custom_fields: [:key, :value]
     ).tap do |whitelisted|
       if params[:machine][:custom_fields]

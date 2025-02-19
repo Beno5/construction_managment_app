@@ -7,17 +7,20 @@
   <!-- Projekt Parametri -->
   <div class="flex flex-col items-center justify-center space-y-2 px-4 py-2 text-gray-700 border border-gray-200 border-dashed rounded dark:text-gray-400 dark:border-gray-600">
     <p><span class="font-semibold">Naziv projekta:</span> <%= project.name %></p>
-    <p><span class="font-semibold">Tip projekta:</span> <%= project.project_type %></p>
     <p><span class="font-semibold">Adresa projekta:</span> <%= project.address %></p>
     <p><span class="font-semibold">Vođa projekta:</span> <%= project.project_manager %></p>
     <p><span class="font-semibold">Planirani početak projekta:</span> <%= project.planned_start_date.strftime("%d.%m.%Y") %></p>
     <p><span class="font-semibold">Planirani završetak projekta:</span> <%= project.planned_end_date.strftime("%d.%m.%Y") %></p>
     <p><span class="font-semibold">Predviđeno vreme trajanja projekta:</span>
-      <%= ((project.planned_end_date.year * 12 + project.planned_end_date.month) -
-         (project.planned_start_date.year * 12 + project.planned_start_date.month)) %> meseci
+      <%= ((project.planned_end_date.year * 12 + project.planned_end_date.month) - (project.planned_start_date.year * 12 + project.planned_start_date.month)) %> meseci
     </p>
+    <p><span class="font-semibold">Stvarni početak projekta:</span> <%= project.real_start_date&.strftime("%d.%m.%Y") || "N/A" %></p>
+    <p><span class="font-semibold">Stvarni završetak projekta:</span> <%= project.real_end_date&.strftime("%d.%m.%Y") || "N/A" %></p>
+    <p><span class="font-semibold">Planirani trošak:</span> <%= project.planned_cost ? "#{project.planned_cost} #{@current_business.currency_symbol}" : "N/A" %></p>
+    <p><span class="font-semibold">Stvarni trošak:</span> <%= project.real_cost ? "#{project.real_cost} #{@current_business.currency_symbol}" : "N/A" %></p>
+    <p><span class="font-semibold">Status:</span> <%= project.status.humanize %></p>
+    <p><span class="font-semibold">Opis projekta:</span> <%= project.description.present? ? project.description : "N/A" %></p>
     <% if project.custom_fields.present? %>
-      <!-- Dugme za otvaranje modala -->
       <% custom_fields = JSON.parse(project.custom_fields.to_json) rescue {} %>
       <%= render 'modals/modal_custom_fields', custom_fields: custom_fields, item: project %>
       <button type="button" class="text-blue-600 hover:underline open-modal" data-target="custom-fields-modal-<%= project.id %>">
@@ -25,13 +28,13 @@
       </button>
     <% end %>
     <% if project.documents.attached? %>
-      <!-- Dugme za otvaranje modala -->
       <%= render 'modals/modal_documents', documents: project.documents, project: project %>
       <button type="button" class="text-blue-600 hover:underline open-modal" data-target="documents-modal-<%= project.id %>">
         📂 View Documents
       </button>
     <% end %>
   </div>
+  <!-- Akcije -->
   <div class="flex flex-col items-center px-4 py-4 border border-gray-200 border-dashed rounded dark:border-gray-600">
     <%= link_to new_business_project_task_path(@current_business, project), class: "w-2/3 bg-primary-600 text-white text-center px-4 py-2 mb-4 rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 transition", data: { turbo: "false" } do %>
       + Dodaj Aktivnost
@@ -42,7 +45,7 @@
       📋 Pregled Aktivnosti
     <% end %>
   </div>
-  <!-- Dropdown Button -->
+  <!-- Dropdown -->
   <div class="flex justify-end px-4 py-2 border border-gray-200 border-dashed rounded dark:border-gray-600">
     <button id="dropdownMenuButton-<%= project.id %>" data-dropdown-toggle="dropdownMenu-<%= project.id %>" class="inline-flex justify-end p-2 ...">
       <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">

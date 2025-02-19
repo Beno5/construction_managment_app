@@ -100,10 +100,16 @@ class ProjectsController < ApplicationController
 
   def project_params
     params.require(:project).permit(
-      :name, :project_type, :address, :project_manager,
-      :planned_start_date, :planned_end_date, :estimated_cost,
-      :description, :status, documents: [],
-                             custom_fields: [:key, :value]
+      :name,
+      :address,
+      :project_manager,
+      :planned_start_date,
+      :planned_end_date,
+      :real_cost, # Dodato real_cost
+      :description,
+      :status,
+      documents: [],
+      custom_fields: [:key, :value]
     ).tap do |whitelisted|
       if params[:project][:custom_fields]
         transformed_custom_fields = params[:project][:custom_fields].to_unsafe_h.each_with_object({}) do |(_, field), hash|

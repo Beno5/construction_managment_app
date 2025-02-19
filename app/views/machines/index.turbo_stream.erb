@@ -1,14 +1,12 @@
 <%= turbo_stream.replace "machines-frame", partial: "partials/table", locals: {
   collection: @machines,
   columns: {
-    "Naziv" => :name,
-    "Kategorija" => :category,
-    "Tip" => :machine_type,
-    "Status" => ->(machine) {
-      machine.is_occupied ? 
-        content_tag(:span, "Zauzeto", class: "inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-red-100 text-red-800") : 
-        content_tag(:span, "Dostupno", class: "inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-green-100 text-green-800")
-    }
+    "Naziv" => :name, 
+    "Opis" => ->(machine) { content_tag(:span, machine.description.truncate(25), title: machine.description, class: "tooltip") },
+    "Jedinica Vremena" => ->(machine) { machine.unit_of_measure.humanize },
+    "Cijena po jedinici" => ->(machine) { "#{machine.price_per_unit} #{machine.business.currency_symbol}" }, 
+    "Fiksni Troškovi (€)" => :fixed_costs,
+    "Custom Polja" => :custom_fields
   },
   turbo_frame_id: "machines-frame",
   edit_path: ->(machine) { edit_business_machine_path(current_business, machine) },
