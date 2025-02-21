@@ -7,6 +7,8 @@ class CreateMaterials < ActiveRecord::Migration[7.0]
       t.integer :unit_of_measure, default: 0, null: false
       t.jsonb :custom_fields, default: {}
       t.references :business, null: false, foreign_key: true
+      t.references :user, null: false, foreign_key: true 
+
 
       t.timestamps
     end

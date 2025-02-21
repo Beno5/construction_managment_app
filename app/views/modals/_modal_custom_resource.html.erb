@@ -1,0 +1,47 @@
+<!-- Modal for New Custom Resource -->
+<div id="custom-resource-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900 bg-opacity-50 modal">
+  <div class="relative w-full max-w-xl h-auto bg-white rounded-lg shadow-lg dark:bg-gray-800">
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Create Custom Resource</h2>
+    </div>
+    <div id="modal-content" class="p-6 max-h-[70vh] overflow-y-auto">
+<%= form_with(model: CustomResource.new, url: business_project_task_custom_resources_path(@task.project.business, @task.project, @task), method: :post, local: false, data: { turbo: false }) do |f| %>
+        <%= f.hidden_field :task_id, value: @task.id %>
+        <div class="mb-4">
+          <%= f.label :name, "Naziv", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+        </div>
+        <div class="mb-4">
+          <%= f.label :category, "Category", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <%= f.select :category, CustomResource.categories.keys.map { |key| [key.humanize, key] }, {}, 
+        class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+        <div class="mb-4">
+          <%= f.label :unit_of_measure, "Jedinica Mjere", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <%= f.select :unit_of_measure, [], { include_blank: "Select Unit" }, id: "custom_resource_unit_of_measure",
+        class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+        </div>
+        <div class="mb-4">
+          <%= f.label :quantity, "Količina", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <%= f.number_field :quantity, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+        </div>
+        <div class="mb-4">
+          <%= f.label :price_per_unit, "Cijena po jedinici", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <%= f.number_field :price_per_unit, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+        </div>
+        <div class="mb-4">
+          <%= f.label :technical_description, "Tehnički opis", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <%= f.text_area :technical_description, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+        </div>
+        <div class="flex justify-end">
+          <%= f.submit "Create Custom Resource", class: "px-4 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700" %>
+        </div>
+      <% end %>
+    </div>
+    <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-700">
+      <button type="button" class="close-modal px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
+        Close
+      </button>
+    </div>
+  </div>
+</div>

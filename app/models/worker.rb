@@ -2,6 +2,7 @@ class Worker < ApplicationRecord
   include CustomFields
 
   belongs_to :business
+  belongs_to :user
   has_many :activities, as: :activityable
 
   # Enum za jedinicu vremena

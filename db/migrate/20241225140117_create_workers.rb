@@ -10,6 +10,8 @@ class CreateWorkers < ActiveRecord::Migration[7.0]
       t.decimal :price_per_unit, precision: 10, scale: 2
       t.boolean :is_team, default: false
       t.jsonb :custom_fields, default: {}
+      t.references :user, null: false, foreign_key: true 
+
 
       t.timestamps
     end

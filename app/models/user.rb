@@ -1,5 +1,10 @@
 class User < ApplicationRecord
   has_many :businesses, dependent: :destroy
+  has_many :projects
+  has_many :workers
+  has_many :machines
+  has_many :materials
+  
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,

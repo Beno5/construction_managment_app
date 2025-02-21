@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_12_202145) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_20_122329) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -70,6 +70,20 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_12_202145) do
     t.index ["user_id"], name: "index_businesses_on_user_id"
   end
 
+  create_table "custom_resources", force: :cascade do |t|
+    t.string "name"
+    t.integer "quantity"
+    t.string "unit_of_measure"
+    t.decimal "price_per_unit"
+    t.decimal "total_cost"
+    t.text "description"
+    t.integer "category"
+    t.bigint "task_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["task_id"], name: "index_custom_resources_on_task_id"
+  end
+
   create_table "links", force: :cascade do |t|
     t.integer "source_id"
     t.integer "target_id"
@@ -86,9 +100,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_12_202145) do
     t.decimal "fixed_costs", precision: 10, scale: 2
     t.jsonb "custom_fields", default: {}
     t.bigint "business_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["business_id"], name: "index_machines_on_business_id"
+    t.index ["user_id"], name: "index_machines_on_user_id"
   end
 
   create_table "materials", force: :cascade do |t|
@@ -98,9 +114,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_12_202145) do
     t.integer "unit_of_measure", default: 0, null: false
     t.jsonb "custom_fields", default: {}
     t.bigint "business_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["business_id"], name: "index_materials_on_business_id"
+    t.index ["user_id"], name: "index_materials_on_user_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -127,17 +145,21 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_12_202145) do
   create_table "tasks", force: :cascade do |t|
     t.string "name"
     t.string "description"
-    t.integer "quantity"
-    t.string "unit"
     t.date "planned_start_date"
     t.date "planned_end_date"
     t.decimal "planned_cost"
+    t.date "real_start_date"
+    t.date "real_end_date"
+    t.decimal "real_cost"
     t.jsonb "custom_fields", default: {}
+    t.integer "category", default: 0, null: false
     t.bigint "project_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "progress", default: "0.0"
     t.index ["project_id"], name: "index_tasks_on_project_id"
+    t.index ["user_id"], name: "index_tasks_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -163,19 +185,26 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_12_202145) do
     t.decimal "price_per_unit", precision: 10, scale: 2
     t.boolean "is_team", default: false
     t.jsonb "custom_fields", default: {}
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "business_id", null: false
     t.index ["business_id"], name: "index_workers_on_business_id"
+    t.index ["user_id"], name: "index_workers_on_user_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "businesses", "users"
+  add_foreign_key "custom_resources", "tasks"
   add_foreign_key "machines", "businesses"
+  add_foreign_key "machines", "users"
   add_foreign_key "materials", "businesses"
+  add_foreign_key "materials", "users"
   add_foreign_key "projects", "businesses"
   add_foreign_key "projects", "users"
   add_foreign_key "tasks", "projects"
+  add_foreign_key "tasks", "users"
   add_foreign_key "workers", "businesses"
+  add_foreign_key "workers", "users"
 end

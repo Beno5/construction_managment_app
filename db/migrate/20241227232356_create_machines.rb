@@ -8,6 +8,8 @@ class CreateMachines < ActiveRecord::Migration[7.0]
       t.decimal :fixed_costs, precision: 10, scale: 2
       t.jsonb :custom_fields, default: {}
       t.references :business, null: false, foreign_key: true
+      t.references :user, null: false, foreign_key: true 
+
 
       t.timestamps
     end

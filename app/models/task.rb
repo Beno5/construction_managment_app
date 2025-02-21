@@ -1,10 +1,14 @@
 class Task < ApplicationRecord
   belongs_to :project
+  belongs_to :user
   has_many :activities
+  has_many :custom_resources, dependent: :destroy
+
+  enum :category, { preparatory_work: 0, structural_construction: 1, installation_and_craft: 2, finishing_work: 3 }
+
 
   # Validacije
-  validates :description, :quantity, :unit, :planned_start_date, :planned_end_date, :planned_cost, presence: true
-  validates :quantity, numericality: { greater_than_or_equal_to: 0 }
+  validates :name, :description, :planned_start_date, :planned_end_date, :planned_cost, presence: true
   validates :planned_cost, numericality: { greater_than_or_equal_to: 0 }
 
   # Validacija za datume

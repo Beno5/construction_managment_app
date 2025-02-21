@@ -47,6 +47,7 @@ business = Business.create!(
     unit_of_measure: Material.unit_of_measures.keys.sample, # Koristimo enum
     description: Faker::Lorem.sentence,
     custom_fields: { supplier: Faker::Company.name },
+    user: user,
     business: business
   )
 end
@@ -60,6 +61,7 @@ end
     price_per_unit: Faker::Number.decimal(l_digits: 2, r_digits: 2),
     fixed_costs: Faker::Number.decimal(l_digits: 3, r_digits: 2),
     custom_fields: { maintenance_schedule: Faker::Lorem.sentence },
+    user: user,
     business: business
   )
 end
@@ -76,6 +78,7 @@ end
     price_per_unit: Faker::Number.decimal(l_digits: 2, r_digits: 2),
     is_team: Faker::Boolean.boolean,
     custom_fields: { skill_level: %w[Beginner Intermediate Expert].sample },
+    user: user,
     business: business
   )
 end
@@ -92,13 +95,10 @@ end
     planned_start_date: planned_start_date,
     planned_end_date: planned_end_date,
     planned_cost: Faker::Number.decimal(l_digits: 5, r_digits: 2),
-    real_cost: Faker::Number.decimal(l_digits: 5, r_digits: 2), # Koristimo real_cost umjesto estimated_cost
     description: Faker::Lorem.paragraph,
     custom_fields: { priority: %w[High Medium Low].sample },
     user: user,
-    business: business,
-    real_start_date: Faker::Date.between(from: planned_start_date, to: planned_end_date),
-    real_end_date: Faker::Date.between(from: planned_start_date, to: planned_end_date + 30)
+    business: business
   )
 
   # Kreiranje taskova unutar projekta
@@ -111,13 +111,12 @@ end
     task = Task.create!(
       name: Faker::Lorem.sentence(word_count: 3),
       description: Faker::Lorem.sentence,
-      quantity: Faker::Number.between(from: 1, to: 100),
-      unit: %w[kg m3 pcs].sample,
       planned_start_date: task_start_date,
       planned_end_date: task_end_date,
       planned_cost: Faker::Number.decimal(l_digits: 4, r_digits: 2),
       progress: Faker::Number.decimal(l_digits: 1, r_digits: 2),
       custom_fields: { urgency: %w[Critical Important Normal].sample },
+      user: user,
       project: project
     )
     task_ids << task.id
