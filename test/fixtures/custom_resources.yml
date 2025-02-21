@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  quantity: 1
+  unit_of_measure: MyString
+  price_per_unit: 9.99
+  total_cost: 9.99
+  description: MyText
+  category: 1
+  task: one
+
+two:
+  name: MyString
+  quantity: 1
+  unit_of_measure: MyString
+  price_per_unit: 9.99
+  total_cost: 9.99
+  description: MyText
+  category: 1
+  task: two

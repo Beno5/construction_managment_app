@@ -2,8 +2,6 @@
   collection: @tasks,
   columns: {
     "Naziv" => :description,
-    "Količina" => :quantity,
-    "Jedinica" => :unit,
     "Planirani Početak" => ->(task) { task.planned_start_date&.strftime("%d.%m.%Y") },
     "Planirani Kraj" => ->(task) { task.planned_end_date&.strftime("%d.%m.%Y") },
     "Custom Polja" => :custom_fields

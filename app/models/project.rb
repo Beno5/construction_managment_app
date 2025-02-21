@@ -10,7 +10,7 @@ class Project < ApplicationRecord
   require 'date'
 
   enum :status, { pending: 0, active: 1, completed: 2, canceled: 3, paused: 4 }
-
+  
   # Validations
   validates :name, :address, :project_manager, :planned_start_date, :planned_end_date, presence: true
   validates :real_cost, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true

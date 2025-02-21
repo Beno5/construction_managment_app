@@ -1,5 +1,7 @@
 class Material < ApplicationRecord
   belongs_to :business
+  belongs_to :user
+
   has_many :activities, as: :activityable
 
   # Validations

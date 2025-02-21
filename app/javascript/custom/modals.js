@@ -26,3 +26,35 @@ document.addEventListener("turbo:load", function () {
     });
   });
 });
+
+
+document.addEventListener("turbo:load", function () {
+  const categorySelect = document.getElementById("custom_resource_category");
+  const unitSelect = document.getElementById("custom_resource_unit_of_measure");
+
+  if (!categorySelect || !unitSelect) return;
+
+  fetch('/fetch_data/unit_options') // Ispravan URL
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(unitOptions => {
+      categorySelect.addEventListener("change", function () {
+        const selectedCategory = categorySelect.value;
+        const units = unitOptions[selectedCategory] || {};
+
+        unitSelect.innerHTML = '<option value="">Select Unit</option>';
+
+        Object.entries(units).forEach(([key, label]) => {
+          const option = document.createElement("option");
+          option.value = key;
+          option.textContent = label;
+          unitSelect.appendChild(option);
+        });
+      });
+    })
+    .catch(error => console.error('Error fetching unit options:', error));
+});
