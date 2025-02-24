@@ -1,0 +1,17 @@
+<div class="grid grid-cols-6 gap-6">
+  <!-- Real Start Date -->
+  <div class="col-span-6 sm:col-span-3">
+    <%= f.label :real_start_date, "Stvarni početak radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= f.date_field :real_start_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+  </div>
+  <!-- Real End Date -->
+  <div class="col-span-6 sm:col-span-3">
+    <%= f.label :real_end_date, "Stvarni kraj radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= f.date_field :real_end_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+  </div>
+  <!-- Real Cost -->
+  <div class="col-span-6 sm:col-span-3">
+    <%= f.label :real_cost, "Stvarni troškovi aktivnosti (#{@project.business.currency_symbol})", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= f.number_field :real_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+  </div>
+</div>

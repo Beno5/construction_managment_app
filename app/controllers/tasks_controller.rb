@@ -31,6 +31,7 @@ class TasksController < ApplicationController
     @selected_machines_names = @machines.where(id: @selected_machines).map(&:name).join(', ')
     @selected_materials_names = @materials.where(id: @selected_materials).map(&:name).join(', ')
     @custom_resources = @task.custom_resources
+    @resources = []
   end
 
   def create
@@ -74,6 +75,7 @@ class TasksController < ApplicationController
   def task_params
     params.require(:task).permit(
       :name, :description, :planned_start_date, :planned_end_date, :planned_cost,
+      :real_start_date, :real_end_date, :real_cost, :category,
       custom_fields: [:key, :value]
     ).tap do |whitelisted|
       if params[:task][:custom_fields]

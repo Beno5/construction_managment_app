@@ -6,9 +6,10 @@ module.exports = {
     './app/helpers/**/*.rb',
     './app/javascript/**/*.js',
     './app/views/**/*.{erb,haml,html,slim}',
-    './node_modules/flowbite/**/*.js', // Flowbite fajlovi
+    './node_modules/flowbite/**/*.js', // Uključivanje Flowbite datoteka
   ],
   safelist: [
+    // Dodajte sve potrebne klase ovdje
     'rounded-l-lg',
     'rounded-r-lg',
     'bg-gray-200',
@@ -28,9 +29,25 @@ module.exports = {
     'leading-9',
     'shadow-lg',
     'bg-opacity-50',
-    'dark:bg-opacity-80'
+    'dark:bg-opacity-80',
+    'peer-checked:after:translate-x-full',
+    'after:transition-all',
+    // Dodajte Flowbite specifične klase
+    'after:content-[""]',
+    'after:absolute',
+    'after:top-[2px]',
+    'after:start-[2px]',
+    'after:bg-white',
+    'after:border-gray-300',
+    'after:border',
+    'after:rounded-full',
+    'after:h-5',
+    'after:w-5',
+    'peer-checked:after:translate-x-full',
+    'rtl:peer-checked:after:-translate-x-full',
+    'peer-checked:after:border-white',
   ],
-  darkMode: "class", // Dark mode na osnovu klase
+  darkMode: 'class', // Dark mode na temelju klase
   theme: {
     extend: {
       colors: {
@@ -44,28 +61,57 @@ module.exports = {
           "600": "#2563eb",
           "700": "#1d4ed8",
           "800": "#1e40af",
-          "900": "#1e3a8a"
+          "900": "#1e3a8a",
+          "950": "#172554", // Dodana boja 950
         },
       },
       fontFamily: {
-        sans: ['Inter', ...defaultTheme.fontFamily.sans],
-        body: ['Inter', ...defaultTheme.fontFamily.sans],
-        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace']
+        sans: [
+          'Inter', 
+          'ui-sans-serif', 
+          'system-ui', 
+          '-apple-system', 
+          'Segoe UI', 
+          'Roboto', 
+          'Helvetica Neue', 
+          'Arial', 
+          'Noto Sans', 
+          'sans-serif', 
+          'Apple Color Emoji', 
+          'Segoe UI Emoji', 
+          'Segoe UI Symbol', 
+          'Noto Color Emoji',
+          ...defaultTheme.fontFamily.sans,
+        ],
+        body: [
+          'Inter', 
+          'ui-sans-serif', 
+          'system-ui', 
+          '-apple-system', 
+          'Segoe UI', 
+          'Roboto', 
+          'Helvetica Neue', 
+          'Arial', 
+          'Noto Sans', 
+          'sans-serif', 
+          'Apple Color Emoji', 
+          'Segoe UI Emoji', 
+          'Segoe UI Symbol', 
+          'Noto Color Emoji',
+          ...defaultTheme.fontFamily.sans,
+        ],
+      },
+      translate: {
+        'full': '100%', // Dodano kako bi Tailwind prepoznao translate-x-full
       },
       transitionProperty: {
         'width': 'width', // Animacije širine
-        'opacity': 'opacity', // Dodata animacija za opacity
+        'opacity': 'opacity', // Dodana animacija za opacity
       },
       textDecoration: ['active'], // Aktivni stilovi
       minWidth: {
-        'kanban': '28rem' // Minimalna širina za kanban
+        'kanban': '28rem', // Minimalna širina za kanban
       },
-    },
-  },
-  variants: {
-    extend: {
-      opacity: ['responsive', 'hover', 'focus', 'group-hover'], // Varijacije za opacity
-      transitionProperty: ['responsive', 'motion-safe', 'motion-reduce'], // Varijacije za tranzicije
     },
   },
   plugins: [
