@@ -9,6 +9,12 @@ class TasksController < ApplicationController
     @tasks = @project.tasks
   end
 
+  def show
+    @project = @business.projects.find(params[:project_id])
+    @task = @project.tasks.find(params[:id]) # Uveri se da ovo ne vraća nil
+    @subtasks = @task.sub_tasks
+  end
+
   def new
     @task = @project.tasks.new
     @workers = @current_business.workers
@@ -36,6 +42,8 @@ class TasksController < ApplicationController
 
   def create
     @task = @project.tasks.new(task_params)
+    @task.user_id = current_user.id
+
     if @task.save
       update_task_activities(@task, params[:worker_ids], params[:machine_ids])
       redirect_to business_project_path(@business, @project), notice: "Task was successfully created."

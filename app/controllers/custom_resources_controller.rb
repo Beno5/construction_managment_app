@@ -6,26 +6,30 @@ class CustomResourcesController < ApplicationController
     @custom_resource = @task.custom_resources.build
   end
 
+  def edit; end
+
   def create
     puts "Received params: #{params.inspect}"
     @task = Task.find(params[:task_id])
     @custom_resource = @task.custom_resources.new(custom_resource_params)
-  
+
     if @custom_resource.save
       respond_to do |format|
         format.turbo_stream
-        format.html { redirect_to edit_business_project_task_path(@task.project.business, @task.project, @task), notice: "Resource created." }
+        format.html do
+          redirect_to edit_business_project_task_path(@task.project.business, @task.project, @task),
+                      notice: "Resource created."
+        end
       end
     else
       respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("custom-resource-modal", partial: "modals/modal_custom_resource", locals: { custom_resource: @custom_resource }) }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("custom-resource-modal", partial: "modals/modal_custom_resource",
+                                                                             locals: { custom_resource: @custom_resource })
+        end
         format.html { render :new, status: :unprocessable_entity }
       end
     end
-  end
-  
-
-  def edit
   end
 
   def update
@@ -52,6 +56,7 @@ class CustomResourcesController < ApplicationController
   end
 
   def custom_resource_params
-    params.require(:custom_resource).permit(:name, :quantity, :unit_of_measure, :price_per_unit, :total_cost, :description, :category)
+    params.require(:custom_resource).permit(:name, :quantity, :unit_of_measure, :price_per_unit, :total_cost,
+                                            :description, :category)
   end
 end

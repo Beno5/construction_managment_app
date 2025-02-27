@@ -7,6 +7,7 @@
       <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white"><%= local_assigns[:title] || "Default Title" %></h1>
     </div>
     <div class="sm:flex mb-4">
+    <% if local_assigns[:show_search].present? %>
       <!-- Search Bar -->
       <% if local_assigns[:search_path].present? %>
         <form action="<%= local_assigns[:search_path] %>" method="GET" data-turbo-frame="<%= local_assigns[:frame_id] || "#{local_assigns[:model_name].downcase}-frame" %>" class="lg:pr-3" data-controller="search">
@@ -29,6 +30,7 @@
           <% end %>
         <% end %>
       </div>
+        <% end %>
     </div>
   </div>
 </div>

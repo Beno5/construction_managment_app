@@ -22,6 +22,7 @@ class WorkersController < ApplicationController
 
   def create
     @worker = @business.workers.new(worker_params)
+    @worker.user_id = current_user.id
     if @worker.save
       redirect_to business_workers_path(@business), notice: 'Worker was successfully created.'
     else
@@ -57,7 +58,7 @@ class WorkersController < ApplicationController
 
   def worker_params
     params.require(:worker).permit(
-      :first_name, :last_name, :profession, :description, :phone_number,
+      :first_name, :last_name, :profession, :description,
       :unit_of_measure, :price_per_unit, :is_team,
       custom_fields: [:key, :value]
     ).tap do |whitelisted|

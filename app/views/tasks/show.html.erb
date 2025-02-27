@@ -1,0 +1,125 @@
+<% 
+  model_name = "SubTasks"
+  paths = {
+    task: business_project_task_path(@current_business, @project, @task),
+    tasks: business_project_tasks_path(@current_business, @project),
+    new_subtask: new_business_project_task_sub_task_path(@current_business, @project, @task),
+    show_subtask: ->(subtask) { business_project_task_sub_task_path(@current_business, @project, @task, subtask) },
+    edit_subtask: ->(subtask) { edit_business_project_task_sub_task_path(@current_business, @project, @task, subtask) },
+    delete_subtask: ->(subtask) { business_project_task_sub_task_path(@current_business, @project, @task, subtask) }
+  }
+%>
+
+<%= render 'partials/header1', 
+           title: @task.name, 
+           model_name: model_name, 
+           search_path: paths[:task], 
+           new_path: paths[:new_subtask],
+           additional_crumbs: [
+             { name: "Projects", path: business_projects_path(@current_business) },
+             { name: @project.name, path: paths[:task] },
+             { name: @task.name, path: paths[:task] }
+           ] %>
+
+
+<div class="grid grid-cols-6 gap-6">
+  <!-- Name -->
+  <div class="col-span-6 sm:col-span-3">
+    <%= label_tag :name, "Ime", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+      <%= @task.name %>
+    </div>
+  </div>
+  <!-- Description -->
+  <div class="col-span-6 sm:col-span-3">
+    <%= label_tag :description, "Opis aktivnosti", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+      <%= @task.description %>
+    </div>
+  </div>
+  <div class="col-span-6 sm:col-span-3">
+    <%= label_tag :category, "Kategorija", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+      <%= @task.category.humanize %>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-6 gap-6">
+  <!-- Planned Start Date -->
+  <div class="col-span-6 sm:col-span-3">
+    <%= label_tag :planned_start_date, "Planirani početak radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+      <%= @task.planned_start_date.strftime("%Y-%m-%d") if @task.planned_start_date %>
+    </div>
+  </div>
+  <!-- Planned End Date -->
+  <div class="col-span-6 sm:col-span-3">
+    <%= label_tag :planned_end_date, "Planirani kraj radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+      <%= @task.planned_end_date.strftime("%Y-%m-%d") if @task.planned_end_date %>
+    </div>
+  </div>
+  <!-- Planned Cost -->
+  <div class="col-span-6 sm:col-span-3">
+    <%= label_tag :planned_cost, "Planirani troškovi aktivnosti (#{@project.business.currency_symbol})", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+      <%= @task.planned_cost %>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-6 gap-6">
+  <!-- Real Start Date -->
+  <div class="col-span-6 sm:col-span-3">
+    <%= label_tag :real_start_date, "Stvarni početak radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+      <%= @task.real_start_date.strftime("%Y-%m-%d") if @task.real_start_date %>
+    </div>
+  </div>
+  <!-- Real End Date -->
+  <div class="col-span-6 sm:col-span-3">
+    <%= label_tag :real_end_date, "Stvarni kraj radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+      <%= @task.real_end_date.strftime("%Y-%m-%d") if @task.real_end_date %>
+    </div>
+  </div>
+  <!-- Real Cost -->
+  <div class="col-span-6 sm:col-span-3">
+    <%= label_tag :real_cost, "Stvarni troškovi aktivnosti (#{@project.business.currency_symbol})", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+      <%= number_to_currency(@task.real_cost, unit: @project.business.currency_symbol) %>
+    </div>
+  </div>
+   <!-- Custom Fields -->
+   <div class="col-span-6">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Dodatna Polja</h3>
+    <% @task.custom_fields.each do |key, value| %>
+      <div class="col-span-6 sm:col-span-3">
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= key.humanize %></label>
+        <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <%= value %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+ 
+
+<%= render 'partials/table', 
+           collection: @subtasks, 
+           columns: {
+             "Naziv" => :description,
+             "Planirani Početak" => ->(subtask) { I18n.l(subtask.planned_start_date, format: :long) if subtask.planned_start_date },
+             "Planirani Kraj" => ->(subtask) { I18n.l(subtask.planned_end_date, format: :long) if subtask.planned_end_date },
+             "Resursi" => ->(subtask) { render 'partials/task_resources_tooltip', task: subtask },
+             "Custom Polja" => :custom_fields
+           },
+           turbo_frame_id: "subtasks-frame",
+           model_name: model_name, 
+           search_path: paths[:task], 
+           new_path: paths[:new_subtask],
+           show_path: paths[:show_subtask],
+           edit_path: paths[:edit_subtask],
+           delete_path: paths[:delete_subtask],
+           actions: [] %>

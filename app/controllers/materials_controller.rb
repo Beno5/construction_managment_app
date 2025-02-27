@@ -7,8 +7,8 @@ class MaterialsController < ApplicationController
   def index
     @materials = current_business.materials.search(params[:search])
     respond_to do |format|
-      format.html
-      format.turbo_stream
+      format.html # Renderuje standardni HTML za klasične prelaze
+      format.turbo_stream # Renderuje Turbo Stream za pretragu
     end
   end
 
@@ -22,6 +22,8 @@ class MaterialsController < ApplicationController
 
   def create
     @material = @business.materials.new(material_params)
+    @material.user_id = current_user.id
+
     if @material.save
       redirect_to business_materials_path(@business), notice: 'Material uspješno kreiran'
     else

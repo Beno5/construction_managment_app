@@ -21,6 +21,8 @@ class BusinessesController < ApplicationController
 
   def create
     @business = current_user.businesses.new(business_params)
+    @business.user_id = current_user.id
+
     if @business.save
       redirect_to businesses_path, notice: "Business created successfully."
     else
