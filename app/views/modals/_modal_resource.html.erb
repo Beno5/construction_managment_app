@@ -8,29 +8,93 @@
     <!-- Modal Body -->
     <div class="p-6 max-h-[70vh] overflow-y-auto">
       <!-- Toggle Section -->
-      <label class="inline-flex items-center cursor-pointer">
-        <input type="checkbox" id="resource-toggle" value="" class="sr-only peer">
-        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
-        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Toggle for Custom Resource</span>
-      </label>
-      
-      <!-- Content for Standard Resources -->
-      <div id="standard-resources">
-        <p class="text-gray-700 dark:text-gray-300">Ovdje dolazi kontent za standardne resurse.</p>
+      <div class="flex items-center justify-center space-x-2 mb-4">
+        <span id="standard-text" class="text-m font-medium text-gray-900 dark:text-gray-300">Standardni Resurs</span>
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="resource-toggle" value="" class="sr-only peer" onchange="toggleColor()">
+          <div class="relative w-11 h-6 bg-blue-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+        </label>
+        <span id="custom-text" class="text-m font-medium text-gray-900 dark:text-gray-300">Custom Resource</span>
       </div>
-      
-      <!-- Content for Custom Resources -->
-      <div id="custom-resources" class="hidden">
-        <%= form_with(model: CustomResource.new, url: business_project_task_custom_resources_path(@task.project.business, @task.project, @task), method: :post, local: false, data: { turbo: false }) do |f| %>
+      <!-- Content for Standard Resources -->
+      <div id="standard-resources" data-controller="activity">
+        <%= form_with(model: Activity.new, url: business_project_task_sub_task_activities_path(@task.project.business, @task.project, @task, @sub_task),
+         method: :post, local: false, data: { turbo: false }) do |f| %>
           <%= f.hidden_field :task_id, value: @task.id %>
+          <div class="mb-4">
+            <%= f.label :category, "Kategorija", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.select :category, [["-- Odaberite kategoriju --", ""]] + CustomResource.categories.except("other").keys.map { |key| [key.humanize, key] }, {}, 
+        class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white", 
+        id: "activity_category", data: { action: "change->activity#updateResources" } %>
+          </div>
+          <div class="mb-4">
+            <%= f.label :resource_id, "Resurs", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.select :resource_id, [["-- Odaberite resurs --", ""]], {}, 
+        class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600", 
+        id: "activity_resource", data: { business_id: @task.project.business.id, action: "change->activity#updateReadOnlyFields" } %>
+          </div>
+          <div class="mb-4">
+            <%= f.label :quantity, "Količina", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.number_field :quantity, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600", data: { action: "input->activity#updateQuantity" } %>
+          </div>
+          <div class="mb-4">
+            <%= f.label :unit_of_measure, "Jedinica mjere", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_field :unit_of_measure, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+          </div>
+          <div class="mb-4">
+            <%= f.label :price_per_unit, "Cijena po jedinici", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_field :price_per_unit, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+          </div>
+          <div class="mb-4">
+            <%= f.label :description, "Opis", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_area :description, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+          </div>
+          <div class="mb-4 hidden">
+            <%= f.label :fixed_costs, "Fiksni troškovi", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white " %>
+            <%= f.text_field :fixed_costs, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+          </div>
+          <div class="mb-4 hidden">
+            <%= f.label :profession, "Profesija", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_field :profession, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+          </div>
+          <div class="mb-4">
+            <label for="total" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ukupno</label>
+            <input type="text" id="total" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" readonly>
+          </div>
+          <div class="flex justify-end">
+            <%= f.submit "Dodaj Aktivnost", class: "px-4 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700" %>
+          </div>
+        <% end %>
+      </div>
+      <!-- Content for Custom Resources -->
+      <div id="custom-resources" class="hidden" data-controller="custom-resource">
+        <%= form_with(model: CustomResource.new, 
+              url: business_project_task_sub_task_custom_resources_path(@task.project.business, @task.project, @task, @sub_task),
+              method: :post, 
+              local: true, 
+              data: { turbo: false }) do |f| %>
+          <%= f.hidden_field :task_id, value: @task.id %>
+          <div class="mb-4">
+            <%= f.label :category, "Category", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.select :category, [['-- Select Category --', nil]] + CustomResource.categories.keys.map { |key| [key.humanize, key] }, {},
+    class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
+    data: { action: "change->custom-resource#updateResources" } %>
+          </div>
           <div class="mb-4">
             <%= f.label :name, "Naziv", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
             <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
           </div>
-          <div class="mb-4">
-            <%= f.label :category, "Category", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.select :category, CustomResource.categories.keys.map { |key| [key.humanize, key] }, {}, 
-                class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+          <div class="mb-4 hidden" data-target="custom-resource.firstName">
+            <%= f.label :first_name, "First Name", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_field :first_name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+          </div>
+          <div class="mb-4 hidden" data-target="custom-resource.lastName">
+            <%= f.label :last_name, "Last Name", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_field :last_name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+          </div>
+          <div class="mb-4 hidden">
+            <%= f.label :profession, "Profesija", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_field :profession, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
           </div>
           <div class="mb-4">
             <%= f.label :unit_of_measure, "Jedinica Mjere", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
@@ -39,15 +103,19 @@
           </div>
           <div class="mb-4">
             <%= f.label :quantity, "Količina", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.number_field :quantity, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+            <%= f.number_field :quantity, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600", data: { action: "input->custom-resource#updateQuantity", custom_resource_target: "quantity" } %>
           </div>
           <div class="mb-4">
             <%= f.label :price_per_unit, "Cijena po jedinici", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.number_field :price_per_unit, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+            <%= f.number_field :price_per_unit, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600", data: { action: "input->custom-resource#updateQuantity", custom_resource_target: "pricePerUnit" } %>
           </div>
           <div class="mb-4">
-            <%= f.label :technical_description, "Tehnički opis", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_area :technical_description, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+            <%= f.label :description, "Opis", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_area :description, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+          </div>
+          <div class="mb-4">
+            <label for="total" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ukupno</label>
+            <input type="text" id="total" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" readonly data-custom-resource-target="total">
           </div>
           <div class="flex justify-end">
             <%= f.submit "Create Custom Resource", class: "px-4 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700" %>
@@ -63,7 +131,6 @@
     </div>
   </div>
 </div>
-
 <!-- JavaScript to toggle between Standard and Custom Resource content -->
 <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -80,5 +147,31 @@
         standardDiv.classList.remove("hidden");
       }
     });
+  });
+
+  // Funkcija za mijenjanje boje teksta ovisno o stanju toggle-a
+  function toggleColor() {
+    const checkbox = document.getElementById('resource-toggle');
+    const standardText = document.getElementById('standard-text');
+    const customText = document.getElementById('custom-text');
+
+    if (checkbox.checked) {
+      // Ako je toggle uključen, boja "Custom Resource" postaje plava
+      standardText.classList.remove('text-blue-600');
+      standardText.classList.add('text-gray-900');
+      customText.classList.remove('text-gray-900');
+      customText.classList.add('text-blue-600');
+    } else {
+      // Ako je toggle isključen, boja "Standardni Resurs" postaje plava
+      customText.classList.remove('text-blue-600');
+      customText.classList.add('text-gray-900');
+      standardText.classList.remove('text-gray-900');
+      standardText.classList.add('text-blue-600');
+    }
+  }
+
+  // Pozivaj funkciju na učitavanje stranice kako bi se postavio početni status
+  document.addEventListener('DOMContentLoaded', () => {
+    toggleColor();
   });
 </script>

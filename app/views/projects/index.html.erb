@@ -1,6 +1,7 @@
 <%= render 'partials/header1', 
            title: "Projects", 
-           model_name: "Projects", 
+           model_name: "Projects",
+           show_search: true,
            search_path: business_projects_path(@current_business), 
            new_path: new_business_project_path(@current_business),
            additional_crumbs: [] %>

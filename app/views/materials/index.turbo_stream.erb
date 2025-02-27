@@ -8,7 +8,7 @@
     "Custom Polja" => :custom_fields
   },
   turbo_frame_id: "materials-frame",
-  edit_path: ->(material) { edit_business_material_path(current_business, material) },
-  delete_path: ->(material) { business_material_path(current_business, material) },
+  edit_path: ->(material) { edit_business_material_path(@current_business, material) },
+  delete_path: ->(material) { business_material_path(@current_business, material) },
   actions: []
 } %>

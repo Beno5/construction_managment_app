@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyString
+  planned_start_date: 2025-02-27
+  planned_end_date: 2025-02-27
+  planned_cost: 9.99
+  real_start_date: 2025-02-27
+  real_end_date: 2025-02-27
+  real_cost: 9.99
+  custom_fields: 
+  category: 1
+  user_id: 
+  progress: 9.99
+  task: one
+
+two:
+  name: MyString
+  description: MyString
+  planned_start_date: 2025-02-27
+  planned_end_date: 2025-02-27
+  planned_cost: 9.99
+  real_start_date: 2025-02-27
+  real_end_date: 2025-02-27
+  real_cost: 9.99
+  custom_fields: 
+  category: 1
+  user_id: 
+  progress: 9.99
+  task: two

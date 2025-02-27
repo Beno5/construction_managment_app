@@ -1,25 +1,40 @@
+<% 
+  model_name = "Workers"
+  paths = {
+    workers: business_workers_path(@current_business),
+    new_worker: new_business_worker_path(@current_business),
+    edit_worker: ->(worker) { edit_business_worker_path(@current_business, worker) },
+    show_worker: ->(worker) { business_worker_path(@current_business, worker) },
+    delete_worker: ->(worker) { business_worker_path(@current_business, worker) }
+  }
+%>
+
 <%= render 'partials/header1', 
            title: "Workers", 
-           model_name: "Workers", 
-           search_path: business_workers_path(@current_business), 
-           new_path: new_business_worker_path(@current_business),
+           model_name: model_name, 
+           search_path: paths[:workers], 
+           new_path: paths[:new_worker],
            additional_crumbs: [
-             { name: "Workers", path: business_workers_path }
+             { name: "Workers", path: paths[:workers] }
            ] %>
+
 <%= render 'partials/table', 
            collection: @workers, 
            columns: {
-            "Ime" => :first_name, 
-            "Prezime" => :last_name, 
-            "Opis" => ->(worker) { content_tag(:span, worker.description.truncate(25), title: worker.description, class: "tooltip") },
-            "Profesija" => :profession, 
-            "Jedinica vremena" => ->(worker) { worker.unit_of_measure.humanize }, 
-            "Cijena po jedinici" => ->(worker) { "#{worker.price_per_unit} #{worker.business.currency_symbol}" }, 
-            "Tim" => ->(worker) { worker.is_team ? "Da" : "Ne" }, 
-            "Custom Polja" => :custom_fields
-          },
-
+             "Ime" => :first_name, 
+             "Prezime" => :last_name, 
+             "Opis" => ->(worker) { content_tag(:span, worker.description.truncate(25), title: worker.description, class: "tooltip") },
+             "Profesija" => :profession, 
+             "Jedinica vremena" => ->(worker) { worker.unit_of_measure.humanize }, 
+             "Cijena po jedinici" => ->(worker) { "#{worker.price_per_unit} #{worker.business.currency_symbol}" }, 
+             "Tim" => ->(worker) { worker.is_team ? "Da" : "Ne" }, 
+             "Custom Polja" => :custom_fields
+           },
            turbo_frame_id: "workers-frame",
-           edit_path: ->(worker) { edit_business_worker_path(@current_business, worker) },
-           delete_path: ->(worker) { business_worker_path(@current_business, worker) },
+           model_name: model_name, 
+           search_path: paths[:workers], 
+           new_path: paths[:new_worker],
+           edit_path: paths[:edit_worker],
+           show_path: paths[:show_worker],
+           delete_path: paths[:delete_worker],
            actions: [] %>

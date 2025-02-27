@@ -1,0 +1,62 @@
+<div class="grid grid-cols-6 gap-6">
+  <!-- Ime -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ime</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.name %>
+    </div>
+  </div>
+
+  <!-- Opis -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Opis aktivnosti</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.description %>
+    </div>
+  </div>
+
+  <!-- Planirani početak radova -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani početak radova</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.planned_start_date %>
+    </div>
+  </div>
+
+  <!-- Planirani kraj radova -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani kraj radova</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.planned_end_date %>
+    </div>
+  </div>
+
+  <!-- Planirani troškovi -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani troškovi aktivnosti (#{@project.business.currency_symbol})</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.planned_cost %>
+    </div>
+  </div>
+
+  <!-- Kategorija -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategorija</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.category.humanize %>
+    </div>
+  </div>
+
+  <!-- Dodatna Polja -->
+  <div class="col-span-6">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Dodatna Polja</h3>
+    <% @sub_task.custom_fields.each do |key, value| %>
+      <div class="col-span-6 sm:col-span-3">
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= key.humanize %></label>
+        <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <%= value %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+<%= render 'partials/header1', 
+           title: @worker.persisted? ? "Uredi #{@worker.first_name} #{@worker.last_name}" : "Novi Radnik",
+           model_name: "Radnici",
+           search_path: nil,
+           new_path: nil,
+           additional_crumbs: [
+             { name: "Radnici", path: business_workers_path(@current_business) },
+             (@worker.persisted? ? { name: "#{@worker.first_name} #{@worker.last_name}", path: business_worker_path(@current_business, @worker) } : { name: "Novi Radnik", path: nil })
+           ] %>
+
+<div class="grid grid-cols-6 gap-6">
+  <!-- Ime -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ime</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @worker.first_name %>
+    </div>
+  </div>
+  
+  <!-- Prezime -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prezime</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @worker.last_name %>
+    </div>
+  </div>
+
+  <!-- Profesija -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Profesija</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @worker.profession %>
+    </div>
+  </div>
+
+  <!-- Jedinica vremena -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jedinica vremena</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @worker.unit_of_measure.humanize %>
+    </div>
+  </div>
+
+  <!-- Cijena po jedinici -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cijena po jedinici (<%= @worker.business.currency_symbol %>)</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @worker.price_per_unit %>
+    </div>
+  </div>
+
+  <!-- Tim -->
+  <div class="col-span-6 sm:col-span-3 flex items-center">
+    <label class="text-sm font-medium text-gray-900 dark:text-white">Da li je ovo tim?</label>
+    <div class="ml-2">
+      <%= @worker.is_team ? "Da" : "Ne" %>
+    </div>
+  </div>
+
+  <!-- Opis -->
+  <div class="col-span-6">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Opis</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @worker.description %>
+    </div>
+  </div>
+
+  <!-- Dodatna Polja -->
+  <div class="col-span-6">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Dodatna Polja</h3>
+    <% @worker.custom_fields.each do |key, value| %>
+      <div class="col-span-6 sm:col-span-3">
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= key.humanize %></label>
+        <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <%= value %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

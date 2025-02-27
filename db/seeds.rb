@@ -1,6 +1,7 @@
 # Brisanje postojećih podataka (opcionalno, paziti u produkciji!)
 Activity.destroy_all
 Link.destroy_all
+SubTask.destroy_all
 Task.destroy_all
 Project.destroy_all
 Material.destroy_all
@@ -29,7 +30,6 @@ user = User.create!(
 business = Business.create!(
   name: Faker::Company.name,
   address: Faker::Address.full_address,
-  phone_number: Faker::PhoneNumber.phone_number,
   vat_number: Faker::Number.unique.number(digits: 10).to_s,
   registration_number: Faker::Number.unique.number(digits: 8).to_s,
   owner_first_name: Faker::Name.first_name,
@@ -73,7 +73,6 @@ end
     last_name: Faker::Name.last_name,
     profession: Faker::Job.title,
     description: Faker::Lorem.sentence,
-    phone_number: Faker::PhoneNumber.cell_phone,
     unit_of_measure: Worker.unit_of_measures.keys.sample, # Koristimo enum
     price_per_unit: Faker::Number.decimal(l_digits: 2, r_digits: 2),
     is_team: Faker::Boolean.boolean,
@@ -120,18 +119,32 @@ end
       project: project
     )
     task_ids << task.id
+
+    # Kreiranje 2 sub taska za svaki task
+
+    SubTask.create!(
+      name: Faker::Lorem.sentence(word_count: 3),
+      description: Faker::Lorem.sentence,
+      planned_start_date: task_start_date,
+      planned_end_date: task_end_date,
+      planned_cost: Faker::Number.decimal(l_digits: 3, r_digits: 2),
+      progress: Faker::Number.decimal(l_digits: 1, r_digits: 2),
+      user: user,
+      task: task,
+      category: rand(0..2)
+    )
   end
 
   # Kreiranje veza (links) između taskova
-  next unless task_ids.length > 1
+  # next unless task_ids.length > 1
 
-  (0..task_ids.length - 2).each do |i|
-    Link.create!(
-      source_id: task_ids[i],
-      target_id: task_ids[i + 1],
-      link_type: "0" # Finish-to-Start veza
-    )
-  end
+  # (0..task_ids.length - 2).each do |i|
+  # Link.create!(
+  #   source_id: task_ids[i],
+  #  target_id: task_ids[i + 1],
+  #  link_type: "0" # Finish-to-Start veza
+  # )
+  # end
 end
 
 # Kreiranje aktivnosti za svaki task
@@ -143,7 +156,7 @@ Task.all.each do |task|
       activity_type: "material",
       start_date: task.planned_start_date,
       end_date: task.planned_end_date,
-      task: task,
+      sub_task: task.sub_tasks.first,
       activityable: material,
       quantity: rand(1..100)
     )
@@ -156,7 +169,7 @@ Task.all.each do |task|
       activity_type: "machine",
       start_date: task.planned_start_date,
       end_date: task.planned_end_date,
-      task: task,
+      sub_task: task.sub_tasks.first,
       activityable: machine,
       quantity: rand(1..10)
     )
@@ -169,7 +182,7 @@ Task.all.each do |task|
       activity_type: "worker",
       start_date: task.planned_start_date,
       end_date: task.planned_end_date,
-      task: task,
+      sub_task: task.sub_tasks.first,
       activityable: worker,
       quantity: rand(1..5)
     )

@@ -13,7 +13,7 @@ class CreateTasks < ActiveRecord::Migration[7.0]
       t.integer :category, default: 0, null: false
 
       t.references :project, null: false, foreign_key: true
-      t.references :user, null: false, foreign_key: true 
+      t.references :user, null: false, foreign_key: true
 
       t.timestamps
     end

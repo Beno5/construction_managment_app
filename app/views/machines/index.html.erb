@@ -1,22 +1,38 @@
+<% 
+  model_name = "Machines"
+  paths = {
+    machines: business_machines_path(@current_business),
+    new_machine: new_business_machine_path(@current_business),
+    show_machine: ->(machine) { business_machine_path(@current_business, machine) },
+    edit_machine: ->(machine) { edit_business_machine_path(@current_business, machine) },
+    delete_machine: ->(machine) { business_machine_path(@current_business, machine) }
+  }
+%>
+
 <%= render 'partials/header1', 
            title: "Machines", 
-           model_name: "Machines", 
-           search_path: business_machines_path(@current_business), 
-           new_path: new_business_machine_path(@current_business),
+           model_name: model_name, 
+           search_path: paths[:machines], 
+           new_path: paths[:new_machine],
            additional_crumbs: [
-             { name: "Machines", path: business_machines_path(@current_business) }
+             { name: "Machines", path: paths[:machines] }
            ] %>
+
 <%= render 'partials/table', 
            collection: @machines, 
            columns: {
-    "Naziv" => :name, 
-    "Opis" => ->(machine) { content_tag(:span, machine.description.truncate(25), title: machine.description, class: "tooltip") },
-    "Jedinica Vremena" => ->(machine) { machine.unit_of_measure.humanize },
-    "Cijena po jedinici" => ->(machine) { "#{machine.price_per_unit} #{machine.business.currency_symbol}" }, 
-    "Fiksni Troškovi (€)" => :fixed_costs,
-    "Custom Polja" => :custom_fields
-  },
+             "Naziv" => :name, 
+             "Opis" => ->(machine) { content_tag(:span, machine.description.truncate(25), title: machine.description, class: "tooltip") },
+             "Jedinica vremena" => ->(machine) { machine.unit_of_measure.humanize },
+             "Cijena po jedinici" => ->(machine) { "#{machine.price_per_unit} #{machine.business.currency_symbol}" }, 
+             "Fiksni troškovi (€)" => :fixed_costs,
+             "Custom polja" => :custom_fields
+           },
            turbo_frame_id: "machines-frame",
-           edit_path: ->(machine) { edit_business_machine_path(@current_business, machine) },
-           delete_path: ->(machine) { business_machine_path(@current_business, machine) },
+           model_name: model_name, 
+           search_path: paths[:machines], 
+           new_path: paths[:new_machine],
+           show_path: paths[:show_machine],
+           edit_path: paths[:edit_machine],
+           delete_path: paths[:delete_machine],
            actions: [] %>

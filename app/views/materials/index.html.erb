@@ -1,23 +1,35 @@
+<% 
+  model_name = "Materials" # ovo je bitno zbog dinamike
+  paths = {
+    materials: business_materials_path(@current_business),
+    new_material: new_business_material_path(@current_business),
+    edit_material: ->(material) { edit_business_material_path(@current_business, material) },
+    show_material: ->(material) { business_material_path(@current_business, material) },
+    delete_material: ->(material) { business_material_path(@current_business, material) }
+  }
+%>
 <%= render 'partials/header1', 
            title: "Materijali", 
-           model_name: "Materijali", 
-           search_path: business_materials_path(@current_business), 
-           new_path: new_business_material_path(@current_business),
+           model_name: model_name, 
+           search_path: paths[:materials], 
+           new_path: paths[:new_material],
            additional_crumbs: [
-             { name: "Materijali", path: business_materials_path(@current_business) }
+             { name: "Materijali", path: paths[:materials] }
            ] %>
-
 <%= render 'partials/table', 
            collection: @materials, 
-          columns: {
-  "Naziv" => :name,
-  "Cijena po jedinici" => ->(material) { "#{material.price_per_unit} #{material.business.currency_symbol}" }, 
-  "Jedinica mjere" => :unit_of_measure,
-  "Opis" => :description,
-  "Custom Polja" => :custom_fields
-},
-
+           columns: {
+             "Naziv" => :name,
+             "Cijena po jedinici" => ->(material) { "#{material.price_per_unit} #{material.business.currency_symbol}" }, 
+             "Jedinica mjere" => :unit_of_measure,
+             "Opis" => :description,
+             "Custom Polja" => :custom_fields
+           },
            turbo_frame_id: "materials-frame",
-           edit_path: ->(material) { edit_business_material_path(@current_business, material) },
-           delete_path: ->(material) { business_material_path(@current_business, material) },
+           model_name: model_name, 
+           search_path: paths[:materials], 
+           new_path: paths[:new_material],
+           edit_path: paths[:edit_material],
+           show_path: paths[:show_material],
+           delete_path: paths[:delete_material],
            actions: [] %>

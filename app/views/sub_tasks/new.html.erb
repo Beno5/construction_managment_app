@@ -1,0 +1,45 @@
+<%= render 'partials/header1', 
+           title: @sub_task.persisted? ? "Edit #{@sub_task.description}" : "New SubTask",
+           model_name: "SubTasks",
+           search_path: nil,
+           new_path: nil,
+           additional_crumbs: [
+             { name: "Projects", path: business_projects_path(@current_business) },
+             { name: @project.name, path: business_project_path(@current_business, @project) },
+             { name: @task.name, path: business_project_task_path(@current_business, @project, @task) },
+             (@sub_task.persisted? ? { name: @sub_task.description, path: business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) } : { name: "New SubTask", path: nil })
+           ] %>
+
+<!-- SubTask Form -->
+<%= form_with(model: [@current_business, @project, @task, @sub_task], local: true, data: { turbo: true }) do |f| %>
+  <div class="grid grid-cols-6 gap-6">
+    <!-- Name -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :name, "Ime", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+    </div>
+    <!-- Description -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :description, "Opis aktivnosti", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :description, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+    </div>
+    <!-- Planned Start Date -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :planned_start_date, "Planirani početak radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.date_field :planned_start_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Planned End Date -->
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :planned_end_date, "Planirani kraj radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.date_field :planned_end_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <div class="col-span-6 sm:col-span-3">
+      <%= f.label :planned_cost, "Planirani troškovi aktivnosti (#{@project.business.currency_symbol})", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.number_field :planned_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+  </div>
+  <!-- Submit Button -->
+  <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
+    <%= f.submit "Create SubTask", data: { turbo: false }, class: "text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" %>
+  </div>
+<% end %>

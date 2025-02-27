@@ -1,0 +1,56 @@
+<div class="grid grid-cols-6 gap-6">
+  <!-- Planirani početak radova -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani početak radova</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.planned_start_date %>
+    </div>
+  </div>
+
+  <!-- Planirani kraj radova -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani kraj radova</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.planned_end_date %>
+    </div>
+  </div>
+
+  <!-- Planirani troškovi aktivnosti -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani troškovi aktivnosti (#{@project.business.currency_symbol})</label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.planned_cost %>
+    </div>
+  </div>
+</div>
+
+
+
+<% 
+  model_name = "Resources"
+  paths = {
+    edit_resource: ->(resource) { edit_business_resource_path(@current_business, resource) }, 
+    delete_resource: ->(resource) { business_resource_path(@current_business, resource) }
+  }
+%>
+
+<%= render 'partials/table', 
+           collection: @resources, 
+           columns: {
+             "Ime" => :name, 
+             "Vrsta" => ->(resource) { resource.kind.humanize }, 
+             "Opis" => :description, 
+             "Količina" => :quantity, 
+             "Jedinica mjere" => :unit_of_measure, 
+             "Cijena po JM" => :price_per_unit,
+             "Ukupno" => :total_price
+           },
+           turbo_frame_id: "resources-frame",
+           model_name: model_name, 
+           edit_path: paths[:edit_resource],
+           show_path: paths[:show_resource],
+           delete_path: paths[:delete_resource],
+           actions: [] %>
+
+
+<%= render "modals/modal_resource" %>

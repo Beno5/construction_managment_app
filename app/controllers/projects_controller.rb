@@ -30,6 +30,8 @@ class ProjectsController < ApplicationController
 
   def create
     @project = @business.projects.new(project_params)
+    @project.user_id = current_user.id
+
     if @project.save
       redirect_to business_projects_url(@business), notice: 'Project was successfully created.'
     else

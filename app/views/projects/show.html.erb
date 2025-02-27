@@ -1,25 +1,43 @@
+<% 
+  model_name = "Tasks"
+  paths = {
+    project: business_project_path(@current_business, @project),
+    projects: business_projects_path(@current_business),
+    new_task: new_business_project_task_path(@current_business, @project),
+    show_task: ->(task) { business_project_task_path(@current_business, @project, task) },
+    edit_task: ->(task) { edit_business_project_task_path(@current_business, @project, task) },
+    delete_task: ->(task) { business_project_task_path(@current_business, @project, task) }
+  }
+%>
+
 <%= render 'partials/header1', 
            title: @project.name, 
-           model_name: "Tasks", 
-           search_path: business_project_path(@current_business, @project), 
-           new_path: new_business_project_task_path(@current_business, @project),
+           model_name: model_name, 
+           search_path: paths[:project], 
+           new_path: paths[:new_task],
            additional_crumbs: [
-             { name: "Projects", path: business_projects_path(@current_business) },
-             { name: @project.name, path: business_project_path(@current_business, @project) }
+             { name: "Projects", path: paths[:projects] },
+             { name: @project.name, path: paths[:project] }
            ] %>
+
 <%= render 'partials/table', 
            collection: @tasks, 
            columns: {
              "Naziv" => :description,
-             "Planirani Početak" => ->(task) { task.planned_start_date&.strftime("%d.%m.%Y") },
-             "Planirani Kraj" => ->(task) { task.planned_end_date&.strftime("%d.%m.%Y") },
-             "Resursi" => ->(task) { render 'partials/task_resources_tooltip', task: task },
+             "Planirani Početak" => ->(task) { I18n.l(task.planned_start_date, format: :long) if task.planned_start_date },
+             "Planirani Kraj" => ->(task) { I18n.l(task.planned_end_date, format: :long) if task.planned_end_date },
+             "Resursi" => :description,
              "Custom Polja" => :custom_fields
            },
            turbo_frame_id: "tasks-frame",
-           edit_path: ->(task) { edit_business_project_task_path(@current_business, @project, task) },
-           delete_path: ->(task) { business_project_task_path(@current_business, @project, task) },
+           model_name: model_name, 
+           search_path: paths[:project], 
+           new_path: paths[:new_task],
+           show_path: paths[:show_task],
+           edit_path: paths[:edit_task],
+           delete_path: paths[:delete_task],
            actions: [] %>
+
 <div class="bg-white p-6 rounded-lg shadow-md mt-6">
   <h2 class="text-xl font-bold mb-4">Project Timeline (Gantt Chart)</h2>
   <div id="gantt_here" data-project-id="<%= @project.id %>" style="width: 100%; height: 500px;"></div>

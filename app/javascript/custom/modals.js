@@ -34,7 +34,7 @@ document.addEventListener("turbo:load", function () {
 
   if (!categorySelect || !unitSelect) return;
 
-  fetch('/fetch_data/unit_options') // Ispravan URL
+  fetch('/fetch_data/unit_options')
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');

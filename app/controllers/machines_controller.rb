@@ -22,6 +22,8 @@ class MachinesController < ApplicationController
 
   def create
     @machine = @business.machines.new(machine_params)
+    @machine = current_user.id
+
     if @machine.save
       redirect_to business_machines_path(@business), notice: 'Machine was successfully created.'
     else

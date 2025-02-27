@@ -1,25 +1,42 @@
+<% 
+  model_name = "Businesses"
+  paths = {
+    businesses: businesses_path,
+    new_business: new_business_path,
+    show_business: ->(business) { business_path(business) },
+    edit_business: ->(business) { edit_business_path(business) },
+    delete_business: ->(business) { business_path(business) }
+  }
+%>
+
 <%= render 'partials/header1', 
            title: "Businesses", 
-           model_name: "Businesses", 
-           search_path: businesses_path, 
-           new_path: new_business_path,
-           additional_crumbs: [] %>
+           model_name: model_name, 
+           search_path: paths[:businesses], 
+           new_path: paths[:new_business],
+           additional_crumbs: [
+             { name: "Businesses", path: paths[:businesses] }
+           ] %>
+
 <%= render 'partials/table', 
            collection: @businesses, 
            columns: {
-            "Naziv" => :name, 
-            "Adresa" => :address, 
-            "Broj Telefona" => :phone_number,
-            "PIB" => :vat_number,
-            "Matični Broj" => :registration_number,
-            "Ime Vlasnika" => :owner_first_name,
-            "Prezime Vlasnika" => :owner_last_name,
-            "Valuta" => ->(business) { business.currency&.capitalize }
-          },
-
+             "Naziv" => :name, 
+             "Adresa" => :address, 
+             "Broj telefona" => :phone_number,
+             "PIB" => :vat_number,
+             "Matični broj" => :registration_number,
+             "Ime vlasnika" => :owner_first_name,
+             "Prezime vlasnika" => :owner_last_name,
+             "Valuta" => ->(business) { business.currency&.capitalize }
+           },
            turbo_frame_id: "businesses-frame",
-           edit_path: ->(business) { edit_business_path(business) },
-           delete_path: ->(business) { business_path(business) },
+           model_name: model_name, 
+           search_path: paths[:businesses], 
+           new_path: paths[:new_business],
+           show_path: paths[:show_business],
+           edit_path: paths[:edit_business],
+           delete_path: paths[:delete_business],
            actions: [
              ->(business) {
                if current_business == business
