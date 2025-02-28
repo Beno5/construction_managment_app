@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_27_120820) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_20_122329) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_120820) do
     t.integer "quantity"
     t.date "start_date"
     t.date "end_date"
+    t.decimal "total_cost"
     t.bigint "sub_task_id"
     t.bigint "activityable_id"
     t.string "activityable_type"
@@ -78,10 +79,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_120820) do
     t.decimal "total_cost"
     t.text "description"
     t.integer "category"
-    t.bigint "task_id", null: false
+    t.bigint "sub_task_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["task_id"], name: "index_custom_resources_on_task_id"
+    t.index ["sub_task_id"], name: "index_custom_resources_on_sub_task_id"
+    t.index ["user_id"], name: "index_custom_resources_on_user_id"
   end
 
   create_table "links", force: :cascade do |t|
@@ -214,7 +217,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_27_120820) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "businesses", "users"
-  add_foreign_key "custom_resources", "tasks"
+  add_foreign_key "custom_resources", "sub_tasks"
+  add_foreign_key "custom_resources", "users"
   add_foreign_key "machines", "businesses"
   add_foreign_key "machines", "users"
   add_foreign_key "materials", "businesses"

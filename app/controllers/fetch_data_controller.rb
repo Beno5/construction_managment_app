@@ -18,7 +18,7 @@ class FetchDataController < ApplicationController
     business = Business.find(params[:business_id])
     resources = case params[:category]
                 when "worker"
-                  business.workers.select(:id, :first_name, :last_name).map { |w| { id: w.id, name: w.full_name } }
+                  business.workers.select(:id, :first_name, :last_name).map { |w| { id: w.id, name: w.name } }
                 when "material"
                   business.materials.select(:id, :name)
                 when "machine"

@@ -12,7 +12,7 @@ class SubTasksController < ApplicationController
   end
 
   def show
-    @resources = []
+    @activities = @sub_task.activities
   end
 
   def new

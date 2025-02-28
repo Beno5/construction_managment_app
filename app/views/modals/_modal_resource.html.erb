@@ -58,8 +58,8 @@
             <%= f.text_field :profession, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
           </div>
           <div class="mb-4">
-            <label for="total" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ukupno</label>
-            <input type="text" id="total" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" readonly>
+            <%= f.label :total_cost, "Ukupno", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_field :total_cost, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
           </div>
           <div class="flex justify-end">
             <%= f.submit "Dodaj Aktivnost", class: "px-4 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700" %>
@@ -114,8 +114,8 @@
             <%= f.text_area :description, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
           </div>
           <div class="mb-4">
-            <label for="total" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ukupno</label>
-            <input type="text" id="total" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" readonly data-custom-resource-target="total">
+            <%= f.label :total_cost, "Ukupno", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_field :total_cost, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600", data: { custom_resource_target: "totalCost" } %>
           </div>
           <div class="flex justify-end">
             <%= f.submit "Create Custom Resource", class: "px-4 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700" %>

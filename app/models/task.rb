@@ -1,7 +1,6 @@
 class Task < ApplicationRecord
   belongs_to :project
   belongs_to :user
-  has_many :custom_resources, dependent: :destroy
   has_many :sub_tasks, dependent: :destroy
 
   enum :category, { preparatory_work: 0, structural_construction: 1, installation_and_craft: 2, finishing_work: 3 }

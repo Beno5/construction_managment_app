@@ -13,7 +13,7 @@ class Worker < ApplicationRecord
   validates :price_per_unit, numericality: { greater_than_or_equal_to: 0 }
 
   # Helper method
-  def full_name
+  def name
     "#{first_name} #{last_name}"
   end
 end
