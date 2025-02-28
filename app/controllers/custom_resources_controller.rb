@@ -62,6 +62,7 @@ class CustomResourcesController < ApplicationController
   end
 
   def custom_resource_params
-    params.require(:custom_resource).permit(:name, :quantity, :unit_of_measure, :price_per_unit, :total_cost, :description, :category)
+    params.require(:custom_resource).permit(:name, :first_name, :last_name, :quantity, :unit_of_measure, :price_per_unit,
+     :total_cost, :description, :category, :profession, :fixed_costs)
   end
 end

@@ -10,7 +10,7 @@ class FetchDataController < ApplicationController
       worker: worker_units.to_h,
       material: material_units.to_h,
       machine: machine_units.to_h,
-      other: all_units.to_h
+      custom: all_units.to_h
     }
   end
 

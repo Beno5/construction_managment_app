@@ -2,7 +2,17 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
 
-  static targets = ["quantity", "pricePerUnit", "totalCost"];
+    static targets = [
+    "quantity",
+    "pricePerUnit",
+    "totalCost",
+    "name",
+    "firstName",
+    "lastName",
+    "profession",
+    "unitOfMeasure",
+    "description"
+  ];
 
   updateQuantity(event) {
     const quantity = parseFloat(this.quantityTarget.value) || 0; // Uzimamo količinu
@@ -28,9 +38,24 @@ export default class extends Controller {
   }
 
   clearFields() {
-    const nameField = document.querySelector("[name='custom_resource[name]']");
-    if (nameField) nameField.value = ''; // Očisti naziv polja
-  }
+    const fields = [
+        "custom_resource[quantity]",
+        "custom_resource[price_per_unit]",
+        "custom_resource[total_cost]",
+        "custom_resource[name]",
+        "custom_resource[first_name]",
+        "custom_resource[last_name]",
+        "custom_resource[profession]",
+        "custom_resource[unit_of_measure]",
+        "custom_resource[description]"
+    ];
+
+    fields.forEach(fieldName => {
+        const field = document.querySelector(`[name='${fieldName}']`);
+        if (field) field.value = ''; // Očisti polje ako postoji
+    });
+}
+
 
   hideAdditionalFields() {
     const nameField = document.querySelector("[name='custom_resource[name]']");
