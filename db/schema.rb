@@ -73,6 +73,10 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_20_122329) do
 
   create_table "custom_resources", force: :cascade do |t|
     t.string "name"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "profession"
+    t.decimal "fixed_costs", precision: 10, scale: 2
     t.integer "quantity"
     t.string "unit_of_measure"
     t.decimal "price_per_unit"
