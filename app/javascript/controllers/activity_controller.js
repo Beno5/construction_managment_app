@@ -4,7 +4,7 @@ export default class extends Controller {
   updateQuantity(event) {
     const quantity = parseFloat(event.target.value) || 0; // Uzimamo količinu
     const pricePerUnitField = document.querySelector("[name='activity[price_per_unit]']");
-    const totalField = document.getElementById("total"); // Uzmemo total input po ID-ju
+    const totalField = document.querySelector("[name='activity[total_cost]']"); // Uzmemo total input po ID-ju
   
     const pricePerUnit = parseFloat(pricePerUnitField.value) || 0; // Uzimamo cenu po jedinici
     const total = quantity * pricePerUnit; // Izračunavamo ukupno
@@ -66,7 +66,7 @@ export default class extends Controller {
     const professionField = document.querySelector("[name='activity[profession]']");
     const fixedCostsField = document.querySelector("[name='activity[fixed_costs]']");
     const quantityField = document.querySelector("[name='activity[quantity]']");
-    const totalField = document.getElementById("total");
+    const totalField = document.querySelector("[name='activity[total_cost]']");
 
     if (quantityField) quantityField.value = '';
     if (totalField) totalField.value = '';
@@ -96,7 +96,7 @@ export default class extends Controller {
     if (!resourceId || !category) return;
 
     const quantityField = document.querySelector("[name='activity[quantity]']");
-    const totalField = document.getElementById("total");
+    const totalField = document.querySelector("[name='activity[total_cost]']");
     if (quantityField) quantityField.value = '';
     if (totalField) totalField.value = '';
 

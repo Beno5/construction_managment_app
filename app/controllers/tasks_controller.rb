@@ -33,7 +33,7 @@ class TasksController < ApplicationController
     @selected_workers = @task.activities.where(activity_type: :worker).pluck(:activityable_id) || []
     @selected_machines = @task.activities.where(activity_type: :machine).pluck(:activityable_id) || []
     @selected_materials = @task.activities.where(activity_type: :material).pluck(:activityable_id) || []
-    @selected_workers_names = @workers.where(id: @selected_workers).map(&:full_name).join(', ')
+    @selected_workers_names = @workers.where(id: @selected_workers).map(&:name).join(', ')
     @selected_machines_names = @machines.where(id: @selected_machines).map(&:name).join(', ')
     @selected_materials_names = @materials.where(id: @selected_materials).map(&:name).join(', ')
     @custom_resources = @task.custom_resources

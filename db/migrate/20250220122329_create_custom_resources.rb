@@ -8,7 +8,9 @@ class CreateCustomResources < ActiveRecord::Migration[7.0]
       t.decimal :total_cost
       t.text :description
       t.integer :category
-      t.references :task, null: false, foreign_key: true
+      t.references :sub_task, null: false, foreign_key: true
+      t.references :user, null: false, foreign_key: true
+
 
       t.timestamps
     end

@@ -2,14 +2,14 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
 
-  static targets = ["quantity", "pricePerUnit", "total"];
+  static targets = ["quantity", "pricePerUnit", "totalCost"];
 
   updateQuantity(event) {
     const quantity = parseFloat(this.quantityTarget.value) || 0; // Uzimamo količinu
     const pricePerUnit = parseFloat(this.pricePerUnitTarget.value) || 0; // Uzimamo cenu po jedinici
     const total = quantity * pricePerUnit; // Izračunavamo ukupno
 
-    this.totalTarget.value = total.toFixed(2); // Postavljamo ukupno u input
+    this.totalCostTarget.value = total.toFixed(2); // Postavljamo ukupno u input
   }
 
   updateResources(event) {

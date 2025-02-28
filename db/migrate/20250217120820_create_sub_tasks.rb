@@ -13,7 +13,7 @@ class CreateSubTasks < ActiveRecord::Migration[6.1]
       t.integer :category, default: 0, null: false
       t.bigint :user_id, null: false
       t.decimal :progress, default: 0.0
-      t.references :task, null: false, foreign_key: true # Referenca na task
+      t.references :task, null: false, foreign_key: true
 
       t.timestamps
     end

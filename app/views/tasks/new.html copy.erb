@@ -53,7 +53,7 @@
             <li>
               <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                 <input type="checkbox" id="worker_<%= worker.id %>" name="worker_ids[]" value="<%= worker.id %>" class="w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded dark:bg-gray-600 dark:border-gray-500" <%= 'checked' if @selected_workers.include?(worker.id) %>>
-                <label for="worker_<%= worker.id %>" class="ml-2 block text-sm font-medium text-gray-900 dark:text-gray-300"><%= worker.full_name %></label>
+                <label for="worker_<%= worker.id %>" class="ml-2 block text-sm font-medium text-gray-900 dark:text-gray-300"><%= worker.name %></label>
               </div>
             </li>
           <% end %>

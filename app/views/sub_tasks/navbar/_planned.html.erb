@@ -29,27 +29,29 @@
 <% 
   model_name = "Resources"
   paths = {
-    edit_resource: ->(resource) { edit_business_resource_path(@current_business, resource) }, 
-    delete_resource: ->(resource) { business_resource_path(@current_business, resource) }
+    edit_resource: ->(resource) { url_for([:edit, @current_business, resource.activityable]) }, 
+    show_resource: ->(resource) { url_for([@current_business, resource.activityable]) }, 
+    delete_resource: ->(resource) { url_for([@current_business, resource.activityable]) }
   }
 %>
 
+
 <%= render 'partials/table', 
-           collection: @resources, 
+           collection: @activities, 
            columns: {
-             "Ime" => :name, 
-             "Vrsta" => ->(resource) { resource.kind.humanize }, 
-             "Opis" => :description, 
-             "Količina" => :quantity, 
-             "Jedinica mjere" => :unit_of_measure, 
-             "Cijena po JM" => :price_per_unit,
-             "Ukupno" => :total_price
+             "Ime" => ->(activity) { activity.activityable.name }, 
+             "Vrsta" => ->(activity) { activity.activity_type }, 
+             "Opis" => ->(activity) { activity.activityable.description }, 
+             "Količina" => ->(activity) { activity.quantity }, 
+             "Jedinica mjere" => ->(activity) { activity.activityable.unit_of_measure }, 
+             "Cijena po JM" => ->(activity) { activity.activityable.price_per_unit }, 
+             "Ukupno" => ->(activity) { activity.total_cost }, 
            },
            turbo_frame_id: "resources-frame",
            model_name: model_name, 
-           edit_path: paths[:edit_resource],
-           show_path: paths[:show_resource],
-           delete_path: paths[:delete_resource],
+           edit_path: "",
+           show_path: "",
+           delete_path: "",
            actions: [] %>
 
 

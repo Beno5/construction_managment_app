@@ -48,7 +48,8 @@ class ActivitiesController < ApplicationController
       end_date: @sub_task.planned_end_date,
       activityable_id: @sub_task.id,
       activityable_type: activity_params[:category].capitalize,
-      quantity: activity_params[:quantity]
+      quantity: activity_params[:quantity],
+      total_cost: activity_params[:total_cost]
     }
   end
 
@@ -64,7 +65,8 @@ class ActivitiesController < ApplicationController
       :unit_of_measure,
       :price_per_unit,
       :fixed_costs,
-      :profession
+      :profession,
+      :total_cost
     )
   end
 end
