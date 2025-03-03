@@ -52,4 +52,27 @@ class FetchDataController < ApplicationController
       render json: { error: 'Resource not found' }, status: :not_found
     end
   end
+
+  def get_activity
+    @resource = Activity.find(params[:id]) # ili neki drugi model
+  
+    render json: {
+      activity_type: @resource.activity_type,
+      quantity: @resource.quantity,
+      start_date: @resource.start_date,
+      end_date: @resource.end_date,
+      total_cost: @resource.total_cost,
+      activityable_type: @resource.activityable_type,
+      activityable_id: @resource.activityable_id,
+      # Dodajemo podatke iz povezanog modela
+      resource_name: @resource.activityable.name,
+      resoruce_description: @resource.activityable.description,
+      resoruce_unit_of_measure: @resource.activityable.unit_of_measure,
+      resoruce_price_per_unit: @resource.activityable.price_per_unit,
+      resoruce_profession: @resource.activityable.try(:profession),
+      resoruce_first_name: @resource.activityable.try(:first_name),
+      resoruce_last_name: @resource.activityable.try(:last_name)
+    }
+  end
+  
 end

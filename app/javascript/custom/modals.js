@@ -1,16 +1,66 @@
 document.addEventListener("turbo:load", function () {
   console.log("JavaScript loaded and running.");
 
-  // Close modal
   document.querySelectorAll(".close-modal").forEach((button) => {
     button.addEventListener("click", function () {
       const modal = this.closest(".modal");
       if (modal) {
         modal.classList.add("hidden");
-        console.log(`Modal with ID '${modal.id}' is now hidden.`);
+  
+        // Selektovanje svih formi unutar modala
+        const forms = modal.querySelectorAll("form");
+  
+        // Resetovanje formi
+        forms.forEach((form) => {
+          form.querySelectorAll("input:not([type='submit']), select, textarea").forEach((field) => {
+            if (field.type === "checkbox" || field.type === "radio") {
+              field.checked = false; // Resetovanje checkbox-a i radio dugmadi
+            } else {
+              field.value = ""; // Resetovanje input-a i text area-a
+            }
+          });
+        });
+  
+        // Resetovanje toggle stanja
+        const toggle = document.getElementById("resource-toggle");
+        if (toggle) {
+          toggle.checked = false; // Resetovanje na početno stanje
+          toggleColor(); // Pozivanje funkcije za resetovanje boje teksta
+        }
+  
+        console.log(`Modal with ID '${modal.id}' is now hidden and form is reset.`);
       }
     });
   });
+  
+  // Funkcija za mijenjanje boje teksta ovisno o stanju toggle-a
+  function toggleColor() {
+    const checkbox = document.getElementById('resource-toggle');
+    const standardText = document.getElementById('standard-text');
+    const customText = document.getElementById('custom-text');
+  
+    if (checkbox.checked) {
+      standardText.classList.remove('text-blue-600');
+      standardText.classList.add('text-gray-900');
+      customText.classList.remove('text-gray-900');
+      customText.classList.add('text-blue-600');
+    } else {
+      customText.classList.remove('text-blue-600');
+      customText.classList.add('text-gray-900');
+      standardText.classList.remove('text-gray-900');
+      standardText.classList.add('text-blue-600');
+    }
+  }
+  
+  // Pozivaj funkciju na učitavanje stranice kako bi se postavio početni status
+  document.addEventListener('DOMContentLoaded', () => {
+    toggleColor();
+  });
+  
+  
+  
+  
+  
 
   // Open modal
   document.querySelectorAll(".open-modal").forEach((button) => {
