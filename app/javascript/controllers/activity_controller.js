@@ -1,6 +1,74 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
+
+  connect() {
+    // Dodajemo listener za otvaranje modala
+    document.querySelectorAll('.open-modal').forEach(link => {
+      link.addEventListener('click', this.handleModalClick.bind(this));
+    });
+  }
+
+  handleModalClick(event) {
+    const activityId_from_button = event.target.dataset.activityId;
+    const activityId = document.querySelector("[name='activity[activity_id]']").value = activityId_from_button;
+    const form = this.element.querySelector("form");
+    const submitButton = form.querySelector("input[type='submit']");
+    const mode = event.target.dataset.mode; // Pretpostavljamo da modal ima atribut `data-mode`
+    
+    if (activityId) {
+      submitButton.value = "Ažuriraj Aktivnost";
+    } else {
+      submitButton.value = "Dodaj Aktivnost";
+    }
+    
+    // Ako je mode 'show', postavi sve inpute na readonly i sakrij submit dugme
+    if (mode === 'show') {
+      this.setFormReadOnly(form);  // Postavi polja na readonly i disable
+      this.hideSubmitButton(submitButton);  // Sakrij submit dugme
+    } else  {
+      this.setFormEditable(form);  // Ukloni readonly i disable
+      this.showSubmitButton(submitButton);  // Prikazivanje submit dugmeta
+    }
+  }
+  
+  setFormReadOnly(form) {
+    const formFields = form.querySelectorAll('input, select, textarea');
+    formFields.forEach(field => {
+      field.setAttribute("readonly", true);
+      field.disabled = true;
+    });
+  }
+  
+  setFormEditable(form) {
+    const formFields = form.querySelectorAll('input, select, textarea');
+    formFields.forEach(field => {
+      field.removeAttribute("readonly");  // Uklanja readonly
+      field.disabled = false;  // Omogućava interakciju sa poljem
+    });
+  }
+  
+  hideSubmitButton(submitButton) {
+    submitButton.style.display = 'none';  // Sakrij dugme
+  }
+  
+  showSubmitButton(submitButton) {
+    submitButton.style.display = 'inline-block';  // Prikazivanje dugmeta
+  }
+  
+  
+
+  setFormReadOnly(form) {
+    const formFields = form.querySelectorAll('input, select, textarea'); // Svi inputi, select i textarea u formi
+    formFields.forEach(field => {
+      field.setAttribute("readonly", true);  // Postavi readonly
+      field.disabled = true; // Takođe onemogući interakciju sa poljem
+    });
+  }
+    
+  
+  
+
   updateQuantity(event) {
     const quantity = parseFloat(event.target.value) || 0; // Uzimamo količinu
     const pricePerUnitField = document.querySelector("[name='activity[price_per_unit]']");

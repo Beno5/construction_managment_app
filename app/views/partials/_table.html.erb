@@ -101,17 +101,12 @@
                     <div id="<%= item.id %>-dropdown" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 ">
                       <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= item.id %>-dropdown-button">
                         <% if model_name == "Resources" %>
-<%= link_to 'Show', '#', 
-    class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal", 
-    data: { target: 'resource-modal', turbo: false, mode: 'show', type: item.activityable_type } %>
-
-<%= link_to 'Edit', '#',
-    class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal", 
-    
-    data: { target: 'resource-modal', turbo: false, mode: 'edit', type: item.activityable_type } %>
-
-
-
+                          <%= link_to 'Show', '#', 
+                            class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal", 
+                            data: { target: 'resource-modal', turbo: false, mode: 'show', type: item.activityable_type } %>
+                          <%= link_to 'Edit', '#',
+                            class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal",
+                            data: { target: 'resource-modal', turbo: false, mode: 'edit', type: item.activityable_type, activity_id: item.id} %>
                         <% else %>
                           <li>
                             <%= link_to 'Show', local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>

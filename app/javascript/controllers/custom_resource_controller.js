@@ -21,10 +21,23 @@ export default class extends Controller {
       link.addEventListener('click', this.handleModalClick.bind(this));
     });
   }
+
   
   handleModalClick(event) {
     event.preventDefault(); // Sprečavamo da se link prati
   
+    const activityId_from_button = event.target.dataset.activityId
+    const activityId = document.querySelector("[name='custom_resource[activity_id]']").value = activityId_from_button // ako je create button onda nema activityId 
+    const form = this.element.querySelector("form");
+    const submitButton = form.querySelector("input[type='submit']");
+
+    if (activityId) {
+      submitButton.value = "Ažuriraj Aktivnost";
+    } else {
+      submitButton.value = "Dodaj Aktivnost";
+    }
+
+
     const modal = document.getElementById('resource-modal'); // Pronađi modal
     const mode = event.target.dataset.mode; // Dohvati vrednost mode (show, edit, ili undefined)
     const type = event.target.dataset.type; // Dohvati vrednost mode (show, edit, ili undefined)
@@ -224,30 +237,60 @@ export default class extends Controller {
   
   
   
-  initializeModal(mode, type) {
-    const toggleContainer = document.getElementById('resource-toggle-container'); // Pronađi kontejner za toggle
-    const formStandard = document.getElementById('standard-resources'); // Pronađi kontejner za toggle
-    const customStandard = document.getElementById('custom-resources'); // Pronađi kontejner za toggle
-  
-    // Ako postoji 'mode' (tj. edit ili show), sakrij toggle
-    if (mode === "edit" || mode === "show") {
-      toggleContainer.classList.add('hidden');
+initializeModal(mode, type) {
+  const toggleContainer = document.getElementById('resource-toggle-container');
+  const formStandard = document.getElementById('standard-resources');
+  const customStandard = document.getElementById('custom-resources');
+  const formFields = this.element.querySelectorAll('input, select, textarea'); // Svi inputi, select i textarea u formi
+  const submitButton = this.element.querySelector("input[type='submit']"); // Dugme za submit
+
+  // Ako postoji 'mode' (tj. edit ili show), sakrij toggle
+  if (mode === "edit" || mode === "show") {
+    toggleContainer.classList.add('hidden');
+    
+    // Ako je 'show' mode, postavi sve inpute na readonly
+    if (mode === "show") {
+      formFields.forEach(field => {
+        field.setAttribute("readonly", true);  // Postavi readonly
+        field.disabled = true; // Takođe onemogući interakciju sa poljem
+      });
+      this.hideSubmitButton(submitButton); // Sakrij submit dugme u 'show' režimu
     } else {
-      // Ako nema mode (create), prikaži toggle
-      toggleContainer.classList.remove('hidden');
+      formFields.forEach(field => {
+        field.removeAttribute("readonly");  // Ukloni readonly
+        field.disabled = false; // Omogući interakciju sa poljem
+      });
+      this.showSubmitButton(submitButton); // Prikazivanje dugmeta u 'edit' režimu
     }
-
-   if (type === "CustomResource") {
-      customStandard.classList.remove('hidden');
-      formStandard.classList.add('hidden');
-
-      
-   } else {
-      formStandard.classList.remove('hidden');
-      customStandard.classList.add('hidden');
-   }
-
+  } else {
+    // Ako nema mode (create), prikaži toggle
+    toggleContainer.classList.remove('hidden');
+    this.showSubmitButton(submitButton); // Prikazivanje dugmeta u 'create' režimu
   }
+
+  if (type === "CustomResource") {
+    customStandard.classList.remove('hidden');
+    formStandard.classList.add('hidden');
+  } else {
+    formStandard.classList.remove('hidden');
+    customStandard.classList.add('hidden');
+  }
+}
+
+hideSubmitButton(submitButton) {
+  if (submitButton) {
+    submitButton.style.display = 'none';  // Sakrij dugme
+  }
+}
+
+showSubmitButton(submitButton) {
+  if (submitButton) {
+    submitButton.style.display = 'inline-block';  // Prikazivanje dugmeta
+  }
+}
+
+
+
   
 
 

@@ -9,29 +9,45 @@ class CustomResourcesController < ApplicationController
   def edit; end
 
   def create
-    ActiveRecord::Base.transaction do
-      @custom_resource = @sub_task.custom_resources.new(custom_resource_params)
-      @custom_resource.user = current_user
-      @custom_resource.save!
-  
-      @sub_task.activities.create!(
-        activity_type: @custom_resource.category,
-        start_date: @sub_task.planned_start_date,
-        end_date: @sub_task.planned_end_date,
-        activityable: @custom_resource,
-        quantity: @custom_resource.quantity,
-        total_cost: @custom_resource.total_cost
-      )
+    if params[:custom_resource][:activity_id].present? && params[:custom_resource][:activity_id] != "undefined"
+      activity = Activity.find(params[:custom_resource][:activity_id])
+      ActiveRecord::Base.transaction do
+        raise ActiveRecord::RecordInvalid.new(@activity) unless activity.activityable.update(custom_resource_params)
+
+        custom_resource = activity.activityable
+        activity.update(
+          activity_type: custom_resource.category,
+          start_date: @sub_task.planned_start_date,
+          end_date: @sub_task.planned_end_date,
+          activityable: custom_resource,
+          quantity: custom_resource.quantity,
+          total_cost: custom_resource.total_cost
+        )
+      end
+      redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
+                  notice: 'Custom resource i aktivnost uspešno ažurirani.'
+    else
+      ActiveRecord::Base.transaction do
+        @custom_resource = @sub_task.custom_resources.new(custom_resource_params)
+        @custom_resource.user = current_user
+        @custom_resource.save!
+
+        @sub_task.activities.create!(
+          activity_type: @custom_resource.category,
+          start_date: @sub_task.planned_start_date,
+          end_date: @sub_task.planned_end_date,
+          activityable: @custom_resource,
+          quantity: @custom_resource.quantity,
+          total_cost: @custom_resource.total_cost
+        )
+      end
+      redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
+                  notice: 'Custom resource i aktivnost uspešno kreirani.'
     end
-  
-    redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
-                notice: 'Custom resource i aktivnost uspešno kreirani.'
   rescue ActiveRecord::RecordInvalid => e
     redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
-                alert: "Greška pri kreiranju custom resursa i aktivnosti: #{e.message}"
+                alert: "Greška pri kreiranju ili ažuriranju custom resursa i aktivnosti: #{e.message}"
   end
-  
-  
 
   def update
     if @custom_resource.update(custom_resource_params)
@@ -63,6 +79,6 @@ class CustomResourcesController < ApplicationController
 
   def custom_resource_params
     params.require(:custom_resource).permit(:name, :first_name, :last_name, :quantity, :unit_of_measure, :price_per_unit,
-     :total_cost, :description, :category, :profession, :fixed_costs)
+                                            :total_cost, :description, :category, :profession, :fixed_costs)
   end
 end
