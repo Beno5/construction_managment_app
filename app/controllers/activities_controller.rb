@@ -6,19 +6,29 @@ class ActivitiesController < ApplicationController
   end
 
   def create
-    @activity = @sub_task.activities.new(params_mapped)
-
-    if @activity.save
-      redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
-                  notice: 'Aktivnost je uspešno kreirana.'
+    if params[:activity][:activity_id].present? && params[:activity][:activity_id] != "undefined"
+      @activity = Activity.find(params[:activity][:activity_id])
+      if @activity.update(params_mapped)
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
+                    notice: 'Aktivnost je uspešno ažurirana.'
+      else
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
+                    alert: 'Greška pri ažuriranju aktivnosti.'
+      end
     else
-      redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
-                  alert: 'Greška pri kreiranju aktivnosti.'
+      @activity = @sub_task.activities.new(params_mapped)
+      if @activity.save
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
+                    notice: 'Aktivnost je uspešno kreirana.'
+      else
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
+                    alert: 'Greška pri kreiranju aktivnosti.'
+      end
     end
   end
 
   def update
-    @activity = @sub_task.activities.find(params[:id])
+    @activity = @sub_task.activities.find(params[:activity][:activity_id])
 
     if @activity.update(activity_params)
       redirect_to project_task_sub_task_path(@sub_task.task.project, @sub_task.task, @sub_task),
@@ -46,7 +56,7 @@ class ActivitiesController < ApplicationController
       activity_type: activity_params[:category],
       start_date: @sub_task.planned_start_date,
       end_date: @sub_task.planned_end_date,
-      activityable_id: @sub_task.id,
+      activityable_id: activity_params[:resource_id],
       activityable_type: activity_params[:category].capitalize,
       quantity: activity_params[:quantity],
       total_cost: activity_params[:total_cost]
@@ -58,7 +68,6 @@ class ActivitiesController < ApplicationController
       :name,
       :description,
       :date,
-      :task_id,
       :category,
       :resource_id,
       :quantity,
@@ -66,7 +75,8 @@ class ActivitiesController < ApplicationController
       :price_per_unit,
       :fixed_costs,
       :profession,
-      :total_cost
+      :total_cost,
+      :activity_id
     )
   end
 end

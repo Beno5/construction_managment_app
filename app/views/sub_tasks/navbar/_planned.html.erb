@@ -29,8 +29,8 @@
 <% 
   model_name = "Resources"
   paths = {
-    edit_resource: ->(resource) { url_for([:edit, @current_business, resource.activityable]) }, 
-    show_resource: ->(resource) { url_for([@current_business, resource.activityable]) }, 
+    create_resource: ->(resource) { url_for([:edit, @current_business, resource.activityable]) }, 
+    update_resource: ->(resource) { url_for([@current_business, resource.activityable]) }, 
     delete_resource: ->(resource) { url_for([@current_business, resource.activityable]) }
   }
 %>

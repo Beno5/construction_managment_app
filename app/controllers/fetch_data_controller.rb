@@ -55,7 +55,7 @@ class FetchDataController < ApplicationController
 
   def get_activity
     @resource = Activity.find(params[:id]) # ili neki drugi model
-  
+
     render json: {
       activity_type: @resource.activity_type,
       quantity: @resource.quantity,
@@ -74,5 +74,4 @@ class FetchDataController < ApplicationController
       resoruce_last_name: @resource.activityable.try(:last_name)
     }
   end
-  
 end

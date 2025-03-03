@@ -8,8 +8,10 @@ class CustomResource < ApplicationRecord
   validates :quantity, :unit_of_measure, :price_per_unit, :total_cost, presence: true
 
   def name
-    return super if self[:name].present?
-    "#{first_name} #{last_name}".strip.presence
+    if worker?
+      "#{first_name} #{last_name}".strip.presence
+    elsif self[:name].present?
+      super
+    end
   end
-  
 end

@@ -1,49 +1,51 @@
 <div id="standard-resources" data-controller="activity">
-        <%= form_with(model: Activity.new, url: business_project_task_sub_task_activities_path(@task.project.business, @task.project, @task, @sub_task),
-         method: :post, local: false, data: { turbo: false }) do |f| %>
-          <%= f.hidden_field :task_id, value: @task.id %>
-          <div class="mb-4">
-            <%= f.label :category, "Kategorija", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.select :category, [["-- Odaberite kategoriju --", ""]] + CustomResource.categories.except("other").keys.map { |key| [key.humanize, key] }, {}, 
+  <%= form_with(model: Activity.new, url: business_project_task_sub_task_activities_path(@task.project.business, @task.project, @task, @sub_task),
+         method: :post, local: true, data: { turbo: false }) do |f| %>
+    <%= f.hidden_field :activity_id, value: '' %>
+    <%= f.hidden_field :authenticity_token, value: form_authenticity_token %>
+    <div class="mb-4">
+      <%= f.label :category, "Kategorija", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.select :category, [["-- Odaberite kategoriju --", ""]
+      ] + CustomResource.categories.except("other").keys.map { |key| [key.humanize, key] }, {}, 
         class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white", 
         id: "activity_category", data: { action: "change->activity#updateResources" } %>
-          </div>
-          <div class="mb-4">
-            <%= f.label :resource_id, "Resurs", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.select :resource_id, [["-- Odaberite resurs --", ""]], {}, 
+    </div>
+    <div class="mb-4">
+      <%= f.label :resource_id, "Resurs", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.select :resource_id, [["-- Odaberite resurs --", ""]], {}, 
         class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600", 
         id: "activity_resource", data: { business_id: @task.project.business.id, action: "change->activity#updateReadOnlyFields" } %>
-          </div>
-          <div class="mb-4">
-            <%= f.label :quantity, "Količina", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.number_field :quantity, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600", data: { action: "input->activity#updateQuantity" } %>
-          </div>
-          <div class="mb-4">
-            <%= f.label :unit_of_measure, "Jedinica mjere", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_field :unit_of_measure, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-          </div>
-          <div class="mb-4">
-            <%= f.label :price_per_unit, "Cijena po jedinici", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_field :price_per_unit, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-          </div>
-          <div class="mb-4">
-            <%= f.label :description, "Opis", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_area :description, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-          </div>
-          <div class="mb-4 hidden">
-            <%= f.label :fixed_costs, "Fiksni troškovi", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white " %>
-            <%= f.text_field :fixed_costs, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-          </div>
-          <div class="mb-4 hidden">
-            <%= f.label :profession, "Profesija", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_field :profession, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-          </div>
-          <div class="mb-4">
-            <%= f.label :total_cost, "Ukupno", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_field :total_cost, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-          </div>
-          <div class="flex justify-end">
-            <%= f.submit "Dodaj Aktivnost", class: "px-4 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700" %>
-          </div>
-        <% end %>
-      </div>
+    </div>
+    <div class="mb-4">
+      <%= f.label :quantity, "Količina", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.number_field :quantity, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600", data: { action: "input->activity#updateQuantity" } %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :unit_of_measure, "Jedinica mjere", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :unit_of_measure, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :price_per_unit, "Cijena po jedinici", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :price_per_unit, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :description, "Opis", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_area :description, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <div class="mb-4 hidden">
+      <%= f.label :fixed_costs, "Fiksni troškovi", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white " %>
+      <%= f.text_field :fixed_costs, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <div class="mb-4 hidden">
+      <%= f.label :profession, "Profesija", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :profession, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <div class="mb-4">
+      <%= f.label :total_cost, "Ukupno", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :total_cost, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <div class="flex justify-end">
+      <%= f.submit "Dodaj Aktivnost", class: "px-4 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700" %>
+    </div>
+  <% end %>
+</div>
