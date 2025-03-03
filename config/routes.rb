@@ -33,4 +33,5 @@ Rails.application.routes.draw do
   get 'fetch_data/unit_options', to: 'fetch_data#unit_options'
   get 'fetch_data/resources', to: 'fetch_data#resources'
   get 'fetch_data/resource_details', to: 'fetch_data#resource_details'
+  get 'fetch_data/:id', to: 'fetch_data#get_activity'
 end
