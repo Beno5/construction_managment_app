@@ -13,6 +13,7 @@ class TasksController < ApplicationController
     @project = @business.projects.find(params[:project_id])
     @task = @project.tasks.find(params[:id]) # Uveri se da ovo ne vraća nil
     @subtasks = @task.sub_tasks
+    @documents = @task.documents
   end
 
   def new
@@ -20,9 +21,6 @@ class TasksController < ApplicationController
     @workers = @current_business.workers
     @machines = @current_business.machines
     @materials = @current_business.materials
-    @selected_workers = []
-    @selected_machines = []
-    @selected_materials = []
   end
 
   def edit
@@ -30,13 +28,6 @@ class TasksController < ApplicationController
     @workers = @current_business.workers
     @machines = @current_business.machines
     @materials = @current_business.materials
-    @selected_workers = @task.activities.where(activity_type: :worker).pluck(:activityable_id) || []
-    @selected_machines = @task.activities.where(activity_type: :machine).pluck(:activityable_id) || []
-    @selected_materials = @task.activities.where(activity_type: :material).pluck(:activityable_id) || []
-    @selected_workers_names = @workers.where(id: @selected_workers).map(&:name).join(', ')
-    @selected_machines_names = @machines.where(id: @selected_machines).map(&:name).join(', ')
-    @selected_materials_names = @materials.where(id: @selected_materials).map(&:name).join(', ')
-    @custom_resources = @task.custom_resources
     @resources = []
   end
 

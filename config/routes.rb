@@ -16,11 +16,12 @@ Rails.application.routes.draw do
         resources :sub_tasks do
           resources :custom_resources, only: [:new, :create, :edit, :update, :destroy]
           resources :activities, only: [:new, :create, :update, :destroy]
+          resources :documents, only: [:new, :create, :edit, :update, :destroy, :show]
         end
+        resources :documents, only: [:new, :create, :edit, :update, :destroy, :show], shallow: true
+
       end
-      member do
-        delete :remove_document
-      end
+      resources :documents, only: [:new, :create, :edit, :update, :destroy, :show], shallow: true
     end
   end
 
@@ -34,4 +35,5 @@ Rails.application.routes.draw do
   get 'fetch_data/resources', to: 'fetch_data#resources'
   get 'fetch_data/resource_details', to: 'fetch_data#resource_details'
   get 'fetch_data/:id', to: 'fetch_data#get_activity'
+  get 'fetch_data/get_document/:id', to: 'fetch_data#get_document'
 end

@@ -1,4 +1,6 @@
 class FetchDataController < ApplicationController
+  protect_from_forgery except: [:unit_options, :resources, :resource_details, :get_activity, :get_document]
+
   def unit_options
     worker_units = Worker.unit_of_measures.keys.map { |k| [k.humanize, k] }
     material_units = Material.unit_of_measures.keys.map { |k| [k.humanize, k] }
@@ -72,6 +74,17 @@ class FetchDataController < ApplicationController
       resoruce_profession: @resource.activityable.try(:profession),
       resoruce_first_name: @resource.activityable.try(:first_name),
       resoruce_last_name: @resource.activityable.try(:last_name)
+    }
+  end
+
+  def get_document
+    @document = Document.find(params[:id])
+    render json: {
+      id: @document.id,
+      name: @document.name,
+      description: @document.description,
+      category: @document.category,
+      file: @document.file.attached? ? { filename: @document.file.filename.to_s } : nil
     }
   end
 end

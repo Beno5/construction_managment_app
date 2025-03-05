@@ -3,6 +3,7 @@ class SubTask < ApplicationRecord
   belongs_to :user
   has_many :activities
   has_many :custom_resources, dependent: :destroy
+  has_many :documents, dependent: :destroy
 
   enum :category, { preparatory_work: 0, structural_construction: 1, installation_and_craft: 2, finishing_work: 3 }
 

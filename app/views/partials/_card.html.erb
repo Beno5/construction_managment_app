@@ -27,12 +27,6 @@
         View Custom fields
       </button>
     <% end %>
-    <% if project.documents.attached? %>
-      <%= render 'modals/modal_documents', documents: project.documents, project: project %>
-      <button type="button" class="text-blue-600 hover:underline open-modal" data-target="documents-modal-<%= project.id %>">
-        📂 View Documents
-      </button>
-    <% end %>
   </div>
   <!-- Akcije -->
   <div class="flex flex-col items-center px-4 py-4 border border-gray-200 border-dashed rounded dark:border-gray-600">

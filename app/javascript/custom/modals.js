@@ -9,6 +9,11 @@ document.addEventListener("turbo:load", function () {
   
         // Selektovanje svih formi unutar modala
         const forms = modal.querySelectorAll("form");
+
+        const fileNameSpan = modal.querySelector("#file-name");
+        if (fileNameSpan) {
+          fileNameSpan.textContent = "No file selected"; // Reset the file name display
+        }
   
         // Resetovanje formi
         forms.forEach((form) => {
