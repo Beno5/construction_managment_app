@@ -15,11 +15,7 @@ class ProjectsController < ApplicationController
 
   def show
     @tasks = @project.tasks.search(params[:search])
-
-    respond_to do |format|
-      format.html # Renderuje standardni HTML za klasične prelaze
-      format.turbo_stream # Renderuje Turbo Stream za pretragu
-    end
+    @documents = @project.documents
   end
 
   def new

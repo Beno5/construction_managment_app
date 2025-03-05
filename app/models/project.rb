@@ -4,8 +4,7 @@ class Project < ApplicationRecord
   belongs_to :business
   belongs_to :user
   has_many :tasks, dependent: :destroy
-
-  has_many_attached :documents
+  has_many :documents, dependent: :destroy
 
   require 'date'
 

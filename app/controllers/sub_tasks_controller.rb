@@ -13,6 +13,7 @@ class SubTasksController < ApplicationController
 
   def show
     @activities = @sub_task.activities
+    @documents = @sub_task.documents
   end
 
   def new

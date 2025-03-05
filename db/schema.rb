@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_20_122329) do
+ActiveRecord::Schema[7.0].define(version: 2025_03_05_181859) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -89,6 +89,20 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_20_122329) do
     t.datetime "updated_at", null: false
     t.index ["sub_task_id"], name: "index_custom_resources_on_sub_task_id"
     t.index ["user_id"], name: "index_custom_resources_on_user_id"
+  end
+
+  create_table "documents", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.integer "category", default: 0
+    t.bigint "project_id"
+    t.bigint "task_id"
+    t.bigint "sub_task_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_documents_on_project_id"
+    t.index ["sub_task_id"], name: "index_documents_on_sub_task_id"
+    t.index ["task_id"], name: "index_documents_on_task_id"
   end
 
   create_table "links", force: :cascade do |t|
@@ -223,6 +237,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_20_122329) do
   add_foreign_key "businesses", "users"
   add_foreign_key "custom_resources", "sub_tasks"
   add_foreign_key "custom_resources", "users"
+  add_foreign_key "documents", "projects"
+  add_foreign_key "documents", "sub_tasks"
+  add_foreign_key "documents", "tasks"
   add_foreign_key "machines", "businesses"
   add_foreign_key "machines", "users"
   add_foreign_key "materials", "businesses"
