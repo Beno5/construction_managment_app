@@ -81,7 +81,7 @@
             </thead>
             <tbody>
               <% collection.each do |item| %>
-                <tr id="row_<%= item.id %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                <tr id="<%= dom_id(item) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <% columns.each do |_, attr| %>
                     <td class="px-4 py-3">
                       <% if attr.is_a?(Proc) %>
@@ -99,42 +99,47 @@
                       <% end %>
                     </td>
                   <% end %>
-                 <td class="px-4 py-3 flex items-center justify-end">
-  <button id="<%= "#{model_name.downcase}-#{item.id}-dropdown-button" %>" 
-          data-dropdown-toggle="<%= "#{model_name.downcase}-#{item.id}-dropdown" %>" 
-          class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" 
-          type="button">
-    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-    </svg>
-  </button>
-
-  <div id="<%= "#{model_name.downcase}-#{item.id}-dropdown" %>" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "#{model_name.downcase}-#{item.id}-dropdown-button" %>">
-      <% if model_name == "Resources" %>
-        <%= link_to 'Show', '#', 
-                    class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal", 
-                    data: { target: 'resource-modal', turbo: false, mode: 'show', type: item.activityable_type } %>
-        <%= link_to 'Edit', '#',
-                    class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal",
-                    data: { target: 'resource-modal', turbo: false, mode: 'edit', type: item.activityable_type, activity_id: item.id} %>
-      <% elsif model_name == "Documents"%>
-        <%= link_to 'Edit', '#',
-                    class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal",
-                    data: { target: 'documents-modal', turbo: false, mode: 'edit', id: item.id, controller: "edit-document", action: "click->edit-document#loadDocument"} %> 
-
-      <% else %>
-        <li>
-          <%= link_to 'Show', local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
-        </li>
-        <li>
-          <%= link_to 'Edit', local_assigns[:edit_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-</td>
-
+                  <td class="px-4 py-3 flex items-center justify-end">
+                    <button id="<%= "#{model_name.downcase}-#{item.id}-dropdown-button" %>" 
+                      data-dropdown-toggle="<%= "#{model_name.downcase}-#{item.id}-dropdown" %>" 
+                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" 
+                      type="button">
+                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                      </svg>
+                    </button>
+                    <div id="<%= "#{model_name.downcase}-#{item.id}-dropdown" %>" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                      <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "#{model_name.downcase}-#{item.id}-dropdown-button" %>">
+                        <% if model_name == "Resources" %>
+                          <%= link_to 'Show', '#', 
+                            class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal", 
+                            data: { target: 'resource-modal', turbo: false, mode: 'show', type: item.activityable_type } %>
+                          <%= link_to 'Edit', '#',
+                            class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal",
+                            data: { target: 'resource-modal', turbo: false, mode: 'edit', type: item.activityable_type, activity_id: item.id} %>
+                        <% elsif model_name == "Documents"%>
+                          <li>
+                            <%= link_to 'Edit', '#',
+                              class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal",
+                              data: { target: 'documents-modal', turbo: false, mode: 'edit', id: item.id, controller: "edit-document", action: "click->edit-document#loadDocument"} %>
+                          </li>
+                          <li>
+                            <%= link_to 'Delete', local_assigns[:delete_path].call(item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                          </li>
+                        <% else %>
+                          <li>
+                            <%= link_to 'Show', local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                          </li>
+                          <li>
+                            <%= link_to 'Edit', local_assigns[:edit_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                          </li>
+                          <li>
+                            <%= link_to 'Delete', local_assigns[:delete_path].call(item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete, item_id: item.id, item_type: item.model_name }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white delete-item-link" %>
+                          </li>
+                        <% end %>
+                      </ul>
+                    </div>
+                  </td>
                 </tr>
               <% end %>
             </tbody>
@@ -179,3 +184,4 @@
     </div>
   </div>
 </section>
+<%= render 'modals/delete_modal' %>

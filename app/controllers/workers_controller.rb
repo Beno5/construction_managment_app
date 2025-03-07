@@ -41,10 +41,10 @@ class WorkersController < ApplicationController
   def destroy
     @worker = current_business.workers.find(params[:id])
     @worker.destroy
-
+  
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.remove("row_#{@worker.id}")
+        render turbo_stream: turbo_stream.remove(dom_id(@worker))
       end
       format.html { redirect_to business_workers_path(current_business), notice: "Worker was successfully deleted." }
     end

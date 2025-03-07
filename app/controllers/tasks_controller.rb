@@ -54,10 +54,14 @@ class TasksController < ApplicationController
   end
 
   def destroy
+    @task =  @project.tasks.find(params[:id])
     @task.destroy
+  
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@task)) }
-      format.html { redirect_to business_project_path(@business, @project), notice: "Task was successfully deleted." }
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.remove(dom_id(@task))
+      end
+      format.html { redirect_to business_tasks_path(current_business), notice: "Task was successfully deleted." }
     end
   end
 

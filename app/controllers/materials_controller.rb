@@ -40,12 +40,14 @@ class MaterialsController < ApplicationController
   end
 
   def destroy
+    @material = current_business.materials.find(params[:id])
     @material.destroy
+  
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.remove("row_#{@material.id}")
+        render turbo_stream: turbo_stream.remove(dom_id(@material))
       end
-      format.html { redirect_to business_materials_path(current_business), notice: "Material uspješno obrisan" }
+      format.html { redirect_to business_materials_path(current_business), notice: "Material was successfully deleted." }
     end
   end
 
