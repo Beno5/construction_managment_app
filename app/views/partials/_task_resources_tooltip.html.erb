@@ -11,7 +11,7 @@
     <strong>Radnici:</strong> 
     <% workers = task.activities.where(activity_type: "worker").map { |a| a.activityable } %>
     <% if workers.present? %>
-      <%= workers.map(&:name).join(', ') %>
+      <%= workers.compact.map(&:name).join(', ') %>
     <% else %>
       <span class="text-gray-400">Nema radnika</span>
     <% end %>
@@ -19,7 +19,7 @@
     <strong>Mašine:</strong> 
     <% machines = task.activities.where(activity_type: "machine").map { |a| a.activityable } %>
     <% if machines.present? %>
-      <%= machines.map(&:name).join(', ') %>
+      <%= machines.compact.map(&:name).join(', ') %>
     <% else %>
       <span class="text-gray-400">Nema mašina</span>
     <% end %>

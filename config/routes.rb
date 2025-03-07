@@ -36,4 +36,5 @@ Rails.application.routes.draw do
   get 'fetch_data/resource_details', to: 'fetch_data#resource_details'
   get 'fetch_data/:id', to: 'fetch_data#get_activity'
   get 'fetch_data/get_document/:id', to: 'fetch_data#get_document'
+  get 'fetch_data/check_activity/:item_id/:item_type', to: 'fetch_data#check_activity'
 end

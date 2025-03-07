@@ -41,8 +41,15 @@ class DocumentsController < ApplicationController
   end
 
   def destroy
+    @document = @project.documents.find(params[:id])
     @document.destroy
-    redirect_to parent_path(@document), notice: 'Dokument je uspješno obrisan.'
+  
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.remove(dom_id(@document))
+      end
+      format.html { redirect_to business_project_path(@current_business, @project), notice: "Document was successfully deleted." }
+    end
   end
 
   private
