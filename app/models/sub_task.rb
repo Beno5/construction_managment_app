@@ -1,7 +1,7 @@
 class SubTask < ApplicationRecord
   belongs_to :task
   belongs_to :user
-  has_many :activities
+  has_many :activities, dependent: :destroy
   has_many :custom_resources, dependent: :destroy
   has_many :documents, dependent: :destroy
 
