@@ -15,7 +15,7 @@ class ProjectsController < ApplicationController
 
   def show
     @tasks = @project.tasks.search(params[:search])
-    @documents = @project.documents
+    @documents = @project.documents.search(params[:search])
   end
 
   def new

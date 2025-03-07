@@ -12,8 +12,8 @@ class TasksController < ApplicationController
   def show
     @project = @business.projects.find(params[:project_id])
     @task = @project.tasks.find(params[:id]) # Uveri se da ovo ne vraća nil
-    @subtasks = @task.sub_tasks
-    @documents = @task.documents
+    @subtasks = @task.sub_tasks.search(params[:search])
+    @documents = @task.documents.search(params[:search])
   end
 
   def new
@@ -61,7 +61,7 @@ class TasksController < ApplicationController
       format.turbo_stream do
         render turbo_stream: turbo_stream.remove(dom_id(@task))
       end
-      format.html { redirect_to business_tasks_path(current_business), notice: "Task was successfully deleted." }
+      format.html { redirect_to business_project_path(@business, @project), notice: "Task was successfully deleted." }
     end
   end
 

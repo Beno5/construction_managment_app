@@ -12,8 +12,8 @@ class SubTasksController < ApplicationController
   end
 
   def show
-    @activities = @sub_task.activities
-    @documents = @sub_task.documents
+    @activities = @sub_task.activities.search(params[:search])
+    @documents = @sub_task.documents.search(params[:search])
   end
 
   def new
@@ -51,7 +51,7 @@ class SubTasksController < ApplicationController
       format.turbo_stream do
         render turbo_stream: turbo_stream.remove(dom_id(@sub_task))
       end
-      format.html { redirect_to business_sub_tasks_path(current_business), notice: "Sub-task was successfully deleted." }
+      format.html { redirect_to business_project_task_path(@business, @task.project, @task), notice: "Sub-task was successfully deleted." }
     end
   end
 

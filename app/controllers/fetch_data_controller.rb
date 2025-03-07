@@ -91,9 +91,15 @@ class FetchDataController < ApplicationController
   def check_activity
     item_id = params[:item_id]
     item_type = params[:item_type].gsub('"', '').constantize
+
+    if item_type == Business || item_type == Task || item_type == SubTask
+      render json: { has_activities: false }
+      return
+    end
+
     item = item_type.find(item_id)
     activities = item.activities.includes(sub_task: { task: :project })
-  
+
     if activities.exists?
       activity_details = activities.map do |activity|
         sub_task = activity.sub_task
