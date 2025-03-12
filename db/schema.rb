@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_05_181859) do
+ActiveRecord::Schema[7.0].define(version: 2025_03_10_203406) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -163,6 +163,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_05_181859) do
     t.index ["user_id"], name: "index_projects_on_user_id"
   end
 
+  create_table "real_activities", force: :cascade do |t|
+    t.bigint "activity_id", null: false
+    t.bigint "user_id", null: false
+    t.decimal "quantity"
+    t.decimal "difference"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["activity_id"], name: "index_real_activities_on_activity_id"
+    t.index ["user_id"], name: "index_real_activities_on_user_id"
+  end
+
   create_table "sub_tasks", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -246,6 +257,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_05_181859) do
   add_foreign_key "materials", "users"
   add_foreign_key "projects", "businesses"
   add_foreign_key "projects", "users"
+  add_foreign_key "real_activities", "activities"
+  add_foreign_key "real_activities", "users"
   add_foreign_key "sub_tasks", "tasks"
   add_foreign_key "tasks", "projects"
   add_foreign_key "tasks", "users"

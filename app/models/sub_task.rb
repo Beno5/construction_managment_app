@@ -14,18 +14,27 @@ class SubTask < ApplicationRecord
   # Validacija za datume
   validate :end_date_after_start_date
 
-  def earliest_start_date
-    tasks.minimum(:planned_start_date)
-  end
+  after_save :update_total_costs
+  after_save :update_dates
 
-  def latest_end_date
-    tasks.maximum(:planned_end_date)
-  end
 
   def calculate_duration
     return unless planned_start_date.present? && planned_end_date.present?
 
     ((planned_end_date.year * 12) + planned_end_date.month) - ((planned_start_date.year * 12) + planned_start_date.month)
+  end
+
+  def update_total_costs
+    self.update_columns(planned_cost: activities.sum(:total_cost), real_cost: activities.joins(:real_activities).sum('real_activities.cost'))
+    task.update_total_costs
+  end
+
+  def update_dates
+    earliest_activity_start_date = activities.minimum(:planned_start_date)
+    latest_activity_end_date = activities.maximum(:planned_end_date)
+
+    self.update_columns(planned_start_date: earliest_activity_start_date, planned_end_date: latest_activity_end_date)
+    task.update_dates
   end
 
   private

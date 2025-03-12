@@ -1,5 +1,5 @@
 class FetchDataController < ApplicationController
-  protect_from_forgery except: [:unit_options, :resources, :resource_details, :get_activity, :get_document, :check_activity]
+  protect_from_forgery except: [:unit_options, :resources, :resource_details, :get_activity_and_resource_infos, :get_activity_and_real_activity_infos, :get_document, :check_activity]
 
   def unit_options
     worker_units = Worker.unit_of_measures.keys.map { |k| [k.humanize, k] }
@@ -55,7 +55,7 @@ class FetchDataController < ApplicationController
     end
   end
 
-  def get_activity
+  def get_activity_and_resource_infos
     @resource = Activity.find(params[:id]) # ili neki drugi model
 
     render json: {
@@ -123,5 +123,17 @@ class FetchDataController < ApplicationController
     else
       render json: { has_activities: false }
     end
+  end
+
+  def get_activity_and_real_activity_infos
+    activity = Activity.find(params[:activity_id])
+    real_activity = RealActivity.find_by(id: params[:real_activity_id])
+  
+    render json: {
+      name: activity.activityable.name,
+      unit_of_measure: activity.activityable.unit_of_measure,
+      price_per_unit: activity.activityable.price_per_unit,
+      quantity: real_activity&.quantity
+    }
   end
 end

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'real_activities/new'
+  get 'real_activities/create'
   devise_for :users
   root to: "businesses#index"
 
@@ -15,7 +17,9 @@ Rails.application.routes.draw do
       resources :tasks do
         resources :sub_tasks do
           resources :custom_resources, only: [:new, :create, :edit, :update, :destroy]
-          resources :activities, only: [:new, :create, :update, :destroy]
+          resources :activities, only: [:new, :create, :update, :destroy] do
+            resources :real_activities, only: [:new, :create, :update, :destroy]
+          end
           resources :documents, only: [:new, :create, :edit, :update, :destroy, :show]
         end
         resources :documents, only: [:new, :create, :edit, :update, :destroy, :show], shallow: true
@@ -34,7 +38,8 @@ Rails.application.routes.draw do
   get 'fetch_data/unit_options', to: 'fetch_data#unit_options'
   get 'fetch_data/resources', to: 'fetch_data#resources'
   get 'fetch_data/resource_details', to: 'fetch_data#resource_details'
-  get 'fetch_data/:id', to: 'fetch_data#get_activity'
+  get 'fetch_data/get_activity_and_resource_infos/:id', to: 'fetch_data#get_activity_and_resource_infos'
   get 'fetch_data/get_document/:id', to: 'fetch_data#get_document'
   get 'fetch_data/check_activity/:item_id/:item_type', to: 'fetch_data#check_activity'
+  get 'fetch_data/get_activity_and_real_activity_infos/:activity_id/:real_activity_id', to: 'fetch_data#get_activity_and_real_activity_infos'
 end

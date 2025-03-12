@@ -5,6 +5,8 @@ class User < ApplicationRecord
   has_many :machines
   has_many :materials
   has_many :custom_resources
+  has_many :real_activities
+
   
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

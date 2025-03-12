@@ -60,6 +60,7 @@ gem 'faker'
 gem 'byebug'
 gem 'aws-sdk-s3', '~> 1.48', require: false
 gem 'rails-erd'
+gem 'font-awesome-sass', '~> 6.0'
 
 
 

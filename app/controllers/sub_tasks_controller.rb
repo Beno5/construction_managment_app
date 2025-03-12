@@ -36,7 +36,7 @@ class SubTasksController < ApplicationController
 
   def update
     if @sub_task.update(sub_task_params)
-      redirect_to business_project_sub_tasks_path(@business, @task.project),
+      redirect_to business_project_task_sub_task_path(@business, @task.project, @task, @sub_task),
                   notice: "Sub-task was successfully updated."
     else
       render :edit, status: :unprocessable_entity

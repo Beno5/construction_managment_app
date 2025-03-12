@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  activity: one
+  user: one
+  quantity: 9.99
+  difference: 9.99
+
+two:
+  activity: two
+  user: two
+  quantity: 9.99
+  difference: 9.99
