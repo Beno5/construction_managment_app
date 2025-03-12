@@ -111,12 +111,19 @@
                     <div id="<%= "#{model_name.downcase}-#{item.id}-dropdown" %>" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                       <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "#{model_name.downcase}-#{item.id}-dropdown-button" %>">
                         <% if model_name == "Resources" %>
-                          <%= link_to 'Show', '#', 
+                          <li>
+                            <%= link_to 'Show', '#', 
                             class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal", 
                             data: { target: 'resource-modal', turbo: false, mode: 'show', type: item.activityable_type } %>
-                          <%= link_to 'Edit', '#',
+                          </li>
+                          <li>
+                            <%= link_to 'Edit', '#',
                             class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal",
                             data: { target: 'resource-modal', turbo: false, mode: 'edit', type: item.activityable_type, activity_id: item.id} %>
+                          </li>
+                          <li>
+                            <%= link_to 'Delete', business_project_task_sub_task_activity_path(@business, @project, @task, @sub_task, item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                          </li>
                         <% elsif model_name == "Documents"%>
                           <li>
                             <%= link_to 'Edit', '#',

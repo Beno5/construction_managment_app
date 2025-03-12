@@ -15,30 +15,6 @@
     </div>
   </div>
 
-  <!-- Planirani početak radova -->
-  <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani početak radova</label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.planned_start_date %>
-    </div>
-  </div>
-
-  <!-- Planirani kraj radova -->
-  <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani kraj radova</label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.planned_end_date %>
-    </div>
-  </div>
-
-  <!-- Planirani troškovi -->
-  <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani troškovi aktivnosti (#{@project.business.currency_symbol})</label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.planned_cost %>
-    </div>
-  </div>
-
   <!-- Kategorija -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategorija</label>
@@ -90,4 +66,4 @@
            delete_path: paths_doc[:delete_document],
            actions: [] %>
 
-      <%= render "modals/modal_documents_new"%>
+      <%= render "modals/modal_documents"%>

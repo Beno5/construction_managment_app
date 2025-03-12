@@ -1,0 +1,41 @@
+<!-- filepath: /home/benjamin/construction_managment/construction_managment_app/app/views/modals/_modal_real_resource.html.erb -->
+<div id="real_resource-modal" data-controller="real-resources" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900 bg-opacity-50 modal">
+  <div class="relative w-full max-w-xl h-auto bg-white rounded-lg shadow-lg dark:bg-gray-800">
+    <!-- Modal Header -->
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Real Resource</h2>
+    </div>
+    <!-- Modal Body -->
+    <div class="p-6 max-h-[70vh] overflow-y-auto">
+      <%= form_with model: RealActivity.new, url: "", local: true, data: { turbo: false } do |f| %>
+        <%= f.hidden_field :real_activity_id, value: '' %>
+        <%= f.hidden_field :authenticity_token, value: form_authenticity_token %>
+        <div class="mb-4">
+          <%= f.label :name, "Naziv", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <%= f.text_field :name, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+        </div>
+        <div class="mb-4">
+          <%= f.label :unit_of_measure, "Jedinica Mjere", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <%= f.text_field :unit_of_measure, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+        </div>
+        <div class="mb-4">
+          <%= f.label :price_per_unit, "Cijena po jedinici", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+          <%= f.number_field :price_per_unit, step: 0.01, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600", data: { action: "input->custom-resource#updateQuantity", custom_resource_target: "pricePerUnit" } %>
+        </div>
+        <div class="mb-4">
+          <%= f.label :quantity, "Quantity", class: "block text-sm font-medium text-gray-700 dark:text-gray-200" %>
+          <%= f.number_field :quantity, class: "block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200" %>
+        </div>
+        <div class="flex justify-end">
+          <%= f.submit "Save", class: "px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700" %>
+        </div>
+      <% end %>
+    </div>
+    <!-- Modal Footer -->
+    <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-700">
+      <button type="button" class="close-modal px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
+        Close
+      </button>
+    </div>
+  </div>
+</div>

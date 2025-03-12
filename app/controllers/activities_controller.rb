@@ -39,10 +39,13 @@ class ActivitiesController < ApplicationController
   end
 
   def destroy
-    @activity = @sub_task.activities.find(params[:id])
+    @activity = Activity.find(params[:id])
     @activity.destroy
-    redirect_to project_task_sub_task_path(@sub_task.task.project, @sub_task.task, @sub_task),
-                notice: 'Aktivnost je obrisana.'
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to business_project_task_sub_task_path(business, @project, @task, @sub_task, anchor: 'planned'), notice: "Real activity was successfully deleted." }
+    end
   end
 
   private

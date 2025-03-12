@@ -1,8 +1,13 @@
 class Activity < ApplicationRecord
   belongs_to :sub_task
   belongs_to :activityable, polymorphic: true
+  has_many :real_activities, dependent: :destroy
 
   enum :activity_type, { worker: 0, machine: 1, material: 2, custom: 3 }
+
+  after_save :update_sub_task_costs
+  after_save :update_sub_task_dates
+
 
   def self.search(query)
     if query.present?
@@ -21,4 +26,15 @@ class Activity < ApplicationRecord
       all
     end
   end
+
+  private
+
+  def update_sub_task_costs
+    sub_task.update_total_costs
+  end
+
+  def update_sub_task_dates
+    sub_task.update_dates
+  end
+
 end

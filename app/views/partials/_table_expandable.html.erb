@@ -1,0 +1,194 @@
+<section class="bg-gray-50 dark:bg-gray-900 pt-5">
+  <div class="mx-auto">
+    <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
+      <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+        <div class="w-full md:w-1/2">
+          <form action="<%= business_project_task_sub_task_path(@business, @project, @task, @sub_task) %>" method="GET" data-turbo-frame="real_resources-frame" class="lg:pr-3" data-controller="search">
+            <label for="search" class="sr-only">Search</label>
+            <div class="relative mt-1 lg:w-64 xl:w-96">
+              <input type="text" name="search" id="search" placeholder="Search for resources..." 
+                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                     data-action="input->search#performSearch">
+            </div>
+          </form>
+        </div>
+        <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+          <div class="flex items-center space-x-3 w-full md:w-auto">
+            <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+              </svg>
+              Filter
+              <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+              </svg>
+            </button>
+            <div id="filterDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+              <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose brand</h6>
+              <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
+                <li class="flex items-center">
+                  <input id="apple" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                  <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Apple (56)</label>
+                </li>
+                <li class="flex items-center">
+                  <input id="fitbit" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                  <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Microsoft (16)</label>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <turbo-frame id="real_resources-frame">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" class="px-4 py-3"></th>
+                <th scope="col" class="px-4 py-3">Ime</th>
+                <th scope="col" class="px-4 py-3">Vrsta</th>
+                <th scope="col" class="px-4 py-3">Opis</th>
+                <th scope="col" class="px-4 py-3">Količina</th>
+                <th scope="col" class="px-4 py-3">Jedinica mjere</th>
+                <th scope="col" class="px-4 py-3">Cijena po JM</th>
+                <th scope="col" class="px-4 py-3">Ukupno</th>
+                <th scope="col" class="px-4 py-3">
+                  <span class="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @activities.each_with_index do |activity, index| %>
+                <tr id="real-<%= dom_id(activity) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <td class="px-4 py-3">
+         <button type="button" class="toggle-real-activities" data-target="#real-activities-<%= index %>">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 chevron-icon" viewBox="0 0 20 20" fill="currentColor">
+    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+  </svg>
+</button>
+                  </td>
+                  <td class="px-4 py-3"><%= activity.activityable.name %></td>
+                  <td class="px-4 py-3"><%= activity.activity_type %></td>
+                  <td class="px-4 py-3"><%= activity.activityable.description %></td>
+                  <td class="px-4 py-3"><%= activity.quantity %></td>
+                  <td class="px-4 py-3"><%= activity.activityable.unit_of_measure %></td>
+                  <td class="px-4 py-3"><%= activity.activityable.price_per_unit %></td>
+                  <td class="px-4 py-3"><%= activity.total_cost %></td>
+                  <td class="px-4 py-3 flex items-center justify-end">
+                    <button type="button" data-target="real_resource-modal" data-activity-id="<%= activity.id %>" data-business-id="<%= @business.id %>" data-project-id="<%= @project.id %>" data-task-id="<%= @task.id %>" data-sub-task-id="<%= @sub_task.id %>" class="open-modal inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                      <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+                      </svg>
+                      Add Real Resource
+                    </button>
+                  </td>
+                </tr>
+                <!-- Hidden row for Real Activities -->
+                <tr id="real-activities-<%= index %>" class="hidden">
+                  <td colspan="9">
+                    <div class="overflow-x-auto">
+                      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                          <tr>
+                            <th scope="col" class="px-4 py-3">Quantity</th>
+                            <th scope="col" class="px-4 py-3">
+                              <span class="sr-only">Actions</span>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% activity.real_activities.each do |real_activity| %>
+                            <tr id="<%= dom_id(real_activity) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                              <td class="px-4 py-3"><%= real_activity.quantity %></td>
+                              <td class="px-4 py-3 flex items-center justify-end">
+                                <button id="<%= "real_activites-#{real_activity.id}-dropdown-button" %>" 
+                      data-dropdown-toggle="<%= "real_activites-#{real_activity.id}-dropdown" %>" 
+                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" 
+                      type="button">
+                                  <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                  </svg>
+                                </button>
+                                <div id="<%= "real_activites-#{real_activity.id}-dropdown" %>" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                  <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "real_activites-#{real_activity.id}-dropdown-button" %>">
+                                    <li>
+                                      <%= link_to 'Edit', '#',
+    class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal",
+    data: { target: 'real_resource-modal', turbo: false, mode: 'edit', id: real_activity.id, quantity: real_activity.quantity, activity_id: activity.id, controller: "real-resources", action: "click->real-resources#updateFields",  } %>
+                                    </li>
+                                    <li>
+                                      <%= link_to 'Delete', business_project_task_sub_task_activity_real_activity_path(@business, @project, @task, @sub_task, activity, real_activity), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </td>
+                            </tr>
+                          <% end %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </turbo-frame>
+      <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+          Showing
+          <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
+          of
+          <span class="font-semibold text-gray-900 dark:text-white">1000</span>
+        </span>
+        <ul class="inline-flex items-stretch -space-x-px">
+          <li>
+            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white" aria-label="Previous">
+              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M9.293 6.293a1 1 0 00-1.414 1.414L11.586 10l-3.707 3.707a1 1 0 001.414 1.414l5-5a1 1 0 000-1.414l-5-5z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 text-sm font-medium text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">1</a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 text-sm font-medium text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">2</a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 text-sm font-medium text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">3</a>
+          </li>
+          <li>
+            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white" aria-label="Next">
+              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10.707 6.293a1 1 0 011.414 1.414L8.414 10l3.707 3.707a1 1 0 01-1.414 1.414l-5-5a1 1 0 010-1.414l5-5z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</section>
+<%= render 'modals/modal_real_resource' %>
+<script>
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest('.toggle-real-activities');
+    if (button) {
+      const target = document.querySelector(button.dataset.target);
+      if (target) {
+        target.classList.toggle('hidden');
+        const icon = button.querySelector('.chevron-icon');
+        if (target.classList.contains('hidden')) {
+          icon.innerHTML = `
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          `;
+        } else {
+          icon.innerHTML = `
+            <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+          `;
+        }
+      }
+    }
+  });
+</script>

@@ -61,7 +61,7 @@ export default class extends Controller {
 
   async fetchData(rowId) {
     try {
-      const response = await fetch(`/fetch_data/${rowId}`, { method: 'GET' });
+      const response = await fetch(`/fetch_data/get_activity_and_resource_infos/${rowId}`, { method: 'GET' });
       const data = await response.json();
       console.log(data);
   
