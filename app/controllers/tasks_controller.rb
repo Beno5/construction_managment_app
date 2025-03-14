@@ -44,9 +44,9 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    @task =  @project.tasks.find(params[:id])
+    @task = @project.tasks.find(params[:id])
     @task.destroy
-  
+
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: turbo_stream.remove(dom_id(@task))

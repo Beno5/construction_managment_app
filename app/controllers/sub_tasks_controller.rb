@@ -46,12 +46,15 @@ class SubTasksController < ApplicationController
   def destroy
     @sub_task = @task.sub_tasks.find(params[:id])
     @sub_task.destroy
-  
+
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: turbo_stream.remove(dom_id(@sub_task))
       end
-      format.html { redirect_to business_project_task_path(@business, @task.project, @task), notice: "Sub-task was successfully deleted." }
+      format.html do
+        redirect_to business_project_task_path(@business, @task.project, @task),
+                    notice: "Sub-task was successfully deleted."
+      end
     end
   end
 
