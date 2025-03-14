@@ -17,7 +17,7 @@ export default class extends Controller {
 
   connect() {
     // Osluškuj klikove na linkove koji otvaraju modal
-    document.querySelectorAll('.open-modal').forEach(link => {
+    document.querySelectorAll('.resource-modal').forEach(link => {
       link.addEventListener('click', this.handleModalClick.bind(this));
     });
   }
@@ -263,6 +263,10 @@ initializeModal(mode, type) {
       this.showSubmitButton(submitButton); // Prikazivanje dugmeta u 'edit' režimu
     }
   } else {
+    formFields.forEach(field => {
+      field.removeAttribute("readonly");  // Ukloni readonly
+      field.disabled = false; // Omogući interakciju sa poljem
+    });
     // Ako nema mode (create), prikaži toggle
     toggleContainer.classList.remove('hidden');
     this.showSubmitButton(submitButton); // Prikazivanje dugmeta u 'create' režimu

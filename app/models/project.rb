@@ -32,17 +32,6 @@ class Project < ApplicationRecord
   def latest_end_date
     tasks.maximum(:planned_end_date)
   end
- 
-  def update_total_costs
-    self.update_columns(planned_cost: tasks.sum(:planned_cost), real_cost: tasks.sum(:real_cost))
-  end
-
-  def update_dates
-    earliest_tasks_start_date = tasks.minimum(:planned_start_date)
-    latest_tasks_end_date = tasks.maximum(:planned_end_date)
-
-    self.update_columns(planned_start_date: earliest_tasks_start_date, planned_end_date: latest_tasks_end_date)
-  end
 
   private
 

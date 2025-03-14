@@ -9,11 +9,8 @@
     <p><span class="font-semibold">Naziv projekta:</span> <%= project.name %></p>
     <p><span class="font-semibold">Adresa projekta:</span> <%= project.address %></p>
     <p><span class="font-semibold">Vođa projekta:</span> <%= project.project_manager %></p>
-    <p><span class="font-semibold">Planirani početak projekta:</span> <%= project.planned_start_date.strftime("%d.%m.%Y") %></p>
-    <p><span class="font-semibold">Planirani završetak projekta:</span> <%= project.planned_end_date.strftime("%d.%m.%Y") %></p>
-    <p><span class="font-semibold">Predviđeno vreme trajanja projekta:</span>
-      <%= ((project.planned_end_date.year * 12 + project.planned_end_date.month) - (project.planned_start_date.year * 12 + project.planned_start_date.month)) %> meseci
-    </p>
+    <p><span class="font-semibold">Planirani početak projekta:</span> <%= project.planned_start_date&.strftime("%d.%m.%Y") %></p>
+    <p><span class="font-semibold">Planirani završetak projekta:</span> <%= project.planned_end_date&.strftime("%d.%m.%Y") %></p>
     <p><span class="font-semibold">Stvarni početak projekta:</span> <%= project.real_start_date&.strftime("%d.%m.%Y") || "N/A" %></p>
     <p><span class="font-semibold">Stvarni završetak projekta:</span> <%= project.real_end_date&.strftime("%d.%m.%Y") || "N/A" %></p>
     <p><span class="font-semibold">Planirani trošak:</span> <%= project.planned_cost ? "#{project.planned_cost} #{@current_business.currency_symbol}" : "N/A" %></p>

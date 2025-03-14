@@ -113,12 +113,12 @@
                         <% if model_name == "Resources" %>
                           <li>
                             <%= link_to 'Show', '#', 
-                            class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal", 
+                            class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal resource-modal", 
                             data: { target: 'resource-modal', turbo: false, mode: 'show', type: item.activityable_type } %>
                           </li>
                           <li>
                             <%= link_to 'Edit', '#',
-                            class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal",
+                            class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal resource-modal",
                             data: { target: 'resource-modal', turbo: false, mode: 'edit', type: item.activityable_type, activity_id: item.id} %>
                           </li>
                           <li>

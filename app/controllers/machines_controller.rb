@@ -42,7 +42,7 @@ class MachinesController < ApplicationController
   def destroy
     @machine = current_business.machines.find(params[:id])
     @machine.destroy
-  
+
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: turbo_stream.remove(dom_id(@machine))

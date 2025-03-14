@@ -48,11 +48,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_10_203406) do
     t.date "start_date"
     t.date "end_date"
     t.decimal "total_cost"
-    t.bigint "sub_task_id"
+    t.bigint "sub_task_id", null: false
     t.bigint "activityable_id"
     t.string "activityable_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["sub_task_id"], name: "index_activities_on_sub_task_id"
   end
 
   create_table "businesses", force: :cascade do |t|
@@ -164,13 +165,17 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_10_203406) do
   end
 
   create_table "real_activities", force: :cascade do |t|
+    t.integer "quantity"
+    t.decimal "total_cost"
+    t.date "start_date"
+    t.date "end_date"
     t.bigint "activity_id", null: false
     t.bigint "user_id", null: false
-    t.decimal "quantity"
-    t.decimal "difference"
+    t.bigint "sub_task_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["activity_id"], name: "index_real_activities_on_activity_id"
+    t.index ["sub_task_id"], name: "index_real_activities_on_sub_task_id"
     t.index ["user_id"], name: "index_real_activities_on_user_id"
   end
 
@@ -245,6 +250,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_10_203406) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "activities", "sub_tasks"
   add_foreign_key "businesses", "users"
   add_foreign_key "custom_resources", "sub_tasks"
   add_foreign_key "custom_resources", "users"
@@ -258,6 +264,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_10_203406) do
   add_foreign_key "projects", "businesses"
   add_foreign_key "projects", "users"
   add_foreign_key "real_activities", "activities"
+  add_foreign_key "real_activities", "sub_tasks"
   add_foreign_key "real_activities", "users"
   add_foreign_key "sub_tasks", "tasks"
   add_foreign_key "tasks", "projects"

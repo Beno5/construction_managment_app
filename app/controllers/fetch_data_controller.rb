@@ -1,5 +1,6 @@
 class FetchDataController < ApplicationController
-  protect_from_forgery except: [:unit_options, :resources, :resource_details, :get_activity_and_resource_infos, :get_activity_and_real_activity_infos, :get_document, :check_activity]
+  protect_from_forgery except: [:unit_options, :resources, :resource_details, :get_activity_and_resource_infos,
+                                :get_activity_and_real_activity_infos, :get_document, :check_activity]
 
   def unit_options
     worker_units = Worker.unit_of_measures.keys.map { |k| [k.humanize, k] }
@@ -90,9 +91,9 @@ class FetchDataController < ApplicationController
 
   def check_activity
     item_id = params[:item_id]
-    item_type = params[:item_type].gsub('"', '').constantize
+    item_type = params[:item_type].delete('"').constantize
 
-    if item_type == Business || item_type == Task || item_type == SubTask
+    if [Business, Task, SubTask].include?(item_type)
       render json: { has_activities: false }
       return
     end
@@ -115,7 +116,7 @@ class FetchDataController < ApplicationController
           sub_task_name: sub_task.name
         }
       end
-  
+
       render json: {
         has_activities: true,
         activity_details: activity_details
@@ -128,12 +129,15 @@ class FetchDataController < ApplicationController
   def get_activity_and_real_activity_infos
     activity = Activity.find(params[:activity_id])
     real_activity = RealActivity.find_by(id: params[:real_activity_id])
-  
+
     render json: {
       name: activity.activityable.name,
       unit_of_measure: activity.activityable.unit_of_measure,
       price_per_unit: activity.activityable.price_per_unit,
-      quantity: real_activity&.quantity
+      quantity: real_activity&.quantity,
+      start_date: real_activity&.start_date,
+      end_date: real_activity&.end_date,
+      total_cost: real_activity&.total_cost
     }
   end
 end

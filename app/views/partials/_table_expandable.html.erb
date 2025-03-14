@@ -61,11 +61,11 @@
               <% @activities.each_with_index do |activity, index| %>
                 <tr id="real-<%= dom_id(activity) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <td class="px-4 py-3">
-         <button type="button" class="toggle-real-activities" data-target="#real-activities-<%= index %>">
-  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 chevron-icon" viewBox="0 0 20 20" fill="currentColor">
-    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-  </svg>
-</button>
+                    <button type="button" class="toggle-real-activities" data-target="#real-activities-<%= index %>">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 chevron-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
                   </td>
                   <td class="px-4 py-3"><%= activity.activityable.name %></td>
                   <td class="px-4 py-3"><%= activity.activity_type %></td>
@@ -75,7 +75,7 @@
                   <td class="px-4 py-3"><%= activity.activityable.price_per_unit %></td>
                   <td class="px-4 py-3"><%= activity.total_cost %></td>
                   <td class="px-4 py-3 flex items-center justify-end">
-                    <button type="button" data-target="real_resource-modal" data-activity-id="<%= activity.id %>" data-business-id="<%= @business.id %>" data-project-id="<%= @project.id %>" data-task-id="<%= @task.id %>" data-sub-task-id="<%= @sub_task.id %>" class="open-modal inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    <button type="button" data-target="real_resource-modal" data-activity-id="<%= activity.id %>" data-business-id="<%= @business.id %>" data-project-id="<%= @project.id %>" data-task-id="<%= @task.id %>" data-sub-task-id="<%= @sub_task.id %>" class="real-resources-modal open-modal inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                       <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
                       </svg>
@@ -90,7 +90,12 @@
                       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                           <tr>
-                            <th scope="col" class="px-4 py-3">Quantity</th>
+                            <th scope="col" class="px-4 py-3">Pocetak aktivnosti</th>
+                            <th scope="col" class="px-4 py-3">Kraj aktivnosti</th>
+                            <th scope="col" class="px-4 py-3">Kolicina</th>
+                            <th scope="col" class="px-4 py-3">Jedinica mjere</th>
+                            <th scope="col" class="px-4 py-3">Cijena po JM</th>
+                            <th scope="col" class="px-4 py-3">Ukupno</th>
                             <th scope="col" class="px-4 py-3">
                               <span class="sr-only">Actions</span>
                             </th>
@@ -99,7 +104,12 @@
                         <tbody>
                           <% activity.real_activities.each do |real_activity| %>
                             <tr id="<%= dom_id(real_activity) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                              <td class="px-4 py-3"><%= real_activity.start_date %></td>
+                              <td class="px-4 py-3"><%= real_activity.end_date %></td>
                               <td class="px-4 py-3"><%= real_activity.quantity %></td>
+                              <td class="px-4 py-3"><%= real_activity.activity.activityable.unit_of_measure %></td>
+                              <td class="px-4 py-3"><%= real_activity.activity.activityable.price_per_unit %></td>
+                              <td class="px-4 py-3"><%= real_activity.total_cost %></td>
                               <td class="px-4 py-3 flex items-center justify-end">
                                 <button id="<%= "real_activites-#{real_activity.id}-dropdown-button" %>" 
                       data-dropdown-toggle="<%= "real_activites-#{real_activity.id}-dropdown" %>" 
@@ -113,7 +123,7 @@
                                   <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "real_activites-#{real_activity.id}-dropdown-button" %>">
                                     <li>
                                       <%= link_to 'Edit', '#',
-    class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal",
+    class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal real-resources-modal",
     data: { target: 'real_resource-modal', turbo: false, mode: 'edit', id: real_activity.id, quantity: real_activity.quantity, activity_id: activity.id, controller: "real-resources", action: "click->real-resources#updateFields",  } %>
                                     </li>
                                     <li>

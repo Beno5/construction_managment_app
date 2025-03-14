@@ -5,9 +5,8 @@ class Activity < ApplicationRecord
 
   enum :activity_type, { worker: 0, machine: 1, material: 2, custom: 3 }
 
-  after_save :update_sub_task_costs
-  after_save :update_sub_task_dates
-
+  after_destroy :update_parent_sub_task
+  after_save :update_parent_sub_task
 
   def self.search(query)
     if query.present?
@@ -15,12 +14,12 @@ class Activity < ApplicationRecord
       activities = preload(:activityable).all
       activities.select do |activity|
         activity.activity_type.downcase.include?(query_downcase) ||
-        activity.quantity.to_s.downcase.include?(query_downcase) ||
-        activity.total_cost.to_s.downcase.include?(query_downcase) ||
-        activity.activityable.name.downcase.include?(query_downcase) ||
-        activity.activityable.description.downcase.include?(query_downcase) ||
-        activity.activityable.unit_of_measure.downcase.include?(query_downcase) ||
-        activity.activityable.price_per_unit.to_s.downcase.include?(query_downcase)
+          activity.quantity.to_s.downcase.include?(query_downcase) ||
+          activity.total_cost.to_s.downcase.include?(query_downcase) ||
+          activity.activityable.name.downcase.include?(query_downcase) ||
+          activity.activityable.description.downcase.include?(query_downcase) ||
+          activity.activityable.unit_of_measure.downcase.include?(query_downcase) ||
+          activity.activityable.price_per_unit.to_s.downcase.include?(query_downcase)
       end
     else
       all
@@ -29,12 +28,7 @@ class Activity < ApplicationRecord
 
   private
 
-  def update_sub_task_costs
-    sub_task.update_total_costs
+  def update_parent_sub_task
+    UpdateDynamicAttributesService.new(sub_task).update_all!
   end
-
-  def update_sub_task_dates
-    sub_task.update_dates
-  end
-
 end

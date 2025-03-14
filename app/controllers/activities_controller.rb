@@ -44,7 +44,10 @@ class ActivitiesController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to business_project_task_sub_task_path(business, @project, @task, @sub_task, anchor: 'planned'), notice: "Real activity was successfully deleted." }
+      format.html do
+        redirect_to business_project_task_sub_task_path(business, @project, @task, @sub_task, anchor: 'planned'),
+                    notice: "Real activity was successfully deleted."
+      end
     end
   end
 
