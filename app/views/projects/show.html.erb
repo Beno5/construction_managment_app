@@ -9,7 +9,6 @@
     delete_task: ->(task) { business_project_task_path(@current_business, @project, task) }
   }
 %>
-
 <%= render 'partials/header1', 
            title: @project.name, 
            model_name: model_name, 
@@ -19,25 +18,7 @@
              { name: "Projects", path: paths[:projects] },
              { name: @project.name, path: paths[:project] }
            ] %>
-
-<%= render 'partials/table', 
-           collection: @tasks, 
-           columns: {
-             "Naziv" => :description,
-             "Planirani Početak" => ->(task) { I18n.l(task.planned_start_date, format: :long) if task.planned_start_date },
-             "Planirani Kraj" => ->(task) { I18n.l(task.planned_end_date, format: :long) if task.planned_end_date },
-             "Resursi" => :description,
-             "Custom Polja" => :custom_fields
-           },
-           turbo_frame_id: "tasks-frame",
-           model_name: model_name, 
-           search_path: paths[:project], 
-           new_path: paths[:new_task],
-           show_path: paths[:show_task],
-           edit_path: paths[:edit_task],
-           delete_path: paths[:delete_task],
-           actions: [] %>
-
+<%= render 'partials/table_expandable_task' %>
 <% 
   model_name_doc = "Documents"
   paths_doc = {
@@ -47,8 +28,6 @@
     delete_document: ->(document) { "" }
   }
 %>
-
-
 <%= render 'partials/table', 
            collection: @documents, 
            columns: {
@@ -66,10 +45,7 @@
            show_path: paths_doc[:show_document],
            delete_path: paths_doc[:delete_document],
            actions: [] %>
-
-      <%= render "modals/modal_documents"%>
-
-
+<%= render "modals/modal_documents"%>
 <div class="bg-white p-6 rounded-lg shadow-md mt-6">
   <h2 class="text-xl font-bold mb-4">Project Timeline (Gantt Chart)</h2>
   <div id="gantt_here" data-project-id="<%= @project.id %>" style="width: 100%; height: 500px;"></div>

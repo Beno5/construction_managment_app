@@ -130,8 +130,7 @@ end
       planned_cost: Faker::Number.decimal(l_digits: 3, r_digits: 2),
       progress: Faker::Number.decimal(l_digits: 1, r_digits: 2),
       user: user,
-      task: task,
-      category: rand(0..2)
+      task: task
     )
   end
 
