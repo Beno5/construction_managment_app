@@ -1,27 +1,19 @@
 <div class="relative flex justify-center items-center">
-  <!-- Info ikonica -->
-  <button data-tooltip-target="tooltip-<%= task.id %>" data-tooltip-style="light" type="button" class="text-blue-600">
+  <!-- Info Icon -->
+  <button data-tooltip-target="tooltip-<%= item.class.name.downcase %>-<%= item.id %>" data-tooltip-style="light" type="button" class="text-blue-600">
     <svg class="w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/>
     </svg>
   </button>
 
   <!-- Tooltip -->
-  <div id="tooltip-<%= task.id %>" role="tooltip" class="absolute z-10 invisible inline-block px-6 py-4 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 tooltip" style="width: 250px;">
-    <strong>Radnici:</strong> 
-    <% workers = task.activities.where(activity_type: "worker").map { |a| a.activityable } %>
-    <% if workers.present? %>
-      <%= workers.map(&:name).join(', ') %>
+  <div id="tooltip-<%= item.class.name.downcase %>-<%= item.id %>" role="tooltip" class="absolute z-50 invisible inline-block px-6 py-4 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 tooltip" style="width: 250px; max-height: 200px;">
+    <% if item.custom_fields.present? %>
+      <% item.custom_fields.each do |key, value| %>
+        <strong><%= key %>:</strong> <%= value %><br>
+      <% end %>
     <% else %>
-      <span class="text-gray-400">Nema radnika</span>
-    <% end %>
-    <br>
-    <strong>Mašine:</strong> 
-    <% machines = task.activities.where(activity_type: "machine").map { |a| a.activityable } %>
-    <% if machines.present? %>
-      <%= machines.map(&:name).join(', ') %>
-    <% else %>
-      <span class="text-gray-400">Nema mašina</span>
+      <span class="text-gray-400">No custom fields available</span>
     <% end %>
     <div class="tooltip-arrow" data-popper-arrow></div>
   </div>

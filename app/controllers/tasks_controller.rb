@@ -48,10 +48,11 @@ class TasksController < ApplicationController
     @task.destroy
 
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.remove(dom_id(@task))
+      format.turbo_stream
+      format.html do
+        redirect_to business_project_path(@business, @project, anchor: 'tasks'),
+                    notice: "Task was successfully deleted."
       end
-      format.html { redirect_to business_project_path(@business, @project), notice: "Task was successfully deleted." }
     end
   end
 
@@ -68,7 +69,7 @@ class TasksController < ApplicationController
   def task_params
     params.require(:task).permit(
       :name, :description, :planned_start_date, :planned_end_date, :planned_cost,
-      :real_start_date, :real_end_date, :real_cost, :category,
+      :real_start_date, :real_end_date, :real_cost,
       custom_fields: [:key, :value]
     ).tap do |whitelisted|
       if params[:task][:custom_fields]

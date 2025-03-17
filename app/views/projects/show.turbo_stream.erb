@@ -1,22 +1,2 @@
-<% 
-  paths = {
-    edit_task: ->(task) { edit_business_project_task_path(@current_business, @project, task) },
-    delete_task: ->(task) { business_project_task_path(@current_business, @project, task) }
-  }
 
-  columns = {
-    "Naziv" => :description,
-    "Planirani Početak" => ->(task) { I18n.l(task.planned_start_date, format: :short) if task.planned_start_date },
-    "Planirani Kraj" => ->(task) { I18n.l(task.planned_end_date, format: :short) if task.planned_end_date },
-    "Custom Polja" => :custom_fields
-  }
-%>
-
-<%= turbo_stream.replace "tasks-frame", partial: "partials/table", locals: {
-  collection: @tasks,
-  columns: columns,
-  turbo_frame_id: "tasks-frame",
-  edit_path: paths[:edit_task],
-  delete_path: paths[:delete_task],
-  actions: []
-} %>
+<%= turbo_stream.replace "tasks-frame", partial: "partials/table_expandable_task" %>

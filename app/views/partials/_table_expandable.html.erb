@@ -112,9 +112,9 @@
                               <td class="px-4 py-3"><%= real_activity.total_cost %></td>
                               <td class="px-4 py-3 flex items-center justify-end">
                                 <button id="<%= "real_activites-#{real_activity.id}-dropdown-button" %>" 
-                      data-dropdown-toggle="<%= "real_activites-#{real_activity.id}-dropdown" %>" 
-                      class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" 
-                      type="button">
+                                  data-dropdown-toggle="<%= "real_activites-#{real_activity.id}-dropdown" %>" 
+                                  class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" 
+                                  type="button">
                                   <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                                   </svg>
@@ -123,8 +123,8 @@
                                   <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "real_activites-#{real_activity.id}-dropdown-button" %>">
                                     <li>
                                       <%= link_to 'Edit', '#',
-    class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal real-resources-modal",
-    data: { target: 'real_resource-modal', turbo: false, mode: 'edit', id: real_activity.id, quantity: real_activity.quantity, activity_id: activity.id, controller: "real-resources", action: "click->real-resources#updateFields",  } %>
+                                        class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal real-resources-modal",
+                                        data: { target: 'real_resource-modal', turbo: false, mode: 'edit', id: real_activity.id, quantity: real_activity.quantity, activity_id: activity.id, controller: "real-resources", action: "click->real-resources#updateFields",  } %>
                                     </li>
                                     <li>
                                       <%= link_to 'Delete', business_project_task_sub_task_activity_real_activity_path(@business, @project, @task, @sub_task, activity, real_activity), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
@@ -144,39 +144,8 @@
           </table>
         </div>
       </turbo-frame>
-      <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
-        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-          Showing
-          <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
-          of
-          <span class="font-semibold text-gray-900 dark:text-white">1000</span>
-        </span>
-        <ul class="inline-flex items-stretch -space-x-px">
-          <li>
-            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white" aria-label="Previous">
-              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M9.293 6.293a1 1 0 00-1.414 1.414L11.586 10l-3.707 3.707a1 1 0 001.414 1.414l5-5a1 1 0 000-1.414l-5-5z" clip-rule="evenodd" />
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 text-sm font-medium text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">1</a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 text-sm font-medium text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">2</a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 text-sm font-medium text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">3</a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white" aria-label="Next">
-              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M10.707 6.293a1 1 0 011.414 1.414L8.414 10l3.707 3.707a1 1 0 01-1.414 1.414l-5-5a1 1 0 010-1.414l5-5z" clip-rule="evenodd" />
-              </svg>
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <%= render "partials/nav_pages" %>
+
     </div>
   </div>
 </section>
