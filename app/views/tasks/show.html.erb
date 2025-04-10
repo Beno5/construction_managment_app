@@ -99,7 +99,6 @@
              "Naziv" => :description,
              "Planirani Početak" => ->(subtask) { I18n.l(subtask.planned_start_date, format: :long) if subtask.planned_start_date },
              "Planirani Kraj" => ->(subtask) { I18n.l(subtask.planned_end_date, format: :long) if subtask.planned_end_date },
-             "Resursi" => ->(subtask) { render 'partials/task_resources_tooltip', task: subtask },
              "Custom Polja" => :custom_fields
            },
            turbo_frame_id: "subtasks-frame",

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_10_203406) do
+ActiveRecord::Schema[7.0].define(version: 2025_04_09_153726) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -194,6 +194,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_10_203406) do
     t.bigint "task_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "planned_auto_calculation", default: true
+    t.boolean "real_auto_calculation", default: true
     t.index ["task_id"], name: "index_sub_tasks_on_task_id"
   end
 
