@@ -135,6 +135,8 @@ export default class extends Controller {
     const fixedCostsField = document.querySelector("[name='activity[fixed_costs]']");
     const quantityField = document.querySelector("[name='activity[quantity]']");
     const totalField = document.querySelector("[name='activity[total_cost]']");
+    const startDate = document.querySelector("[name='activity[start_date]']");
+    const endDate = document.querySelector("[name='activity[end_date]']");
 
     if (quantityField) quantityField.value = '';
     if (totalField) totalField.value = '';
@@ -143,6 +145,8 @@ export default class extends Controller {
     if (descriptionField) descriptionField.value = '';
     if (professionField) professionField.value = '';
     if (fixedCostsField) fixedCostsField.value = '';
+    if (startDate) startDate.value = '';
+    if (endDate) endDate.value = '';
   }
 
   showAdditionalFields(category) {

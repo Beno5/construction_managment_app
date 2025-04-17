@@ -1,3 +1,4 @@
+<h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white"><%= local_assigns[:model_name] %></h1>
 <section class="bg-gray-50 dark:bg-gray-900 pt-5">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
@@ -34,7 +35,7 @@
                 <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
                 </svg>
-                Add New <%= local_assigns[:model_name] %>
+                Add New <%= local_assigns[:model_name].singularize %>
               <% end %>
             <% end %>
           <% end %>
@@ -80,6 +81,21 @@
               </tr>
             </thead>
             <tbody>
+              <% if collection.empty? %>
+                <tr>
+                  <td colspan="<%= columns.size + 1 %>" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
+                    <p class="mb-4">Nemate <%= model_name.downcase %>. Dodajte novi da započnete!</p>
+                    <% if local_assigns[:new_path].present? %>
+                      <%= link_to local_assigns[:new_path], class: "inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" do %>
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        Add New <%= local_assigns[:model_name].singularize %>
+                      <% end %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
               <% collection.each do |item| %>
                 <tr id="<%= dom_id(item) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <% columns.each do |_, attr| %>
@@ -134,8 +150,15 @@
                             <%= link_to 'Delete', document_path(item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                         <% else %>
+                          <% if model_name == "Businesses"%>
+                            <li>
+                              <%= form_with url: select_business_path(item), method: :post, data: { turbo: false } do %>
+                                <%= submit_tag 'Izaberi Business', class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                              <% end %>
+                            </li>
+                          <% end %>
                           <li>
-                            <%= link_to 'Show', local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <%= link_to 'Show Projects', local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                           <li>
                             <%= link_to 'Edit', local_assigns[:edit_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>

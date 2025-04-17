@@ -3,12 +3,12 @@
   paths = {
     businesses: businesses_path,
     new_business: new_business_path,
-    show_business: ->(business) { business_path(business) },
+    show_business: ->(business) { business_projects_path(business) },
     edit_business: ->(business) { edit_business_path(business) },
-    delete_business: ->(business) { business_path(business) }
+    delete_business: ->(business) { business_path(business) },
+    select_business: ->(business) { select_business_path(business) }
   }
 %>
-
 <%= render 'partials/header1', 
            title: "Businesses", 
            model_name: model_name, 
@@ -17,7 +17,6 @@
            additional_crumbs: [
              { name: "Businesses", path: paths[:businesses] }
            ] %>
-
 <%= render 'partials/table', 
            collection: @businesses, 
            columns: {
@@ -37,6 +36,7 @@
            show_path: paths[:show_business],
            edit_path: paths[:edit_business],
            delete_path: paths[:delete_business],
+           select_path: paths[:select_business],
            actions: [
              ->(business) {
                if current_business == business

@@ -1,5 +1,5 @@
 <%= render 'partials/header1', 
-           title: @task.persisted? ? "Edit #{@task.description}" : "New Task",
+           title: @task.persisted? ? "Edit #{@task.name}" : "New Task",
            model_name: "Tasks",
            search_path: nil,
            new_path: nil,
@@ -43,6 +43,7 @@
       <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Prilagođena polja</h3>
       <%= render 'partials/custom_fields', custom_fields: @task.custom_fields, model: 'task' %>
     </div>
+    
   </div>
   <!-- Submit Button -->
   <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">

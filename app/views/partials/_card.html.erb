@@ -1,11 +1,11 @@
 <div id="row_<%= project.id %>" class="p-4 mb-4 space-y-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
   <!-- Header -->
   <div class="flex justify-between items-center px-4 py-2 text-gray-800 border border-gray-200 border-dashed rounded dark:text-gray-400 dark:border-gray-600">
-    <h2 class="text-2xl font-extrabold">Projekat id: A</h2>
+    <h2 class="text-xl font-bold">Projekat id: <%= project.client_project_id %></h2>
     <span class="text-sm font-semibold text-gray-600 dark:text-gray-400">Broj aktivnosti: <%= project.tasks.count %></span>
   </div>
   <!-- Projekt Parametri -->
-  <div class="flex flex-col items-center justify-center space-y-2 px-4 py-2 text-gray-700 border border-gray-200 border-dashed rounded dark:text-gray-400 dark:border-gray-600">
+  <div class="flex flex-col  space-y-2 px-4 py-2 text-gray-700 border border-gray-200 border-dashed rounded dark:text-gray-400 dark:border-gray-600">
     <p><span class="font-semibold">Naziv projekta:</span> <%= project.name %></p>
     <p><span class="font-semibold">Adresa projekta:</span> <%= project.address %></p>
     <p><span class="font-semibold">Vođa projekta:</span> <%= project.project_manager %></p>
@@ -33,7 +33,7 @@
     <%= link_to business_project_path(@current_business, project),
                class: "w-2/3 bg-gray-200 text-gray-800 text-center px-4 py-2 mt-2 rounded-lg hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 transition",
                data: { turbo: "false" } do %>
-      📋 Pregled Aktivnosti
+      📋 Pregled Projekta
     <% end %>
   </div>
   <!-- Dropdown -->

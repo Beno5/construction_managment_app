@@ -30,7 +30,7 @@ class ActivitiesController < ApplicationController
   def update
     @activity = @sub_task.activities.find(params[:activity][:activity_id])
 
-    if @activity.update(activity_params)
+    if @activity.update(params_mapped)
       redirect_to project_task_sub_task_path(@sub_task.task.project, @sub_task.task, @sub_task),
                   notice: 'Aktivnost je uspešno ažurirana.'
     else
@@ -60,8 +60,8 @@ class ActivitiesController < ApplicationController
   def params_mapped
     {
       activity_type: activity_params[:category],
-      start_date: @sub_task.planned_start_date,
-      end_date: @sub_task.planned_end_date,
+      start_date: activity_params[:start_date],
+      end_date: activity_params[:end_date],
       activityable_id: activity_params[:resource_id],
       activityable_type: activity_params[:category].capitalize,
       quantity: activity_params[:quantity],
@@ -82,7 +82,9 @@ class ActivitiesController < ApplicationController
       :fixed_costs,
       :profession,
       :total_cost,
-      :activity_id
+      :activity_id,
+      :start_date,
+      :end_date
     )
   end
 end

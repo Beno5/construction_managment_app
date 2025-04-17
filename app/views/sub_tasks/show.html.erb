@@ -1,6 +1,6 @@
 <%= render 'partials/header1', 
-           title: @sub_task.persisted? ? "Edit #{@task.description}" : "New Task",
-           model_name: "Tasks",
+           title: "#{@sub_task.name}",
+           model_name: "SubTasks",
            search_path: nil,
            new_path: nil,
            additional_crumbs: [

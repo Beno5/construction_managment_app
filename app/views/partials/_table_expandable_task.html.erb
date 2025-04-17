@@ -1,4 +1,6 @@
-<section class="bg-gray-50 dark:bg-gray-900 pt-5">
+      
+<h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white">Tasks</h1>
+<section class="bg-gray-50 dark:bg-gray-900 pt-5 mb-5">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
       <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
@@ -51,6 +53,7 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-4 py-3"></th>
+                <th scope="col" class="px-4 py-3">ID</th>
                 <th scope="col" class="px-4 py-3">Naziv</th>
                 <th scope="col" class="px-4 py-3">Opis</th>
                 <th scope="col" class="px-4 py-3">Planirani Početak</th>
@@ -72,6 +75,7 @@
                       </svg>
                     </button>
                   </td>
+                  <td class="px-4 py-3"><%= task.position %></td>
                   <td class="px-4 py-3"><%= task.name %></td>
                   <td class="px-4 py-3"><%= content_tag(:span, task.description&.truncate(25), title: task.description, class: "tooltip") %></td>
                   <td class="px-4 py-3"><%= I18n.l(task.planned_start_date, format: :long) if task.planned_start_date %></td>
@@ -120,6 +124,7 @@
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                           <tr>
                             <th scope="col" class="px-4 py-3"></th>
+                            <th scope="col" class="px-4 py-3">ID</th>
                             <th scope="col" class="px-4 py-3">Naziv</th>
                             <th scope="col" class="px-4 py-3">Opis</th>
                             <th scope="col" class="px-4 py-3">Planirani Početak</th>
@@ -134,8 +139,9 @@
                           <% task.sub_tasks.each do |sub_task| %>
                             <tr id="<%= dom_id(sub_task) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                               <td class="px-4 py-3"></td>
+                              <td class="px-4 py-3"><%= sub_task.show_position %></td>
                               <td class="px-4 py-3"><%= sub_task.name %></td>
-                              <td class="px-4 py-3"><%= content_tag(:span, task.description&.truncate(25), title: task.description, class: "tooltip") %></td>
+                              <td class="px-4 py-3"><%= content_tag(:span, sub_task.description&.truncate(25), title: task.description, class: "tooltip") %></td>
                               <td class="px-4 py-3"><%= I18n.l(sub_task.planned_start_date, format: :long) if sub_task.planned_start_date %></td>
                               <td class="px-4 py-3"><%= I18n.l(sub_task.planned_end_date, format: :long) if sub_task.planned_end_date %></td>
                               <td class="px-4 py-3"><%= render 'partials/custom_fields_tooltip', item: sub_task %></td>
@@ -150,6 +156,10 @@
                                 </button>
                                 <div id="<%= "sub-task-#{sub_task.id}-dropdown" %>" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                   <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "sub-task-#{sub_task.id}-dropdown-button" %>">
+                                     <li>
+                                      <%= link_to 'Show', business_project_task_sub_task_path(@business, @project, task, sub_task), data: { turbo: false},
+          class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                                    </li>
                                     <li>
                                       <%= link_to 'Edit', edit_business_project_task_sub_task_path(@business, @project, task, sub_task), data: { turbo: false},
           class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
