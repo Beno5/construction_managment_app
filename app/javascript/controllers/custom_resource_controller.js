@@ -124,6 +124,13 @@ export default class extends Controller {
   
       const totalCostField = modal.querySelector("#custom_resource_total_cost");
       if (totalCostField) totalCostField.value = data.total_cost;
+
+      const startDateField = modal.querySelector("#custom_resource_start_date");
+      if (startDateField) startDateField.value = data.start_date || '';
+
+      const endDateField = modal.querySelector("#custom_resource_end_date");
+      if (endDateField) endDateField.value = data.end_date || '';
+
   
     } else {
       // If it's a different resource type, populate the fields accordingly
@@ -153,6 +160,13 @@ export default class extends Controller {
   
       const resourceNameField = modal.querySelector("#activity_resource_name");
       if (resourceNameField) resourceNameField.value = data.resource_name || '';
+
+      const startDateField = modal.querySelector("#activity_start_date");
+      if (startDateField) startDateField.value = data.start_date || '';
+
+      const endDateField = modal.querySelector("#activity_end_date");
+      if (endDateField) endDateField.value = data.end_date || '';
+
     }
   }
   

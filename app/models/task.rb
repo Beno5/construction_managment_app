@@ -1,15 +1,21 @@
 class Task < ApplicationRecord
+  include CustomFields
+
   belongs_to :project
   belongs_to :user
   has_many :sub_tasks, dependent: :destroy
   has_many :documents, dependent: :destroy
 
   # Validacije
-  validates :name, :description, :planned_start_date, :planned_end_date, :planned_cost, presence: true
-  validates :planned_cost, numericality: { greater_than_or_equal_to: 0 }
+  validates :name, presence: true
 
   # Validacija za datume
   validate :end_date_after_start_date
+
+  before_create :assign_position
+  after_destroy :reorder_tasks
+
+
 
   def calculate_duration
     return unless planned_start_date.present? && planned_end_date.present?
@@ -18,6 +24,17 @@ class Task < ApplicationRecord
   end
 
   private
+
+  def assign_position
+    self.position = (project.tasks.maximum(:position) || 0) + 1
+  end
+  
+  def reorder_tasks
+    project.tasks.order(:position).each_with_index do |task, index|
+      task.update(position: index + 1)
+    end
+  end
+  
 
   def end_date_after_start_date
     return if planned_start_date.blank? || planned_end_date.blank?

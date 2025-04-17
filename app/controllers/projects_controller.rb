@@ -106,6 +106,7 @@ class ProjectsController < ApplicationController
       :real_cost, # Dodato real_cost
       :description,
       :status,
+      :client_project_id,
       documents: [],
       custom_fields: [:key, :value]
     ).tap do |whitelisted|

@@ -6,7 +6,6 @@
       <%= @sub_task.planned_start_date %>
     </div>
   </div>
-
   <!-- Planirani kraj radova -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani kraj radova</label>
@@ -14,7 +13,6 @@
       <%= @sub_task.planned_end_date %>
     </div>
   </div>
-
   <!-- Planirani troškovi aktivnosti -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani troškovi aktivnosti (#{@project.business.currency_symbol})</label>
@@ -23,9 +21,6 @@
     </div>
   </div>
 </div>
-
-
-
 <% 
   model_name = "Resources"
   paths = {
@@ -34,14 +29,14 @@
     delete_resource: ->(resource) { url_for([@current_business, resource.activityable]) }
   }
 %>
-
-
-<%= render 'partials/table', 
+<% if @sub_task.planned_auto_calculation%>
+  <%= render 'partials/table', 
            collection: @activities, 
            columns: {
              "Ime" => ->(activity) { activity.activityable.name }, 
              "Vrsta" => ->(activity) { activity.activity_type }, 
              "Opis" => ->(activity) { activity.activityable.description }, 
+             "Planirani start date" => ->(activity) { activity.start_date.strftime("%Y-%m-%d") },
              "Količina" => ->(activity) { activity.quantity }, 
              "Jedinica mjere" => ->(activity) { activity.activityable.unit_of_measure }, 
              "Cijena po JM" => ->(activity) { activity.activityable.price_per_unit }, 
@@ -53,6 +48,5 @@
            show_path: "",
            delete_path: "",
            actions: [] %>
-
-
+<% end %>
 <%= render "modals/modal_resource" %>

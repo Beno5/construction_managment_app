@@ -1,7 +1,7 @@
 class BusinessesController < ApplicationController
   include ActionView::RecordIdentifier
 
-  before_action :set_business, only: [:show, :edit, :update, :destroy]
+  before_action :set_business, only: [:show, :update, :destroy]
   skip_before_action :set_current_business, only: [:select]
 
   def index
@@ -17,8 +17,13 @@ class BusinessesController < ApplicationController
     @business = current_user.businesses.new
   end
 
-  def edit; end
-
+  def edit
+    @business = current_user.businesses.find_by(id: params[:id])
+    unless @business
+      redirect_to businesses_path, alert: "Business not found."
+    end
+  end
+  
   def create
     @business = current_user.businesses.new(business_params)
     @business.user_id = current_user.id
@@ -60,22 +65,6 @@ class BusinessesController < ApplicationController
   end
 
   private
-
-  def set_business
-    @business = current_user.businesses.find_by(id: params[:id])
-    if params[:business_id].present?
-      @business = current_user.businesses.find_by(id: params[:business_id])
-      session[:current_business_id] = @business.id if @business
-    elsif session[:current_business_id]
-      @business = current_user.businesses.find_by(id: session[:current_business_id])
-    else
-      @business = current_user.businesses.first
-      session[:current_business_id] = @business.id if @business
-    end
-    return if @business
-
-    redirect_to businesses_path, alert: "Business not found."
-  end
 
   def business_params
     params.require(:business).permit(:name, :address, :phone_number, :vat_number, :registration_number,

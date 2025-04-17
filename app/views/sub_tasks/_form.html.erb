@@ -72,6 +72,11 @@
       <%= f.label :real_cost, "Stvarni troškovi aktivnosti (#{@project.business.currency_symbol})", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.number_field :real_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
+
+    <div class="col-span-6">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Custom Fields</h3>
+      <%= render 'partials/custom_fields', custom_fields: @sub_task.custom_fields, model: 'sub_task' %>
+    </div>
   </div>
 
   <!-- Submit Button -->

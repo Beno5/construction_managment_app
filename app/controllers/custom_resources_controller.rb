@@ -17,8 +17,8 @@ class CustomResourcesController < ApplicationController
         custom_resource = activity.activityable
         activity.update(
           activity_type: custom_resource.category,
-          start_date: @sub_task.planned_start_date,
-          end_date: @sub_task.planned_end_date,
+          start_date: custom_resource.start_date,
+          end_date: custom_resource.end_date,
           activityable: custom_resource,
           quantity: custom_resource.quantity,
           total_cost: custom_resource.total_cost
@@ -34,8 +34,8 @@ class CustomResourcesController < ApplicationController
 
         @sub_task.activities.create!(
           activity_type: @custom_resource.category,
-          start_date: @sub_task.planned_start_date,
-          end_date: @sub_task.planned_end_date,
+          start_date: @custom_resource.start_date,
+          end_date: @custom_resource.end_date,
           activityable: @custom_resource,
           quantity: @custom_resource.quantity,
           total_cost: @custom_resource.total_cost
@@ -79,6 +79,6 @@ class CustomResourcesController < ApplicationController
 
   def custom_resource_params
     params.require(:custom_resource).permit(:name, :first_name, :last_name, :quantity, :unit_of_measure, :price_per_unit,
-                                            :total_cost, :description, :category, :profession, :fixed_costs)
+                                            :total_cost, :description, :category, :profession, :fixed_costs, :start_date, :end_date)
   end
 end

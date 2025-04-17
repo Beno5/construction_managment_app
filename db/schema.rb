@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_04_09_153726) do
+ActiveRecord::Schema[7.0].define(version: 2025_04_14_191453) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -88,6 +88,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_09_153726) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "start_date"
+    t.date "end_date"
     t.index ["sub_task_id"], name: "index_custom_resources_on_sub_task_id"
     t.index ["user_id"], name: "index_custom_resources_on_user_id"
   end
@@ -160,6 +162,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_09_153726) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "business_id", null: false
+    t.string "client_project_id"
     t.index ["business_id"], name: "index_projects_on_business_id"
     t.index ["user_id"], name: "index_projects_on_user_id"
   end
@@ -196,6 +199,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_09_153726) do
     t.datetime "updated_at", null: false
     t.boolean "planned_auto_calculation", default: true
     t.boolean "real_auto_calculation", default: true
+    t.integer "position"
     t.index ["task_id"], name: "index_sub_tasks_on_task_id"
   end
 
@@ -214,6 +218,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_09_153726) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "progress", default: "0.0"
+    t.integer "position"
     t.index ["project_id"], name: "index_tasks_on_project_id"
     t.index ["user_id"], name: "index_tasks_on_user_id"
   end
