@@ -15,8 +15,6 @@ class Task < ApplicationRecord
   before_create :assign_position
   after_destroy :reorder_tasks
 
-
-
   def calculate_duration
     return unless planned_start_date.present? && planned_end_date.present?
 
@@ -28,13 +26,12 @@ class Task < ApplicationRecord
   def assign_position
     self.position = (project.tasks.maximum(:position) || 0) + 1
   end
-  
+
   def reorder_tasks
     project.tasks.order(:position).each_with_index do |task, index|
       task.update(position: index + 1)
     end
   end
-  
 
   def end_date_after_start_date
     return if planned_start_date.blank? || planned_end_date.blank?

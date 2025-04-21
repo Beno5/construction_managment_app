@@ -24,8 +24,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_business
-
-
     
     if params[:business_id].present?
       @current_business = current_user.businesses.find_by(id: params[:business_id])

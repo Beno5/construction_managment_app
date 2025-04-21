@@ -14,12 +14,10 @@ class SubTask < ApplicationRecord
   # Validacija za datume
   validate :end_date_after_start_date
 
-  after_save :trigger_update_service
-  after_destroy :trigger_update_service
   before_create :assign_position
+  after_destroy :trigger_update_service
   after_destroy :reorder_sub_tasks
-
-
+  after_save :trigger_update_service
 
   def calculate_duration
     return unless planned_start_date.present? && planned_end_date.present?
@@ -30,7 +28,6 @@ class SubTask < ApplicationRecord
   def show_position
     "#{task.position}.#{position}"
   end
-  
 
   private
 
@@ -43,7 +40,6 @@ class SubTask < ApplicationRecord
       sub_task.update(position: index + 1)
     end
   end
-  
 
   def end_date_after_start_date
     return if planned_start_date.blank? || planned_end_date.blank?
@@ -54,7 +50,6 @@ class SubTask < ApplicationRecord
 
     errors.add(:planned_end_date, "must be after start date")
   end
-
 
   def trigger_update_service
     UpdateDynamicAttributesService.new(self).update_all!
