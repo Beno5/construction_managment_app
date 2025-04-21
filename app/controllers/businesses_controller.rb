@@ -19,11 +19,11 @@ class BusinessesController < ApplicationController
 
   def edit
     @business = current_user.businesses.find_by(id: params[:id])
-    unless @business
-      redirect_to businesses_path, alert: "Business not found."
-    end
+    return if @business
+
+    redirect_to businesses_path, alert: "Business not found."
   end
-  
+
   def create
     @business = current_user.businesses.new(business_params)
     @business.user_id = current_user.id

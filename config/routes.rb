@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get 'real_activities/new'
-  get 'real_activities/create'
   devise_for :users
   root to: "businesses#index"
 
