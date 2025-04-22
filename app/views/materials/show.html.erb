@@ -1,45 +1,45 @@
 <%= render 'partials/header1', 
-           title: @material.persisted? ? "Pregled #{@material.name}" : "Novi Materijal",
-           model_name: "Materijali",
+           title:  @material.name,
+           model_name: t('materials.form.model_name'),
            search_path: nil,
            new_path: nil,
            additional_crumbs: [
-             { name: "Materijali", path: business_materials_path(@current_business) },
-             (@material.persisted? ? { name: @material.name, path: business_material_path(@current_business, @material) } : { name: "Novi Materijal", path: nil })
+             { name: t('materials.form.model_name'), path: business_materials_path(@current_business) },
+             (@material.persisted? ? { name: @material.name, path: business_material_path(@current_business, @material) } : { name: t('materials.form.new_title'), path: nil })
            ] %>
 
 <div class="grid grid-cols-6 gap-6">
   <!-- Naziv -->
   <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Naziv materijala</label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('materials.form.name') %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @material.name %>
     </div>
   </div>
   <!-- Cijena po jedinici -->
   <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cijena po jedinici <%="(#{@material.business.currency_symbol})"%></label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('materials.form.price_per_unit', currency: @material.business.currency_symbol) %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @material.price_per_unit %>
     </div>
   </div>
   <!-- Jedinica mjere -->
   <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jedinica mjere</label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('materials.form.unit_of_measure') %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @material.unit_of_measure.humanize %>
     </div>
   </div>
   <!-- Opis -->
   <div class="col-span-6">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Opis</label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('materials.form.description') %></label>
     <div class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @material.description %>
     </div>
   </div>
   <!-- Custom Polja -->
   <div class="col-span-6">
-    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Dodatna Polja</h3>
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('materials.form.custom_fields') %></h3>
     <% @material.custom_fields.each do |key, value| %>
       <div class="col-span-6 sm:col-span-3">
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= key.humanize %></label>

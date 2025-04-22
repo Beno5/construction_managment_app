@@ -1,0 +1,63 @@
+sr:
+  devise:
+    confirmations:
+      confirmed: "Vaša email adresa je uspešno potvrđena."
+      send_instructions: "U nekoliko minuta ćete dobiti email sa uputstvima za potvrdu vaše email adrese."
+      send_paranoid_instructions: "Ako vaša email adresa postoji u našoj bazi, dobićete email sa uputstvima za potvrdu vaše email adrese."
+    failure:
+      already_authenticated: "Već ste prijavljeni."
+      inactive: "Vaš nalog još uvek nije aktiviran."
+      invalid: "Nevalidni %{authentication_keys} ili lozinka."
+      locked: "Vaš nalog je zaključan."
+      last_attempt: "Imate još jedan pokušaj pre nego što vaš nalog bude zaključan."
+      not_found_in_database: "Nevalidni %{authentication_keys} ili lozinka."
+      timeout: "Vaš sesija je istekao. Molimo vas da se ponovo prijavite."
+      unauthenticated: "Morate biti prijavljeni ili se registrovati pre nego što nastavite."
+      unconfirmed: "Morate potvrditi vašu email adresu pre nego što nastavite."
+    mailer:
+      confirmation_instructions:
+        subject: "Uputstvo za potvrdu"
+      reset_password_instructions:
+        subject: "Uputstvo za resetovanje lozinke"
+      unlock_instructions:
+        subject: "Uputstvo za otključavanje"
+      email_changed:
+        subject: "Email promenjen"
+      password_change:
+        subject: "Lozinka promenjena"
+    omniauth_callbacks:
+      failure: "Nismo mogli da vas autentifikujemo preko %{kind} zbog \"%{reason}\"."
+      success: "Uspešno ste se autentifikovali preko %{kind} naloga."
+    passwords:
+      no_token: "Ne možete pristupiti ovoj stranici bez tokena koji ste dobili putem email-a za resetovanje lozinke."
+      send_instructions: "U nekoliko minuta ćete dobiti email sa uputstvima za resetovanje lozinke."
+      send_paranoid_instructions: "Ako vaša email adresa postoji u našoj bazi, dobićete email sa linkom za resetovanje lozinke."
+      updated: "Vaša lozinka je uspešno promenjena. Sada ste prijavljeni."
+      updated_not_active: "Vaša lozinka je uspešno promenjena."
+    registrations:
+      destroyed: "Zbogom! Vaš nalog je uspešno otkazan. Nadamo se da ćemo se ponovo videti uskoro."
+      signed_up: "Dobrodošli! Uspešno ste se registrovali."
+      signed_up_but_inactive: "Uspešno ste se registrovali. Međutim, nismo mogli da vas prijavimo jer vaš nalog još uvek nije aktiviran."
+      signed_up_but_locked: "Uspešno ste se registrovali. Međutim, nismo mogli da vas prijavimo jer je vaš nalog zaključan."
+      signed_up_but_unconfirmed: "Poslali smo vam email sa linkom za potvrdu. Molimo vas da pratite link kako biste aktivirali vaš nalog."
+      update_needs_confirmation: "Uspešno ste ažurirali svoj nalog, ali moramo da potvrdimo vašu novu email adresu. Molimo vas da proverite email i pratite link za potvrdu."
+      updated: "Vaš nalog je uspešno ažuriran."
+      updated_but_not_signed_in: "Vaš nalog je uspešno ažuriran, ali pošto je vaša lozinka promenjena, potrebno je da se ponovo prijavite."
+    sessions:
+      signed_in: "Uspešno ste se prijavili."
+      signed_out: "Uspešno ste se odjavili."
+      already_signed_out: "Već ste odjavljeni."
+    unlocks:
+      send_instructions: "U nekoliko minuta ćete dobiti email sa uputstvima za otključavanje vašeg naloga."
+      send_paranoid_instructions: "Ako vaš nalog postoji, dobićete email sa uputstvima za otključavanje."
+      unlocked: "Vaš nalog je uspešno otključan. Molimo vas da se prijavite da nastavite."
+  errors:
+    messages:
+      already_confirmed: "je već potvrđen, molimo vas da pokušate da se prijavite"
+      confirmation_period_expired: "mora biti potvrđen u periodu od %{period}, molimo vas da zatražite novi"
+      expired: "je istekao, molimo vas da zatražite novi"
+      not_found: "nije pronađen"
+      not_locked: "nije bio zaključan"
+      not_saved:
+        one: "1 greška je sprečila da %{resource} bude sačuvan:"
+        other: "%{count} grešaka je sprečilo da %{resource} bude sačuvan:"

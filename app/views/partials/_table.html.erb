@@ -1,4 +1,6 @@
-<h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white"><%= local_assigns[:model_name] %></h1>
+<% if ["Documents", "SubTasks", "Resources"].include?(local_assigns[:model_name]) %>
+  <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mt-4"><%= t("sidebar.#{local_assigns[:model_name].downcase}") %></h2>
+<% end %>
 <section class="bg-gray-50 dark:bg-gray-900 pt-5">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
@@ -8,7 +10,7 @@
           <form action="<%= local_assigns[:search_path] %>" method="GET" data-turbo-frame="<%= local_assigns[:frame_id] || "#{local_assigns[:model_name].downcase}-frame" %>" class="lg:pr-3" data-controller="search">
             <label for="search" class="sr-only">Search</label>
             <div class="relative mt-1 lg:w-64 xl:w-96">
-              <input type="text" name="search" id="search" placeholder="Search for <%= local_assigns[:model_name].downcase %>..." 
+              <input type="text" name="search" id="search" placeholder="<%= t("table.search.#{local_assigns[:model_name].singularize.downcase}") %>..." 
         class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
         data-action="input->search#performSearch">
             </div>
@@ -20,14 +22,14 @@
               <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
               </svg>
-              Add New Resource
+              <%= t('table.new.resource') %>
             </button>
           <% elsif model_name == "Documents" %>
             <button type="button" data-target="documents-modal" class="open-modal inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
               <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
               </svg>
-              Add New Document
+              <%= t('table.new.document') %>
             </button>
           <% else %>
             <% if local_assigns[:new_path].present? %>
@@ -35,7 +37,7 @@
                 <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
                 </svg>
-                Add New <%= local_assigns[:model_name].singularize %>
+                <%= t("table.new.#{local_assigns[:model_name].singularize.downcase}") %>
               <% end %>
             <% end %>
           <% end %>
@@ -84,15 +86,7 @@
               <% if collection.empty? %>
                 <tr>
                   <td colspan="<%= columns.size + 1 %>" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
-                    <p class="mb-4">Nemate <%= model_name.downcase %>. Dodajte novi da započnete!</p>
-                    <% if local_assigns[:new_path].present? %>
-                      <%= link_to local_assigns[:new_path], class: "inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" do %>
-                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
-                        </svg>
-                        Add New <%= local_assigns[:model_name].singularize %>
-                      <% end %>
-                    <% end %>
+                    <p class="mb-4"> <%= t("table.empty.#{local_assigns[:model_name].singularize.downcase}") %></p>
                   </td>
                 </tr>
               <% end %>
@@ -103,13 +97,7 @@
                       <% if attr.is_a?(Proc) %>
                         <%= attr.call(item) %>
                       <% elsif attr == :custom_fields && item.custom_fields.present? %>
-                        <% custom_fields = JSON.parse(item.custom_fields.to_json) rescue {} %>
-                        <%= render 'modals/modal_custom_fields', custom_fields: custom_fields, item: item %>
-                        <button type="button" class="text-blue-600 hover:underline open-modal" data-target="custom-fields-modal-<%= item.id %>">
-                          View
-                        </button>
-                      <% elsif attr == :custom_fields %>
-                        <span class="text-gray-400">None</span>
+                        <%= render 'partials/custom_fields_tooltip', item: item %>
                       <% else %>
                         <%= item.send(attr) %>
                       <% end %>
@@ -128,26 +116,26 @@
                       <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "#{model_name.downcase}-#{item.id}-dropdown-button" %>">
                         <% if model_name == "Resources" %>
                           <li>
-                            <%= link_to 'Show', '#', 
+                            <%= link_to t("table.actions.show.#{local_assigns[:model_name].singularize.downcase}") , '#', 
                             class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal resource-modal", 
                             data: { target: 'resource-modal', turbo: false, mode: 'show', type: item.activityable_type } %>
                           </li>
                           <li>
-                            <%= link_to 'Edit', '#',
+                            <%= link_to t("table.actions.edit.#{local_assigns[:model_name].singularize.downcase}"), '#',
                             class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal resource-modal",
                             data: { target: 'resource-modal', turbo: false, mode: 'edit', type: item.activityable_type, activity_id: item.id} %>
                           </li>
                           <li>
-                            <%= link_to 'Delete', business_project_task_sub_task_activity_path(@business, @project, @task, @sub_task, item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), business_project_task_sub_task_activity_path(@business, @project, @task, @sub_task, item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                         <% elsif model_name == "Documents"%>
                           <li>
-                            <%= link_to 'Edit', '#',
+                            <%= link_to t("table.actions.edit.#{local_assigns[:model_name].singularize.downcase}"), '#',
                               class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal",
                               data: { target: 'documents-modal', turbo: false, mode: 'edit', id: item.id, controller: "edit-document", action: "click->edit-document#loadDocument"} %>
                           </li>
                           <li>
-                            <%= link_to 'Delete', document_path(item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), document_path(item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                         <% else %>
                           <% if model_name == "Businesses"%>
@@ -158,13 +146,15 @@
                             </li>
                           <% end %>
                           <li>
-                            <%= link_to 'Show Projects', local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <% unless local_assigns[:model_name] == "Businesses" %>
+                            <%= link_to t("table.actions.show.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <% end %>
                           </li>
                           <li>
-                            <%= link_to 'Edit', local_assigns[:edit_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <%= link_to t("table.actions.edit.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:edit_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                           <li>
-                            <%= link_to 'Delete', local_assigns[:delete_path].call(item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete, item_id: item.id, item_type: item.model_name }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white delete-item-link" %>
+                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:delete_path].call(item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete, item_id: item.id, item_type: item.model_name }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white delete-item-link" %>
                           </li>
                         <% end %>
                       </ul>

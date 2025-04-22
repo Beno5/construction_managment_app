@@ -1,17 +1,15 @@
 <%= turbo_stream.replace "workers-frame", partial: "partials/table", locals: {
   collection: @workers,
-  columns: {
-    "Ime" => :first_name, 
-    "Prezime" => :last_name,
-    "Opis" => ->(worker) { content_tag(:span, worker.description.truncate(25), title: worker.description, class: "tooltip") },
-    "Profesija" => :profession, 
-    "Jedinica vremena" => ->(worker) { worker.unit_of_measure.humanize }, 
-    "Cijena po jedinici" => ->(worker) { "#{worker.price_per_unit} #{worker.business.currency_symbol}" }, 
-    "Tim" => ->(worker) { worker.is_team ? "Da" : "Ne" }, 
-    "Custom Polja" => :custom_fields
-  },
+   columns: {
+             t('workers.form.first_name') => :first_name,
+             t('workers.form.last_name') => :last_name,
+             t('workers.form.profession') => :profession,
+             t('workers.form.unit_of_measure') => ->(worker) { worker.unit_of_measure.humanize },
+             t('workers.form.price_per_unit', currency: @current_business.currency_symbol) => ->(worker) { "#{worker.price_per_unit} #{worker.business.currency_symbol}" },
+             t('workers.form.is_team') => ->(worker) { worker.is_team ? t('workers.form.yes') : t('workers.form.no') },
+             t('workers.form.description') => ->(worker) { content_tag(:span, worker.description.truncate(25), title: worker.description, class: "tooltip") }
+           },
   turbo_frame_id: "workers-frame",
   edit_path: paths[:edit_worker],
-  delete_path: paths[:delete_worker],
-  actions: []
+  delete_path: paths[:delete_worker]
 } %>

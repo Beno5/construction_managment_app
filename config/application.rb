@@ -12,6 +12,8 @@ module ConstructionManagmentApp
     config.load_defaults 7.0
 
     config.autoload_paths << Rails.root.join('app/services')
+    config.i18n.available_locales = [:en, :sr]
+    config.i18n.default_locale = :sr
 
     # Configuration for the application, engines, and railties goes here.
     #

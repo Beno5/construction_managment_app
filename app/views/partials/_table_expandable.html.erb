@@ -1,3 +1,5 @@
+  
+<h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mt-4"><%= t("real_resources.title") %></h2>
 <section class="bg-gray-50 dark:bg-gray-900 pt-5">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
@@ -58,7 +60,6 @@
               </tr>
             </thead>
             <tbody>
-              
               <% @activities.each_with_index do |activity, index| %>
                 <tr id="real-<%= dom_id(activity) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <td class="px-4 py-3">
@@ -146,7 +147,6 @@
         </div>
       </turbo-frame>
       <%= render "partials/nav_pages" %>
-
     </div>
   </div>
 </section>

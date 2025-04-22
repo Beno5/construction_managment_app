@@ -1,28 +1,19 @@
 <%= turbo_stream.replace "businesses-frame", partial: "partials/table", locals: {
   collection: @businesses,
-  columns: {
-    "Naziv" => :name, 
-    "Adresa" => :address, 
-    "Broj Telefona" => :phone_number,
-    "PIB" => :vat_number,
-    "Matični Broj" => :registration_number,
-    "Ime Vlasnika" => :owner_first_name,
-    "Prezime Vlasnika" => :owner_last_name,
-    "Valuta" => ->(business) { business.currency&.capitalize }
-  },
+   columns: {
+             t('businesses.index.columns.name') => :name, 
+             t('businesses.index.columns.address') => :address, 
+             t('businesses.index.columns.phone_number') => :phone_number,
+             t('businesses.index.columns.vat_number') => :vat_number,
+             t('businesses.index.columns.registration_number') => :registration_number,
+             t('businesses.index.columns.owner_first_name') => :owner_first_name,
+             t('businesses.index.columns.owner_last_name') => :owner_last_name,
+             t('businesses.index.columns.currency') => ->(business) { business.currency&.capitalize }
+           },
   turbo_frame_id: "businesses-frame",
   model_name: "Businesses",
   search_path: businesses_path,
   new_path: new_business_path,
   edit_path: ->(business) { edit_business_path(business) },
   delete_path: ->(business) { business_path(business) },
-  actions: [
-    ->(business) {
-      if current_business == business
-        content_tag(:span, "Selektovan", class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg")
-      else
-        button_to 'Izaberi', select_business_path(business), method: :post, class: "inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-      end
-    }
-  ]
 } %>

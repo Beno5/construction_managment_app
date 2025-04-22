@@ -1,56 +1,56 @@
 <%= render 'partials/header1', 
-           title: @business.persisted? ? "Edit #{@business.name}" : "New Business",
-           model_name: "Businesses",
+           title: @business.persisted? ? t('businesses.form.edit_title', name: @business.name) : t('businesses.form.new_title'),
+           model_name: t('businesses.form.model_name'),
            search_path: nil,
            new_path: nil,
            additional_crumbs: [
-             (@business.persisted? ? { name: @business.name, path: business_path(@business) } : { name: "New Business", path: nil })
+             (@business.persisted? ? { name: @business.name, path: business_path(@business) } : { name: t('businesses.form.new_title'), path: nil })
            ] %>
 <%= form_with model: @business, local: true do |f| %>
   <div class="grid grid-cols-6 gap-6">
     <!-- Business Name -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :name, "Business Name", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :name, t('businesses.form.name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
     <!-- Business Address -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :address, "Business Address", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :address, t('businesses.form.address'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :address, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Business Phone Number -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :phone_number, "Phone Number", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :phone_number, t('businesses.form.phone_number'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.telephone_field :phone_number, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- VAT Number -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :vat_number, "VAT Number", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :vat_number, t('businesses.form.vat_number'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :vat_number, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Registration Number -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :registration_number, "Registration Number", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :registration_number, t('businesses.form.registration_number'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :registration_number, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Owner First Name -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :owner_first_name, "Owner First Name", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :owner_first_name, t('businesses.form.owner_first_name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :owner_first_name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Owner Last Name -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :owner_last_name, "Owner Last Name", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :owner_last_name, t('businesses.form.owner_last_name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :owner_last_name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Currency Selection -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :currency, "Currency", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :currency, t('businesses.form.currency'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.select :currency, Business.currencies.keys.map { |c| [c.capitalize, c] }, {}, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
   </div>
   <!-- Submit Button -->
   <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
-    <%= f.submit @business.persisted? ? "Update Business" : "Create Business", data: { turbo: false }, class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>
+    <%= f.submit @business.persisted? ? t('businesses.form.update_button') : t('businesses.form.create_button'), data: { turbo: false }, class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>
   </div>
 <% end %>

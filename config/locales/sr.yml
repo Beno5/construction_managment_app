@@ -1,0 +1,201 @@
+sr:
+  date:
+    formats:
+      default: "%Y-%m-%d"
+      short: "%b %d"
+      long: "%B %d, %Y"
+    day_names:
+      - Nedelja
+      - Ponedeljak
+      - Utorak
+      - Sreda
+      - Četvrtak
+      - Petak
+      - Subota
+    abbr_day_names:
+      - ned
+      - pon
+      - uto
+      - sre
+      - čet
+      - pet
+      - sub
+    month_names:
+      - ~
+      - Januar
+      - Februar
+      - Mart
+      - April
+      - Maj
+      - Jun
+      - Jul
+      - Avgust
+      - Septembar
+      - Oktobar
+      - Novembar
+      - Decembar
+    abbr_month_names:
+      - ~
+      - jan
+      - feb
+      - mar
+      - apr
+      - maj
+      - jun
+      - jul
+      - avg
+      - sep
+      - okt
+      - nov
+      - dec
+    order:
+      - :year
+      - :month
+      - :day
+  time:
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"
+      short: "%d %b %H:%M"
+      long: "%B %d, %Y %H:%M"
+    am: "Pre podne"
+    pm: "Popodne"
+  devise:
+    registrations:
+      new:
+        create_account: "Kreirajte besplatan nalog"
+        email: "Vaša email adresa"
+        password: "Vaša lozinka"
+        password_confirmation: "Potvrdite lozinku"
+        accept_terms: "Prihvatam"
+        terms_link: "Uslove korišćenja"
+        create_account: "Kreirajte nalog"
+        already_have_account: "Već imate nalog?"
+        login_here: "Prijavite se ovde"
+  sidebar:
+    search: "Pretraži"
+    dashboard: "Nadzorna tabla"
+    projects: "Projekti"
+    finances: "Finansije"
+    workers: "Radnici"
+    machines: "Mašine"
+    materials: "Materijali"
+    businesses: "Firme"
+    settings: "Podešavanja"
+  businesses:
+    form:
+      edit_title: "Izmeni %{name}"
+      new_title: "Nova Firma"
+      name: "Naziv Firme"
+      address: "Adresa Firme"
+      phone_number: "Broj Telefona"
+      vat_number: "PIB"
+      registration_number: "Matični Broj"
+      owner_first_name: "Ime Vlasnika"
+      owner_last_name: "Prezime Vlasnika"
+      currency: "Valuta"
+      update_button: "Ažuriraj Firmu"
+      create_button: "Kreiraj Firmu"
+    index:
+      columns:
+        name: "Naziv"
+        address: "Adresa"
+        phone_number: "Broj telefona"
+        vat_number: "PIB"
+        registration_number: "Matični broj"
+        owner_first_name: "Ime vlasnika"
+        owner_last_name: "Prezime vlasnika"
+        currency: "Valuta"
+  materials:
+    form:
+      edit_title: "Izmeni %{name}"
+      new_title: "Novi Materijal"
+      name: "Naziv materijala"
+      price_per_unit: "Cijena po jedinici (%{currency})"
+      unit_of_measure: "Jedinica mjere"
+      select_unit: "Odaberite jedinicu"
+      description: "Opis"
+      custom_fields: "Dodatna Polja"
+      update_button: "Ažuriraj Materijal"
+      create_button: "Kreiraj Materijal"
+  machines:
+    form:
+      edit_title: "Izmeni %{name}"
+      new_title: "Nova Mašina"
+      name: "Naziv mašine"
+      price_per_unit: "Cijena po jedinici (%{currency})"
+      fixed_costs: "Fiksni troškovi (%{currency})"
+      unit_of_measure: "Jedinica mjere"
+      description: "Opis"
+      custom_fields: "Dodatna Polja"
+      update_button: "Ažuriraj Mašinu"
+      create_button: "Kreiraj Mašinu"
+  workers:
+    form:
+      edit_title: "Izmeni %{name}"
+      new_title: "Novi Radnik"
+      first_name: "Ime"
+      last_name: "Prezime"
+      profession: "Profesija"
+      unit_of_measure: "Jedinica vremena"
+      price_per_unit: "Cijena po jedinici (%{currency})"
+      is_team: "Da li je ovo tim?"
+      description: "Opis"
+      custom_fields: "Dodatna Polja"
+      update_button: "Ažuriraj Radnika"
+      create_button: "Kreiraj Radnika"
+  real_resources:
+    title: Stvarni resursi
+  table:
+    new:
+      resource: Dodaj novi resurs
+      document: Dodaj novi dokument
+      business: Dodaj novu firmu
+      machine: Dodaj novu mašinu
+      worker: Dodaj novog radnika
+      material: Dodaj novi materijal
+      project: Dodaj novi projekat
+    empty:
+      resource: Nemate resursa. Dodajte novi resurs da započnete.
+      document: Nemate dokumenata. Dodajte novi dokument da započnete.
+      business: Nemate firmi. Dodajte novu firmu da započnete.
+      machine: Nemate mašina. Dodajte novu mašinu da započnete.
+      worker: Nemate radnika. Dodajte novog radnika da započnete.
+      material: Nemate materijala. Dodajte novi materijal da započnete.
+      project: Nemate projekata. Dodajte novi projekat da započnete.
+    search:
+      resource: Pretraži resurse
+      document: Pretraži dokumente
+      business: Pretraži firme
+      machine: Pretraži mašine
+      worker: Pretraži radnike
+      material: Pretraži materijale
+      project: Pretraži projekte
+    actions:
+      edit: 
+        resource: Izmeni resurs
+        document: Izmeni dokument
+        business: Izmeni firmu
+        machine: Izmeni mašinu
+        worker: Izmeni radnika
+        material: Izmeni materijal
+        project: Izmeni projekat
+      delete: 
+        resource: Obriši resurs
+        document: Obriši dokument
+        business: Obriši firmu
+        machine: Obriši mašinu
+        worker: Obriši radnika
+        material: Obriši materijal
+        project: Obriši projekat
+      show:
+        resource: Prikaži resurs
+        document: Prikaži dokument
+        business: Prikaži firmu
+        machine: Prikaži mašinu
+        worker: Prikaži radnika
+        material: Prikaži materijal
+        project: Prikaži projekat
+     
+    
+  
+      
