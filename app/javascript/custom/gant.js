@@ -22,6 +22,33 @@ document.addEventListener("DOMContentLoaded", function () {
   gantt.config.date_grid = "%d.%m.%Y"; // Format datuma u tabeli (gridu)
   gantt.config.lightbox = false;
 
+  gantt.config.columns = [
+    {
+      name: "position",
+      label: "ID",
+      width: 80,
+      align: "left",
+      tree: true
+    },
+    {
+      name: "name",
+      label: "Task name",
+      width: "*",
+      align: "left"
+    },
+    {
+      name: "start_date",
+      label: "Start Date",
+      align: "left",
+      width: 100,
+    }
+  ];
+
+  gantt.templates.task_text = function(start, end, task) {
+    return ""; // Prikazuje prazno, ništa ne prikazuje
+  };
+  
+  
 
   gantt.init("gantt_here");
 
@@ -78,3 +105,15 @@ document.addEventListener("DOMContentLoaded", function () {
     return true; // Omogućava Gantt-u da završi dodavanje linka
   });
 });
+
+function buildTooltip(id, start, end) {
+  const template = document.getElementById("gantt-tooltip-template");
+  if (!template) return "";
+
+  let html = template.innerHTML;
+  html = html.replaceAll("REPLACE_ID", `tooltip-${id}`);
+  html = html.replace("REPLACE_START", start || "N/A");
+  html = html.replace("REPLACE_END", end || "N/A");
+
+  return html;
+}

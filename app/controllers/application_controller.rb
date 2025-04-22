@@ -2,7 +2,9 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_current_business, if: :user_signed_in?
+  before_action :set_locale
   helper_method :current_business
+  
 
   # Redirekcija nakon uspješne prijave
   def after_sign_in_path_for(resource)
@@ -15,6 +17,10 @@ class ApplicationController < ActionController::Base
     redirect_to businesses_path, alert: "Business not found." unless @business
   end
   
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
+
   private
 
   def current_business

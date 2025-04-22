@@ -1,33 +1,197 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   "true": "foo"
-#
-# To learn more, please read the Rails Internationalization guide
-# available at https://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  date:
+    formats:
+      default: "%Y-%m-%d"
+      short: "%b %d"
+      long: "%B %d, %Y"
+    day_names:
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+    abbr_day_names:
+      - Sun
+      - Mon
+      - Tue
+      - Wed
+      - Thu
+      - Fri
+      - Sat
+    month_names:
+      - ~
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
+    abbr_month_names:
+      - ~
+      - Jan
+      - Feb
+      - Mar
+      - Apr
+      - May
+      - Jun
+      - Jul
+      - Aug
+      - Sep
+      - Oct
+      - Nov
+      - Dec
+    order:
+      - :year
+      - :month
+      - :day
+  time:
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"
+      short: "%d %b %H:%M"
+      long: "%B %d, %Y %H:%M"
+    am: "AM"
+    pm: "PM"
+  devise:
+    registrations:
+      new:
+        create_account: "Create a free account"
+        email: "Your email address"
+        password: "Your password"
+        password_confirmation: "Confirm your password"
+        accept_terms: "I accept"
+        terms_link: "Terms of service"
+        create_account: "Create account"
+        already_have_account: "Already have an account?"
+        login_here: "Login here"
+  sidebar:
+    search: "Search"
+    dashboard: "Dashboard"
+    projects: "Projects"
+    finances: "Finances"
+    workers: "Workers"
+    machines: "Machines"
+    materials: "Materials"
+    businesses: "Businesses"
+    settings: "Settings"
+  businesses:
+    form:
+      edit_title: "Edit %{name}"
+      new_title: "New Business"
+      name: "Business Name"
+      address: "Business Address"
+      phone_number: "Phone Number"
+      vat_number: "VAT Number"
+      registration_number: "Registration Number"
+      owner_first_name: "Owner First Name"
+      owner_last_name: "Owner Last Name"
+      currency: "Currency"
+      update_button: "Update Business"
+      create_button: "Create Business"
+    index:
+      columns:
+        name: "Name"
+        address: "Address"
+        phone_number: "Phone Number"
+        vat_number: "VAT Number"
+        registration_number: "Registration Number"
+        owner_first_name: "Owner First Name"
+        owner_last_name: "Owner Last Name"
+        currency: "Currency"
+  materials:
+    form:
+      edit_title: "Edit %{name}"
+      new_title: "New Material"
+      name: "Material Name"
+      price_per_unit: "Price per unit (%{currency})"
+      unit_of_measure: "Unit of Measure"
+      select_unit: "Select a unit"
+      description: "Description"
+      custom_fields: "Additional Fields"
+      update_button: "Update Material"
+      create_button: "Create Material"
+  machines:
+    form:
+      edit_title: "Edit %{name}"
+      new_title: "New Machine"
+      name: "Machine Name"
+      price_per_unit: "Price per unit (%{currency})"
+      fixed_costs: "Fixed Costs (%{currency})"
+      unit_of_measure: "Unit of Measure"
+      description: "Description"
+      custom_fields: "Additional Fields"
+      update_button: "Update Machine"
+      create_button: "Create Machine"
+  workers:
+    form:
+      edit_title: "Edit %{name}"
+      new_title: "New Worker"
+      first_name: "First Name"
+      last_name: "Last Name"
+      profession: "Profession"
+      unit_of_measure: "Unit of Measure"
+      price_per_unit: "Price per unit (%{currency})"
+      is_team: "Is this a team?"
+      description: "Description"
+      custom_fields: "Additional Fields"
+      update_button: "Update Worker"
+      create_button: "Create Worker"
+  real_resources:
+    title: Real resources
+  table:
+    new:
+      resource: "Add New Resource"
+      document: "Add New Document"
+      business: "Add New Business"
+      machine: "Add New Machine"
+      worker: "Add New Worker"
+      material: "Add New Material"
+      project: "Add New Project"
+    empty:
+      resource: "You don't have any resources. Add a new resource to get started."
+      document: "You don't have any documents. Add a new document to get started."
+      business: "You don't have any businesses. Add a new business to get started."
+      machine: "You don't have any machines. Add a new machine to get started."
+      worker: "You don't have any workers. Add a new worker to get started."
+      material: "You don't have any materials. Add a new material to get started."
+      project: "You don't have any projects. Add a new project to get started."
+    search:
+      resource: "Search resources"
+      document: "Search documents"
+      business: "Search businesses"
+      machine: "Search machines"
+      worker: "Search workers"
+      material: "Search materials"
+      project: "Search projects"
+    actions:
+      edit:
+        resource: "Edit resource"
+        document: "Edit document"
+        business: "Edit business"
+        machine: "Edit machine"
+        worker: "Edit worker"
+        material: "Edit material"
+        project: "Edit project"
+      delete:
+        resource: "Delete resource"
+        document: "Delete document"
+        business: "Delete business"
+        machine: "Delete machine"
+        worker: "Delete worker"
+        material: "Delete material"
+        project: "Delete project"
+      show:
+        resource: "Show resource"
+        document: "Show document"
+        business: "Show business"
+        machine: "Show machine"
+        worker: "Show worker"
+        material: "Show material"
+        project: "Show project"

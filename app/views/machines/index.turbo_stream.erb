@@ -1,13 +1,13 @@
 <%= turbo_stream.replace "machines-frame", partial: "partials/table", locals: {
   collection: @machines,
   columns: {
-    "Naziv" => :name, 
-    "Opis" => ->(machine) { content_tag(:span, machine.description.truncate(25), title: machine.description, class: "tooltip") },
-    "Jedinica Vremena" => ->(machine) { machine.unit_of_measure.humanize },
-    "Cijena po jedinici" => ->(machine) { "#{machine.price_per_unit} #{machine.business.currency_symbol}" }, 
-    "Fiksni Troškovi (€)" => :fixed_costs,
-    "Custom Polja" => :custom_fields
-  },
+             t('machines.form.name') => :name, 
+             t('machines.form.description') => ->(machine) { content_tag(:span, machine.description.truncate(25), title: machine.description, class: "tooltip") },
+             t('machines.form.unit_of_measure') => ->(machine) { machine.unit_of_measure.humanize },
+             t('machines.form.price_per_unit', currency: @current_business.currency_symbol) => ->(machine) { "#{machine.price_per_unit} #{machine.business.currency_symbol}" }, 
+             t('machines.form.fixed_costs', currency: @current_business.currency_symbol) => :fixed_costs,
+             t('machines.form.custom_fields') => :custom_fields
+           },
   turbo_frame_id: "machines-frame",
   model_name: model_name, 
   edit_path: paths[:edit_machine],

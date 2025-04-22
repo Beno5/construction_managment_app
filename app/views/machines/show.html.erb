@@ -1,57 +1,57 @@
 <%= render 'partials/header1', 
-           title: @machine.persisted? ? "Pregled #{@machine.name}" : "Nova Mašina",
-           model_name: "Mašine",
+           title:  @machine.name,
+           model_name: t('machines.form.model_name'),
            search_path: nil,
            new_path: nil,
            additional_crumbs: [
-             { name: "Mašine", path: business_machines_path(@current_business) },
-             (@machine.persisted? ? { name: @machine.name, path: business_machine_path(@current_business, @machine) } : { name: "Nova Mašina", path: nil })
+             { name: t('machines.form.model_name'), path: business_machines_path(@current_business) },
+             (@machine.persisted? ? { name: @machine.name, path: business_machine_path(@current_business, @machine) } : { name: t('machines.form.new_title'), path: nil })
            ] %>
 
 <div class="grid grid-cols-6 gap-6">
-  <!-- Naziv -->
+  <!-- Name -->
   <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Naziv mašine</label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.name') %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @machine.name %>
     </div>
   </div>
 
-  <!-- Jedinica mjere -->
+  <!-- Unit of Measure -->
   <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jedinica mjere</label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.unit_of_measure') %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @machine.unit_of_measure.humanize %>
     </div>
   </div>
 
-  <!-- Cijena po jedinici -->
+  <!-- Price Per Unit -->
   <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cijena po jedinici <%="(#{@machine.business.currency_symbol})"%></label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.price_per_unit', currency: @machine.business.currency_symbol) %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @machine.price_per_unit %>
     </div>
   </div>
 
-  <!-- Fiksni troškovi -->
+  <!-- Fixed Costs -->
   <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fiksni troškovi <%="(#{@machine.business.currency_symbol})"%></label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.fixed_costs', currency: @machine.business.currency_symbol) %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @machine.fixed_costs %>
     </div>
   </div>
 
-  <!-- Opis -->
+  <!-- Description -->
   <div class="col-span-6">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Opis</label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.description') %></label>
     <div class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @machine.description %>
     </div>
   </div>
 
-  <!-- Custom Polja -->
+  <!-- Custom Fields -->
   <div class="col-span-6">
-    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Dodatna Polja</h3>
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('machines.form.custom_fields') %></h3>
     <% @machine.custom_fields.each do |key, value| %>
       <div class="col-span-6 sm:col-span-3">
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= key.humanize %></label>
