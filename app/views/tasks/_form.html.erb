@@ -1,12 +1,12 @@
 <%= render 'partials/header1', 
-           title: @task.persisted? ? "Edit #{@task.name}" : "New Task",
-           model_name: "Tasks",
+           title: @task.persisted? ? t('tasks.form.edit_title', name: @task.name) : t('tasks.form.new_title'),
+           model_name: t('tasks.form.model_name'),
            search_path: nil,
            new_path: nil,
            additional_crumbs: [
-             { name: "Projects", path: business_projects_path(@current_business) },
+             { name: t('projects.form.model_name'), path: business_projects_path(@current_business) },
              { name: @project.name, path: business_project_path(@current_business, @project) },
-             (@task.persisted? ? { name: @task.description, path: business_project_task_path(@current_business, @project, @task) } : { name: "New Task", path: nil })
+             (@task.persisted? ? { name: @task.name, path: business_project_task_path(@current_business, @project, @task) } : { name: t('tasks.form.new_title'), path: nil })
            ] %>
 
 <!-- Task Form -->
@@ -14,39 +14,39 @@
   <div class="grid grid-cols-6 gap-6">
     <!-- Name -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :name, "Ime", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :name, t('tasks.form.name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
     <!-- Description -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :description, "Opis aktivnosti", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :description, t('tasks.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :description, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
     <!-- Planned Start Date -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :planned_start_date, "Planirani početak radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :planned_start_date, t('tasks.form.planned_start_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.date_field :planned_start_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Planned End Date -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :planned_end_date, "Planirani kraj radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :planned_end_date, t('tasks.form.planned_end_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.date_field :planned_end_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Planned Cost -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :planned_cost, "Planirani troškovi aktivnosti (#{@project.business.currency_symbol})", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :planned_cost, t('tasks.form.planned_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.number_field :planned_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
     <!-- Custom Fields -->
     <div class="col-span-6">
-      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Prilagođena polja</h3>
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('tasks.form.custom_fields') %></h3>
       <%= render 'partials/custom_fields', custom_fields: @task.custom_fields, model: 'task' %>
     </div>
     
   </div>
   <!-- Submit Button -->
   <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
-    <%= f.submit @task.persisted? ? "Update Task" : "Create Task", data: { turbo: false }, class: "text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" %>
+    <%= f.submit @task.persisted? ? t('tasks.form.update_button') : t('tasks.form.create_button'), data: { turbo: false }, class: "text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" %>
   </div>
 <% end %>

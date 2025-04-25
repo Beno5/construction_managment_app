@@ -1,5 +1,5 @@
 <% if ["Documents", "SubTasks", "Resources"].include?(local_assigns[:model_name]) %>
-  <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mt-4"><%= t("sidebar.#{local_assigns[:model_name].downcase}") %></h2>
+  <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mt-4"><%= t("#{local_assigns[:model_name].downcase}.form.model_name") %></h2>
 <% end %>
 <section class="bg-gray-50 dark:bg-gray-900 pt-5">
   <div class="mx-auto">
@@ -147,7 +147,7 @@
                           <% end %>
                           <li>
                             <% unless local_assigns[:model_name] == "Businesses" %>
-                            <%= link_to t("table.actions.show.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                              <%= link_to t("table.actions.show.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                             <% end %>
                           </li>
                           <li>

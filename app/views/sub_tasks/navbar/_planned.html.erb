@@ -1,26 +1,27 @@
 <div class="grid grid-cols-6 gap-6">
-  <!-- Planirani početak radova -->
+  <!-- Planned Start Date -->
   <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani početak radova</label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.planned_start_date') %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.planned_start_date %>
+      <%= @sub_task.planned_start_date&.strftime("%d.%m.%Y") %>
     </div>
   </div>
-  <!-- Planirani kraj radova -->
+  <!-- Planned End Date -->
   <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani kraj radova</label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.planned_end_date') %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.planned_end_date %>
+      <%= @sub_task.planned_end_date&.strftime("%d.%m.%Y") %>
     </div>
   </div>
-  <!-- Planirani troškovi aktivnosti -->
+  <!-- Planned Cost -->
   <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Planirani troškovi aktivnosti (#{@project.business.currency_symbol})</label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.planned_cost', currency: @project.business.currency_symbol) %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @sub_task.planned_cost %>
     </div>
   </div>
 </div>
+
 <% 
   model_name = "Resources"
   paths = {
@@ -29,18 +30,19 @@
     delete_resource: ->(resource) { url_for([@current_business, resource.activityable]) }
   }
 %>
-<% if @sub_task.planned_auto_calculation%>
+
+<% if @sub_task.planned_auto_calculation %>
   <%= render 'partials/table', 
            collection: @activities, 
            columns: {
-             "Ime" => ->(activity) { activity.activityable.name }, 
-             "Vrsta" => ->(activity) { activity.activity_type }, 
-             "Opis" => ->(activity) { activity.activityable.description }, 
-             "Planirani start date" => ->(activity) { activity.start_date.strftime("%Y-%m-%d") },
-             "Količina" => ->(activity) { activity.quantity }, 
-             "Jedinica mjere" => ->(activity) { activity.activityable.unit_of_measure }, 
-             "Cijena po JM" => ->(activity) { activity.activityable.price_per_unit }, 
-             "Ukupno" => ->(activity) { activity.total_cost }, 
+             t('tasks.form.name') => ->(activity) { activity.activityable.name }, 
+             t('tasks.form.type') => ->(activity) { activity.activity_type }, 
+             t('tasks.form.description') => ->(activity) { activity.activityable.description }, 
+             t('tasks.form.planned_start_date') => ->(activity) { activity.start_date.strftime("%d.%m.%Y") },
+             t('tasks.form.quantity') => ->(activity) { activity.quantity }, 
+             t('tasks.form.unit_of_measure') => ->(activity) { activity.activityable.unit_of_measure }, 
+             t('tasks.form.price_per_unit') => ->(activity) { activity.activityable.price_per_unit }, 
+             t('tasks.form.total_cost') => ->(activity) { activity.total_cost }, 
            },
            turbo_frame_id: "resources-frame",
            model_name: model_name, 
@@ -49,4 +51,5 @@
            delete_path: "",
            actions: [] %>
 <% end %>
+
 <%= render "modals/modal_resource" %>

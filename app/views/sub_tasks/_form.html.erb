@@ -1,13 +1,13 @@
 <%= render 'partials/header1', 
-           title: @sub_task.persisted? ? "Edit #{@sub_task.description}" : "New SubTask",
-           model_name: "SubTasks",
+           title: @sub_task.persisted? ? t('subtasks.form.edit_title', name: @sub_task.description) : t('subtasks.form.new_title'),
+           model_name: t('subtasks.form.model_name'),
            search_path: nil,
            new_path: nil,
            additional_crumbs: [
-             { name: "Projects", path: business_projects_path(@current_business) },
+             { name: t('projects.form.model_name'), path: business_projects_path(@current_business) },
              { name: @project.name, path: business_project_path(@current_business, @project) },
              { name: @task.name, path: business_project_task_path(@current_business, @project, @task) },
-             (@sub_task.persisted? ? { name: @sub_task.description, path: business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) } : { name: "New SubTask", path: nil })
+             (@sub_task.persisted? ? { name: @sub_task.description, path: business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) } : { name: t('subtasks.form.new_title'), path: nil })
            ] %>
 
 <!-- SubTask Form -->
@@ -15,111 +15,73 @@
   <div class="grid grid-cols-6 gap-6">
     <!-- Name -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :name, "Ime", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :name, t('subtasks.form.name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
 
     <!-- Description -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :description, "Opis aktivnosti", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :description, t('subtasks.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :description, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
 
     <!-- Planned Auto Calculation Checkbox -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :planned_auto_calculation, "Calculate planned values automatically", class: "block font-medium text-sm text-gray-700" %>
+      <%= f.label :planned_auto_calculation, t('subtasks.form.planned_auto_calculation'), class: "block font-medium text-sm text-gray-700" %>
       <%= f.check_box :planned_auto_calculation, id: "planned_auto_checkbox", class: "mt-1" %>
     </div>
 
     <!-- Planned Start Date -->
     <div class="col-span-4 sm:col-span-3">
-      <%= f.label :planned_start_date, "Planirani početak radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :planned_start_date, t('subtasks.form.planned_start_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.date_field :planned_start_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
     <!-- Planned End Date -->
     <div class="col-span-4 sm:col-span-3">
-      <%= f.label :planned_end_date, "Planirani kraj radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :planned_end_date, t('subtasks.form.planned_end_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.date_field :planned_end_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
     <!-- Planned Cost -->
     <div class="col-span-4 sm:col-span-3">
-      <%= f.label :planned_cost, "Planirani troškovi aktivnosti (#{@project.business.currency_symbol})", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :planned_cost, t('subtasks.form.planned_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.number_field :planned_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
     <!-- Real Auto Calculation Checkbox -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :real_auto_calculation, "Calculate real values automatically", class: "block font-medium text-sm text-gray-700" %>
+      <%= f.label :real_auto_calculation, t('subtasks.form.real_auto_calculation'), class: "block font-medium text-sm text-gray-700" %>
       <%= f.check_box :real_auto_calculation, id: "real_auto_checkbox", class: "mt-1" %>
     </div>
 
     <!-- Real Start Date -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :real_start_date, "Stvarni početak radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :real_start_date, t('subtasks.form.real_start_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.date_field :real_start_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
     <!-- Real End Date -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :real_end_date, "Stvarni kraj radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :real_end_date, t('subtasks.form.real_end_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.date_field :real_end_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
     <!-- Real Costs -->
     <div class="col-span-6 sm:col-span-3">
-      <%= f.label :real_cost, "Stvarni troškovi aktivnosti (#{@project.business.currency_symbol})", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :real_cost, t('subtasks.form.real_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.number_field :real_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
+    <!-- Custom Fields -->
     <div class="col-span-6">
-      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Custom Fields</h3>
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('subtasks.form.custom_fields') %></h3>
       <%= render 'partials/custom_fields', custom_fields: @sub_task.custom_fields, model: 'sub_task' %>
     </div>
   </div>
 
   <!-- Submit Button -->
   <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
-    <%= f.submit @sub_task.persisted? ? "Update SubTask" : "Create SubTask", data: { turbo: false }, class: "text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" %>
+    <%= f.submit @sub_task.persisted? ? t('subtasks.form.update_button') : t('subtasks.form.create_button'), data: { turbo: false }, class: "text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" %>
   </div>
 <% end %>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const plannedAutoCheckbox = document.getElementById("planned_auto_checkbox");
-  const realAutoCheckbox = document.getElementById("real_auto_checkbox");
-
-  const plannedStartDate = document.getElementById("sub_task_planned_start_date");
-  const plannedEndDate = document.getElementById("sub_task_planned_end_date");
-  const plannedCost = document.getElementById("sub_task_planned_cost");
-
-  const realStartDate = document.getElementById("sub_task_real_start_date");
-  const realEndDate = document.getElementById("sub_task_real_end_date");
-  const realCost = document.getElementById("sub_task_real_cost");
-
-  function toggleFields() {
-    // Toggle fields for Planned Auto Calculation
-    const isPlannedChecked = plannedAutoCheckbox.checked;
-
-    plannedStartDate.disabled = isPlannedChecked;
-    plannedEndDate.disabled = isPlannedChecked;
-    plannedCost.disabled = isPlannedChecked;
-
-    // Toggle fields for Real Auto Calculation
-    const isRealChecked = realAutoCheckbox.checked;
-
-    realStartDate.disabled = isRealChecked;
-    realEndDate.disabled = isRealChecked;
-    realCost.disabled = isRealChecked;
-  }
-
-  // Initial check on page load
-  toggleFields();
-
-  // Listen for checkbox changes
-  plannedAutoCheckbox.addEventListener("change", toggleFields);
-  realAutoCheckbox.addEventListener("change", toggleFields);
-});
-
-</script>

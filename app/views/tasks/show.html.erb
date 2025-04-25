@@ -1,5 +1,5 @@
 <% 
-  model_name = "SubTasks"
+  model_name = t('subtasks.form.model_name')
   paths = {
     task: business_project_task_path(@current_business, @project, @task),
     tasks: business_project_tasks_path(@current_business, @project),
@@ -11,78 +11,84 @@
 %>
 <%= render 'partials/header1', 
            title: @task.name, 
-           model_name: model_name, 
+           model_name: t('tasks.form.model_name'), 
            search_path: paths[:task], 
            new_path: paths[:new_subtask],
            additional_crumbs: [
-             { name: "Projects", path: business_projects_path(@current_business) },
-             { name: @project.name, path: paths[:task] },
+             { name: t('projects.form.model_name'), path: business_projects_path(@current_business) },
+             { name: @project.name, path: business_project_path(@current_business, @project) },
              { name: @task.name, path: paths[:task] }
            ] %>
+
 <div class="grid grid-cols-6 gap-6">
   <!-- Name -->
   <div class="col-span-6 sm:col-span-3">
-    <%= label_tag :name, "Ime", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= label_tag :name, t('tasks.form.name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
     <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @task.name %>
     </div>
   </div>
   <!-- Description -->
   <div class="col-span-6 sm:col-span-3">
-    <%= label_tag :description, "Opis aktivnosti", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= label_tag :description, t('tasks.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
     <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @task.description %>
     </div>
   </div>
 </div>
+
 <div class="grid grid-cols-6 gap-6">
   <!-- Planned Start Date -->
   <div class="col-span-6 sm:col-span-3">
-    <%= label_tag :planned_start_date, "Planirani početak radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= label_tag :planned_start_date, t('tasks.form.planned_start_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
     <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
-      <%= @task.planned_start_date.strftime("%Y-%m-%d") if @task.planned_start_date %>
+      <%= @task.planned_start_date&.strftime("%d.%m.%Y") %>
     </div>
   </div>
   <!-- Planned End Date -->
   <div class="col-span-6 sm:col-span-3">
-    <%= label_tag :planned_end_date, "Planirani kraj radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= label_tag :planned_end_date, t('tasks.form.planned_end_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
     <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
-      <%= @task.planned_end_date.strftime("%Y-%m-%d") if @task.planned_end_date %>
+      <%= @task.planned_end_date&.strftime("%d.%m.%Y") %>
     </div>
   </div>
   <!-- Planned Cost -->
   <div class="col-span-6 sm:col-span-3">
-    <%= label_tag :planned_cost, "Planirani troškovi aktivnosti (#{@project.business.currency_symbol})", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= label_tag :planned_cost, t('tasks.form.planned_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
     <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @task.planned_cost %>
     </div>
   </div>
 </div>
+
 <div class="grid grid-cols-6 gap-6">
   <!-- Real Start Date -->
   <div class="col-span-6 sm:col-span-3">
-    <%= label_tag :real_start_date, "Stvarni početak radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= label_tag :real_start_date, t('tasks.form.real_start_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
     <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
-      <%= @task.real_start_date.strftime("%Y-%m-%d") if @task.real_start_date %>
+      <%= @task.real_start_date&.strftime("%d.%m.%Y") %>
     </div>
   </div>
   <!-- Real End Date -->
   <div class="col-span-6 sm:col-span-3">
-    <%= label_tag :real_end_date, "Stvarni kraj radova", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= label_tag :real_end_date, t('tasks.form.real_end_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
     <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
-      <%= @task.real_end_date.strftime("%Y-%m-%d") if @task.real_end_date %>
+      <%= @task.real_end_date&.strftime("%d.%m.%Y") %>
     </div>
   </div>
   <!-- Real Cost -->
   <div class="col-span-6 sm:col-span-3">
-    <%= label_tag :real_cost, "Stvarni troškovi aktivnosti (#{@project.business.currency_symbol})", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= label_tag :real_cost, t('tasks.form.real_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
     <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= number_to_currency(@task.real_cost, unit: @project.business.currency_symbol) %>
     </div>
   </div>
+</div>
+
+<div class="grid grid-cols-6 gap-6">
   <!-- Custom Fields -->
   <div class="col-span-6">
-    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Dodatna Polja</h3>
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('tasks.form.custom_fields') %></h3>
     <% @task.custom_fields.each do |key, value| %>
       <div class="col-span-6 sm:col-span-3">
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= key.humanize %></label>
@@ -93,22 +99,24 @@
     <% end %>
   </div>
 </div>
+
 <%= render 'partials/table', 
            collection: @subtasks, 
            columns: {
-             "Naziv" => :description,
-             "Planirani Početak" => ->(subtask) { I18n.l(subtask.planned_start_date, format: :long) if subtask.planned_start_date },
-             "Planirani Kraj" => ->(subtask) { I18n.l(subtask.planned_end_date, format: :long) if subtask.planned_end_date },
-             "Custom Polja" => :custom_fields
+             t('subtasks.form.name') => :description,
+             t('subtasks.form.planned_start_date') => ->(subtask) { I18n.l(subtask.planned_start_date, format: :long) if subtask.planned_start_date },
+             t('subtasks.form.planned_end_date') => ->(subtask) { I18n.l(subtask.planned_end_date, format: :long) if subtask.planned_end_date },
+             t('subtasks.form.custom_fields') => :custom_fields
            },
            turbo_frame_id: "subtasks-frame",
-           model_name: model_name, 
+           model_name: "SubTasks", 
            search_path: paths[:task], 
            new_path: paths[:new_subtask],
            show_path: paths[:show_subtask],
            edit_path: paths[:edit_subtask],
            delete_path: paths[:delete_subtask],
            actions: [] %>
+
 <% 
   model_name_doc = "Documents"
   paths_doc = {
@@ -121,10 +129,10 @@
 <%= render 'partials/table', 
            collection: @documents, 
            columns: {
-             "Naziv" => :name, 
-             "Opis" => ->(document) { content_tag(:span, document.description&.truncate(25), title: document.description, class: "tooltip") },
-             "Veličina" => ->(document) { document.file.attached? ? "#{document.file.byte_size / 1024} KB" : "Nema" },
-             "Datum kreiranja" => ->(document) { document.created_at.strftime("%Y-%m-%d") }
+             t('documents.form.name') => :name, 
+             t('documents.form.description') => ->(document) { content_tag(:span, document.description&.truncate(25), title: document.description, class: "tooltip") },
+             t('documents.form.size') => ->(document) { document.file.attached? ? "#{document.file.byte_size / 1024} KB" : t('documents.form.no_file') },
+             t('documents.form.created_at') => ->(document) { document.created_at.strftime("%Y-%m-%d") }
            },
            turbo_frame_id: "documents-frame",
            model_name: model_name_doc, 

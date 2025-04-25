@@ -1,10 +1,11 @@
 <%= render 'partials/header1', 
-           title: "Projects", 
-           model_name: "Projects",
+           title: t('projects.form.model_name'), 
+           model_name: t('projects.form.model_name'),
            show_search: true,
            search_path: business_projects_path(@current_business), 
            new_path: new_business_project_path(@current_business),
            additional_crumbs: [] %>
+
 <turbo-frame id="projects-frame">
   <% if @projects.any? %>
     <div class="grid grid-cols-1 xl:grid-cols-3 xl:gap-4 dark:bg-gray-900">
@@ -15,14 +16,14 @@
   <% else %>
     <div class="text-center py-12 px-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
       <p class="text-gray-600 dark:text-gray-300 mb-4 text-lg pt-2">
-        Nemate nijedan projekat. Dodajte novi da započnete!
+        <%= t('projects.form.no_projects_message') %>
       </p>
       <%= link_to new_business_project_path(@current_business), data: { turbo: false },
           class: "inline-flex items-center justify-center mb-5 px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" do %>
         <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
         </svg>
-        Dodaj novi projekat
+        <%= t('projects.form.add_new_project') %>
       <% end %>
     </div>
   <% end %>
