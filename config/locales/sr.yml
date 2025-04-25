@@ -85,6 +85,7 @@ sr:
     form:
       edit_title: "Izmeni %{name}"
       new_title: "Nova Firma"
+      model_name: "Firme"
       name: "Naziv Firme"
       address: "Adresa Firme"
       phone_number: "Broj Telefona"
@@ -109,6 +110,7 @@ sr:
     form:
       edit_title: "Izmeni %{name}"
       new_title: "Novi Materijal"
+      model_name: "Materijali"
       name: "Naziv materijala"
       price_per_unit: "Cijena po jedinici (%{currency})"
       unit_of_measure: "Jedinica mjere"
@@ -121,6 +123,7 @@ sr:
     form:
       edit_title: "Izmeni %{name}"
       new_title: "Nova Mašina"
+      model_name: "Mašine"
       name: "Naziv mašine"
       price_per_unit: "Cijena po jedinici (%{currency})"
       fixed_costs: "Fiksni troškovi (%{currency})"
@@ -133,6 +136,7 @@ sr:
     form:
       edit_title: "Izmeni %{name}"
       new_title: "Novi Radnik"
+      model_name: "Radnici"
       first_name: "Ime"
       last_name: "Prezime"
       profession: "Profesija"
@@ -143,8 +147,147 @@ sr:
       custom_fields: "Dodatna Polja"
       update_button: "Ažuriraj Radnika"
       create_button: "Kreiraj Radnika"
+  projects:
+    form:
+      edit_title: "Izmeni %{name}"
+      new_title: "Novi Projekat"
+      model_name: "Projekti"
+      client_project_id: "ID Klijentskog Projekta"
+      name: "Naziv Projekta"
+      address: "Adresa Projekta"
+      project_manager: "Menadžer Projekta"
+      planned_start_date: "Planirani Datum Početka"
+      planned_end_date: "Planirani Datum Zavrsetka"
+      planned_cost: "Procijenjeni Trošak (%{currency})"
+      real_start_date: "Stvarni Datum Početka"
+      real_end_date: "Stvarni Datum Zavrsetka"
+      real_cost: "Stvarni Trošak (%{currency})"
+      status: "Status Projekta"
+      description: "Opis Projekta"
+      custom_fields: "Prilagođena Polja"
+      task_count: "Broj Pozicija"
+      not_available: "N/A"
+      view_custom_fields: "Prikaži Prilagođena Polja"
+      add_task: "Dodaj Poziciju"
+      view_project: "Pregled Projekta"
+      edit_project: "Izmeni Projekat"
+      delete_project: "Obriši Projekat"
+      delete_confirmation: "Da li ste sigurni da želite obrisati ovaj projekat?"
+      no_projects_message: "Nemate nijedan projekat. Dodajte novi da započnete!"
+      add_new_project: "Dodaj novi projekat"
+      update_button: "Ažuriraj Projekat"
+      create_button: "Kreiraj Projekat"
+    show:
+      timeline_title: "Vremenska Linija Projekta (Gantogram)"
+  tasks:
+    add_new: "Dodaj novu poziciju"
+    table:
+      id: "ID"
+      name: "Naziv"
+      description: "Opis"
+      planned_start_date: "Planirani Početak"
+      planned_end_date: "Planirani Kraj"
+      custom_fields: "Prilagođena Polja"
+      actions: "Akcije"
+    actions:
+      show: "Prikaži Poziciju"
+      edit: "Izmeni Poziciju"
+      delete: "Obriši Poziciju"
+      confirm_delete: "Da li ste sigurni da želite obrisati ovu poziciju?"
+    form:
+      edit_title: "Izmeni %{name}"
+      new_title: "Nova Pozicija"
+      model_name: "Pozicije"
+      name: "Naziv Pozicije"
+      description: "Opis Pozicije"
+      planned_start_date: "Planirani Datum Početka"
+      planned_end_date: "Planirani Datum Zavrsetka"
+      planned_cost: "Planirani Trošak (%{currency})"
+      custom_fields: "Prilagođena Polja"
+      update_button: "Ažuriraj Poziciju"
+      create_button: "Kreiraj Poziciju"
+      real_start_date: "Stvarni Datum Početka"
+      real_end_date: "Stvarni Datum Zavrsetka"
+      real_cost: "Stvarni Trošak (%{currency})"
+  subtasks:
+    form:
+      edit_title: "Izmeni %{name}"
+      new_title: "Nova Podpozicija"
+      model_name: "Podpozicije"
+      name: "Naziv Podpozicije"
+      description: "Opis Podpozicije"
+      planned_auto_calculation: "Automatski izračunaj planirane vrednosti"
+      planned_start_date: "Planirani Datum Početka"
+      planned_end_date: "Planirani Datum Zavrsetka"
+      planned_cost: "Planirani Trošak (%{currency})"
+      real_auto_calculation: "Automatski izračunaj stvarne vrednosti"
+      real_start_date: "Stvarni Datum Početka"
+      real_end_date: "Stvarni Datum Zavrsetka"
+      real_cost: "Stvarni Trošak (%{currency})"
+      custom_fields: "Prilagođena Polja"
+      update_button: "Ažuriraj Podpoziciju"
+      create_button: "Kreiraj Podpoziciju"
+      add_new: "Dodaj Podpoziciju"
+    actions:
+      show: "Prikaži Podpoziciju"
+      add_new: "Dodaj novu Podpoziciju"
+      edit: "Izmeni Podpoziciju"
+      delete: "Obriši Podpoziciju"
+      confirm_delete: "Da li ste sigurni da želite obrisati ovu podpoziciju?"
+    show:
+      info_communication: "Info i Komunikacija"
+      planned: "Planirano"
+      real: "Realno"
+  resources:
+    form:
+      model_name: "Planirani Resursi"
+      search_placeholder: "Pretraži resurse..."
+    modal:
+      title: "Kreiraj Resurs"
+      standard: "Standardni Resurs"
+      custom: "Prilagođeni Resurs"
+      close: "Zatvori"
+    table:
+      name: "Ime"
+      type: "Vrsta"
+      description: "Opis"
+      quantity: "Količina"
+      unit_of_measure: "Jedinica mjere"
+      price_per_unit: "Cijena po JM"
+      total_cost: "Ukupno"
+      actions: "Akcije"
   real_resources:
     title: Stvarni resursi
+    search_placeholder: "Pretraži resurse..."
+    add: "Dodaj stvarni resurs"
+    table:
+      start_date: "Pocetak aktivnosti"
+      end_date: "Kraj aktivnosti"
+      quantity: "Kolicina"
+      unit_of_measure: "Jedinica mjere"
+      price_per_unit: "Cijena po JM"
+      total_cost: "Ukupno"
+      actions: "Akcije"
+    modal:
+      title: "Stvarni Resurs"
+      save: "Sačuvaj"
+      close: "Zatvori"
+  documents:
+    form:
+      model_name: "Dokumenti"
+      name: "Naziv"
+      description: "Opis"
+      category: "Kategorija"
+      size: "Veličina"
+      no_file: "Nema fajla"
+      created_at: "Datum kreiranja"
+    modal:
+      title: "Dodaj novi dokument"
+      close: "Zatvori"
+      add_document: "Dodaj novi dokument"
+      upload: "Dodaj"
+      choose_file: "Izaberi fajl"
+      no_file_selected: "Nema fajla"
   table:
     new:
       resource: Dodaj novi resurs
@@ -154,6 +297,8 @@ sr:
       worker: Dodaj novog radnika
       material: Dodaj novi materijal
       project: Dodaj novi projekat
+      task: Dodaj novu poziciju
+      subtask: Dodaj novu podpoziciju
     empty:
       resource: Nemate resursa. Dodajte novi resurs da započnete.
       document: Nemate dokumenata. Dodajte novi dokument da započnete.
@@ -162,6 +307,8 @@ sr:
       worker: Nemate radnika. Dodajte novog radnika da započnete.
       material: Nemate materijala. Dodajte novi materijal da započnete.
       project: Nemate projekata. Dodajte novi projekat da započnete.
+      task: Nemate pozicija. Dodajte novu poziciju da započnete.
+      subtask: Nemate podpozicija. Dodajte novu podpoziciju da započnete.
     search:
       resource: Pretraži resurse
       document: Pretraži dokumente
@@ -170,6 +317,8 @@ sr:
       worker: Pretraži radnike
       material: Pretraži materijale
       project: Pretraži projekte
+      task: Pretraži pozicije
+      subtask: Pretraži podpozicije
     actions:
       edit: 
         resource: Izmeni resurs
@@ -179,6 +328,8 @@ sr:
         worker: Izmeni radnika
         material: Izmeni materijal
         project: Izmeni projekat
+        task: Izmeni poziciju
+        subtask: Izmeni podpoziciju
       delete: 
         resource: Obriši resurs
         document: Obriši dokument
@@ -187,6 +338,8 @@ sr:
         worker: Obriši radnika
         material: Obriši materijal
         project: Obriši projekat
+        task: Obriši poziciju
+        subtask: Obriši podpoziciju
       show:
         resource: Prikaži resurs
         document: Prikaži dokument
@@ -195,6 +348,8 @@ sr:
         worker: Prikaži radnika
         material: Prikaži materijal
         project: Prikaži projekat
+        task: Prikaži poziciju
+        subtask: Prikaži podpoziciju
      
     
   

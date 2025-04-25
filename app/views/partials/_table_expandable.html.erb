@@ -1,4 +1,3 @@
-  
 <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mt-4"><%= t("real_resources.title") %></h2>
 <section class="bg-gray-50 dark:bg-gray-900 pt-5">
   <div class="mx-auto">
@@ -8,7 +7,7 @@
           <form action="<%= business_project_task_sub_task_path(@business, @project, @task, @sub_task) %>" method="GET" data-turbo-frame="real_resources-frame" class="lg:pr-3" data-controller="search">
             <label for="search" class="sr-only">Search</label>
             <div class="relative mt-1 lg:w-64 xl:w-96">
-              <input type="text" name="search" id="search" placeholder="Search for resources..." 
+              <input type="text" name="search" id="search" placeholder="<%= t('real_resources.search_placeholder') %>"  
                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                      data-action="input->search#performSearch">
             </div>
@@ -47,15 +46,15 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-4 py-3"></th>
-                <th scope="col" class="px-4 py-3">Ime</th>
-                <th scope="col" class="px-4 py-3">Vrsta</th>
-                <th scope="col" class="px-4 py-3">Opis</th>
-                <th scope="col" class="px-4 py-3">Količina</th>
-                <th scope="col" class="px-4 py-3">Jedinica mjere</th>
-                <th scope="col" class="px-4 py-3">Cijena po JM</th>
-                <th scope="col" class="px-4 py-3">Ukupno</th>
+                <th scope="col" class="px-4 py-3"><%= t('resources.table.name') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('resources.table.type') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('resources.table.description') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('resources.table.quantity') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('resources.table.unit_of_measure') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('resources.table.price_per_unit') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('resources.table.total_cost') %></th>
                 <th scope="col" class="px-4 py-3">
-                  <span class="sr-only">Actions</span>
+                  <span class="sr-only"><%= t('resources.table.actions') %></span>
                 </th>
               </tr>
             </thead>
@@ -81,7 +80,7 @@
                       <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
                       </svg>
-                      Add Real Resource
+                      <%= t('real_resources.add') %>
                     </button>
                   </td>
                 </tr>
@@ -92,14 +91,14 @@
                       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                           <tr>
-                            <th scope="col" class="px-4 py-3">Pocetak aktivnosti</th>
-                            <th scope="col" class="px-4 py-3">Kraj aktivnosti</th>
-                            <th scope="col" class="px-4 py-3">Kolicina</th>
-                            <th scope="col" class="px-4 py-3">Jedinica mjere</th>
-                            <th scope="col" class="px-4 py-3">Cijena po JM</th>
-                            <th scope="col" class="px-4 py-3">Ukupno</th>
+                            <th scope="col" class="px-4 py-3"><%= t('real_resources.table.start_date') %></th>
+                            <th scope="col" class="px-4 py-3"><%= t('real_resources.table.end_date') %></th>
+                            <th scope="col" class="px-4 py-3"><%= t('real_resources.table.quantity') %></th>
+                            <th scope="col" class="px-4 py-3"><%= t('real_resources.table.unit_of_measure') %></th>
+                            <th scope="col" class="px-4 py-3"><%= t('real_resources.table.price_per_unit') %></th>
+                            <th scope="col" class="px-4 py-3"><%= t('real_resources.table.total_cost') %></th>
                             <th scope="col" class="px-4 py-3">
-                              <span class="sr-only">Actions</span>
+                              <span class="sr-only"><%= t('real_resources.table.actions') %></span>
                             </th>
                           </tr>
                         </thead>

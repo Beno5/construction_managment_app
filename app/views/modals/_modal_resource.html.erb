@@ -3,18 +3,18 @@
   <div class="relative w-full max-w-xl h-auto bg-white rounded-lg shadow-lg dark:bg-gray-800">
     <!-- Modal Header -->
     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Create Resource</h2>
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200"><%= t('resources.modal.title') %></h2>
     </div>
     <!-- Modal Body -->
     <div class="p-6 max-h-[70vh] overflow-y-auto">
       <!-- Toggle Section -->
       <div id="resource-toggle-container" class="flex items-center justify-center space-x-2 mb-4">
-        <span id="standard-text" class="text-m font-medium text-gray-900 dark:text-gray-300">Standardni Resurs</span>
+        <span id="standard-text" class="text-m font-medium text-gray-900 dark:text-gray-300"><%= t('resources.modal.standard') %></span>
         <label class="inline-flex items-center cursor-pointer">
           <input type="checkbox" id="resource-toggle" value="" class="sr-only peer" onchange="toggleColor()">
           <div class="relative w-11 h-6 bg-blue-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
         </label>
-        <span id="custom-text" class="text-m font-medium text-gray-900 dark:text-gray-300">Custom Resource</span>
+        <span id="custom-text" class="text-m font-medium text-gray-900 dark:text-gray-300"><%= t('resources.modal.custom') %></span>
       </div>
       <!-- Content for Standard Resources -->
       <%= render "modals/form_standard"%>
@@ -24,7 +24,7 @@
     <!-- Modal Footer -->
     <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-700">
       <button type="button" class="close-modal px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
-        Close
+        <%= t('resources.modal.close') %>
       </button>
     </div>
   </div>
@@ -48,20 +48,17 @@
     });
   });
 
-  // Funkcija za mijenjanje boje teksta ovisno o stanju toggle-a
   function toggleColor() {
     const checkbox = document.getElementById('resource-toggle');
     const standardText = document.getElementById('standard-text');
     const customText = document.getElementById('custom-text');
 
     if (checkbox.checked) {
-      // Ako je toggle uključen, boja "Custom Resource" postaje plava
       standardText.classList.remove('text-blue-600');
       standardText.classList.add('text-gray-900');
       customText.classList.remove('text-gray-900');
       customText.classList.add('text-blue-600');
     } else {
-      // Ako je toggle isključen, boja "Standardni Resurs" postaje plava
       customText.classList.remove('text-blue-600');
       customText.classList.add('text-gray-900');
       standardText.classList.remove('text-gray-900');
@@ -69,7 +66,6 @@
     }
   }
 
-  // Pozivaj funkciju na učitavanje stranice kako bi se postavio početni status
   document.addEventListener('DOMContentLoaded', () => {
     toggleColor();
   });

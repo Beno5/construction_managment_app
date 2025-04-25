@@ -1,29 +1,31 @@
 <%= render 'partials/header1', 
-           title: "#{@sub_task.name}",
-           model_name: "SubTasks",
+           title: @sub_task.name,
+           model_name: t('subtasks.form.model_name'),
            search_path: nil,
            new_path: nil,
            additional_crumbs: [
-             { name: "Projects", path: business_projects_path(@current_business) },
+             { name: t('projects.form.model_name'), path: business_projects_path(@current_business) },
              { name: @project.name, path: business_project_path(@current_business, @project) },
-             (@task.persisted? ? { name: @task.description, path: business_project_task_path(@current_business, @project, @task) } : { name: "New Task", path: nil })
+             (@task.persisted? ? { name: @task.description, path: business_project_task_path(@current_business, @project, @task) } : { name: t('tasks.form.new_title'), path: nil })
            ] %>
+
 <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
   <ul class="flex flex-wrap -mb-px" id="tabs">
     <li class="me-2">
       <a href="#" class="inline-block p-4 border-b-2 border-blue-600 text-blue-600 rounded-t-lg"
-           data-tab="info">Info i Komunikacija</a>
+           data-tab="info"><%= t('subtasks.show.info_communication') %></a>
     </li>
     <li class="me-2">
       <a href="#" class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-           data-tab="planned">Planirano</a>
+           data-tab="planned"><%= t('subtasks.show.planned') %></a>
     </li>
     <li class="me-2">
       <a href="#" class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-           data-tab="real">Realno</a>
+           data-tab="real"><%= t('subtasks.show.real') %></a>
     </li>
   </ul>
 </div>
+
 <div class="p-4 border">
   <div id="tab-content-info">
     <%= render 'sub_tasks/navbar/info_communication' %>
@@ -35,47 +37,47 @@
     <%= render 'sub_tasks/navbar/real' %>
   </div>
 </div>
+
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-  const tabs = document.querySelectorAll("[data-tab]");
-  const contents = {
-    planned: document.getElementById("tab-content-planned"),
-    real: document.getElementById("tab-content-real"),
-    info: document.getElementById("tab-content-info"),
-  };
+    const tabs = document.querySelectorAll("[data-tab]");
+    const contents = {
+      planned: document.getElementById("tab-content-planned"),
+      real: document.getElementById("tab-content-real"),
+      info: document.getElementById("tab-content-info"),
+    };
 
-  function activateTab(tabName) {
-    if (!contents[tabName]) return;
-    
-    // Resetuj sve tabove
-    tabs.forEach(t => {
-      t.classList.remove("text-blue-600", "border-blue-600", "dark:text-blue-500", "dark:border-blue-500");
-      t.classList.add("border-transparent", "hover:text-gray-600", "hover:border-gray-300", "dark:hover:text-gray-300");
-    });
+    function activateTab(tabName) {
+      if (!contents[tabName]) return;
 
-    Object.values(contents).forEach(content => content.classList.add("hidden"));
+      // Reset all tabs
+      tabs.forEach(t => {
+        t.classList.remove("text-blue-600", "border-blue-600", "dark:text-blue-500", "dark:border-blue-500");
+        t.classList.add("border-transparent", "hover:text-gray-600", "hover:border-gray-300", "dark:hover:text-gray-300");
+      });
 
-    // Aktiviraj izabrani tab
-    const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
-    if (activeTab) {
-      activeTab.classList.add("text-blue-600", "border-blue-600", "dark:text-blue-500", "dark:border-blue-500");
-      activeTab.classList.remove("border-transparent", "hover:text-gray-600", "hover:border-gray-300", "dark:hover:text-gray-300");
+      Object.values(contents).forEach(content => content.classList.add("hidden"));
+
+      // Activate selected tab
+      const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
+      if (activeTab) {
+        activeTab.classList.add("text-blue-600", "border-blue-600", "dark:text-blue-500", "dark:border-blue-500");
+        activeTab.classList.remove("border-transparent", "hover:text-gray-600", "hover:border-gray-300", "dark:hover:text-gray-300");
+      }
+      contents[tabName].classList.remove("hidden");
     }
-    contents[tabName].classList.remove("hidden");
-  }
 
-  // Ako URL ima hash (npr. #planned), postavi taj tab
-  const hash = window.location.hash.substring(1);
-  activateTab(hash || "info"); // Ako nema hash-a, otvara "info" kao default
+    // If URL has a hash (e.g., #planned), set that tab
+    const hash = window.location.hash.substring(1);
+    activateTab(hash || "info"); // Default to "info" if no hash
 
-  tabs.forEach(tab => {
-    tab.addEventListener("click", function(event) {
-      event.preventDefault();
-      const selectedTab = tab.dataset.tab;
-      history.pushState(null, null, `#${selectedTab}`); // Postavi hash u URL bez reload-a
-      activateTab(selectedTab);
+    tabs.forEach(tab => {
+      tab.addEventListener("click", function(event) {
+        event.preventDefault();
+        const selectedTab = tab.dataset.tab;
+        history.pushState(null, null, `#${selectedTab}`); // Set hash in URL without reload
+        activateTab(selectedTab);
+      });
     });
   });
-});
-
 </script>
