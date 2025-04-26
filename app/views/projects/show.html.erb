@@ -15,7 +15,6 @@
            search_path: paths[:project], 
            new_path: paths[:new_task],
            additional_crumbs: [
-             { name: t('projects.form.model_name'), path: paths[:projects] },
              { name: @project.name, path: paths[:project] }
            ] %>
 <%= render 'partials/table_expandable_task' %>

@@ -201,7 +201,7 @@ export default class extends Controller {
         // Dodaj placeholder opciju za resurse
         let placeholderOption = document.createElement("option");
         placeholderOption.value = "";
-        placeholderOption.textContent = "-- Odaberite resurs --";
+        placeholderOption.textContent = t("resource.form.select_resource");
         placeholderOption.selected = true;
         placeholderOption.disabled = true;
         resourceSelect.appendChild(placeholderOption);
@@ -217,7 +217,7 @@ export default class extends Controller {
         // Dodaj placeholder opciju za jedinice mere
         let unitPlaceholder = document.createElement("option");
         unitPlaceholder.value = "";
-        unitPlaceholder.textContent = "-- Odaberite jedinicu --";
+        unitPlaceholder.textContent = t("resource.form.select_unit");
         unitPlaceholder.selected = true;
         unitPlaceholder.disabled = true;
         unitSelect.appendChild(unitPlaceholder);

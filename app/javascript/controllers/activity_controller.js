@@ -17,9 +17,9 @@ export default class extends Controller {
     const mode = event.target.dataset.mode; // Pretpostavljamo da modal ima atribut `data-mode`
     
     if (activityId) {
-      submitButton.value = "Ažuriraj Aktivnost";
+      submitButton.value = t("actions.edit.resource");
     } else {
-      submitButton.value = "Dodaj Aktivnost";
+      submitButton.value = t("table.new.resource");
     }
     
     // Ako je mode 'show', postavi sve inpute na readonly i sakrij submit dugme

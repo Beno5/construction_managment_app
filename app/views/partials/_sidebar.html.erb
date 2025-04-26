@@ -92,8 +92,8 @@
               <span class="ml-3"><%= t('sidebar.settings') %></span>
             <% end %>
           </li>
-          <li><%= link_to "English", url_for(locale: :en) %> |
-<%= link_to "Српски", url_for(locale: :sr) %></li>
+          <li><%= link_to "English", url_for(locale: :en), data: { turbo: false } %> |
+<%= link_to "Српски", url_for(locale: :sr), data: { turbo: false } %></li>
           <% end %>
         </ul>
       </div>

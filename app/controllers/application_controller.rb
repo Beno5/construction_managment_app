@@ -11,11 +11,16 @@ class ApplicationController < ActionController::Base
     businesses_path
   end
 
-  # Centralizovani metod za postavljanje poslovanja
   def set_business
+    # Pokušaj da pronađeš business pomoću business_id
     @business = current_user.businesses.find_by(id: params[:business_id])
+  
+    # Ako nije pronađen, pokušaj sa id (ako si u kontekstu businessa)
+    @business ||= current_user.businesses.find_by(id: params[:id])
+  
+    # Ako business nije pronađen, preusmeri na listu businessa
     redirect_to businesses_path, alert: "Business not found." unless @business
-  end
+  end 
   
   def set_locale
     I18n.locale = params[:locale] || I18n.default_locale
