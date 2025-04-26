@@ -4,9 +4,9 @@
            search_path: nil,
            new_path: nil,
            additional_crumbs: [
-             { name: t('projects.form.model_name'), path: business_projects_path(@current_business) },
              { name: @project.name, path: business_project_path(@current_business, @project) },
-             (@task.persisted? ? { name: @task.description, path: business_project_task_path(@current_business, @project, @task) } : { name: t('tasks.form.new_title'), path: nil })
+             (@task.persisted? ? { name: @task.name, path: business_project_task_path(@current_business, @project, @task) } : { name: t('tasks.form.new_title'), path: nil }),
+             { name: @sub_task.name, path: business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) }
            ] %>
 
 <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">

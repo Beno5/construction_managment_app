@@ -1,7 +1,7 @@
 class BusinessesController < ApplicationController
   include ActionView::RecordIdentifier
 
-  before_action :set_business, only: [:show, :update, :destroy]
+  before_action :set_business, only: [:edit, :update, :destroy]
   skip_before_action :set_current_business, only: [:select]
 
   def index

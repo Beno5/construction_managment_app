@@ -242,6 +242,10 @@ sr:
     form:
       model_name: "Planirani Resursi"
       search_placeholder: "Pretraži resurse..."
+      select_category: "Odaberite kategoriju"
+      select_resource: "Odaberite resurs"
+      select_unit: "Odaberite jedinicu mjere"
+      create_custom_resource: "Dodaj prilagodjeni resurs"
     modal:
       title: "Kreiraj Resurs"
       standard: "Standardni Resurs"
@@ -249,13 +253,33 @@ sr:
       close: "Zatvori"
     table:
       name: "Ime"
+      first_name: "Ime"
+      last_name: "Prezime"
+      profession: "Profesija"
       type: "Vrsta"
       description: "Opis"
       quantity: "Količina"
+      category: "Kategorija"
+      resource: "Resurs"
       unit_of_measure: "Jedinica mjere"
       price_per_unit: "Cijena po JM"
       total_cost: "Ukupno"
       actions: "Akcije"
+      planned_start_date: "Planirani Početak"
+      planned_end_date: "Planirani Kraj"
+  form:
+    select_category: "Odaberite kategoriju" # Added if missing
+    select_resource: "Odaberite resurs"     # Added if missing
+    planned_start_date: "Planirani Datum Početka"
+    planned_end_date: "Planirani Datum Zavrsetka"
+    quantity: "Količina"
+    unit_of_measure: "Jedinica mjere"
+    price_per_unit: "Cijena po JM"
+    description: "Opis"
+    fixed_costs: "Fiksni troškovi"
+    profession: "Profesija"
+    total_cost: "Ukupni trošak"
+    add_activity: "Dodaj Aktivnost"         # Added if missing
   real_resources:
     title: Stvarni resursi
     search_placeholder: "Pretraži resurse..."

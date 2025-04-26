@@ -4,56 +4,55 @@
     <%= f.hidden_field :activity_id, value: '' %>
     <%= f.hidden_field :authenticity_token, value: form_authenticity_token %>
     <div class="mb-4">
-      <%= f.label :category, "Kategorija", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.select :category, [["-- Odaberite kategoriju --", ""]
-      ] + CustomResource.categories.except("custom").keys.map { |key| [key.humanize, key] }, {}, 
+      <%= f.label :category, t('resources.table.category'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.select :category, [["-- #{t('resources.form.select_category')} --", ""]] + CustomResource.categories.except("custom").keys.map { |key| [key.humanize, key] }, {}, 
         class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white", 
         id: "activity_category", data: { action: "change->activity#updateResources" } %>
     </div>
     <div class="mb-4">
-      <%= f.label :resource_id, "Resurs", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.select :resource_id, [["-- Odaberite resurs --", ""]], {}, 
+      <%= f.label :resource_id, t('resources.table.resource'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.select :resource_id, [["-- #{t('resources.form.select_resource')} --", ""]], {}, 
         class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600", 
         id: "activity_resource", data: { business_id: @task.project.business.id, action: "change->activity#updateReadOnlyFields" } %>
     </div>
     <div class="mb-4">
-      <%= f.label :start_date, "Planirani početak aktivnosti", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :start_date, t('resources.table.planned_start_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.date_field :start_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <div class="mb-4">
-      <%= f.label :end_date, "Planirani završetak aktivnosti", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :end_date, t('resources.table.planned_end_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.date_field :end_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <div class="mb-4">
-      <%= f.label :quantity, "Količina", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :quantity, t('resources.table.quantity'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.number_field :quantity, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600", data: { action: "input->activity#updateQuantity" } %>
     </div>
     <div class="mb-4">
-      <%= f.label :unit_of_measure, "Jedinica mjere", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :unit_of_measure, t('resources.table.unit_of_measure'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :unit_of_measure, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <div class="mb-4">
-      <%= f.label :price_per_unit, "Cijena po jedinici", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :price_per_unit, t('resources.table.price_per_unit'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :price_per_unit, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <div class="mb-4">
-      <%= f.label :description, "Opis", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :description, t('resources.table.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_area :description, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <div class="mb-4 hidden">
-      <%= f.label :fixed_costs, "Fiksni troškovi", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white " %>
+      <%= f.label :fixed_costs, t('resources.form.fixed_costs'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white " %>
       <%= f.text_field :fixed_costs, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <div class="mb-4 hidden">
-      <%= f.label :profession, "Profesija", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :profession, t('resources.form.profession'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :profession, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <div class="mb-4">
-      <%= f.label :total_cost, "Ukupno", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.label :total_cost, t('resources.table.total_cost'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :total_cost, readonly: true, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <div class="flex justify-end">
-      <%= f.submit "Dodaj Aktivnost", class: "px-4 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700" %>
+      <%= f.submit t('table.new.resource'), class: "px-4 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700" %>
     </div>
   <% end %>
 </div>
