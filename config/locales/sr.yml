@@ -228,6 +228,10 @@ sr:
       update_button: "Ažuriraj Podpoziciju"
       create_button: "Kreiraj Podpoziciju"
       add_new: "Dodaj Podpoziciju"
+      unit_of_measure: "Jedinica Mjere"
+      quantity: "Količina"
+      price_per_unit: "Cijena po Jedinici (%{currency})"
+      total_cost: "Ukupni Trošak"
     actions:
       show: "Prikaži Podpoziciju"
       add_new: "Dodaj novu Podpoziciju"

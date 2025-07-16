@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_04_14_191453) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_16_185525) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -145,6 +145,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_14_191453) do
     t.index ["user_id"], name: "index_materials_on_user_id"
   end
 
+  create_table "norms", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "info"
+    t.integer "norm_type", default: 0, null: false
+    t.integer "subtype"
+    t.string "unit_of_measure"
+    t.decimal "norm_value", precision: 10, scale: 4
+    t.string "tags", default: [], array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "projects", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -200,6 +213,10 @@ ActiveRecord::Schema[7.0].define(version: 2025_04_14_191453) do
     t.boolean "planned_auto_calculation", default: true
     t.boolean "real_auto_calculation", default: true
     t.integer "position"
+    t.decimal "price_per_unit", precision: 10, scale: 2
+    t.integer "unit_of_measure", default: 0
+    t.integer "quantity"
+    t.decimal "total_cost"
     t.index ["task_id"], name: "index_sub_tasks_on_task_id"
   end
 

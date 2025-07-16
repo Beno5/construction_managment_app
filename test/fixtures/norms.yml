@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  norm_type: 1
+  subtype: 1
+  unit_of_measure: MyString
+  norm_value: 9.99
+
+two:
+  name: MyString
+  description: MyText
+  norm_type: 1
+  subtype: 1
+  unit_of_measure: MyString
+  norm_value: 9.99

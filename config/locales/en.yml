@@ -228,6 +228,10 @@ en:
       update_button: "Update Subtask"
       create_button: "Create Subtask"
       add_new: "Add Subtask"
+      unit_of_measure: "Unit of Measure"
+      quantity: "Quantity"
+      price_per_unit: "Price per Unit (%{currency})"
+      total_cost: Total Cost
     actions:
       show: "Show Subtask"
       add_new: "Add New Subtask"

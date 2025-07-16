@@ -188,4 +188,106 @@ Task.all.each do |task|
   end
 end
 
+Norm.create!([
+  {
+    name: "Oplata od daske – Ravni temelji",
+    description: "Ravni temelji, mašinski fundamenti, oplata 1-strana",
+    info: "Stari način građenja",
+    norm_type: :worker,
+    subtype: :kv,
+    unit_of_measure: "m2",
+    norm_value: 0.37,
+    tags: ["oplate", "temelji", "daske", "ravni", "stari način"]
+  },
+  {
+    name: "Oplata od daske – Ravni temelji",
+    description: "Ravni temelji, mašinski fundamenti, oplata 1-strana",
+    info: "Stari način građenja",
+    norm_type: :worker,
+    subtype: :nkv,
+    unit_of_measure: "m2",
+    norm_value: 0.67,
+    tags: ["oplate", "temelji", "daske", "ravni", "stari način"]
+  },
+  {
+    name: "Oplata kosih i nagnutih ploča",
+    description: "Oplata kosih betonskih ploča",
+    info: "Bez obzira na veličinu",
+    norm_type: :worker,
+    subtype: :kv,
+    unit_of_measure: "m2",
+    norm_value: 0.52,
+    tags: ["kosine", "ploče", "betonske", "doka"]
+  },
+  {
+    name: "Oplata kosih i nagnutih ploča",
+    description: "Oplata kosih betonskih ploča",
+    info: "Bez obzira na veličinu",
+    norm_type: :worker,
+    subtype: :nkv,
+    unit_of_measure: "m2",
+    norm_value: 0.78,
+    tags: ["kosine", "ploče", "betonske", "doka"]
+  },
+  {
+    name: "Mašinski iskop humusa",
+    description: "Buldožer 50ka – 10–20cm",
+    info: "Mašinski zemljani radovi",
+    norm_type: :machine,
+    unit_of_measure: "m3",
+    norm_value: 0.0592,
+    tags: ["iskop", "humus", "buldožer", "zemljani radovi"]
+  },
+  {
+    name: "Mašinsko rastiranje zemlje II kat",
+    description: "Rastiranje slojeva zemlje",
+    info: "GAT komponenta",
+    norm_type: :machine,
+    unit_of_measure: "m3",
+    norm_value: 0.065,
+    tags: ["rastiranje", "zemlja", "mašina", "gat"]
+  },
+  {
+    name: "Oplata za poklopne ploče dimnjaka",
+    description: "1.60/60 2.60/100 3.60/160",
+    info: "Daska 24mm + grede",
+    norm_type: :worker,
+    subtype: :kv,
+    unit_of_measure: "m2",
+    norm_value: 0.55,
+    tags: ["dimnjak", "poklopac", "oplate", "daske"]
+  },
+  {
+    name: "Oplata za poklopne ploče dimnjaka",
+    description: "1.60/60 2.60/100 3.60/160",
+    info: "Daska 24mm + grede",
+    norm_type: :worker,
+    subtype: :nkv,
+    unit_of_measure: "m2",
+    norm_value: 0.69,
+    tags: ["dimnjak", "poklopac", "oplate", "daske"]
+  },
+  {
+    name: "Dvostruka oplata temeljnih greda",
+    description: "Formira se DOKA ploča d=27mm",
+    info: "Uključuje distancere i klince",
+    norm_type: :worker,
+    subtype: :kv,
+    unit_of_measure: "m2",
+    norm_value: 0.40,
+    tags: ["doka", "dvostruka", "temelj", "oplate"]
+  },
+  {
+    name: "Oplata balkonskih zidova i ploča",
+    description: "1. Balkonski ogr. zidovi 2. Ravne ploče",
+    info: "Štafla, bunarske motke",
+    norm_type: :worker,
+    subtype: :nkv,
+    unit_of_measure: "m2",
+    norm_value: 0.82,
+    tags: ["balkon", "zidovi", "ploče", "oplate"]
+  }
+])
+
+
 puts "Seed podaci uspješno kreirani! 🎉"
