@@ -9,75 +9,91 @@
              { name: @sub_task.name, path: business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) }
            ] %>
 
-<div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
-  <ul class="flex flex-wrap -mb-px" id="tabs">
-    <li class="me-2">
-      <a href="#" class="inline-block p-4 border-b-2 border-blue-600 text-blue-600 rounded-t-lg"
-           data-tab="info"><%= t('subtasks.show.info_communication') %></a>
-    </li>
-    <li class="me-2">
-      <a href="#" class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-           data-tab="planned"><%= t('subtasks.show.planned') %></a>
-    </li>
-    <li class="me-2">
-      <a href="#" class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-           data-tab="real"><%= t('subtasks.show.real') %></a>
-    </li>
-  </ul>
+<div class="grid grid-cols-6 gap-6">
+  <!-- Name -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.name') %></label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.name %>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.description') %></label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.description %>
+    </div>
+  </div>
+
+    <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.unit_of_mesure') %></label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.unit_of_measure %>
+    </div>
+  </div>
+
+    <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.quantity') %></label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.quantity %>
+    </div>
+  </div>
+
+    <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.price_per_unit', currency: @current_business.currency_symbol) %></label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.price_per_unit %>
+    </div>
+  </div>
+
+    <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.total_cost') %></label>
+    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.total_cost %>
+    </div>
+  </div>
+
+  <!-- Custom Fields -->
+  <div class="col-span-6">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('subtasks.form.custom_fields') %></h3>
+    <% @sub_task.custom_fields.each do |key, value| %>
+      <div class="col-span-6 sm:col-span-3">
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= key.humanize %></label>
+        <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <%= value %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
 
-<div class="p-4 border">
-  <div id="tab-content-info">
-    <%= render 'sub_tasks/navbar/info_communication' %>
-  </div>
-  <div id="tab-content-planned" class="hidden">
-    <%= render 'sub_tasks/navbar/planned' %>
-  </div>
-  <div id="tab-content-real" class="hidden">
-    <%= render 'sub_tasks/navbar/real' %>
-  </div>
-</div>
+<% 
+  model_name = "Documents"
+  paths_doc = {
+    new_document: new_business_project_document_path(@current_business, @project, @task, @sub_task),
+    edit_document: ->(document) { "" },
+    show_document: ->(document) { "" },
+    delete_document: ->(document) { business_project_document_path(@current_business, @project, document) }
+  }
+%>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const tabs = document.querySelectorAll("[data-tab]");
-    const contents = {
-      planned: document.getElementById("tab-content-planned"),
-      real: document.getElementById("tab-content-real"),
-      info: document.getElementById("tab-content-info"),
-    };
+<%= render 'partials/table', 
+           collection: @documents, 
+           columns: {
+             t('documents.form.name') => :name, 
+             t('documents.form.description') => ->(document) { content_tag(:span, document.description&.truncate(25), title: document.description, class: "tooltip") },
+             t('documents.form.category') => ->(document) { document.category.humanize }, 
+             t('documents.form.size') => ->(document) { document.file.attached? ? "#{document.file.byte_size / 1024} KB" : t('documents.form.no_file') },
+             t('documents.form.created_at') => ->(document) { document.created_at.strftime("%Y-%m-%d") }
+           },
+           turbo_frame_id: "documents-frame",
+           model_name: model_name, 
+           search_path: paths_doc[:documents], 
+           new_path: paths_doc[:new_document],
+           edit_path: paths_doc[:edit_document],
+           show_path: paths_doc[:show_document],
+           delete_path: paths_doc[:delete_document],
+           actions: [] %>
 
-    function activateTab(tabName) {
-      if (!contents[tabName]) return;
-
-      // Reset all tabs
-      tabs.forEach(t => {
-        t.classList.remove("text-blue-600", "border-blue-600", "dark:text-blue-500", "dark:border-blue-500");
-        t.classList.add("border-transparent", "hover:text-gray-600", "hover:border-gray-300", "dark:hover:text-gray-300");
-      });
-
-      Object.values(contents).forEach(content => content.classList.add("hidden"));
-
-      // Activate selected tab
-      const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
-      if (activeTab) {
-        activeTab.classList.add("text-blue-600", "border-blue-600", "dark:text-blue-500", "dark:border-blue-500");
-        activeTab.classList.remove("border-transparent", "hover:text-gray-600", "hover:border-gray-300", "dark:hover:text-gray-300");
-      }
-      contents[tabName].classList.remove("hidden");
-    }
-
-    // If URL has a hash (e.g., #planned), set that tab
-    const hash = window.location.hash.substring(1);
-    activateTab(hash || "info"); // Default to "info" if no hash
-
-    tabs.forEach(tab => {
-      tab.addEventListener("click", function(event) {
-        event.preventDefault();
-        const selectedTab = tab.dataset.tab;
-        history.pushState(null, null, `#${selectedTab}`); // Set hash in URL without reload
-        activateTab(selectedTab);
-      });
-    });
-  });
-</script>
+<%= render "modals/modal_documents" %>
