@@ -316,6 +316,18 @@ en:
       update_button: "Update Document"
       no_file_selected: "No file selected"
       choose_file: "Choose File"
+  norms:
+    title: "Norms"
+    form:
+      model_name: "Norms"
+      name: "Norm Name"
+      description: "Description"
+      unit_of_measure: "Unit of Measure"
+      norm_value: "Value"
+      subtype: "Subtype"
+      norm_type: "Norm Type"
+      info: "Info"
+
   table:
     new:
       resource: "Add New Resource"

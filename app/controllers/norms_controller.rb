@@ -1,0 +1,62 @@
+class NormsController < ApplicationController
+  before_action :set_norm, only: [:edit, :update, :destroy]
+
+def index
+  @norms = Norm.search(params[:search])
+
+  respond_to do |format|
+    format.html do
+      if turbo_frame_request?
+        render partial: "partials/table_norms", locals: { norms: @norms }
+      else
+        render :index # klasični index view
+      end
+    end
+  end
+end
+
+
+
+  def new
+    @norm = Norm.new
+  end
+
+  def create
+    @norm = Norm.new(norm_params)
+    if @norm.save
+      redirect_to business_norms_path(@business), notice: "Norma uspješno kreirana."
+    else
+      render :new
+    end
+  end
+
+  def edit
+  end
+
+  def update
+    if @norm.update(norm_params)
+      redirect_to business_norms_path(@business), notice: "Norma uspješno ažurirana."
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    @norm.destroy
+    redirect_to business_norms_path(@business), notice: "Norma obrisana."
+  end
+
+  private
+
+  def set_business
+    @business = Business.find(params[:business_id])
+  end
+
+  def set_norm
+    @norm = Norm.find(params[:id])
+  end
+
+  def norm_params
+    params.require(:norm).permit(:name, :description, :info, :norm_type, :subtype, :unit_of_measure, :norm_value, tags: [])
+  end
+end

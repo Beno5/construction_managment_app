@@ -14,6 +14,7 @@ class SubTasksController < ApplicationController
   def show
     @activities = @sub_task.activities.search(params[:search])
     @documents = @sub_task.documents.search(params[:search])
+    @norms = Norm.search(params[:search])
   end
 
   def new

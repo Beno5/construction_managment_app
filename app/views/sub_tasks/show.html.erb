@@ -8,7 +8,6 @@
              (@task.persisted? ? { name: @task.name, path: business_project_task_path(@current_business, @project, @task) } : { name: t('tasks.form.new_title'), path: nil }),
              { name: @sub_task.name, path: business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) }
            ] %>
-
 <div class="grid grid-cols-6 gap-6">
   <!-- Name -->
   <div class="col-span-6 sm:col-span-3">
@@ -17,7 +16,6 @@
       <%= @sub_task.name %>
     </div>
   </div>
-
   <!-- Description -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.description') %></label>
@@ -25,35 +23,30 @@
       <%= @sub_task.description %>
     </div>
   </div>
-
-    <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.unit_of_mesure') %></label>
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.unit_of_measure') %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @sub_task.unit_of_measure %>
     </div>
   </div>
-
-    <div class="col-span-6 sm:col-span-3">
+  <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.quantity') %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @sub_task.quantity %>
     </div>
   </div>
-
-    <div class="col-span-6 sm:col-span-3">
+  <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.price_per_unit', currency: @current_business.currency_symbol) %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @sub_task.price_per_unit %>
     </div>
   </div>
-
-    <div class="col-span-6 sm:col-span-3">
+  <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.total_cost') %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @sub_task.total_cost %>
     </div>
   </div>
-
   <!-- Custom Fields -->
   <div class="col-span-6">
     <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('subtasks.form.custom_fields') %></h3>
@@ -67,7 +60,6 @@
     <% end %>
   </div>
 </div>
-
 <% 
   model_name = "Documents"
   paths_doc = {
@@ -77,6 +69,7 @@
     delete_document: ->(document) { business_project_document_path(@current_business, @project, document) }
   }
 %>
+<%= render "partials/table_norms", norms: @norms %>
 
 <%= render 'partials/table', 
            collection: @documents, 
@@ -95,5 +88,4 @@
            show_path: paths_doc[:show_document],
            delete_path: paths_doc[:delete_document],
            actions: [] %>
-
 <%= render "modals/modal_documents" %>
