@@ -316,6 +316,17 @@ sr:
       upload: "Dodaj"
       choose_file: "Izaberi fajl"
       no_file_selected: "Nema fajla"
+  norms:
+    title: "Norme"
+    form:
+      model_name: "Norme"
+      name: "Naziv Norme"
+      description: "Opis"
+      unit_of_measure: "Jedinica Mjere"
+      norm_value: "Vrednost"
+      subtype: "Podtip"
+      norm_type: "Tip Norme"
+      info: "Info"
   table:
     new:
       resource: Dodaj novi resurs

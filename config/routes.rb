@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   root to: "businesses#index"
 
   # Business routes
+  resources :norms
   resources :businesses do
     resources :machines
     resources :workers

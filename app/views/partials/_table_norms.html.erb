@@ -1,0 +1,54 @@
+<h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mt-4"><%= t("norms.title") %></h2>
+<section class="bg-gray-50 dark:bg-gray-900 pt-5">
+  <div class="mx-auto">
+    <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
+      <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+        <div class="w-full md:w-1/2">
+          <%= form_with url: norms_path, method: :get, data: { turbo_frame: "norms-frame", controller: "search" }, local: true do %>
+            <label for="search" class="sr-only">Search</label>
+            <div class="relative mt-1 lg:w-64 xl:w-96">
+              <input type="text" name="search" id="search" placeholder="Pretraži norme..."
+                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                     data-action="input->search#performSearch">
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <turbo-frame id="norms-frame">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" class="px-4 py-3">
+                </th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.name') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.description') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.norm_value') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.norm_type') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.subtype') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.unit_of_measure') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.info') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @norms.each do |norm| %>
+                <tr class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <td class="px-4 py-3">
+                    <input type="checkbox" name="selected_norm_ids[]" value="<%= norm.id %>" class="norm-checkbox" data-action="change->norms#trackSelection">
+                  </td>
+                  <td class="px-4 py-3"><%= norm.name %></td>
+                  <td class="px-4 py-3"><%= norm.description&.truncate(50) %></td>
+                  <td class="px-4 py-3"><%= norm.norm_value %></td>
+                  <td class="px-4 py-3"><%= norm.norm_type.humanize %></td>
+                  <td class="px-4 py-3"><%= norm.subtype&.humanize || '-' %></td>
+                  <td class="px-4 py-3"><%= norm.unit_of_measure %></td>
+                  <td class="px-4 py-3"><%= norm.info %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </turbo-frame>
+    </div>
+  </div>
+</section>
