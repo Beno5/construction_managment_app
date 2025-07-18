@@ -15,6 +15,8 @@ Rails.application.routes.draw do
     resources :projects do
       resources :tasks do
         resources :sub_tasks do
+          post "pinned_norms/:norm_id", to: "pinned_norms#create"
+          delete "pinned_norms/:norm_id", to: "pinned_norms#destroy"
           resources :custom_resources, only: [:new, :create, :edit, :update, :destroy]
           resources :activities, only: [:new, :create, :update, :destroy] do
             resources :real_activities, only: [:new, :create, :update, :destroy]

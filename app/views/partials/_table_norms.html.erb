@@ -5,6 +5,7 @@
       <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
         <div class="w-full md:w-1/2">
           <%= form_with url: norms_path, method: :get, data: { turbo_frame: "norms-frame", controller: "search" }, local: true do %>
+            <%= hidden_field_tag :sub_task_id, @sub_task.id if @sub_task.present? %>
             <label for="search" class="sr-only">Search</label>
             <div class="relative mt-1 lg:w-64 xl:w-96">
               <input type="text" name="search" id="search" placeholder="Pretraži norme..."
@@ -15,7 +16,7 @@
         </div>
       </div>
       <turbo-frame id="norms-frame">
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto" data-controller="norms" data-norms-subtask-id-value="<%= @sub_task.id %>">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -34,7 +35,7 @@
               <% @norms.each do |norm| %>
                 <tr class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <td class="px-4 py-3">
-                    <input type="checkbox" name="selected_norm_ids[]" value="<%= norm.id %>" class="norm-checkbox" data-action="change->norms#trackSelection">
+                    <%= check_box_tag "selected_norm_ids[]", norm.id, @pinned_norms.include?(norm), class: "norm-checkbox", data: { action: "change->norms#trackSelection" } %>
                   </td>
                   <td class="px-4 py-3"><%= norm.name %></td>
                   <td class="px-4 py-3"><%= norm.description&.truncate(50) %></td>

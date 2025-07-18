@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_16_185525) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_18_155423) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -195,6 +195,15 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_16_185525) do
     t.index ["user_id"], name: "index_real_activities_on_user_id"
   end
 
+  create_table "sub_task_norms", force: :cascade do |t|
+    t.bigint "sub_task_id", null: false
+    t.bigint "norm_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["norm_id"], name: "index_sub_task_norms_on_norm_id"
+    t.index ["sub_task_id"], name: "index_sub_task_norms_on_sub_task_id"
+  end
+
   create_table "sub_tasks", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -288,6 +297,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_16_185525) do
   add_foreign_key "real_activities", "activities"
   add_foreign_key "real_activities", "sub_tasks"
   add_foreign_key "real_activities", "users"
+  add_foreign_key "sub_task_norms", "norms"
+  add_foreign_key "sub_task_norms", "sub_tasks"
   add_foreign_key "sub_tasks", "tasks"
   add_foreign_key "tasks", "projects"
   add_foreign_key "tasks", "users"
