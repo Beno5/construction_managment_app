@@ -1,4 +1,8 @@
 class Norm < ApplicationRecord
+  has_many :sub_task_norms, dependent: :destroy
+  has_many :sub_tasks, through: :sub_task_norms
+
+
   enum norm_type: {
     worker: 0,
     material: 1,
