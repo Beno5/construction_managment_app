@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_18_155423) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_22_191640) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -127,6 +127,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_18_155423) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "average_daily_hours"
     t.index ["business_id"], name: "index_machines_on_business_id"
     t.index ["user_id"], name: "index_machines_on_user_id"
   end
@@ -226,6 +227,10 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_18_155423) do
     t.integer "unit_of_measure", default: 0
     t.integer "quantity"
     t.decimal "total_cost"
+    t.integer "duration"
+    t.integer "num_workers_skilled"
+    t.integer "num_workers_unskilled"
+    t.integer "num_machines"
     t.index ["task_id"], name: "index_sub_tasks_on_task_id"
   end
 
@@ -275,6 +280,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_18_155423) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "business_id", null: false
+    t.float "average_daily_hours"
     t.index ["business_id"], name: "index_workers_on_business_id"
     t.index ["user_id"], name: "index_workers_on_user_id"
   end

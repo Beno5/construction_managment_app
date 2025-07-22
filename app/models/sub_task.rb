@@ -11,7 +11,6 @@ class SubTask < ApplicationRecord
   has_many :sub_task_norms, dependent: :destroy
   has_many :pinned_norms, through: :sub_task_norms, source: :norm
 
-
   # Validacije
   validates :name, presence: true
 
