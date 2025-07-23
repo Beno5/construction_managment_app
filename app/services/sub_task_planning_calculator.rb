@@ -1,55 +1,77 @@
 class SubTaskPlanningCalculator
+  DEFAULT_BPRSPD = 9.0
+
   def initialize(sub_task)
     @sub_task = sub_task
     @norms = sub_task.pinned_norms
-    @resources = sub_task.activities.where(activity_type: [:worker, :machine])
   end
 
   def call
-    return if @norms.empty? || @resources.empty?
+    return if @norms.empty? || @sub_task.quantity.blank?
 
-    total_norm_hours = calculate_total_norm_hours
-    duration = @sub_task.duration.to_i
-    return 0 if duration.zero? || total_norm_hours.zero?
-
-    skilled_norms = @norms.select(&:skilled?)
-    unskilled_norms = @norms.select(&:unskilled?)
-    machine_norms = @norms.select(&:machine?)
-
-    skilled_data = calculate_cost_and_count(:worker, :skilled, duration)
-    unskilled_data = calculate_cost_and_count(:worker, :unskilled, duration)
-    machine_data = calculate_cost_and_count(:machine, nil, duration)
-
-    @sub_task.update(
-      duration: duration,
-      num_workers_skilled: skilled_data[:count],
-      num_workers_unskilled: unskilled_data[:count],
-      num_machines: machine_data[:count],
-      planned_cost: skilled_data[:cost] + unskilled_data[:cost] + machine_data[:cost]
-    )
+    if duration_changed?
+      reverse_calculate_from_duration
+    else
+      forward_calculate_duration
+    end
   end
 
   private
 
-  def calculate_total_norm_hours
-    @norms.sum { |norm| norm.norm_value.to_f * @sub_task.quantity.to_f }
+  def forward_calculate_duration
+    total_norm_hours = calculate_total_norm_hours
+    return if total_norm_hours.zero?
+
+    num_skilled   = @sub_task.num_workers_skilled.presence || default_worker_count(:skilled)
+    num_unskilled = @sub_task.num_workers_unskilled.presence || default_worker_count(:unskilled)
+    num_machines  = @sub_task.num_machines.presence || default_worker_count(:machine)
+
+    total_active_units = num_skilled + num_unskilled + num_machines
+    return if total_active_units.zero?
+
+    effective_hours_per_day = total_active_units * DEFAULT_BPRSPD
+    duration = (total_norm_hours / effective_hours_per_day).round(2)
+
+    @sub_task.update(duration: duration)
   end
 
-  def calculate_cost_and_count(activity_type, _norms, duration)
-    relevant_resources = @resources.select { |r| r.activity_type == activity_type.to_s }
+  def reverse_calculate_from_duration
+    total_norm_hours = calculate_total_norm_hours
+    old_duration = @sub_task.duration_before_last_save.to_f
+    new_duration = @sub_task.duration.to_f
+    return if new_duration.zero? || old_duration.zero?
 
-    total_cost = 0
-    total_count = 0
+    ratio = old_duration / new_duration
 
-    relevant_resources.each do |resource|
-      hours_per_day = resource.activityable.average_daily_hours
-      rate = resource.price_per_unit.to_f
-      quantity = resource.quantity.to_i
+    num_skilled   = @sub_task.num_workers_skilled.to_f
+    num_unskilled = @sub_task.num_workers_unskilled.to_f
+    num_machines  = @sub_task.num_machines.to_f
 
-      total_cost += quantity * hours_per_day * duration * rate
-      total_count += quantity
+    @sub_task.update(
+      num_workers_skilled:   (num_skilled * ratio).round(2),
+      num_workers_unskilled: (num_unskilled * ratio).round(2),
+      num_machines:          (num_machines * ratio).round(2)
+    )
+  end
+
+  def duration_changed?
+    @sub_task.saved_change_to_duration?
+  end
+
+  def default_worker_count(type)
+    case type
+    when :skilled
+      @norms.any?(&:skilled?) ? 1 : 0
+    when :unskilled
+      @norms.any?(&:unskilled?) ? 1 : 0
+    when :machine
+      @norms.any?(&:machine?) ? 1 : 0
+    else
+      0
     end
+  end
 
-    { cost: total_cost, count: total_count }
+  def calculate_total_norm_hours
+    @norms.sum { |norm| norm.norm_value.to_f * @sub_task.quantity.to_f }
   end
 end
