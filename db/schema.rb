@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_07_22_191640) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_25_192257) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -227,7 +227,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_07_22_191640) do
     t.integer "unit_of_measure", default: 0
     t.integer "quantity"
     t.decimal "total_cost"
-    t.integer "duration"
+    t.decimal "duration", precision: 10, scale: 2
     t.integer "num_workers_skilled"
     t.integer "num_workers_unskilled"
     t.integer "num_machines"

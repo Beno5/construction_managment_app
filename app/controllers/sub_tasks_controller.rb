@@ -39,12 +39,28 @@ class SubTasksController < ApplicationController
 
   def update
     if @sub_task.update(sub_task_params)
-      redirect_to business_project_task_sub_task_path(@business, @task.project, @task, @sub_task),
-                  notice: "Sub-task was successfully updated."
+      SubTaskPlanningCalculator.new(@sub_task).call
+
+      respond_to do |format|
+        format.html { redirect_to ... }
+        format.json do
+          render json: {
+            success: true,
+            duration: @sub_task.duration,
+            num_workers_skilled: @sub_task.num_workers_skilled,
+            num_workers_unskilled: @sub_task.num_workers_unskilled,
+            num_machines: @sub_task.num_machines
+          }
+        end
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: { success: false }, status: :unprocessable_entity }
+      end
     end
   end
+
 
   def destroy
     @sub_task = @task.sub_tasks.find(params[:id])
@@ -78,6 +94,7 @@ class SubTasksController < ApplicationController
   def sub_task_params
     params.require(:sub_task).permit(
       :name, :description, :planned_start_date, :planned_end_date, :planned_cost,
+      :duration, :num_workers_skilled, :num_workers_unskilled, :num_machines,
       :real_start_date, :real_end_date, :real_cost, :planned_auto_calculation, :real_auto_calculation,
       custom_fields: [:key, :value]
     ).tap do |whitelisted|
