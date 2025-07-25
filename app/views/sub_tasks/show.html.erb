@@ -69,29 +69,36 @@
   }
 %>
 <%= render "partials/table_norms", norms: @norms %>
-<div class="col-span-6 sm:col-span-3">
-  <label for="duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Duration (days)</label>
-  <input type="number" id="duration" value="<%= @sub_task.duration %>" 
+<div data-controller="subtask norms"
+     data-subtask-id="<%= @sub_task.id %>"
+     data-subtask-update-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) %>"
+     data-norms-subtask-id-value="<%= @sub_task.id %>"
+     class="grid grid-cols-6 gap-6">
+
+  <div class="col-span-6 sm:col-span-3">
+    <label for="duration" class="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">Duration (days)</label>
+    <input type="number" id="duration" value="<%= @sub_task.duration %>" 
          class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
          data-subtask-target="duration" data-action="change->subtask#recalculate" />
-</div>
-<div class="col-span-6 sm:col-span-3">
-  <label for="skilled" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skilled Workers</label>
-  <input type="number" id="skilled" value="<%= @sub_task.num_workers_skilled %>" 
+  </div>
+  <div class="col-span-6 sm:col-span-3">
+    <label for="skilled" class="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">Skilled Workers</label>
+    <input type="number" id="skilled" value="<%= @sub_task.num_workers_skilled %>" 
          class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
          data-subtask-target="skilled" data-action="change->subtask#recalculate" />
-</div>
-<div class="col-span-6 sm:col-span-3">
-  <label for="unskilled" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unskilled Workers</label>
-  <input type="number" id="unskilled" value="<%= @sub_task.num_workers_unskilled %>" 
+  </div>
+  <div class="col-span-6 sm:col-span-3">
+    <label for="unskilled" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unskilled Workers</label>
+    <input type="number" id="unskilled" value="<%= @sub_task.num_workers_unskilled %>" 
          class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
          data-subtask-target="unskilled" data-action="change->subtask#recalculate" />
-</div>
-<div class="col-span-6 sm:col-span-3">
-  <label for="machines" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Machines</label>
-  <input type="number" id="machines" value="<%= @sub_task.num_machines %>" 
+  </div>
+  <div class="col-span-6 sm:col-span-3">
+    <label for="machines" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Machines</label>
+    <input type="number" id="machines" value="<%= @sub_task.num_machines %>" 
          class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
          data-subtask-target="machines" data-action="change->subtask#recalculate" />
+  </div>
 </div>
 <%= render 'partials/table', 
            collection: @activities, 

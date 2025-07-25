@@ -6,10 +6,11 @@ class SubTaskPlanningCalculator
     @norms = sub_task.pinned_norms
   end
 
-  def call
-    return if @norms.empty? || @sub_task.quantity.blank?
+  def call(norms = false)
+    return @sub_task.update(duration: 0, num_workers_skilled: 0,
+                    num_workers_unskilled: 0, num_machines: 0) if @norms.empty? || @sub_task.quantity.blank?
 
-    if duration_changed?
+    if duration_changed? && !norms
       reverse_calculate_from_duration
     else
       forward_calculate_duration
@@ -22,9 +23,11 @@ class SubTaskPlanningCalculator
     total_norm_hours = calculate_total_norm_hours
     return if total_norm_hours.zero?
 
-    num_skilled   = @sub_task.num_workers_skilled.presence || default_worker_count(:skilled)
-    num_unskilled = @sub_task.num_workers_unskilled.presence || default_worker_count(:unskilled)
-    num_machines  = @sub_task.num_machines.presence || default_worker_count(:machine)
+   num_skilled   = resolve_count(@sub_task.num_workers_skilled, :skilled)
+   num_unskilled = resolve_count(@sub_task.num_workers_unskilled, :unskilled)
+   num_machines  = resolve_count(@sub_task.num_machines, :machine)
+
+
 
     total_active_units = num_skilled + num_unskilled + num_machines
     return if total_active_units.zero?
@@ -32,7 +35,8 @@ class SubTaskPlanningCalculator
     effective_hours_per_day = total_active_units * DEFAULT_BPRSPD
     duration = (total_norm_hours / effective_hours_per_day).round(2)
 
-    @sub_task.update(duration: duration)
+    @sub_task.update(duration: duration, num_workers_skilled: num_skilled,
+                    num_workers_unskilled: num_unskilled, num_machines: num_machines)
   end
 
   def reverse_calculate_from_duration
@@ -58,7 +62,12 @@ class SubTaskPlanningCalculator
     @sub_task.saved_change_to_duration?
   end
 
-  def default_worker_count(type)
+  def resolve_count(value, type)
+    value.to_f.zero? && @norms.any?(&:"#{type}?") ? 1 : value.to_f
+  end
+
+
+  def default_count(type)
     case type
     when :skilled
       @norms.any?(&:skilled?) ? 1 : 0
