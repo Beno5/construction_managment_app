@@ -21,22 +21,16 @@ export default class extends Controller {
         "Accept": "application/json"
       }
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        this.durationTarget.value = data.duration
-        this.skilledTarget.value = data.num_workers_skilled
-        this.unskilledTarget.value = data.num_workers_unskilled
-        this.machinesTarget.value = data.num_machines
-
-        // 🔁 Ručno pokreni recalculaciju u subtask kontroleru
-        const subtaskController = this.application.getControllerForElementAndIdentifier(this.element, "subtask")
-        if (subtaskController) {
-          subtaskController.recalculate()
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.querySelector('[data-subtask-target="duration"]').value = data.duration
+          document.querySelector('[data-subtask-target="skilled"]').value = data.num_workers_skilled
+          document.querySelector('[data-subtask-target="unskilled"]').value = data.num_workers_unskilled
+          document.querySelector('[data-subtask-target="machines"]').value = data.num_machines
         }
-      }
-    })
-    .catch(error => console.error("Error updating norms:", error))
+      })
+      .catch(error => console.error("Error updating norms:", error))
   }
 
   getBusinessId() {
@@ -51,3 +45,4 @@ export default class extends Controller {
     return window.location.pathname.split("/")[6]
   }
 }
+console.log("🎉 123 li");
