@@ -1,5 +1,5 @@
 class SubTaskPlanningCalculator
-  DEFAULT_BPRSPD = 9.0
+  DEFAULT_BPRSPD = 9.0 # broj radnih sati po danu
 
   def initialize(sub_task)
     @sub_task = sub_task
@@ -7,8 +7,10 @@ class SubTaskPlanningCalculator
   end
 
   def call(norms = false)
-    return @sub_task.update(duration: 0, num_workers_skilled: 0,
-                    num_workers_unskilled: 0, num_machines: 0) if @norms.empty? || @sub_task.quantity.blank?
+    if @norms.empty? || @sub_task.quantity.blank?
+      return @sub_task.update(duration: 0, num_workers_skilled: 0,
+                              num_workers_unskilled: 0, num_machines: 0)
+    end
 
     if duration_changed? && !norms
       reverse_calculate_from_duration
@@ -20,27 +22,38 @@ class SubTaskPlanningCalculator
   private
 
   def forward_calculate_duration
-    total_norm_hours = calculate_total_norm_hours
-    return if total_norm_hours.zero?
+    num_skilled   = resolve_count(@sub_task.num_workers_skilled, :skilled)
+    num_unskilled = resolve_count(@sub_task.num_workers_unskilled, :unskilled)
+    num_machines  = resolve_count(@sub_task.num_machines, :machine)
 
-   num_skilled   = resolve_count(@sub_task.num_workers_skilled, :skilled)
-   num_unskilled = resolve_count(@sub_task.num_workers_unskilled, :unskilled)
-   num_machines  = resolve_count(@sub_task.num_machines, :machine)
+    # Ako niko ne radi, prekini
+    return if num_skilled.zero? && num_unskilled.zero? && num_machines.zero?
 
+    # Izračun učinka po satu po tipu
+    kv_output_per_hour  = num_skilled / avg_norm(:skilled)
+    nkv_output_per_hour = num_unskilled / avg_norm(:unskilled)
+    machine_output_per_hour = num_machines / avg_norm(:machine)
 
+    # Ukupni output po satu (jedinica/sat)
+    total_units_per_hour = kv_output_per_hour + nkv_output_per_hour + machine_output_per_hour
+    return if total_units_per_hour.zero?
 
-    total_active_units = num_skilled + num_unskilled + num_machines
-    return if total_active_units.zero?
+    # Output po danu
+    total_units_per_day = total_units_per_hour * DEFAULT_BPRSPD
 
-    effective_hours_per_day = total_active_units * DEFAULT_BPRSPD
-    duration = (total_norm_hours / effective_hours_per_day).round(2)
+    # Trajanje = količina / output po danu
+    duration = (@sub_task.quantity.to_f / total_units_per_day).round(2)
 
-    @sub_task.update(duration: duration, num_workers_skilled: num_skilled,
-                    num_workers_unskilled: num_unskilled, num_machines: num_machines)
+    @sub_task.update(
+      duration: duration,
+      num_workers_skilled: num_skilled,
+      num_workers_unskilled: num_unskilled,
+      num_machines: num_machines
+    )
   end
 
   def reverse_calculate_from_duration
-    total_norm_hours = calculate_total_norm_hours
+    calculate_total_norm_hours
     old_duration = @sub_task.duration_before_last_save.to_f
     new_duration = @sub_task.duration.to_f
     return if new_duration.zero? || old_duration.zero?
@@ -52,9 +65,9 @@ class SubTaskPlanningCalculator
     num_machines  = @sub_task.num_machines.to_f
 
     @sub_task.update(
-      num_workers_skilled:   (num_skilled * ratio).round(2),
+      num_workers_skilled: (num_skilled * ratio).round(2),
       num_workers_unskilled: (num_unskilled * ratio).round(2),
-      num_machines:          (num_machines * ratio).round(2)
+      num_machines: (num_machines * ratio).round(2)
     )
   end
 
@@ -66,18 +79,12 @@ class SubTaskPlanningCalculator
     value.to_f.zero? && @norms.any?(&:"#{type}?") ? 1 : value.to_f
   end
 
+  def avg_norm(type)
+    selected = @norms.select(&:"#{type}?")
+    return 1.0 if selected.empty?
 
-  def default_count(type)
-    case type
-    when :skilled
-      @norms.any?(&:skilled?) ? 1 : 0
-    when :unskilled
-      @norms.any?(&:unskilled?) ? 1 : 0
-    when :machine
-      @norms.any?(&:machine?) ? 1 : 0
-    else
-      0
-    end
+    total = selected.sum { |n| n.norm_value.to_f }
+    total / selected.size
   end
 
   def calculate_total_norm_hours

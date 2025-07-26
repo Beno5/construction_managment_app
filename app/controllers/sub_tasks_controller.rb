@@ -42,7 +42,7 @@ class SubTasksController < ApplicationController
       SubTaskPlanningCalculator.new(@sub_task).call
 
       respond_to do |format|
-        format.html { redirect_to ... }
+        format.html { redirect_to... }
         format.json do
           render json: {
             success: true,
@@ -60,7 +60,6 @@ class SubTasksController < ApplicationController
       end
     end
   end
-
 
   def destroy
     @sub_task = @task.sub_tasks.find(params[:id])

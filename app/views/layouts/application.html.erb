@@ -22,15 +22,13 @@
     </div>
     <!-- Glavni wrapper za sadržaj -->
     <main class="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col">
-      <% if controller_name == "sessions" || controller_name == "registrations" || controller_name == "passwords" %>
-        <!-- Auth-specific layout -->
+      <% if controller_name.in?(["sessions", "registrations", "passwords"]) %>
         <div class="flex items-center justify-center flex-grow px-6">
           <div class="w-full flex flex-col items-center justify-center px-6 pt-8 mx-auto md:h-screen pt:mt-0 dark:bg-gray-900">
             <%= yield %>
           </div>
         </div>
       <% else %>
-        <!-- Default layout with sidebar, navbar, and content -->
         <%= render "partials/navbar" %>
         <div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
           <%= render "partials/sidebar" %>
