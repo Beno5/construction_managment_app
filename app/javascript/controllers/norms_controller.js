@@ -24,11 +24,22 @@ export default class extends Controller {
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          document.querySelector('[data-subtask-target="duration"]').value = data.duration
-          document.querySelector('[data-subtask-target="skilled"]').value = data.num_workers_skilled
-          document.querySelector('[data-subtask-target="unskilled"]').value = data.num_workers_unskilled
-          document.querySelector('[data-subtask-target="machines"]').value = data.num_machines
-        }
+  const fields = [
+    { target: 'duration', value: data.duration },
+    { target: 'skilled', value: data.num_workers_skilled },
+    { target: 'unskilled', value: data.num_workers_unskilled },
+    { target: 'machines', value: data.num_machines }
+  ];
+
+  fields.forEach(({ target, value }) => {
+    const el = document.querySelector(`[data-subtask-target="${target}"]`);
+    if (el) {
+      el.value = value;
+      el.disabled = !(value > 0);
+    }
+  });
+}
+
       })
       .catch(error => console.error("Error updating norms:", error))
   }
