@@ -76,8 +76,10 @@ class SubTaskPlanningCalculator
   end
 
   def resolve_count(value, type)
-    value.to_f.zero? && @norms.any?(&:"#{type}?") ? 1 : value.to_f
+    return 0 if @norms.none?(&:"#{type}?")
+    value.to_f.zero? ? 1 : value.to_f
   end
+
 
   def avg_norm(type)
     selected = @norms.select(&:"#{type}?")
