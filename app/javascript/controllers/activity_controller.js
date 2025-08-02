@@ -97,7 +97,7 @@ export default class extends Controller {
         resourceSelect.innerHTML = "";
 
         // Dodaj placeholder opciju
-        let placeholderOption = document.createElement("option");
+        const placeholderOption = document.createElement("option");
         placeholderOption.value = "";
         placeholderOption.textContent = "-- Odaberite resurs --";
         placeholderOption.selected = true;
@@ -106,7 +106,7 @@ export default class extends Controller {
 
         // Dodaj resurse
         data.forEach(resource => {
-          let option = document.createElement("option");
+          const option = document.createElement("option");
           option.value = resource.id;
           option.textContent = resource.name;
           resourceSelect.appendChild(option);
