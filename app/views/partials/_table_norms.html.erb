@@ -37,7 +37,16 @@
               <% @norms.each do |norm| %>
                 <tr class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <td class="px-4 py-3">
-                    <%= check_box_tag "selected_norm_ids[]", norm.id, @pinned_norms.include?(norm), class: "norm-checkbox", data: { action: "change->norms#trackSelection" } %>
+                    <%= check_box_tag "selected_norm_ids[]", norm.id, @pinned_norms.include?(norm),
+                        class: "norm-checkbox",
+                        disabled: norm_disabled?(norm, @pinned_norms) || norm_disabled_by_unit?(norm, @pinned_norms),
+                        data: {
+                          action: "change->norms#trackSelection",
+                          norm_type: norm.norm_type,
+                          norm_subtype: norm.worker? ? norm.subtype : nil,
+                          norm_unit: norm.unit_of_measure
+                        }.compact %>
+
                   </td>
                   <td class="px-4 py-3"><%= norm.name %></td>
                   <td class="px-4 py-3"><%= norm.description&.truncate(50) %></td>
