@@ -39,8 +39,9 @@ export default class extends Controller {
 
 
     const modal = document.getElementById('resource-modal'); // Pronađi modal
-    const mode = event.target.dataset.mode; // Dohvati vrednost mode (show, edit, ili undefined)
-    const type = event.target.dataset.type; // Dohvati vrednost mode (show, edit, ili undefined)
+    const mode = event.currentTarget.dataset.mode || "create";
+    const type = event.currentTarget.dataset.type || "StandardResource";
+
    
     // Ako je mode definisan i nije "create", uzimamo rowId
     let rowId = null;
@@ -201,7 +202,7 @@ export default class extends Controller {
         // Dodaj placeholder opciju za resurse
         let placeholderOption = document.createElement("option");
         placeholderOption.value = "";
-        placeholderOption.textContent = t("resource.form.select_resource");
+        placeholderOption.textContent = '-- Odaberite resurs --';
         placeholderOption.selected = true;
         placeholderOption.disabled = true;
         resourceSelect.appendChild(placeholderOption);
@@ -217,7 +218,7 @@ export default class extends Controller {
         // Dodaj placeholder opciju za jedinice mere
         let unitPlaceholder = document.createElement("option");
         unitPlaceholder.value = "";
-        unitPlaceholder.textContent = t("resource.form.select_unit");
+        unitPlaceholder.textContent = ' -- Odaberite jedinicu mere --';
         unitPlaceholder.selected = true;
         unitPlaceholder.disabled = true;
         unitSelect.appendChild(unitPlaceholder);
@@ -252,40 +253,45 @@ export default class extends Controller {
   
   
 initializeModal(mode, type) {
+  // ✅ Sigurnosni fallbackovi
+  mode = mode || "create";
+  type = type || "StandardResource";
+
   const toggleContainer = document.getElementById('resource-toggle-container');
   const formStandard = document.getElementById('standard-resources');
   const customStandard = document.getElementById('custom-resources');
-  const formFields = this.element.querySelectorAll('input, select, textarea'); // Svi inputi, select i textarea u formi
-  const submitButton = this.element.querySelector("input[type='submit']"); // Dugme za submit
+  const formFields = this.element.querySelectorAll('input, select, textarea');
+  const submitButton = this.element.querySelector("input[type='submit']");
 
-  // Ako postoji 'mode' (tj. edit ili show), sakrij toggle
   if (mode === "edit" || mode === "show") {
     toggleContainer.classList.add('hidden');
-    
-    // Ako je 'show' mode, postavi sve inpute na readonly
+
     if (mode === "show") {
+      // 🔒 Show mode – zaključaj polja i sakrij submit
       formFields.forEach(field => {
-        field.setAttribute("readonly", true);  // Postavi readonly
-        field.disabled = true; // Takođe onemogući interakciju sa poljem
+        field.setAttribute("readonly", true);
+        field.disabled = true;
       });
-      this.hideSubmitButton(submitButton); // Sakrij submit dugme u 'show' režimu
+      this.hideSubmitButton(submitButton);
     } else {
+      // ✏ Edit mode – otključaj polja i prikaži submit
       formFields.forEach(field => {
-        field.removeAttribute("readonly");  // Ukloni readonly
-        field.disabled = false; // Omogući interakciju sa poljem
+        field.removeAttribute("readonly");
+        field.disabled = false;
       });
-      this.showSubmitButton(submitButton); // Prikazivanje dugmeta u 'edit' režimu
+      this.showSubmitButton(submitButton);
     }
   } else {
-    formFields.forEach(field => {
-      field.removeAttribute("readonly");  // Ukloni readonly
-      field.disabled = false; // Omogući interakciju sa poljem
-    });
-    // Ako nema mode (create), prikaži toggle
+    // ➕ Create mode – prikaži toggle, otključaj polja i prikaži submit
     toggleContainer.classList.remove('hidden');
-    this.showSubmitButton(submitButton); // Prikazivanje dugmeta u 'create' režimu
+    formFields.forEach(field => {
+      field.removeAttribute("readonly");
+      field.disabled = false;
+    });
+    this.showSubmitButton(submitButton);
   }
 
+  // 📌 Prikaz ispravne sekcije forme
   if (type === "CustomResource") {
     customStandard.classList.remove('hidden');
     formStandard.classList.add('hidden');
@@ -294,6 +300,7 @@ initializeModal(mode, type) {
     customStandard.classList.add('hidden');
   }
 }
+
 
 hideSubmitButton(submitButton) {
   if (submitButton) {

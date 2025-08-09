@@ -3,6 +3,8 @@
   <head>
     <title>ConstructionManagementApp</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta name="turbo-cache-control" content="no-cache">
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <!-- CSS Files -->
@@ -10,15 +12,11 @@
     <%= javascript_importmap_tags %>
     <!-- Header partial equivalent -->
     <%= render "partials/header" %>
+    
   </head>
   <body class="bg-gray-50 dark:bg-gray-800 <%= 'bg-white dark:bg-gray-900' if params[:white_bg] %>">
     <div id="flash-messages" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500">
-      <% if notice %>
-        <p class="notice bg-green-100 text-green-700 px-4 py-2 rounded-lg"><%= notice %></p>
-      <% end %>
-      <% if alert %>
-        <p class="alert bg-red-100 text-red-700 px-4 py-2 rounded-lg"><%= alert %></p>
-      <% end %>
+      <%= render "partials/flash_messages" %>
     </div>
     <!-- Glavni wrapper za sadržaj -->
     <main class="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col">

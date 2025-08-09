@@ -359,6 +359,8 @@ sr:
       task: Pretraži pozicije
       subtask: Pretraži podpozicije
     actions:
+      open: 
+        document: Otvori dokument
       edit: 
         resource: Izmeni resurs
         document: Izmeni dokument

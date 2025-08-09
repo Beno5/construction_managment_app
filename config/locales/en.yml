@@ -360,6 +360,8 @@ en:
       task: "Search tasks"
       subtask: "Search subtasks"
     actions:
+      open:
+        document: "Open document"
       edit:
         resource: "Edit resource"
         document: "Edit document"
