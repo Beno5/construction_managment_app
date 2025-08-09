@@ -10,7 +10,7 @@ class UpdateDynamicAttributesService
     ActiveRecord::Base.transaction do
       # First, check the type of record and update local attributes
       case @record
-      when Activity || RealActivity
+      when Activity
         update_sub_task_from_activity
       when SubTask
         update_sub_task
@@ -40,54 +40,9 @@ class UpdateDynamicAttributesService
   # Updating SubTask entity – dynamic calculation for planned attributes
   def update_sub_task
     sub_task = @record
-    activities = sub_task.activities
-    real_activities = sub_task.real_activities
+    total_cost = sub_task.activities.sum(:total_cost)
 
-    # Ako je planned_auto_calculation isključen, koristimo ručne vrednosti iz forme
-    planned_attributes = if sub_task.planned_auto_calculation == false
-                           {
-                             planned_start_date: sub_task.planned_start_date,
-                             planned_end_date: sub_task.planned_end_date,
-                             planned_cost: sub_task.planned_cost
-                           }
-                         elsif activities.exists?
-                           # Ako postoji aktivnost, koristimo automatske vrednosti
-                           {
-                             planned_start_date: activities.minimum(:start_date),
-                             planned_end_date: activities.maximum(:end_date),
-                             planned_cost: activities.sum(:total_cost)
-                           }
-                         else
-                           {
-                             planned_start_date: nil, planned_end_date: nil, planned_cost: 0
-                           }
-                         end
-
-    # Ako je real_auto_calculation isključen, koristimo ručne vrednosti iz forme
-    real_attributes = if sub_task.real_auto_calculation == false
-                        {
-                          real_start_date: sub_task.real_start_date,
-                          real_end_date: sub_task.real_end_date,
-                          real_cost: sub_task.real_cost
-                        }
-                      elsif real_activities.exists?
-                        # Ako postoji real_aktivnost, koristimo automatske vrednosti
-                        {
-                          real_start_date: real_activities.minimum(:start_date),
-                          real_end_date: real_activities.maximum(:end_date),
-                          real_cost: real_activities.sum(:total_cost)
-                        }
-                      else
-                        {
-                          real_start_date: nil, real_end_date: nil, real_cost: 0
-                        }
-                      end
-
-    # Kombinujemo ručne i automatske vrednosti
-    attributes = planned_attributes.merge(real_attributes)
-
-    # Ažuriramo sub_task sa novim vrednostima
-    sub_task.update_columns(attributes)
+    sub_task.update_columns(total_cost: total_cost)
   rescue ActiveRecord::ActiveRecordError => e
     log_error("sub_task", e)
   rescue StandardError => e

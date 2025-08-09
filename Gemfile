@@ -64,6 +64,7 @@ gem 'font-awesome-sass', '~> 6.0'
 
 
 
+
 group :development do
   gem 'rubocop', require: false
   gem 'rubocop-rails', require: false # Za Ruby on Rails specifične stilove

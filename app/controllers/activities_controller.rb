@@ -10,19 +10,19 @@ class ActivitiesController < ApplicationController
       @activity = Activity.find(params[:activity][:activity_id])
       if @activity.update(params_mapped)
         redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
-                    notice: 'Aktivnost je uspešno ažurirana.'
+                    notice: 'Resurs je uspešno kreiran.'
       else
         redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
-                    alert: 'Greška pri ažuriranju aktivnosti.'
+                    alert: 'Greška pri ažuriranju resursa.'
       end
     else
       @activity = @sub_task.activities.new(params_mapped)
       if @activity.save
         redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
-                    notice: 'Aktivnost je uspešno kreirana.'
+                    notice: 'Resurs je uspešno kreiran.'
       else
         redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
-                    alert: 'Greška pri kreiranju aktivnosti.'
+                    alert: 'Greška pri kreiranju resursa.'
       end
     end
   end
@@ -32,7 +32,7 @@ class ActivitiesController < ApplicationController
 
     if @activity.update(params_mapped)
       redirect_to project_task_sub_task_path(@sub_task.task.project, @sub_task.task, @sub_task),
-                  notice: 'Aktivnost je uspešno ažurirana.'
+                  notice: 'Resurs je uspešno ažuriran.'
     else
       render :edit
     end
@@ -43,10 +43,15 @@ class ActivitiesController < ApplicationController
     @activity.destroy
 
     respond_to do |format|
-      format.turbo_stream
+      format.turbo_stream do
+        flash.now[:notice] = 'Resurs je uspešno obrisan.'
+        # ovo ne radi
+      end
       format.html do
-        redirect_to business_project_task_sub_task_path(business, @project, @task, @sub_task, anchor: 'planned'),
-                    notice: "Real activity was successfully deleted."
+        redirect_to business_project_task_sub_task_path(
+          business, @project, @task, @sub_task, anchor: 'planned'
+        ),
+                    notice: 'Resurs je uspešno obrisan.'
       end
     end
   end

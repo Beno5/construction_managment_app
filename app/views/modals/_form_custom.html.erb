@@ -34,14 +34,6 @@
                 class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <div class="mb-4">
-      <%= f.label :start_date, t('resources.table.planned_start_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.date_field :start_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-    </div>
-    <div class="mb-4">
-      <%= f.label :end_date, t('resources.table.planned_end_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.date_field :end_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-    </div>
-    <div class="mb-4">
       <%= f.label :quantity, t('resources.table.quantity'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.number_field :quantity, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600", data: { action: "input->custom-resource#updateQuantity", custom_resource_target: "quantity" } %>
     </div>
