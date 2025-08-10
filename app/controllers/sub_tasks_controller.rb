@@ -92,9 +92,8 @@ class SubTasksController < ApplicationController
 
   def sub_task_params
     params.require(:sub_task).permit(
-      :name, :description, :planned_start_date, :planned_end_date, :planned_cost,
+      :name, :description, :planned_start_date, :planned_end_date, :planned_cost, :price_per_unit, :unit_of_measure, :quantity,
       :duration, :num_workers_skilled, :num_workers_unskilled, :num_machines,
-      :real_start_date, :real_end_date, :real_cost, :planned_auto_calculation, :real_auto_calculation,
       custom_fields: [:key, :value]
     ).tap do |whitelisted|
       if params[:sub_task][:custom_fields]

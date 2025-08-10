@@ -8,7 +8,6 @@
              { name: @task.name, path: business_project_task_path(@current_business, @project, @task) },
              (@sub_task.persisted? ? { name: @sub_task.name, path: business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) } : { name: t('subtasks.form.new_title'), path: nil })
            ] %>
-
 <!-- SubTask Form -->
 <%= form_with(model: [@current_business, @project, @task, @sub_task], local: true, data: { turbo: true }) do |f| %>
   <div class="grid grid-cols-6 gap-6">
@@ -17,68 +16,47 @@
       <%= f.label :name, t('subtasks.form.name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
-
     <!-- Description -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :description, t('subtasks.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_field :description, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
-
-    <!-- Planned Auto Calculation Checkbox -->
-    <div class="col-span-6 sm:col-span-3">
-      <%= f.label :planned_auto_calculation, t('subtasks.form.planned_auto_calculation'), class: "block font-medium text-sm text-gray-700" %>
-      <%= f.check_box :planned_auto_calculation, id: "planned_auto_checkbox", class: "mt-1" %>
+    <!-- Price Per Unit -->
+    <div class="col-span-4 sm:col-span-3">
+      <%= f.label :price_per_unit, t('subtasks.form.price_per_unit', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.number_field :price_per_unit, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
-
+    <!-- Unit of Measure -->
+    <div class="col-span-4 sm:col-span-3">
+      <%= f.label :unit_of_measure, t('subtasks.form.unit_of_measure'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.select :unit_of_measure, SubTask.unit_of_measures.keys.map { |u| [u.humanize, u] }, {}, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
+    <!-- Quantity -->
+    <div class="col-span-4 sm:col-span-3">
+      <%= f.label :quantity, t('subtasks.form.quantity'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.number_field :quantity, step: 1, min: 0, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
     <!-- Planned Start Date -->
     <div class="col-span-4 sm:col-span-3">
       <%= f.label :planned_start_date, t('subtasks.form.planned_start_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.date_field :planned_start_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
-
     <!-- Planned End Date -->
     <div class="col-span-4 sm:col-span-3">
       <%= f.label :planned_end_date, t('subtasks.form.planned_end_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.date_field :planned_end_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
-
     <!-- Planned Cost -->
     <div class="col-span-4 sm:col-span-3">
       <%= f.label :planned_cost, t('subtasks.form.planned_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.number_field :planned_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
-
-    <!-- Real Auto Calculation Checkbox -->
-    <div class="col-span-6 sm:col-span-3">
-      <%= f.label :real_auto_calculation, t('subtasks.form.real_auto_calculation'), class: "block font-medium text-sm text-gray-700" %>
-      <%= f.check_box :real_auto_calculation, id: "real_auto_checkbox", class: "mt-1" %>
-    </div>
-
-    <!-- Real Start Date -->
-    <div class="col-span-6 sm:col-span-3">
-      <%= f.label :real_start_date, t('subtasks.form.real_start_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.date_field :real_start_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-    </div>
-
-    <!-- Real End Date -->
-    <div class="col-span-6 sm:col-span-3">
-      <%= f.label :real_end_date, t('subtasks.form.real_end_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.date_field :real_end_date, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-    </div>
-
-    <!-- Real Costs -->
-    <div class="col-span-6 sm:col-span-3">
-      <%= f.label :real_cost, t('subtasks.form.real_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.number_field :real_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-    </div>
-
     <!-- Custom Fields -->
     <div class="col-span-6">
       <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('subtasks.form.custom_fields') %></h3>
       <%= render 'partials/custom_fields', custom_fields: @sub_task.custom_fields, model: 'sub_task' %>
     </div>
   </div>
-
   <!-- Submit Button -->
   <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
     <%= f.submit @sub_task.persisted? ? t('subtasks.form.update_button') : t('subtasks.form.create_button'), data: { turbo: false }, class: "text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" %>

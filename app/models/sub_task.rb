@@ -22,6 +22,9 @@ class SubTask < ApplicationRecord
   after_destroy :reorder_sub_tasks
   after_save :trigger_update_service
 
+    enum :unit_of_measure, { kg: 0, m2: 1, m3: 2, pieces: 3, ton: 4, liters: 5, roll: 6, bag: 7, set: 8 }
+
+
   def calculate_duration
     return unless planned_start_date.present? && planned_end_date.present?
 

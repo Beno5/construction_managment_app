@@ -234,7 +234,7 @@ Norm.create!([
                  description: "Buldožer 50ka – 10–20cm",
                  info: "Mašinski zemljani radovi",
                  norm_type: :machine,
-                 unit_of_measure: "m3",
+                 unit_of_measure: "m2",
                  norm_value: 0.0592,
                  tags: ["iskop", "humus", "buldožer", "zemljani radovi"]
                },
