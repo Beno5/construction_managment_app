@@ -363,6 +363,7 @@ en:
       open:
         document: "Open document"
       edit:
+        default: Edit
         resource: "Edit resource"
         document: "Edit document"
         business: "Edit business"

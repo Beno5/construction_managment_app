@@ -62,6 +62,7 @@ gem 'aws-sdk-s3', '~> 1.48', require: false
 gem 'rails-erd'
 gem 'font-awesome-sass', '~> 6.0'
 gem 'i18n-js'
+gem 'business_time'
 
 
 

@@ -14,6 +14,7 @@
            model_name: t('tasks.form.model_name'), 
            search_path: paths[:task], 
            new_path: paths[:new_subtask],
+           edit_path: edit_business_project_task_path(@current_business, @project, @task),
            additional_crumbs: [
              { name: @project.name, path: business_project_path(@current_business, @project) },
              { name: @task.name, path: paths[:task] }

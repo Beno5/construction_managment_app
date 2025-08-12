@@ -3,6 +3,7 @@
            model_name: t('subtasks.form.model_name'),
            search_path: nil,
            new_path: nil,
+           edit_path: edit_business_project_task_sub_task_path(@current_business, @project, @task, @sub_task),
            additional_crumbs: [
              { name: @project.name, path: business_project_path(@current_business, @project) },
              (@task.persisted? ? { name: @task.name, path: business_project_task_path(@current_business, @project, @task) } : { name: t('tasks.form.new_title'), path: nil }),
@@ -45,6 +46,24 @@
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.planned_cost', currency: @current_business.currency_symbol) %></label>
     <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @sub_task.planned_cost %>
+    </div>
+  </div>
+  <!-- Planned Start Date -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+      <%= t('subtasks.form.planned_start_date') %>
+    </label>
+    <div data-subtask-target="plannedStart" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.planned_start_date.strftime("%d. %B %Y") if @sub_task.planned_start_date.present? %>
+    </div>
+  </div>
+  <!-- Planned End Date -->
+  <div class="col-span-6 sm:col-span-3">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+      <%= t('subtasks.form.planned_end_date') %>
+    </label>
+    <div data-subtask-target="plannedEnd" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <%= @sub_task.planned_end_date.strftime("%d. %B %Y") if @sub_task.planned_end_date.present? %>
     </div>
   </div>
   <!-- Custom Fields -->
