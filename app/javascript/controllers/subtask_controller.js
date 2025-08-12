@@ -33,22 +33,41 @@ export default class extends Controller {
       },
       body: JSON.stringify(data)
     })
-    .then(response => {
-      if (!response.ok) throw new Error(`Server error: ${response.status}`);
-      return response.json();
-    })
-    .then(data => {
-      if (data.success) {
-        this.durationTarget.value = data.duration;
-        this.skilledTarget.value = data.num_workers_skilled;
-        this.unskilledTarget.value = data.num_workers_unskilled;
-        this.machinesTarget.value = data.num_machines;
-      } else {
-        console.error("Backend returned failure:", data);
-      }
-    })
-    .catch(error => {
-      console.error("Fetch error:", error);
+      .then(response => {
+        if (!response.ok) throw new Error(`Server error: ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          this.durationTarget.value = data.duration;
+          this.skilledTarget.value = data.num_workers_skilled;
+          this.unskilledTarget.value = data.num_workers_unskilled;
+          this.machinesTarget.value = data.num_machines;
+
+          if (data.planned_start_date) {
+            document.querySelector('[data-subtask-target="plannedStart"]').textContent =
+              this.formatDate(data.planned_start_date);
+          }
+          if (data.planned_end_date) {
+            document.querySelector('[data-subtask-target="plannedEnd"]').textContent =
+              this.formatDate(data.planned_end_date);
+          }
+
+        } else {
+          console.error("Backend returned failure:", data);
+        }
+      })
+      .catch(error => {
+        console.error("Fetch error:", error);
+      });
+  }
+
+  formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("de-DE", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
     });
   }
 }

@@ -362,6 +362,7 @@ sr:
       open: 
         document: Otvori dokument
       edit: 
+        default: Izmeni
         resource: Izmeni resurs
         document: Izmeni dokument
         business: Izmeni firmu

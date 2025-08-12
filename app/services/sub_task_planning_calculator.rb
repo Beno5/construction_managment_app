@@ -12,9 +12,11 @@ class SubTaskPlanningCalculator
                               num_workers_unskilled: 0, num_machines: 0)
     end
 
-    if duration_changed? && !norms
+    if (duration_changed? && !norms) || dates_changed?
+      # calculator
       reverse_calculate_from_duration
     else
+      # preko norme
       forward_calculate_duration
     end
   end
@@ -50,10 +52,14 @@ class SubTaskPlanningCalculator
       num_workers_unskilled: num_unskilled,
       num_machines: num_machines
     )
+
+    update_dates_from_duration(duration)
   end
 
   def reverse_calculate_from_duration
     calculate_total_norm_hours
+    update_duration_from_date_changes if dates_changed?
+
     old_duration = @sub_task.duration_before_last_save.to_f
     new_duration = @sub_task.duration.to_f
     return if new_duration.zero? || old_duration.zero?
@@ -69,10 +75,35 @@ class SubTaskPlanningCalculator
       num_workers_unskilled: (num_unskilled * ratio).round(2),
       num_machines: (num_machines * ratio).round(2)
     )
+
+    update_dates_from_duration(new_duration)
+  end
+
+  def update_duration_from_date_changes
+    return unless @sub_task.planned_start_date.present? && @sub_task.planned_end_date.present?
+
+    new_duration = (@sub_task.planned_end_date - @sub_task.planned_start_date).to_i + 1
+    @sub_task.update(duration: new_duration)
+  end
+
+  def update_dates_from_duration(new_duration)
+    if @sub_task.planned_start_date.present?
+      @sub_task.update(
+        planned_end_date: @sub_task.planned_start_date + (new_duration.to_i - 1)
+      )
+    elsif @sub_task.planned_end_date.present?
+      @sub_task.update(
+        planned_start_date: @sub_task.planned_end_date - (new_duration.to_i - 1)
+      )
+    end
   end
 
   def duration_changed?
     @sub_task.saved_change_to_duration?
+  end
+
+  def dates_changed?
+    @sub_task.saved_change_to_planned_start_date? || @sub_task.saved_change_to_planned_end_date?
   end
 
   def resolve_count(value, type)

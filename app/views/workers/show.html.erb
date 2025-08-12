@@ -3,6 +3,7 @@
            model_name: t('workers.form.model_name'),
            search_path: nil,
            new_path: nil,
+           edit_path: edit_business_worker_path(@current_business, @worker),
            additional_crumbs: [
              { name: t('workers.form.model_name'), path: business_workers_path(@current_business) },
              (@worker.persisted? ? { name: "#{@worker.first_name} #{@worker.last_name}", path: business_worker_path(@current_business, @worker) } : { name: t('workers.form.new_title'), path: nil })

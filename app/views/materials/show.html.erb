@@ -3,6 +3,7 @@
            model_name: t('materials.form.model_name'),
            search_path: nil,
            new_path: nil,
+           edit_path: edit_business_material_path(@current_business, @material),
            additional_crumbs: [
              { name: t('materials.form.model_name'), path: business_materials_path(@current_business) },
              (@material.persisted? ? { name: @material.name, path: business_material_path(@current_business, @material) } : { name: t('materials.form.new_title'), path: nil })
