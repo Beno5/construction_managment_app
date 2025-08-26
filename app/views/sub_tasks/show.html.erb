@@ -149,6 +149,10 @@
     <%= @sub_task.total_cost %>
   </div>
 </div>
+<div class="bg-white p-6 rounded-lg shadow-md mt-6">
+  <h2 class="text-xl font-bold mb-4"><%= t('projects.show.timeline_title') %></h2>
+  <div id="gantt_here" data-project-id="<%= @project.id %>" style="width: 100%; height: 500px;"></div>
+</div>
 <% 
   model_name = "Documents"
   paths_doc = {

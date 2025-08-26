@@ -19,7 +19,6 @@
              { name: @project.name, path: business_project_path(@current_business, @project) },
              { name: @task.name, path: paths[:task] }
            ] %>
-
 <div class="grid grid-cols-6 gap-6">
   <!-- Name -->
   <div class="col-span-6 sm:col-span-3">
@@ -36,7 +35,6 @@
     </div>
   </div>
 </div>
-
 <div class="grid grid-cols-6 gap-6">
   <!-- Planned Start Date -->
   <div class="col-span-6 sm:col-span-3">
@@ -60,7 +58,6 @@
     </div>
   </div>
 </div>
-
 <div class="grid grid-cols-6 gap-6">
   <!-- Real Start Date -->
   <div class="col-span-6 sm:col-span-3">
@@ -84,7 +81,6 @@
     </div>
   </div>
 </div>
-
 <div class="grid grid-cols-6 gap-6">
   <!-- Custom Fields -->
   <div class="col-span-6">
@@ -99,7 +95,6 @@
     <% end %>
   </div>
 </div>
-
 <%= render 'partials/table', 
            collection: @subtasks, 
            columns: {
@@ -116,7 +111,10 @@
            edit_path: paths[:edit_subtask],
            delete_path: paths[:delete_subtask],
            actions: [] %>
-
+<div class="bg-white p-6 rounded-lg shadow-md mt-6">
+  <h2 class="text-xl font-bold mb-4"><%= t('projects.show.timeline_title') %></h2>
+  <div id="gantt_here" data-project-id="<%= @project.id %>" style="width: 100%; height: 500px;"></div>
+</div>
 <% 
   model_name_doc = "Documents"
   paths_doc = {
