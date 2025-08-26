@@ -42,16 +42,6 @@ module Api
           }
         end
       }
-    end
-
-    private
-
-    def task_duration(task)
-      if task.planned_start_date && task.planned_end_date
-        [(task.planned_end_date.to_date - task.planned_start_date.to_date).to_i, 1].max
-      else
-        1 # fallback ako fali datum
-      end
-    end
+    end 
   end
 end
