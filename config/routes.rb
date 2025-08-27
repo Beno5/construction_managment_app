@@ -32,6 +32,7 @@ Rails.application.routes.draw do
 
   # API routes for Gantt
   namespace :api do
+    put "/gantt/move_update/:id", to: "gantt#move_update"
     get "gantt/project/:id/data", to: "gantt#data" # Samo učitavanje podataka
     resources :links, only: [:create, :destroy] # Samo kreiranje i brisanje linkova
   end
