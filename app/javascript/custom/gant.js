@@ -13,12 +13,22 @@ document.addEventListener("DOMContentLoaded", function () {
   ];
 
   // Onemogućavamo sve osim pravljenja linkova
-  gantt.config.drag_resize = false;
-  gantt.config.drag_move = false;
   gantt.config.drag_progress = false;
   gantt.config.drag_links = true;
   gantt.config.date_grid = "%d.%m.%Y";
   gantt.config.lightbox = false;
+
+
+  gantt.templates.link_description = function (link) {
+    var sourceTask = gantt.getTask(link.source);
+    var targetTask = gantt.getTask(link.target);
+
+    var source = sourceTask ? sourceTask.name : link.source;
+    var target = targetTask ? targetTask.name : link.target;
+
+    return source + " → " + target;
+  };
+
 
   // Grid kolone
   gantt.config.columns = [
@@ -84,6 +94,29 @@ document.addEventListener("DOMContentLoaded", function () {
       selectedLinkId = null;
     }
   });
+
+  // Kad korisnik pomjeri task na ganttu
+  gantt.attachEvent("onAfterTaskUpdate", function (id, task) {
+    fetch(`/api/gantt/move_update/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+      },
+      body: JSON.stringify({
+        start_date: gantt.date.date_to_str("%Y-%m-%d")(task.start_date),
+        end_date: gantt.date.date_to_str("%Y-%m-%d")(task.end_date),
+        duration: task.duration
+      })
+    })
+      .then(r => r.json())
+      .then(d => console.log("✅ update:", d))
+      .catch(e => console.error("❌ greska:", e));
+  });
+
+
+
+
 
   // Kada se kreira novi link
   gantt.attachEvent("onLinkCreated", function (link) {

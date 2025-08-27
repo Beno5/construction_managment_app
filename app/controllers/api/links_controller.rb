@@ -3,7 +3,14 @@ module Api
     protect_from_forgery with: :null_session
 
     def create
-      link = Link.new(link_params)
+      source_id = normalize_id(params[:source_id])
+      target_id = normalize_id(params[:target_id])
+
+      link = Link.new(
+        source_id: source_id,
+        target_id: target_id,
+        link_type: params[:link_type]
+      )
 
       if link.save
         render json: { action: "inserted", tid: link.id }
@@ -24,8 +31,11 @@ module Api
 
     private
 
-    def link_params
-      params.permit(:source_id, :target_id, :link_type)
+    # Skida prefiks "t_" ili "st_" i vraća integer ID
+    def normalize_id(raw_id)
+      return nil if raw_id.blank?
+
+      raw_id.to_s.sub(/^t_/, "").sub(/^st_/, "").to_i
     end
   end
 end
