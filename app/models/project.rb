@@ -11,20 +11,14 @@ class Project < ApplicationRecord
   enum :status, { pending: 0, active: 1, completed: 2, canceled: 3, paused: 4 }
 
   # Validations
-  validates :address, presence: true
-  validates :real_cost, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
-  validates :client_project_id, presence: true, uniqueness: true
-  validates :name, presence: true, uniqueness: true
+  validates :client_project_id, presence: true, 
+            uniqueness: { scope: :business_id }
+  validates :name, presence: true, 
+            uniqueness: { scope: :business_id }
+
   validate :end_date_after_start_date
 
-  # Callbacks
-  before_save :calculate_duration
 
-  def calculate_duration
-    return unless planned_start_date.present? && planned_end_date.present?
-
-    ((planned_end_date.year * 12) + planned_end_date.month) - ((planned_start_date.year * 12) + planned_start_date.month)
-  end
 
   def earliest_start_date
     tasks.minimum(:planned_start_date)
@@ -37,8 +31,9 @@ class Project < ApplicationRecord
   private
 
   def end_date_after_start_date
+
     return unless planned_end_date.present? && planned_start_date.present? && planned_end_date < planned_start_date
 
-    errors.add(:planned_end_date, "cannot be earlier than the start date")
+    errors.add(:base, :invalid_dates)
   end
 end

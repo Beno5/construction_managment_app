@@ -1,4 +1,19 @@
 en:
+  activerecord:
+    errors:
+      models:
+        project:
+          attributes:
+            base:
+              invalid_dates: "End date cannot be before start date"
+        task:
+          attributes:
+            base:
+              invalid_dates: "End date cannot be before start date"
+        sub_task:
+          attributes:
+            base:
+              invalid_dates: "End date cannot be before start date"
   date:
     formats:
       default: "%Y-%m-%d"
@@ -106,6 +121,15 @@ en:
         owner_first_name: "Owner First Name"
         owner_last_name: "Owner Last Name"
         currency: "Currency"
+    messages:
+      created: "Business created successfully."
+      updated: "Business updated successfully."
+      deleted: "Business deleted successfully."
+      selected: "%{name} is now selected."
+      not_found: "Business not found."
+    errors:
+      name_required: "Business name is required!"
+      validation_failed: "Please check the form for errors."
   materials:
     form:
       edit_title: "Edit %{name}"
@@ -179,6 +203,16 @@ en:
       create_button: "Create Project"
     show:
       timeline_title: "Project Timeline (Gantt Chart)"
+    errors:
+      required_fields: "Project name and client project ID are required and must be unique"
+      validation_failed: "Unable to save project due to validation errors"
+      name_required: "Project name is required and must be unique within the business"
+      client_project_id_required: "Client project ID is required and must be unique within the business"
+      invalid_dates: "End date must be after start date"
+      validation_failed: "Project could not be saved"
+    messages:
+      created: "Project was successfully created"
+      updated: "Project was successfully updated"
   tasks:
     add_new: "Add New Task"
     table:
@@ -209,6 +243,9 @@ en:
       real_start_date: "Real Start Date"
       real_end_date: "Real End Date"
       real_cost: "Real Cost (%{currency})"
+    errors:
+      name_required: "Task name is required"
+      validation_failed: "Task could not be saved"
   subtasks:
     form:
       edit_title: "Edit %{name}"
@@ -242,6 +279,9 @@ en:
       info_communication: "Info and Communication"
       planned: "Planned"
       real: "Real"
+    errors:
+      name_required: "Sub-task name is required"
+      validation_failed: "Sub-task could not be saved"
   resources:
     form:
       model_name: "Planned Resources"

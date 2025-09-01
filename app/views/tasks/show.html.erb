@@ -57,22 +57,6 @@
       <%= @task.planned_cost %>
     </div>
   </div>
-</div>
-<div class="grid grid-cols-6 gap-6">
-  <!-- Real Start Date -->
-  <div class="col-span-6 sm:col-span-3">
-    <%= label_tag :real_start_date, t('tasks.form.real_start_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-    <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
-      <%= @task.real_start_date&.strftime("%d.%m.%Y") %>
-    </div>
-  </div>
-  <!-- Real End Date -->
-  <div class="col-span-6 sm:col-span-3">
-    <%= label_tag :real_end_date, t('tasks.form.real_end_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-    <div class="block w-full bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
-      <%= @task.real_end_date&.strftime("%d.%m.%Y") %>
-    </div>
-  </div>
   <!-- Real Cost -->
   <div class="col-span-6 sm:col-span-3">
     <%= label_tag :real_cost, t('tasks.form.real_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>

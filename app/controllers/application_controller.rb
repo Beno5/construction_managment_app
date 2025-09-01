@@ -22,9 +22,15 @@ class ApplicationController < ActionController::Base
     redirect_to businesses_path, alert: "Business not found." unless @business
   end 
   
-  def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
-  end
+  # Add this method to include locale in all URLs
+def default_url_options
+  { locale: I18n.locale }
+end
+
+def set_locale
+  I18n.locale = params[:locale] || session[:locale] || I18n.default_locale
+  session[:locale] = I18n.locale
+end
 
   private
 

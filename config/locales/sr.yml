@@ -1,4 +1,19 @@
 sr:
+  activerecord:
+    errors:
+      models:
+        project:
+          attributes:
+            base:
+              invalid_dates: "Datum završetka ne može biti prije datuma početka"
+        task:
+          attributes:
+            base:
+              invalid_dates: "Datum završetka ne može biti prije datuma početka"
+        sub_task:
+          attributes:
+            base:
+              invalid_dates: "Datum završetka ne može biti prije datuma početka"
   date:
     formats:
       default: "%Y-%m-%d"
@@ -106,6 +121,15 @@ sr:
         owner_first_name: "Ime vlasnika"
         owner_last_name: "Prezime vlasnika"
         currency: "Valuta"
+    messages:
+      created: "Firma je uspješno kreirana."
+      updated: "Firma je uspješno ažurirana."
+      deleted: "Firma je uspješno obrisana."
+      selected: "%{name} je sada odabrana."
+      not_found: "Firma nije pronađena."
+    errors:
+      name_required: "Naziv firme je obavezan!"
+      validation_failed: "Molimo provjerite formu za greške."
   materials:
     form:
       edit_title: "Izmeni %{name}"
@@ -179,6 +203,14 @@ sr:
       create_button: "Kreiraj Projekat"
     show:
       timeline_title: "Vremenska Linija Projekta (Gantogram)"
+    errors:
+      name_required: "Ime projekta je obavezno i mora biti jedinstveno unutar firme"
+      client_project_id_required: "ID klijentskog projekta je obavezan i mora biti jedinstven unutar firme"
+      invalid_dates: "Datum završetka mora biti nakon datuma početka"
+      validation_failed: "Projekat nije moguće sačuvati"
+    messages:
+      created: "Projekat je uspješno kreiran"
+      updated: "Projekat je uspješno ažuriran"
   tasks:
     add_new: "Dodaj novu poziciju"
     table:
@@ -209,6 +241,9 @@ sr:
       real_start_date: "Stvarni Datum Početka"
       real_end_date: "Stvarni Datum Zavrsetka"
       real_cost: "Stvarni Trošak (%{currency})"
+  errors:
+    name_required: "Ime zadatka je obavezno"
+    validation_failed: "Zadatak nije moguće sačuvati"
   subtasks:
     form:
       edit_title: "Izmeni %{name}"
@@ -242,6 +277,9 @@ sr:
       info_communication: "Info i Komunikacija"
       planned: "Planirano"
       real: "Realno"
+    errors:
+      name_required: "Ime podpozicije je obavezno"
+      validation_failed: "Podpoziciju nije moguće sačuvati"
   resources:
     form:
       model_name: "Planirani Resursi"
@@ -392,7 +430,7 @@ sr:
         project: Prikaži projekat
         task: Prikaži poziciju
         subtask: Prikaži podpoziciju
-     
-    
-  
-      
+
+
+
+

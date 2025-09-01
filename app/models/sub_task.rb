@@ -47,13 +47,9 @@ class SubTask < ApplicationRecord
   end
 
   def end_date_after_start_date
-    return if planned_start_date.blank? || planned_end_date.blank?
+    return unless planned_end_date.present? && planned_start_date.present? && planned_end_date < planned_start_date
 
-    self.planned_end_date = planned_start_date + planned_end_date.days if planned_end_date.is_a?(Integer)
-
-    return unless planned_end_date < planned_start_date
-
-    errors.add(:planned_end_date, "must be after start date")
+    errors.add(:base, :invalid_dates)
   end
 
   def trigger_update_service
