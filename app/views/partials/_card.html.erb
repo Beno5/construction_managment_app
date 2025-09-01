@@ -12,10 +12,7 @@
     <p><span class="font-semibold"><%= t('projects.form.project_manager') %>:</span> <%= project.project_manager %></p>
     <p><span class="font-semibold"><%= t('projects.form.planned_start_date') %>:</span> <%= project.planned_start_date&.strftime("%d.%m.%Y") %></p>
     <p><span class="font-semibold"><%= t('projects.form.planned_end_date') %>:</span> <%= project.planned_end_date&.strftime("%d.%m.%Y") %></p>
-    <p><span class="font-semibold"><%= t('projects.form.real_start_date') %>:</span> <%= project.real_start_date&.strftime("%d.%m.%Y") || t('projects.form.not_available') %></p>
-    <p><span class="font-semibold"><%= t('projects.form.real_end_date') %>:</span> <%= project.real_end_date&.strftime("%d.%m.%Y") || t('projects.form.not_available') %></p>
     <p><span class="font-semibold"><%= t('projects.form.planned_cost', currency: @current_business.currency_symbol) %>:</span> <%= project.planned_cost ? "#{project.planned_cost} #{@current_business.currency_symbol}" : t('projects.form.not_available') %></p>
-    <p><span class="font-semibold"><%= t('projects.form.real_cost', currency: @current_business.currency_symbol) %>:</span> <%= project.real_cost ? "#{project.real_cost} #{@current_business.currency_symbol}" : t('projects.form.not_available') %></p>
     <p><span class="font-semibold"><%= t('projects.form.status') %>:</span> <%= project.status.humanize %></p>
     <p><span class="font-semibold"><%= t('projects.form.description') %>:</span> <%= project.description.present? ? project.description : t('projects.form.not_available') %></p>
     <% if project.custom_fields.present? %>

@@ -29,9 +29,10 @@ class ProjectsController < ApplicationController
     @project.user_id = current_user.id
 
     if @project.save
-      redirect_to business_projects_url(@business), notice: 'Project was successfully created.'
+      redirect_to business_projects_url(@business), notice: t('projects.messages.created')
     else
-      render :new, status: :unprocessable_entity
+      set_error_message
+      render :new, status: :unprocessable_entity, locals: { locale: params[:locale] }
     end
   end
 
@@ -48,9 +49,10 @@ class ProjectsController < ApplicationController
         end
       end
 
-      redirect_to business_projects_url(@business), notice: 'Project was successfully updated.'
+      redirect_to business_projects_url(@business), notice: t('projects.messages.updated')
     else
-      render :edit, status: :unprocessable_entity
+      set_error_message
+      render :edit, status: :unprocessable_entity, locals: { locale: params[:locale] }
     end
   end
 
@@ -103,7 +105,7 @@ class ProjectsController < ApplicationController
       :project_manager,
       :planned_start_date,
       :planned_end_date,
-      :real_cost, # Dodato real_cost
+      :planned_cost, # Dodato real_cost
       :description,
       :status,
       :client_project_id,
@@ -119,5 +121,17 @@ class ProjectsController < ApplicationController
         whitelisted[:custom_fields] = {}
       end
     end
+  end
+
+  def set_error_message
+    flash.now[:alert] = if @project.errors[:name].any?
+                         t('projects.errors.name_required')
+                       elsif @project.errors[:client_project_id].any?
+                         t('projects.errors.client_project_id_required')
+                       elsif @project.errors[:base].any?
+                         @project.errors[:base].first
+                       else
+                         t('projects.errors.validation_failed')
+                       end
   end
 end

@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", function () {
   gantt.config.date_grid = "%d.%m.%Y";
   gantt.config.lightbox = false;
 
+  
+
 
   gantt.templates.link_description = function (link) {
     var sourceTask = gantt.getTask(link.source);
@@ -42,14 +44,20 @@ document.addEventListener("DOMContentLoaded", function () {
     {
       name: "name",
       label: "Task name",
-      width: "*",
+      width: 120,
       align: "left",
     },
     {
       name: "start_date",
       label: "Start Date",
       align: "center",
-      width: 100
+      width: 120
+    },
+    {
+      name: "end_date",
+      label: "End Date",
+      align: "center",
+      width: 120
     },
     {
       name: "duration",

@@ -23,3 +23,7 @@
  .gantt_add {
    display: none !important;
  }
+ 
+.non-draggable-task .gantt_task_content {
+  cursor: not-allowed;
+}

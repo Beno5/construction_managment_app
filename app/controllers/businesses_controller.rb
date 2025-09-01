@@ -31,7 +31,14 @@ class BusinessesController < ApplicationController
     if @business.save
       redirect_to businesses_path, notice: "Business created successfully."
     else
-      render :new, status: :unprocessable_entity
+      # Provjeri specifično za name error
+      if @business.errors[:name].any?
+        redirect_to new_business_path, alert: "Name is required!"
+      else
+        # Ostali validation errori
+        error_messages = @business.errors.full_messages.join(", ")
+        redirect_to new_business_path, alert: error_messages
+      end
     end
   end
 
@@ -39,7 +46,13 @@ class BusinessesController < ApplicationController
     if @business.update(business_params)
       redirect_to businesses_path, notice: "Business updated successfully."
     else
-      render :edit, status: :unprocessable_entity
+      # Isto i za update
+      if @business.errors[:name].any?
+        redirect_to edit_business_path(@business), alert: "Name is required!"
+      else
+        error_messages = @business.errors.full_messages.join(", ")
+        redirect_to edit_business_path(@business), alert: error_messages
+      end
     end
   end
 
@@ -69,5 +82,9 @@ class BusinessesController < ApplicationController
   def business_params
     params.require(:business).permit(:name, :address, :phone_number, :vat_number, :registration_number,
                                      :owner_first_name, :owner_last_name, :currency)
+  end
+
+  def set_business
+    @business = current_user.businesses.find(params[:id])
   end
 end

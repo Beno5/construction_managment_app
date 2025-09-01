@@ -31,6 +31,7 @@ class TasksController < ApplicationController
     if @task.save
       redirect_to business_project_path(@business, @project), notice: "Task was successfully created."
     else
+      set_error_message
       render :new, status: :unprocessable_entity
     end
   end
@@ -39,6 +40,7 @@ class TasksController < ApplicationController
     if @task.update(task_params)
       redirect_to business_project_path(@business, @project), notice: "Task was successfully updated."
     else
+      set_error_message
       render :edit, status: :unprocessable_entity
     end
   end
@@ -64,6 +66,16 @@ class TasksController < ApplicationController
 
   def set_task
     @task = Task.find_by(id: params[:id])
+  end
+
+  def set_error_message
+    flash.now[:alert] = if @task.errors[:name].any?
+                          t('tasks.errors.name_required')
+                        elsif @task.errors[:base].any?
+                          @task.errors[:base].first
+                        else
+                          t('tasks.errors.validation_failed')
+                        end
   end
 
   def task_params

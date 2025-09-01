@@ -31,8 +31,9 @@ class SubTasksController < ApplicationController
 
     if @sub_task.save
       redirect_to business_project_task_sub_task_path(@business, @task.project, @task, @sub_task),
-                  notice: "Sub-task was successfully created."
+                  notice: t('sub_tasks.messages.created')
     else
+      set_error_message
       render :new, status: :unprocessable_entity
     end
   end
@@ -42,7 +43,10 @@ class SubTasksController < ApplicationController
       SubTaskPlanningCalculator.new(@sub_task).call
 
       respond_to do |format|
-        format.html { redirect_to... }
+        format.html do
+          redirect_to business_project_task_sub_task_path(@business, @task.project, @task, @sub_task),
+                      notice: t('sub_tasks.messages.updated')
+        end
         format.json do
           render json: {
             success: true,
@@ -57,7 +61,10 @@ class SubTasksController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html do
+          set_error_message
+          render :edit, status: :unprocessable_entity
+        end
         format.json { render json: { success: false }, status: :unprocessable_entity }
       end
     end
@@ -107,5 +114,15 @@ class SubTasksController < ApplicationController
         whitelisted[:custom_fields] = {}
       end
     end
+  end
+
+  def set_error_message
+    flash.now[:alert] = if @sub_task.errors[:name].any?
+                          t('subtasks.errors.name_required')
+                        elsif @sub_task.errors[:base].any?
+                          @sub_task.errors[:base].first
+                        else
+                          t('subtasks.errors.validation_failed')
+                        end
   end
 end
