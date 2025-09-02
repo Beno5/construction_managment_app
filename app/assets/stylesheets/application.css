@@ -24,6 +24,35 @@
    display: none !important;
  }
  
-.non-draggable-task .gantt_task_content {
-  cursor: not-allowed;
+/* Task = crvena */
+.gantt_task_line.task-red {
+  background: #e57373;
+  /* soft red */
+  border-color: #d32f2f;
+  /* tamnija crvena za kontrast */
+}
+
+.gantt_task_progress.task-red {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* SubTask = plava */
+.gantt_task_line.task-blue {
+  background: #64b5f6;
+  /* soft blue */
+  border-color: #1976d2;
+  /* tamnija plava za kontrast */
+}
+
+.gantt_task_progress.task-blue {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* (opcionalno) hover malo istakni */
+.gantt_task_line.task-red:hover {
+  filter: brightness(0.95);
+}
+
+.gantt_task_line.task-blue:hover {
+  filter: brightness(1.05);
 }
