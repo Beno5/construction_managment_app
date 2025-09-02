@@ -31,6 +31,51 @@ document.addEventListener("DOMContentLoaded", function () {
     return source + " → " + target;
   };
 
+  // helper za nivo u hijerarhiji (root = 0, task = 1, subtask = 2, ...)
+  function levelOf(task) {
+    let lvl = 0, pid = task.parent;
+    while (pid && pid != 0 && gantt.isTaskExists(pid)) {
+      lvl++;
+      pid = gantt.getTask(pid).parent;
+    }
+    return lvl;
+  }
+
+  // Razlika task (crveni) vs subtask (plavi)
+  gantt.templates.task_class = function (start, end, task) {
+    // Ako već šalješ iz backend-a tip, može i ovako:
+    // if (task.kind === "task") return "task-red";
+    // if (task.kind === "subtask") return "task-blue";
+
+    const lvl = levelOf(task);
+    if (lvl === 1) return "task-red";   // Task
+    return "task-blue";                 // SubTask i dublje
+  };
+
+  // Onemogućimo pomjeranje TASK-ova koji imaju djecu
+  gantt.attachEvent("onBeforeTaskDrag", function (id, mode, e) {
+    const task = gantt.getTask(id);
+
+    // Ako task ima childove → zabrani drag & resize
+    if (gantt.hasChild(task.id)) {
+      return false;
+    }
+
+    return true;
+  });
+
+  // Dodatni fallback (ako nekako prođe)
+  gantt.attachEvent("onBeforeTaskChanged", function (id, mode, old_task) {
+    const task = gantt.getTask(id);
+
+    if (gantt.hasChild(task.id)) {
+      return false; // blokiraj promjenu
+    }
+
+    return true;
+  });
+
+
 
   // Grid kolone
   gantt.config.columns = [
