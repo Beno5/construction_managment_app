@@ -5,6 +5,9 @@ class Activity < ApplicationRecord
 
   enum :activity_type, { worker: 0, machine: 1, material: 2, custom: 3 }
 
+  validates :activity_type, :quantity, :total_cost, presence: true
+  validates :activityable_id, :activityable_type, presence: true
+
   after_destroy :update_parent_sub_task
   after_save :update_parent_sub_task
 

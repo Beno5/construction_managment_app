@@ -9,19 +9,19 @@ class ActivitiesController < ApplicationController
     if params[:activity][:activity_id].present? && params[:activity][:activity_id] != "undefined"
       @activity = Activity.find(params[:activity][:activity_id])
       if @activity.update(params_mapped)
-        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
                     notice: 'Resurs je uspešno kreiran.'
       else
-        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
                     alert: 'Greška pri ažuriranju resursa.'
       end
     else
       @activity = @sub_task.activities.new(params_mapped)
       if @activity.save
-        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
                     notice: 'Resurs je uspešno kreiran.'
       else
-        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
                     alert: 'Greška pri kreiranju resursa.'
       end
     end
@@ -49,7 +49,7 @@ class ActivitiesController < ApplicationController
       end
       format.html do
         redirect_to business_project_task_sub_task_path(
-          business, @project, @task, @sub_task, anchor: 'planned'
+          business, @project, @task, @sub_task
         ),
                     notice: 'Resurs je uspešno obrisan.'
       end
