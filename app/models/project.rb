@@ -11,14 +11,12 @@ class Project < ApplicationRecord
   enum :status, { pending: 0, active: 1, completed: 2, canceled: 3, paused: 4 }
 
   # Validations
-  validates :client_project_id, presence: true, 
-            uniqueness: { scope: :business_id }
-  validates :name, presence: true, 
-            uniqueness: { scope: :business_id }
+  validates :client_project_id, presence: true,
+                                uniqueness: { scope: :business_id }
+  validates :name, presence: true,
+                   uniqueness: { scope: :business_id }
 
   validate :end_date_after_start_date
-
-
 
   def earliest_start_date
     tasks.minimum(:planned_start_date)
@@ -31,7 +29,6 @@ class Project < ApplicationRecord
   private
 
   def end_date_after_start_date
-
     return unless planned_end_date.present? && planned_start_date.present? && planned_end_date < planned_start_date
 
     errors.add(:base, :invalid_dates)

@@ -10,24 +10,49 @@ module Api
       data = []
 
       tasks.each do |task|
-        data << {
-          id: "t_#{task.id}",                         # prefiks za Task
+        task_data = {
+          id: "t_#{task.id}", # prefiks za Task
           name: task.name,
           position: task.position,
-          start_date: task.planned_start_date&.strftime("%Y-%m-%d"),
-          end_date: task.planned_end_date&.strftime("%Y-%m-%d"),
-          parent: 0
+          parent: 0,
+          open: true
         }
 
+        if task.planned_start_date && task.planned_end_date
+          task_data[:start_date] = task.planned_start_date.strftime("%Y-%m-%d")
+          task_data[:end_date]   = task.planned_end_date.strftime("%Y-%m-%d")
+        else
+          task_data[:unscheduled] = true
+          task_data[:duration] = 0
+        end
+
+        data << task_data
+
         task.sub_tasks.each do |sub_task|
-          data << {
-            id: "st_#{sub_task.id}",                  # prefiks za SubTask
+          sub_data = {
+            id: "st_#{sub_task.id}", # prefiks za SubTask
             name: sub_task.name,
             position: sub_task.show_position,
-            start_date: sub_task.planned_start_date&.strftime("%Y-%m-%d"),
-            end_date: sub_task.planned_end_date&.strftime("%Y-%m-%d"),
-            parent: "t_#{task.id}"                    # SubTask je dijete Taska
+            parent: "t_#{task.id}"   # SubTask je dijete Taska
           }
+
+          if sub_task.planned_start_date && sub_task.planned_end_date
+            sub_data[:start_date] = sub_task.planned_start_date.strftime("%Y-%m-%d")
+            sub_data[:end_date]   = sub_task.planned_end_date.strftime("%Y-%m-%d")
+          else
+            sub_data[:unscheduled] = true
+            sub_data[:duration] = 0
+          end
+
+          data << sub_data
+        end
+      end
+
+      data.sort_by! do |item|
+        if item[:start_date].present?
+          Date.parse(item[:start_date])
+        else
+          Date.new(9999, 12, 31) # jako veliki datum -> ide na kraj
         end
       end
 

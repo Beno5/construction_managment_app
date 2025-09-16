@@ -18,6 +18,20 @@ document.addEventListener("DOMContentLoaded", function () {
   gantt.config.date_grid = "%d.%m.%Y";
   gantt.config.lightbox = false;
 
+  gantt.config.show_unscheduled = true;
+
+  gantt.sort((a, b) => {
+    const as = a.start_date ? a.start_date.getTime() : Infinity;
+    const bs = b.start_date ? b.start_date.getTime() : Infinity;
+    return as - bs;
+  });
+
+  gantt.templates.task_class = function (start, end, task) {
+    if (task.unscheduled) return "task-unscheduled";
+    return "";
+  };
+
+
   
 
 
@@ -76,41 +90,23 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 
-
   // Grid kolone
   gantt.config.columns = [
-    {
-      name: "position",
-      label: "ID",
-      width: 80,
-      align: "left",
-      tree: true
-    },
-    {
-      name: "name",
-      label: "Task name",
-      width: 120,
-      align: "left",
-    },
-    {
-      name: "start_date",
-      label: "Start Date",
-      align: "center",
-      width: 120
-    },
-    {
-      name: "end_date",
-      label: "End Date",
-      align: "center",
-      width: 120
-    },
+    { name: "position", label: "ID", width: 80, tree: true },
+    { name: "name", label: "Task name", width: 120 },
+    { name: "start_date", label: "Start Date", width: 120, align: "center" },
+    { name: "end_date", label: "End Date", width: 120, align: "center" },
     {
       name: "duration",
       label: "Duration",
       align: "center",
-      width: 90
+      width: 90,
+      template: function (task) {
+        return task.unscheduled ? 0 : task.duration;
+      }
     }
   ];
+
 
   // Sakrivamo tekst unutar barova
   gantt.templates.task_text = function () { return ""; };
@@ -119,8 +115,10 @@ document.addEventListener("DOMContentLoaded", function () {
   gantt.init("gantt_here");
 
   const projectId = ganttElement.dataset.projectId;
-  gantt.load(`/api/gantt/project/${projectId}/data`);
-
+  gantt.load(`/api/gantt/project/${projectId}/data`, function () {
+    gantt.openAll();
+  });
+  
   let selectedLinkId = null;
 
   // Pamti ID linka prije brisanja

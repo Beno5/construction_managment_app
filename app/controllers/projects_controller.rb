@@ -125,13 +125,13 @@ class ProjectsController < ApplicationController
 
   def set_error_message
     flash.now[:alert] = if @project.errors[:name].any?
-                         t('projects.errors.name_required')
-                       elsif @project.errors[:client_project_id].any?
-                         t('projects.errors.client_project_id_required')
-                       elsif @project.errors[:base].any?
-                         @project.errors[:base].first
-                       else
-                         t('projects.errors.validation_failed')
-                       end
+                          t('projects.errors.name_required')
+                        elsif @project.errors[:client_project_id].any?
+                          t('projects.errors.client_project_id_required')
+                        elsif @project.errors[:base].any?
+                          @project.errors[:base].first
+                        else
+                          t('projects.errors.validation_failed')
+                        end
   end
 end
