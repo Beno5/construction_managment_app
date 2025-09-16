@@ -30,29 +30,25 @@ class BusinessesController < ApplicationController
 
     if @business.save
       redirect_to businesses_path, notice: "Business created successfully."
-    else
+    elsif @business.errors[:name].any?
       # Provjeri specifično za name error
-      if @business.errors[:name].any?
-        redirect_to new_business_path, alert: "Name is required!"
-      else
-        # Ostali validation errori
-        error_messages = @business.errors.full_messages.join(", ")
-        redirect_to new_business_path, alert: error_messages
-      end
+      redirect_to new_business_path, alert: "Name is required!"
+    else
+      # Ostali validation errori
+      error_messages = @business.errors.full_messages.join(", ")
+      redirect_to new_business_path, alert: error_messages
     end
   end
 
   def update
     if @business.update(business_params)
       redirect_to businesses_path, notice: "Business updated successfully."
-    else
+    elsif @business.errors[:name].any?
       # Isto i za update
-      if @business.errors[:name].any?
-        redirect_to edit_business_path(@business), alert: "Name is required!"
-      else
-        error_messages = @business.errors.full_messages.join(", ")
-        redirect_to edit_business_path(@business), alert: error_messages
-      end
+      redirect_to edit_business_path(@business), alert: "Name is required!"
+    else
+      error_messages = @business.errors.full_messages.join(", ")
+      redirect_to edit_business_path(@business), alert: error_messages
     end
   end
 
