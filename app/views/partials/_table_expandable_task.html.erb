@@ -1,10 +1,11 @@
-<h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white">Tasks</h1>
+<h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white">Tasks</h2>
 <section class="bg-gray-50 dark:bg-gray-900 pt-5 mb-5">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
+      <!-- Header -->
       <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
         <div class="w-full md:w-1/2">
-          <form action=" <%= business_project_path(@current_business, @project) %>" method="GET" data-turbo-frame="tasks-frame" class="lg:pr-3" data-controller="search">
+          <form action="<%= business_project_path(@current_business, @project) %>" method="GET" data-turbo-frame="tasks-frame" class="lg:pr-3" data-controller="search">
             <label for="search" class="sr-only">Search</label>
             <div class="relative mt-1 lg:w-64 xl:w-96">
               <input type="text" name="search" id="search" placeholder="Search for tasks..." 
@@ -20,32 +21,9 @@
             </svg>
             <%= t('tasks.add_new') %>
           <% end %>
-          <div class="flex items-center space-x-3 w-full md:w-auto">
-            <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
-              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
-              </svg>
-              Filter
-              <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-              </svg>
-            </button>
-            <div id="filterDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-              <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Choose filter</h6>
-              <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                <li class="flex items-center">
-                  <input id="completed" type="checkbox" value="completed" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                  <label for="completed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Completed</label>
-                </li>
-                <li class="flex items-center">
-                  <input id="pending" type="checkbox" value="pending" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                  <label for="pending" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Pending</label>
-                </li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
+      <!-- Table -->
       <turbo-frame id="tasks-frame">
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -65,16 +43,19 @@
               </tr>
             </thead>
             <tbody>
-              <% @tasks.each_with_index do |task, index| %>
+              <% @tasks.ordered_by_position.each_with_index do |task, index| %>
+                <!-- TASK ROW -->
                 <tr id="<%= dom_id(task) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <td class="px-4 py-3">
-                    <button type="button" class="toggle-sub-tasks" data-target="#sub-tasks-<%= index %>">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 chevron-icon" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                      </svg>
-                    </button>
+                    <% if task.sub_tasks.any? %>
+                      <button type="button" class="toggle-sub-tasks" data-target=".sub-tasks-of-<%= index %>">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 chevron-icon" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                    <% end %>
                   </td>
-                  <td class="px-4 py-3"><%= task.position %></td>
+                  <td class="px-4 py-3 font-bold"><%= task.position %></td>
                   <td class="px-4 py-3"><%= task.name %></td>
                   <td class="px-4 py-3"><%= content_tag(:span, task.description&.truncate(25), title: task.description, class: "tooltip") %></td>
                   <td class="px-4 py-3"><%= I18n.l(task.planned_start_date, format: :long) if task.planned_start_date %></td>
@@ -89,100 +70,89 @@
                     <% end %>
                   </td>
                   <td class="px-4 py-3 flex items-center justify-end">
-                    <button id="<%= "task-#{task.id}-dropdown-button" %>" 
-          data-dropdown-toggle="<%= "task-#{task.id}-dropdown" %>" 
-          class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" 
-          type="button">
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                      </svg>
-                    </button>
-                    <div id="<%= "task-#{task.id}-dropdown" %>" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                      <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "task-#{task.id}-dropdown-button" %>">
-                        <li>
-                          <%= link_to t('tasks.actions.show'), business_project_task_path(@current_business, @project, task), data: { turbo: false},
+                    <td class="px-4 py-3 flex items-center justify-end">
+                      <button id="<%= "task-#{task.id}-dropdown-button" %>" 
+    data-dropdown-toggle="<%= "task-#{task.id}-dropdown" %>" 
+    class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" 
+    type="button">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20">
+                          <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                        </svg>
+                      </button>
+                      <div id="<%= "task-#{task.id}-dropdown" %>" 
+       class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "task-#{task.id}-dropdown-button" %>">
+                          <li>
+                            <%= link_to t('tasks.actions.show'), business_project_task_path(@current_business, @project, task),
+          data: { turbo: false },
           class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
-                        </li>
-                        <li>
-                          <%= link_to t('tasks.actions.edit'), edit_business_project_task_path(@current_business, @project, task), data: { turbo: false},
+                          </li>
+                          <li>
+                            <%= link_to t('tasks.actions.edit'), edit_business_project_task_path(@current_business, @project, task),
+          data: { turbo: false },
           class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
-                        </li>
-                        <li>
-                          <%= link_to t('tasks.actions.delete'), business_project_task_path(@current_business, @project, task), 
-          method: :delete, data: { turbo_confirm: t('tasks.actions.confirm_delete'), turbo_method: :delete }, 
+                          </li>
+                          <li>
+                            <%= link_to t('tasks.actions.delete'), business_project_task_path(@current_business, @project, task),
+          method: :delete,
+          data: { turbo_confirm: t('tasks.actions.confirm_delete'), turbo_method: :delete },
           class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
-                        </li>
-                      </ul>
-                    </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
                   </td>
                 </tr>
-                <tr id="sub-tasks-<%= index %>">
-                  <td colspan="9">
-                    <div class="overflow-x-auto">
-                      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                          <tr>
-                            <th scope="col" class="px-4 py-3"></th>
-                            <th scope="col" class="px-4 py-3"><%= t('tasks.table.id') %></th>
-                            <th scope="col" class="px-4 py-3"><%= t('tasks.table.name') %></th>
-                            <th scope="col" class="px-4 py-3"><%= t('tasks.table.description') %></th>
-                            <th scope="col" class="px-4 py-3"><%= t('tasks.table.planned_start_date') %></th>
-                            <th scope="col" class="px-4 py-3"><%= t('tasks.table.planned_end_date') %></th>
-                            <th scope="col" class="px-4 py-3"><%= t('tasks.table.custom_fields') %></th>
-                            <th scope="col" class="px-4 py-3">
-                              <span class="sr-only"><%= t('tasks.table.actions') %></span>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <% task.sub_tasks.each do |sub_task| %>
-                            <tr id="<%= dom_id(sub_task) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
-                              <td class="px-4 py-3"></td>
-                              <td class="px-4 py-3"><%= sub_task.show_position %></td>
-                              <td class="px-4 py-3"><%= sub_task.name %></td>
-                              <td class="px-4 py-3"><%= content_tag(:span, sub_task.description&.truncate(25), title: task.description, class: "tooltip") %></td>
-                              <td class="px-4 py-3"><%= I18n.l(sub_task.planned_start_date, format: :long) if sub_task.planned_start_date %></td>
-                              <td class="px-4 py-3"><%= I18n.l(sub_task.planned_end_date, format: :long) if sub_task.planned_end_date %></td>
-                              <td class="px-4 py-3"><%= render 'partials/custom_fields_tooltip', item: sub_task %></td>
-                              <td class="px-4 py-3 flex items-center justify-end">
-                                <button id="<%= "sub-task-#{sub_task.id}-dropdown-button" %>" 
-          data-dropdown-toggle="<%= "sub-task-#{sub_task.id}-dropdown" %>" 
-          class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" 
-          type="button">
-                                  <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                  </svg>
-                                </button>
-                                <div id="<%= "sub-task-#{sub_task.id}-dropdown" %>" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                  <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "sub-task-#{sub_task.id}-dropdown-button" %>">
-                                    <li>
-                                      <%= link_to t('subtasks.actions.show'), business_project_task_sub_task_path(@business, @project, task, sub_task), data: { turbo: false},
+                <!-- SUBTASK ROWS -->
+                <% task.sub_tasks.ordered_by_position.each do |sub_task| %>
+                  <tr id="<%= dom_id(sub_task) %>" class="sub-tasks-of-<%= index %> border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <td class="px-4 py-3"></td>
+                    <td class="px-4 py-3 pl-8 text-gray-500"><%= sub_task.show_position %></td>
+                    <td class="px-4 py-3"><%= sub_task.name %></td>
+                    <td class="px-4 py-3"><%= content_tag(:span, sub_task.description&.truncate(25), title: sub_task.description, class: "tooltip") %></td>
+                    <td class="px-4 py-3"><%= I18n.l(sub_task.planned_start_date, format: :long) if sub_task.planned_start_date %></td>
+                    <td class="px-4 py-3"><%= I18n.l(sub_task.planned_end_date, format: :long) if sub_task.planned_end_date %></td>
+                    <td class="px-4 py-3"><%= render 'partials/custom_fields_tooltip', item: sub_task %></td>
+                    <td class="px-4 py-3"></td>
+                    <td class="px-4 py-3 flex items-center justify-end">
+                      <td class="px-4 py-3 flex items-center justify-end">
+                        <button id="<%= "sub-task-#{sub_task.id}-dropdown-button" %>" 
+    data-dropdown-toggle="<%= "sub-task-#{sub_task.id}-dropdown" %>" 
+    class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" 
+    type="button">
+                          <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20">
+                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                          </svg>
+                        </button>
+                        <div id="<%= "sub-task-#{sub_task.id}-dropdown" %>" 
+       class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                          <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "sub-task-#{sub_task.id}-dropdown-button" %>">
+                            <li>
+                              <%= link_to t('subtasks.actions.show'), business_project_task_sub_task_path(@business, @project, task, sub_task),
+          data: { turbo: false },
           class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
-                                    </li>
-                                    <li>
-                                      <%= link_to t('subtasks.actions.edit'), edit_business_project_task_sub_task_path(@business, @project, task, sub_task), data: { turbo: false},
+                            </li>
+                            <li>
+                              <%= link_to t('subtasks.actions.edit'), edit_business_project_task_sub_task_path(@business, @project, task, sub_task),
+          data: { turbo: false },
           class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
-                                    </li>
-                                    <li>
-                                      <%= link_to t('subtasks.actions.delete'), business_project_task_sub_task_path(@business, @project, task, sub_task), 
-          method: :delete, data: { turbo_confirm: t('subtasks.actions.confirm_delete'), turbo_method: :delete }, 
+                            </li>
+                            <li>
+                              <%= link_to t('subtasks.actions.delete'), business_project_task_sub_task_path(@business, @project, task, sub_task),
+          method: :delete,
+          data: { turbo_confirm: t('subtasks.actions.confirm_delete'), turbo_method: :delete },
           class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </td>
-                            </tr>
-                          <% end %>
-                        </tbody>
-                      </table>
-                    </div>
-                  </td>
-                </tr>
+                            </li>
+                          </ul>
+                        </div>
+                      </td>
+                    </td>
+                  </tr>
+                <% end %>
               <% end %>
             </tbody>
           </table>
         </div>
-        <%= render "partials/nav_pages" %>
       </turbo-frame>
     </div>
   </div>
@@ -191,19 +161,13 @@
   document.addEventListener('click', (event) => {
     const button = event.target.closest('.toggle-sub-tasks');
     if (button) {
-      const target = document.querySelector(button.dataset.target);
-      if (target) {
-        target.classList.toggle('hidden');
-        const icon = button.querySelector('.chevron-icon');
-        if (target.classList.contains('hidden')) {
-          icon.innerHTML = `
-            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-          `;
-        } else {
-          icon.innerHTML = `
-            <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
-          `;
-        }
+      const targetRows = document.querySelectorAll(button.dataset.target);
+      const icon = button.querySelector('.chevron-icon');
+      targetRows.forEach(row => row.classList.toggle('hidden'));
+      if (targetRows[0].classList.contains('hidden')) {
+        icon.innerHTML = `<path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />`;
+      } else {
+        icon.innerHTML = `<path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />`;
       }
     }
   });

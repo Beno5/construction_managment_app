@@ -15,6 +15,8 @@ class Task < ApplicationRecord
   before_create :assign_position
   after_destroy :reorder_tasks
 
+  scope :ordered_by_position, -> { all.sort_by { |t| t.position.to_s.split('.').map(&:to_i) } }
+
   private
 
   def assign_position

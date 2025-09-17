@@ -13,7 +13,7 @@
   <!-- First Name -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('workers.form.first_name') %></label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @worker.first_name %>
     </div>
   </div>
@@ -21,7 +21,7 @@
   <!-- Last Name -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('workers.form.last_name') %></label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @worker.last_name %>
     </div>
   </div>
@@ -29,7 +29,7 @@
   <!-- Profession -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('workers.form.profession') %></label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @worker.profession %>
     </div>
   </div>
@@ -37,7 +37,7 @@
   <!-- Unit of Measure -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('workers.form.unit_of_measure') %></label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @worker.unit_of_measure.humanize %>
     </div>
   </div>
@@ -45,7 +45,7 @@
   <!-- Price Per Unit -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('workers.form.price_per_unit', currency: @worker.business.currency_symbol) %></label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @worker.price_per_unit %>
     </div>
   </div>
@@ -61,7 +61,7 @@
   <!-- Description -->
   <div class="col-span-6">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('workers.form.description') %></label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @worker.description %>
     </div>
   </div>
@@ -72,7 +72,7 @@
     <% @worker.custom_fields.each do |key, value| %>
       <div class="col-span-6 sm:col-span-3">
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= key.humanize %></label>
-        <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
           <%= value %>
         </div>
       </div>
