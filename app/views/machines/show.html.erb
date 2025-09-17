@@ -13,7 +13,7 @@
   <!-- Name -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.name') %></label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @machine.name %>
     </div>
   </div>
@@ -21,7 +21,7 @@
   <!-- Unit of Measure -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.unit_of_measure') %></label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @machine.unit_of_measure.humanize %>
     </div>
   </div>
@@ -29,7 +29,7 @@
   <!-- Price Per Unit -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.price_per_unit', currency: @machine.business.currency_symbol) %></label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @machine.price_per_unit %>
     </div>
   </div>
@@ -37,7 +37,7 @@
   <!-- Fixed Costs -->
   <div class="col-span-6 sm:col-span-3">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.fixed_costs', currency: @machine.business.currency_symbol) %></label>
-    <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
+    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600">
       <%= @machine.fixed_costs %>
     </div>
   </div>
@@ -45,7 +45,7 @@
   <!-- Description -->
   <div class="col-span-6">
     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.description') %></label>
-    <div class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+    <div class="block p-2.5 w-full text-sm text-gray-900 bg-gray-100 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
       <%= @machine.description %>
     </div>
   </div>
@@ -56,7 +56,7 @@
     <% @machine.custom_fields.each do |key, value| %>
       <div class="col-span-6 sm:col-span-3">
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= key.humanize %></label>
-        <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
           <%= value %>
         </div>
       </div>

@@ -49,11 +49,7 @@ module Api
       end
 
       data.sort_by! do |item|
-        if item[:start_date].present?
-          Date.parse(item[:start_date])
-        else
-          Date.new(9999, 12, 31) # jako veliki datum -> ide na kraj
-        end
+        item[:position].to_s.split('.').map(&:to_i)
       end
 
       render json: {

@@ -19,20 +19,12 @@ document.addEventListener("DOMContentLoaded", function () {
   gantt.config.lightbox = false;
 
   gantt.config.show_unscheduled = true;
-
-  gantt.sort((a, b) => {
-    const as = a.start_date ? a.start_date.getTime() : Infinity;
-    const bs = b.start_date ? b.start_date.getTime() : Infinity;
-    return as - bs;
-  });
+  gantt.config.sort = false;
 
   gantt.templates.task_class = function (start, end, task) {
     if (task.unscheduled) return "task-unscheduled";
     return "";
   };
-
-
-  
 
 
   gantt.templates.link_description = function (link) {
