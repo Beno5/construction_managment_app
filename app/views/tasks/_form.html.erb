@@ -13,12 +13,12 @@
     <!-- Name -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :name, t('tasks.form.name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+      <%= f.text_field :name, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
     <!-- Description -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :description, t('tasks.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :description, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+      <%= f.text_field :description, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
     <!-- Planned Start Date -->
     <div class="col-span-6 sm:col-span-3">
@@ -26,7 +26,7 @@
       class: "block mb-2 text-sm font-medium #{@task.sub_tasks.any? ? 'text-gray-500' : 'text-gray-900'} dark:text-white" %>
       <%= f.date_field :planned_start_date, 
       disabled: @task.sub_tasks.any?,
-      class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 #{@task.sub_tasks.any? ? 'cursor-not-allowed bg-gray-200' : ''}" %>
+      class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 #{@task.sub_tasks.any? ? 'cursor-not-allowed bg-gray-200' : ''}" %>
     </div>
     <!-- Planned End Date -->
     <div class="col-span-6 sm:col-span-3">
@@ -34,12 +34,12 @@
       class: "block mb-2 text-sm font-medium #{@task.sub_tasks.any? ? 'text-gray-500' : 'text-gray-900'} dark:text-white" %>
       <%= f.date_field :planned_end_date, 
       disabled: @task.sub_tasks.any?,
-      class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 #{@task.sub_tasks.any? ? 'cursor-not-allowed bg-gray-200' : ''}" %>
+      class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 #{@task.sub_tasks.any? ? 'cursor-not-allowed bg-gray-200' : ''}" %>
     </div>
     <!-- Planned Cost -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :planned_cost, t('tasks.form.planned_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.number_field :planned_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.number_field :planned_cost, step: 0.01, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Custom Fields -->
     <div class="col-span-6">

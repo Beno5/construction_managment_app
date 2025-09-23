@@ -62,7 +62,7 @@ class ProjectsController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream # Ovo koristi destroy.turbo_stream.erb za uklanjanje kartice
-      format.html { redirect_to business_projects_path(@business), notice: "Project was successfully deleted." }
+      format.html { redirect_to business_projects_path(@business), notice: t('projects.messages.deleted') }
     end
   end
 

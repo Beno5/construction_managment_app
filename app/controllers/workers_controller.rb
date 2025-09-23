@@ -24,7 +24,7 @@ class WorkersController < ApplicationController
     @worker = @business.workers.new(worker_params)
     @worker.user_id = current_user.id
     if @worker.save
-      redirect_to business_workers_path(@business), notice: 'Worker was successfully created.'
+      redirect_to business_workers_path(@business), notice: t('workers.messages.created')
     else
       render :new, status: :unprocessable_entity
     end
@@ -32,7 +32,7 @@ class WorkersController < ApplicationController
 
   def update
     if @worker.update(worker_params)
-      redirect_to business_workers_path(@business), notice: 'Worker was successfully updated.'
+      redirect_to business_workers_path(@business), notice: t('workers.messages.updated')
     else
       render :edit, status: :unprocessable_entity
     end
@@ -46,7 +46,7 @@ class WorkersController < ApplicationController
       format.turbo_stream do
         render turbo_stream: turbo_stream.remove(dom_id(@worker))
       end
-      format.html { redirect_to business_workers_path(current_business), notice: "Worker was successfully deleted." }
+      format.html { redirect_to business_workers_path(current_business), notice: t('workers.messages.deleted') }
     end
   end
 

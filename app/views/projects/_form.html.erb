@@ -12,43 +12,43 @@
     <!-- Client Project ID -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :client_project_id, t('projects.form.client_project_id'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :client_project_id, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+      <%= f.text_field :client_project_id, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
 
     <!-- Project Name -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :name, t('projects.form.name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+      <%= f.text_field :name, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
 
     <!-- Address -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :address, t('projects.form.address'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :address, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.text_field :address, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
     <!-- Project Manager -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :project_manager, t('projects.form.project_manager'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :project_manager, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.text_field :project_manager, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
     <!-- Estimated Cost -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :planned_cost, t('projects.form.planned_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.number_field :planned_cost, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
+      <%= f.number_field :planned_cost, step: 0.01, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
     </div>
 
     <!-- Status -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :status, t('projects.form.status'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.select :status, Project.statuses.keys, {}, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
+      <%= f.select :status, Project.statuses.keys, {}, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
     </div>
 
     <!-- Description -->
     <div class="col-span-6">
       <%= f.label :description, t('projects.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_area :description, rows: 4, class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" %>
+      <%= f.text_area :description, rows: 4, class: "block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300" %>
     </div>
 
     <!-- Custom Fields -->

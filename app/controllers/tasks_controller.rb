@@ -29,7 +29,7 @@ class TasksController < ApplicationController
     @task.user_id = current_user.id
 
     if @task.save
-      redirect_to business_project_path(@business, @project), notice: "Task was successfully created."
+      redirect_to business_project_path(@business, @project), notice: t('tasks.messages.created')
     else
       set_error_message
       render :new, status: :unprocessable_entity
@@ -38,7 +38,7 @@ class TasksController < ApplicationController
 
   def update
     if @task.update(task_params)
-      redirect_to business_project_path(@business, @project), notice: "Task was successfully updated."
+      redirect_to business_project_path(@business, @project), notice: t('tasks.messages.updated')
     else
       set_error_message
       render :edit, status: :unprocessable_entity
@@ -52,8 +52,7 @@ class TasksController < ApplicationController
     respond_to do |format|
       format.turbo_stream
       format.html do
-        redirect_to business_project_path(@business, @project, anchor: 'tasks'),
-                    notice: "Task was successfully deleted."
+        redirect_to business_project_path(@business, @project, anchor: 'tasks'), notice: t('tasks.messages.deleted')
       end
     end
   end

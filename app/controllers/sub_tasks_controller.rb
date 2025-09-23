@@ -80,7 +80,7 @@ class SubTasksController < ApplicationController
       end
       format.html do
         redirect_to business_project_task_path(@business, @task.project, @task),
-                    notice: "Sub-task was successfully deleted."
+                    notice: t('sub_tasks.messages.deleted')
       end
     end
   end

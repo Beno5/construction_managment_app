@@ -22,10 +22,10 @@ class MachinesController < ApplicationController
 
   def create
     @machine = @business.machines.new(machine_params)
-    @machine = current_user.id
+    @machine.user_id = current_user.id
 
     if @machine.save
-      redirect_to business_machines_path(@business), notice: 'Machine was successfully created.'
+      redirect_to business_machines_path(@business), notice: t("machines.messages.created")
     else
       render :new, status: :unprocessable_entity
     end
@@ -33,7 +33,7 @@ class MachinesController < ApplicationController
 
   def update
     if @machine.update(machine_params)
-      redirect_to business_machines_path(@business), notice: 'Machine was successfully updated.'
+      redirect_to business_machines_path(@business), notice: t("machines.messages.updated")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -47,7 +47,7 @@ class MachinesController < ApplicationController
       format.turbo_stream do
         render turbo_stream: turbo_stream.remove(dom_id(@machine))
       end
-      format.html { redirect_to business_machines_path(current_business), notice: "Machine was successfully deleted." }
+      format.html { redirect_to business_machines_path(current_business), notice: t("machines.messages.deleted") }
     end
   end
 
