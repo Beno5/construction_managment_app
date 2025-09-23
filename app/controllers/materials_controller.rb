@@ -25,7 +25,7 @@ class MaterialsController < ApplicationController
     @material.user_id = current_user.id
 
     if @material.save
-      redirect_to business_materials_path(@business), notice: 'Material uspješno kreiran'
+      redirect_to business_materials_path(@business), notice: t("materials.messages.created")
     else
       render :new, status: :unprocessable_entity
     end
@@ -33,7 +33,7 @@ class MaterialsController < ApplicationController
 
   def update
     if @material.update(material_params)
-      redirect_to business_materials_path(@business), notice: 'Material uspješno ažuriran'
+      redirect_to business_materials_path(@business), notice: t("materials.messages.updated")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -44,11 +44,9 @@ class MaterialsController < ApplicationController
     @material.destroy
 
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.remove(dom_id(@material))
-      end
+      format.turbo_stream
       format.html do
-        redirect_to business_materials_path(current_business), notice: "Material was successfully deleted."
+        redirect_to business_materials_path(current_business), notice: t("materials.messages.deleted")
       end
     end
   end

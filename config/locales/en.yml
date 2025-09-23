@@ -143,6 +143,10 @@ en:
       custom_fields: "Additional Fields"
       update_button: "Update Material"
       create_button: "Create Material"
+    messages:
+      created: "Material was successfully created."
+      updated: "Material was successfully updated."
+      deleted: "Material was successfully deleted."
   machines:
     form:
       edit_title: "Edit %{name}"
@@ -156,6 +160,10 @@ en:
       custom_fields: "Additional Fields"
       update_button: "Update Machine"
       create_button: "Create Machine"
+    messages:
+      created: "Machine was successfully created."
+      updated: "Machine was successfully updated."
+      deleted: "Machine was successfully deleted."
   workers:
     form:
       edit_title: "Edit %{name}"
@@ -171,6 +179,10 @@ en:
       custom_fields: "Additional Fields"
       update_button: "Update Worker"
       create_button: "Create Worker"
+    messages:
+      created: "Worker was successfully created."
+      updated: "Worker was successfully updated."
+      deleted: "Worker was successfully deleted."
   projects:
     form:
       edit_title: "Edit %{name}"
@@ -211,8 +223,9 @@ en:
       invalid_dates: "End date must be after start date"
       validation_failed: "Project could not be saved"
     messages:
-      created: "Project was successfully created"
-      updated: "Project was successfully updated"
+      created: "Project was successfully created."
+      updated: "Project was successfully updated."
+      deleted: "Project was successfully deleted."
   tasks:
     add_new: "Add New Task"
     table:
@@ -243,6 +256,10 @@ en:
       real_start_date: "Real Start Date"
       real_end_date: "Real End Date"
       real_cost: "Real Cost (%{currency})"
+    messages:
+      created: "Task was successfully created."
+      updated: "Task was successfully updated."
+      deleted: "Task was successfully deleted."
     errors:
       name_required: "Task name is required"
       validation_failed: "Task could not be saved"
@@ -279,6 +296,10 @@ en:
       info_communication: "Info and Communication"
       planned: "Planned"
       real: "Real"
+    messages:
+      created: "Sub-task was successfully created."
+      updated: "Sub-task was successfully updated."
+      deleted: "Sub-task was successfully deleted."
     errors:
       name_required: "Sub-task name is required"
       validation_failed: "Sub-task could not be saved"

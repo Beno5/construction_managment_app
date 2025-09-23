@@ -13,31 +13,31 @@
     <!-- Name -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :name, t('machines.form.name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+      <%= f.text_field :name, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
 
     <!-- Unit of Measure -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :unit_of_measure, t('machines.form.unit_of_measure'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.select :unit_of_measure, Machine.unit_of_measures.keys.map { |key| [key.humanize, key] }, {}, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.select :unit_of_measure, Machine.unit_of_measures.keys.map { |key| [key.humanize, key] }, {}, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
     <!-- Price Per Unit -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :price_per_unit, t('machines.form.price_per_unit', currency: @machine.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.number_field :price_per_unit, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.number_field :price_per_unit, step: 0.01, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
     <!-- Fixed Costs -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :fixed_costs, t('machines.form.fixed_costs', currency: @machine.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.number_field :fixed_costs, step: 0.01, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.number_field :fixed_costs, step: 0.01, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
     <!-- Description -->
     <div class="col-span-6">
       <%= f.label :description, t('machines.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_area :description, rows: 4, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.text_area :description, rows: 4, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
 
     <!-- Custom Fields -->

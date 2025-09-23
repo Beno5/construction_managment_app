@@ -29,7 +29,7 @@ class BusinessesController < ApplicationController
     @business.user_id = current_user.id
 
     if @business.save
-      redirect_to businesses_path, notice: "Business created successfully."
+      redirect_to businesses_path, notice: t('businesses.messages.created')
     elsif @business.errors[:name].any?
       # Provjeri specifično za name error
       redirect_to new_business_path, alert: "Name is required!"
@@ -42,7 +42,7 @@ class BusinessesController < ApplicationController
 
   def update
     if @business.update(business_params)
-      redirect_to businesses_path, notice: "Business updated successfully."
+      redirect_to businesses_path, notice: t('businesses.messages.updated')
     elsif @business.errors[:name].any?
       # Isto i za update
       redirect_to edit_business_path(@business), alert: "Name is required!"
@@ -59,7 +59,7 @@ class BusinessesController < ApplicationController
       format.turbo_stream do
         render turbo_stream: turbo_stream.remove("row_#{@business.id}")
       end
-      format.html { redirect_to businesses_path, notice: "Business deleted successfully." }
+      format.html { redirect_to businesses_path, notice: t('businesses.messages.deleted') }
     end
   end
 
@@ -67,9 +67,9 @@ class BusinessesController < ApplicationController
     business = current_user.businesses.find_by(id: params[:id])
     if business
       session[:current_business_id] = business.id
-      redirect_to root_path, notice: "#{business.name} is now selected."
+      redirect_to root_path, notice: t("businesses.messages.selected", name: business.name)
     else
-      redirect_to businesses_path, alert: "Business not found."
+      redirect_to businesses_path, alert: t('businesses.messages.not_found')
     end
   end
 

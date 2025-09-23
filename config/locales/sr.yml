@@ -143,6 +143,10 @@ sr:
       custom_fields: "Dodatna Polja"
       update_button: "Ažuriraj Materijal"
       create_button: "Kreiraj Materijal"
+    messages:
+      created: "Materijal je uspješno kreiran."
+      updated: "Materijal je uspješno ažuriran."
+      deleted: "Materijal je uspješno obrisan."
   machines:
     form:
       edit_title: "Izmeni %{name}"
@@ -156,6 +160,10 @@ sr:
       custom_fields: "Dodatna Polja"
       update_button: "Ažuriraj Mašinu"
       create_button: "Kreiraj Mašinu"
+    messages:
+      created: "Mašina je uspješno kreirana."
+      updated: "Mašina je uspješno ažurirana."
+      deleted: "Mašina je uspješno obrisana."
   workers:
     form:
       edit_title: "Izmeni %{name}"
@@ -171,6 +179,10 @@ sr:
       custom_fields: "Dodatna Polja"
       update_button: "Ažuriraj Radnika"
       create_button: "Kreiraj Radnika"
+    messages:
+      created: "Radnik je uspješno kreiran."
+      updated: "Radnik je uspješno ažuriran."
+      deleted: "Radnik je uspješno obrisan."
   projects:
     form:
       edit_title: "Izmeni %{name}"
@@ -209,8 +221,9 @@ sr:
       invalid_dates: "Datum završetka mora biti nakon datuma početka"
       validation_failed: "Projekat nije moguće sačuvati"
     messages:
-      created: "Projekat je uspješno kreiran"
-      updated: "Projekat je uspješno ažuriran"
+      created: "Projekat je uspješno kreiran."
+      updated: "Projekat je uspješno ažuriran."
+      deleted: "Projekat je uspješno obrisan."
   tasks:
     add_new: "Dodaj novu poziciju"
     table:
@@ -241,9 +254,13 @@ sr:
       real_start_date: "Stvarni Datum Početka"
       real_end_date: "Stvarni Datum Zavrsetka"
       real_cost: "Stvarni Trošak (%{currency})"
-  errors:
-    name_required: "Ime zadatka je obavezno"
-    validation_failed: "Zadatak nije moguće sačuvati"
+    messages:
+      created: "Zadatak je uspješno kreiran."
+      updated: "Zadatak je uspješno ažuriran."
+      deleted: "Zadatak je uspješno obrisan."
+    errors:
+      name_required: "Ime zadatka je obavezno"
+      validation_failed: "Zadatak nije moguće sačuvati"
   subtasks:
     form:
       edit_title: "Izmeni %{name}"
@@ -277,6 +294,10 @@ sr:
       info_communication: "Info i Komunikacija"
       planned: "Planirano"
       real: "Realno"
+    messages:
+      created: "Podzadatak je uspješno kreiran."
+      updated: "Podzadatak je uspješno ažuriran."
+      deleted: "Podzadatak je uspješno obrisan."
     errors:
       name_required: "Ime podpozicije je obavezno"
       validation_failed: "Podpoziciju nije moguće sačuvati"

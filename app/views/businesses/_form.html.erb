@@ -11,42 +11,42 @@
     <!-- Business Name -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :name, t('businesses.form.name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+      <%= f.text_field :name, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
     </div>
     <!-- Business Address -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :address, t('businesses.form.address'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :address, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.text_field :address, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Business Phone Number -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :phone_number, t('businesses.form.phone_number'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.telephone_field :phone_number, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.telephone_field :phone_number, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- VAT Number -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :vat_number, t('businesses.form.vat_number'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :vat_number, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.text_field :vat_number, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Registration Number -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :registration_number, t('businesses.form.registration_number'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :registration_number, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.text_field :registration_number, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Owner First Name -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :owner_first_name, t('businesses.form.owner_first_name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :owner_first_name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.text_field :owner_first_name, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Owner Last Name -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :owner_last_name, t('businesses.form.owner_last_name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :owner_last_name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.text_field :owner_last_name, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Currency Selection -->
     <div class="col-span-6 sm:col-span-3">
       <%= f.label :currency, t('businesses.form.currency'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.select :currency, Business.currencies.keys.map { |c| [c.capitalize, c] }, {}, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+      <%= f.select :currency, Business.currencies.keys.map { |c| [c.capitalize, c] }, {}, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
   </div>
   <!-- Submit Button -->
