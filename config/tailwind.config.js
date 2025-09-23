@@ -10,6 +10,11 @@ module.exports = {
   ],
   safelist: [
     // Dodajte sve potrebne klase ovdje
+    'fixed', 'top-28', 'left-1/2', 'transform', '-translate-x-1/2',
+    'z-50', 'transition-opacity', 'duration-500',
+    'bg-green-100', 'text-green-700',
+    'bg-red-100', 'text-red-700',
+    'px-8', 'py-4', 'rounded-lg', 'text-2xl',
     'rounded-l-lg',
     'rounded-r-lg',
     'bg-gray-200',
