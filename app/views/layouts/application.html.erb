@@ -14,7 +14,9 @@
     <%= favicon_link_tag "favicon-32x32.png", rel: "icon", type: "image/png", sizes: "32x32" %>
   </head>
   <body class="bg-gray-50 dark:bg-gray-800 <%= 'bg-white dark:bg-gray-900' if params[:white_bg] %>">
-    <div id="flash-messages" class="fixed top-28 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500">
+    <div id="flash-messages"
+     class="fixed left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500"
+     style="top: 6rem;">
       <%= render "partials/flash_messages" %>
     </div>
     <!-- Glavni wrapper za sadržaj -->
