@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("turbo:load", function () {
   const ganttElement = document.getElementById("gantt_here");
 
   // Ako nema elementa, ne pokrećemo Gantt
@@ -104,13 +104,17 @@ document.addEventListener("DOMContentLoaded", function () {
   gantt.templates.task_text = function () { return ""; };
 
   // Inicijalizacija
+  if (gantt.$container) {
+    gantt.clearAll();
+  }
   gantt.init("gantt_here");
 
   const projectId = ganttElement.dataset.projectId;
   gantt.load(`/api/gantt/project/${projectId}/data`, function () {
-    gantt.openAll();
+    if (typeof gantt.openAll === "function") {
+      gantt.openAll();
+    }
   });
-  
   let selectedLinkId = null;
 
   // Pamti ID linka prije brisanja

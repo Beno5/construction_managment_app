@@ -36,6 +36,11 @@
       <%= f.label :quantity, t('subtasks.form.quantity'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.number_field :quantity, step: 1, min: 0, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
+    <!-- Planned Cost -->
+    <div class="col-span-4 sm:col-span-3">
+      <%= f.label :planned_cost, t('subtasks.form.planned_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.number_field :planned_cost, step: 0.01, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
+    </div>
     <!-- Planned Start Date -->
     <div class="col-span-4 sm:col-span-3">
       <%= f.label :planned_start_date, t('subtasks.form.planned_start_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
@@ -45,11 +50,6 @@
     <div class="col-span-4 sm:col-span-3">
       <%= f.label :planned_end_date, t('subtasks.form.planned_end_date'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.date_field :planned_end_date, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-    </div>
-    <!-- Planned Cost -->
-    <div class="col-span-4 sm:col-span-3">
-      <%= f.label :planned_cost, t('subtasks.form.planned_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.number_field :planned_cost, step: 0.01, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
     </div>
     <!-- Custom Fields -->
     <div class="col-span-6">

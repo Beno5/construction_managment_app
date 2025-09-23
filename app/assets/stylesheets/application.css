@@ -56,3 +56,17 @@
 .gantt_task_line.task-blue:hover {
   filter: brightness(1.05);
 }
+
+/* Task redovi (prefix t_) → bold */
+div[task_id^="t_"] .gantt_cell {
+  font-weight: 700;
+  /* font-bold */
+  color: #6B7280;
+}
+
+/* Subtask redovi (prefix st_) → normal */
+div[task_id^="st_"] .gantt_cell {
+  font-weight: 400;
+  /* font-normal */
+  color: #6B7280;
+}

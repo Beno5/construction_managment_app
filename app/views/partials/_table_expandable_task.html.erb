@@ -56,11 +56,11 @@
                     <% end %>
                   </td>
                   <td class="px-4 py-3 font-bold"><%= task.position %></td>
-                  <td class="px-4 py-3"><%= task.name %></td>
-                  <td class="px-4 py-3"><%= content_tag(:span, task.description&.truncate(25), title: task.description, class: "tooltip") %></td>
-                  <td class="px-4 py-3"><%= I18n.l(task.planned_start_date, format: :long) if task.planned_start_date %></td>
-                  <td class="px-4 py-3"><%= I18n.l(task.planned_end_date, format: :long) if task.planned_end_date %></td>
-                  <td class="px-4 py-3"><%= render 'partials/custom_fields_tooltip', item: task %></td>
+                  <td class="px-4 py-3 font-bold"><%= task.name %></td>
+                  <td class="px-4 py-3 font-bold"><%= content_tag(:span, task.description&.truncate(25), title: task.description, class: "tooltip") %></td>
+                  <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_start_date, format: :long) if task.planned_start_date %></td>
+                  <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_end_date, format: :long) if task.planned_end_date %></td>
+                  <td class="px-4 py-3 font-bold"><%= render 'partials/custom_fields_tooltip', item: task %></td>
                   <td class="px-4 py-3">
                     <%= link_to new_business_project_task_sub_task_path(@business, @project, task), data: { turbo: false}, class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" do %>
                       <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
