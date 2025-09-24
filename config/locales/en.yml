@@ -187,7 +187,8 @@ en:
     form:
       edit_title: "Edit %{name}"
       new_title: "New Project"
-      model_name: "Projects"
+      model_name: "Project"
+      model_name_pl: "Projects"
       client_project_id: "Client Project ID"
       name: "Project Name"
       address: "Project Address"
@@ -244,7 +245,8 @@ en:
     form:
       edit_title: "Edit %{name}"
       new_title: "New Task"
-      model_name: "Tasks"
+      model_name: "Task"
+      model_name_pl: "Tasks"
       name: "Task Name"
       description: "Task Description"
       planned_start_date: "Planned Start Date"
@@ -267,7 +269,8 @@ en:
     form:
       edit_title: "Edit %{name}"
       new_title: "New Subtask"
-      model_name: "Subtasks"
+      model_name: "Subtask"
+      model_name_pl: "Subtasks"
       name: "Subtask Name"
       description: "Subtask Description"
       planned_auto_calculation: "Automatically calculate planned values"
@@ -363,7 +366,8 @@ en:
       close: "Close"
   documents:
     form:
-      model_name: "Documents"
+      model_name: "Document"
+      model_name_pl: "Documents"
       name: "Name"
       description: "Description"
       category: "Category"
