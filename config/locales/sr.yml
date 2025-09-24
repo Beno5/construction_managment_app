@@ -187,7 +187,8 @@ sr:
     form:
       edit_title: "Izmeni %{name}"
       new_title: "Novi Projekat"
-      model_name: "Projekti"
+      model_name: "Projekt"
+      model_name_pl: "Projekti"
       client_project_id: "ID Klijentskog Projekta"
       name: "Naziv Projekta"
       address: "Adresa Projekta"
@@ -242,7 +243,8 @@ sr:
     form:
       edit_title: "Izmeni %{name}"
       new_title: "Nova Pozicija"
-      model_name: "Pozicije"
+      model_name: "Pozicija"
+      model_name_pl: "Pozicije"
       name: "Naziv Pozicije"
       description: "Opis Pozicije"
       planned_start_date: "Planirani Datum Početka"
@@ -265,7 +267,8 @@ sr:
     form:
       edit_title: "Izmeni %{name}"
       new_title: "Nova Podpozicija"
-      model_name: "Podpozicije"
+      model_name: "Podpozicija"
+      model_name_pl: "Podpozicije"
       name: "Naziv Podpozicije"
       description: "Opis Podpozicije"
       planned_auto_calculation: "Automatski izračunaj planirane vrednosti"
@@ -361,7 +364,8 @@ sr:
       close: "Zatvori"
   documents:
     form:
-      model_name: "Dokumenti"
+      model_name: "Dokument"
+      model_name_pl: "Dokumenti"
       name: "Naziv"
       description: "Opis"
       category: "Kategorija"

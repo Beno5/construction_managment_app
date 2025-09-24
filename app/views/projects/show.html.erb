@@ -1,5 +1,5 @@
 <% 
-  model_name = t('tasks.form.model_name') # Assuming tasks translations exist
+  model_name = t('tasks.form.model_name')
   paths = {
     project: business_project_path(@current_business, @project),
     projects: business_projects_path(@current_business),
@@ -10,7 +10,7 @@
   }
 %>
 <%= render 'partials/header1', 
-           title: @project.name, 
+           title: t('projects.form.model_name') + ': ' + @project.name, 
            model_name: model_name, 
            search_path: paths[:project], 
            new_path: paths[:new_task],

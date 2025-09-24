@@ -36,6 +36,10 @@ class SubTask < ApplicationRecord
     "#{task.position}.#{position}"
   end
 
+  def name_with_position
+    "#{show_position} #{name}"
+  end
+
   private
 
   def assign_position
@@ -57,4 +61,5 @@ class SubTask < ApplicationRecord
   def trigger_update_service
     UpdateDynamicAttributesService.new(self).update_all!
   end
+
 end
