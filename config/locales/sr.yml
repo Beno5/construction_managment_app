@@ -96,6 +96,11 @@ sr:
     materials: "Materijali"
     businesses: "Firme"
     settings: "Podešavanja"
+  breadcrums:
+    projects_overview: "SVI PROJEKTI (%{name})"
+    project_overview: "PREGLED PROJEKTA (%{name})"
+    task_overview: "POZICIJA (%{name})"
+    subtask_overview: "PODPOZICIJA (%{name})"
   businesses:
     form:
       edit_title: "Izmeni %{name}"

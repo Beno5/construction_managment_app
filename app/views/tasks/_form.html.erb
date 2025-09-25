@@ -4,9 +4,9 @@
            search_path: nil,
            new_path: nil,
            additional_crumbs: [
-             { name: @project.name, path: business_project_path(@current_business, @project) },
-             (@task.persisted? ? { name: @task.name, path: business_project_task_path(@current_business, @project, @task) } : { name: t('tasks.form.new_title'), path: nil })
-           ] %>
+              { name: t('breadcrums.project_overview', name: @project.name), path: business_project_path(@current_business, @project) },
+              { name: t('tasks.form.new_title'), path: nil }
+              ] %>
 <!-- Task Form -->
 <%= form_with(model: [@current_business, @project, @task], local: true, data: { turbo: true }) do |f| %>
   <div class="grid grid-cols-6 gap-6">

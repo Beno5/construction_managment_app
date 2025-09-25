@@ -16,7 +16,7 @@
            new_path: paths[:new_task],
            edit_path: edit_business_project_path(@current_business, @project),
            additional_crumbs: [
-             { name: @project.name, path: paths[:project] }
+             { name: t('breadcrums.project_overview', name: @project.name), path: paths[:project] }
            ] %>
 <%= render 'partials/table_expandable_task' %>
 
