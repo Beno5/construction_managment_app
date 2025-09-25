@@ -5,7 +5,7 @@
            new_path: nil,
            additional_crumbs: [
              { name: t('machines.form.model_name'), path: business_machines_path(@current_business) },
-             (@machine.persisted? ? { name: @machine.name, path: business_machine_path(@current_business, @machine) } : { name: t('machines.form.new_title'), path: nil })
+             { name: t('machines.form.new_title'), path: nil }
            ] %>
 
 <%= form_with model: [@current_business, @machine], local: true do |f| %>

@@ -6,8 +6,8 @@
            edit_path: edit_business_project_task_sub_task_path(@current_business, @project, @task, @sub_task),
            additional_crumbs: [
              { name: @project.name, path: business_project_path(@current_business, @project) },
-             (@task.persisted? ? { name: @task.name_with_position, path: business_project_task_path(@current_business, @project, @task) } : { name: t('tasks.form.new_title'), path: nil }),
-             { name: @sub_task.name_with_position, path: business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) }
+             { name: t('breadcrums.task_overview', name: @task.name_with_position), path: business_project_task_path(@current_business, @project, @task) },
+             { name: t('breadcrums.subtask_overview', name: @sub_task.name_with_position), path: business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) }
            ] %>
 <div class="grid grid-cols-6 gap-6">
   <!-- Name -->

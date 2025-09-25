@@ -18,7 +18,7 @@ class Task < ApplicationRecord
   scope :ordered_by_position, -> { all.sort_by { |t| t.position.to_s.split('.').map(&:to_i) } }
   
     def name_with_position
-    "#{position} #{name}"
+    "#{position}. #{name}"
   end
 
   private

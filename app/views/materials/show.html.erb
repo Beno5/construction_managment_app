@@ -6,7 +6,7 @@
            edit_path: edit_business_material_path(@current_business, @material),
            additional_crumbs: [
              { name: t('materials.form.model_name'), path: business_materials_path(@current_business) },
-             (@material.persisted? ? { name: @material.name, path: business_material_path(@current_business, @material) } : { name: t('materials.form.new_title'), path: nil })
+             { name: @material.name, path: business_material_path(@current_business, @material) }
            ] %>
 
 <div class="grid grid-cols-6 gap-6">

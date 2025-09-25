@@ -6,7 +6,7 @@
       </li>
     <% elsif current_business %>
       <li class="inline-flex items-center">
-        <%= link_to current_business.name, business_projects_path(current_business), class: "inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white" %>
+        <%= link_to t("breadcrums.projects_overview", name: current_business.name), business_projects_path(current_business), class: "inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white" %>
       </li>
     <% end %>
 

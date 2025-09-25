@@ -96,6 +96,11 @@ en:
     materials: "Materials"
     businesses: "Businesses"
     settings: "Settings"
+  breadcrums:
+    projects_overview: "ALL PROJECTS (%{name})"
+    project_overview: "PROJECT OVERVIEW (%{name})"
+    task_overview: "TASK (%{name})"
+    subtask_overview: "SUBTASK (%{name})"
   businesses:
     form:
       edit_title: "Edit %{name}"

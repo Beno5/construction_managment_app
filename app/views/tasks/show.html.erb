@@ -16,8 +16,8 @@
            new_path: paths[:new_subtask],
            edit_path: edit_business_project_task_path(@current_business, @project, @task),
            additional_crumbs: [
-             { name: @project.name, path: business_project_path(@current_business, @project) },
-             { name: @task.name_with_position, path: paths[:task] }
+             { name: t('breadcrums.project_overview', name: @project.name), path: business_project_path(@current_business, @project) },
+             { name: t('breadcrums.task_overview', name: @task.name_with_position), path: business_project_task_path(@current_business, @project, @task) }
            ] %>
 <div class="grid grid-cols-6 gap-6">
   <!-- Name -->

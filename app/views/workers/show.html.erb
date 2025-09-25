@@ -6,7 +6,7 @@
            edit_path: edit_business_worker_path(@current_business, @worker),
            additional_crumbs: [
              { name: t('workers.form.model_name'), path: business_workers_path(@current_business) },
-             (@worker.persisted? ? { name: "#{@worker.first_name} #{@worker.last_name}", path: business_worker_path(@current_business, @worker) } : { name: t('workers.form.new_title'), path: nil })
+             { name: "#{@worker.first_name} #{@worker.last_name}", path: business_worker_path(@current_business, @worker) }
            ] %>
 
 <div class="grid grid-cols-6 gap-6">
