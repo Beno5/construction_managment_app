@@ -83,7 +83,7 @@
            collection: @subtasks.ordered_by_position, 
            columns: {
              t('tasks.table.id') => ->(subtask) { subtask.show_position },
-             t('subtasks.form.name') => :description,
+             t('subtasks.form.name') => :name,
              t('subtasks.form.planned_start_date') => ->(subtask) { I18n.l(subtask.planned_start_date, format: :long) if subtask.planned_start_date },
              t('subtasks.form.planned_end_date') => ->(subtask) { I18n.l(subtask.planned_end_date, format: :long) if subtask.planned_end_date },
              t('subtasks.form.custom_fields') => :custom_fields
