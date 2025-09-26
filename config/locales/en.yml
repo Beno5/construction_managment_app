@@ -75,6 +75,8 @@ en:
     am: "AM"
     pm: "PM"
   devise:
+    user:
+      user_settings: "User Settings"
     registrations:
       new:
         create_account: "Create a free account"
@@ -87,15 +89,12 @@ en:
         already_have_account: "Already have an account?"
         login_here: "Login here"
   sidebar:
-    search: "Search"
-    dashboard: "Dashboard"
+    search: "Search..."
     projects: "Projects"
-    finances: "Finances"
     workers: "Workers"
     machines: "Machines"
     materials: "Materials"
     businesses: "Businesses"
-    settings: "Settings"
   breadcrums:
     projects_overview: "ALL PROJECTS (%{name})"
     project_overview: "PROJECT OVERVIEW (%{name})"

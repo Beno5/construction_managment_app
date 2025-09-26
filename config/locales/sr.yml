@@ -75,6 +75,8 @@ sr:
     am: "Pre podne"
     pm: "Popodne"
   devise:
+    user:
+      user_settings: "Korisnička podešavanja"
     registrations:
       new:
         create_account: "Kreirajte besplatan nalog"
@@ -87,15 +89,12 @@ sr:
         already_have_account: "Već imate nalog?"
         login_here: "Prijavite se ovde"
   sidebar:
-    search: "Pretraži"
-    dashboard: "Nadzorna tabla"
     projects: "Projekti"
-    finances: "Finansije"
     workers: "Radnici"
     machines: "Mašine"
     materials: "Materijali"
-    businesses: "Firme"
-    settings: "Podešavanja"
+    businesses: "Biznisi"
+    search: "Pretraži..."
   breadcrums:
     projects_overview: "SVI PROJEKTI (%{name})"
     project_overview: "PREGLED PROJEKTA (%{name})"

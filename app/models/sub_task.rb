@@ -61,5 +61,4 @@ class SubTask < ApplicationRecord
   def trigger_update_service
     UpdateDynamicAttributesService.new(self).update_all!
   end
-
 end

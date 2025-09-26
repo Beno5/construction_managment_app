@@ -16,8 +16,8 @@ class Task < ApplicationRecord
   after_destroy :reorder_tasks
 
   scope :ordered_by_position, -> { all.sort_by { |t| t.position.to_s.split('.').map(&:to_i) } }
-  
-    def name_with_position
+
+  def name_with_position
     "#{position}. #{name}"
   end
 

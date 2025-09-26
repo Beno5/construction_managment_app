@@ -8,92 +8,52 @@
             <%= form_with url: "#", method: :get, local: true, class: "lg:hidden" do %>
               <label for="mobile-search" class="sr-only"><%= t('sidebar.search') %></label>
               <div class="relative">
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
-                  </svg>
-                </div>
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"> <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path> </svg> </div>
                 <%= text_field_tag :email, nil, placeholder: t('sidebar.search'), id: "mobile-search", class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-200 dark:focus:ring-primary-500 dark:focus:border-primary-500" %>
               </div>
             <% end %>
           </li>
-          <!-- Dashboard -->
-          <li>
-            <%= link_to root_path, data: { turbo: false }, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 pointer-events-none opacity-50 cursor-not-allowed" do %>
-              <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
-                <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
-              </svg>
-              <span class="ml-3"><%= t('sidebar.dashboard') %></span>
-            <% end %>
-          </li>
-          <!-- Projects -->
           <% if current_business %>
-          <li>
-            <%= link_to business_projects_path(@current_business), data: { turbo: false }, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
-              <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm2 4h4v4H6V6z"></path>
-              </svg>
-              <span class="ml-3"><%= t('sidebar.projects') %></span>
-            <% end %>
-          </li>
-          <!-- Finances -->
-          <li>
-            <%= link_to business_projects_path(@current_business), data: { turbo: false }, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 pointer-events-none opacity-50 cursor-not-allowed" do %>
-              <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 8c0 2.21-1.79 4-4 4S4 10.21 4 8 5.79 4 8 4s4 1.79 4 4z"></path>
-                <path d="M6 13a7 7 0 118 0H6z"></path>
-              </svg>
-              <span class="ml-3"><%= t('sidebar.finances') %></span>
-            <% end %>
-          </li>
-          <!-- Workers -->
-          <li>
-            <%= link_to business_workers_path(@current_business), data: { turbo: false }, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
-              <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M3 10a7 7 0 1114 0A7 7 0 013 10zm7-9a9 9 0 100 18A9 9 0 0010 1z" clip-rule="evenodd"></path>
-              </svg>
-              <span class="ml-3"><%= t('sidebar.workers') %></span>
-            <% end %>
-          </li>
-          <!-- Machines -->
-          <li>
-            <%= link_to business_machines_path(@current_business), data: { turbo: false }, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
-              <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10.293 15.707a1 1 0 010-1.414L13.586 11l-3.293-3.293a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"></path>
-              </svg>
-              <span class="ml-3"><%= t('sidebar.machines') %></span>
-            <% end %>
-          </li>
-          <!-- Materials -->
-          <li>
-            <%= link_to business_materials_path(@current_business), data: { turbo: false }, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
-              <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10.293 15.707a1 1 0 010-1.414L13.586 11l-3.293-3.293a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"></path>
-              </svg>
-              <span class="ml-3"><%= t('sidebar.materials') %></span>
-            <% end %>
-          </li>
-          <!-- Businesses -->
-          <li>
-            <%= link_to businesses_path, data: { turbo: false }, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
-              <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.5 8a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm8 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm-4.5 4a4 4 0 00-6 0v2h12v-2a4 4 0 00-6 0z"></path>
-              </svg>
-              <span class="ml-3"><%= t('sidebar.businesses') %></span>
-            <% end %>
-          </li>
-          <!-- Settings -->
-          <li>
-            <%= link_to business_projects_path(@current_business), data: { turbo: false }, class: "flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 pointer-events-none opacity-50 cursor-not-allowed" do %>
-              <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm4 3h4v4H8V5z" clip-rule="evenodd"></path>
-              </svg>
-              <span class="ml-3"><%= t('sidebar.settings') %></span>
-            <% end %>
-          </li>
-          <li><%= link_to "English", url_for(locale: :en), data: { turbo: false } %> |
-<%= link_to "Српски", url_for(locale: :sr), data: { turbo: false } %></li>
+            <!-- Projects -->
+            <li>
+              <%= link_to business_projects_path(@current_business), data: { turbo: false }, class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
+                <span class="mr-2">📒</span>
+                <span><%= t('sidebar.projects') %></span>
+              <% end %>
+            </li>
+            <!-- Workers -->
+            <li>
+              <%= link_to business_workers_path(@current_business), data: { turbo: false }, class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
+                <span class="mr-2">👷🏻‍♂️</span>
+                <span><%= t('sidebar.workers') %></span>
+              <% end %>
+            </li>
+            <!-- Machines -->
+            <li>
+              <%= link_to business_machines_path(@current_business), data: { turbo: false }, class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
+                <span class="mr-2">🏗️</span>
+                <span><%= t('sidebar.machines') %></span>
+              <% end %>
+            </li>
+            <!-- Materials -->
+            <li>
+              <%= link_to business_materials_path(@current_business), data: { turbo: false }, class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
+                <span class="mr-2">🧱</span>
+                <span><%= t('sidebar.materials') %></span>
+              <% end %>
+            </li>
+            <!-- Businesses -->
+            <li>
+              <%= link_to businesses_path, data: { turbo: false }, class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
+                <span class="mr-2">🏢</span>
+                <span><%= t('sidebar.businesses') %></span>
+              <% end %>
+            </li>
+            <!-- Languages -->
+            <li>
+              <%= link_to "English", url_for(locale: :en), data: { turbo: false } %> |
+              <%= link_to "Српски", url_for(locale: :sr), data: { turbo: false } %>
+            </li>
           <% end %>
         </ul>
       </div>
