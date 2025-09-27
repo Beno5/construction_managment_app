@@ -10,7 +10,6 @@ class Worker < ApplicationRecord
 
   # Validations
   validates :first_name, presence: true
-  validates :price_per_unit, numericality: { greater_than_or_equal_to: 0 }
 
   # Helper method
   def name
