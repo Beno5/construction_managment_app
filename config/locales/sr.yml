@@ -151,6 +151,7 @@ sr:
       created: "Materijal je uspješno kreiran."
       updated: "Materijal je uspješno ažuriran."
       deleted: "Materijal je uspješno obrisan."
+      name_required: "Ime materijala je obavezno."
   machines:
     form:
       edit_title: "Izmeni %{name}"
@@ -168,6 +169,7 @@ sr:
       created: "Mašina je uspješno kreirana."
       updated: "Mašina je uspješno ažurirana."
       deleted: "Mašina je uspješno obrisana."
+      name_required: "Ime mašine je obavezno."
   workers:
     form:
       edit_title: "Izmeni %{name}"
@@ -187,6 +189,7 @@ sr:
       created: "Radnik je uspješno kreiran."
       updated: "Radnik je uspješno ažuriran."
       deleted: "Radnik je uspješno obrisan."
+      first_name_required: "Ime radnika je obavezno."
   projects:
     form:
       edit_title: "Izmeni %{name}"

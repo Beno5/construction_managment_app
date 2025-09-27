@@ -27,7 +27,8 @@ class MaterialsController < ApplicationController
     if @material.save
       redirect_to business_materials_path(@business), notice: t("materials.messages.created")
     else
-      render :new, status: :unprocessable_entity
+      flash.now[:alert] = t('materials.messages.name_required')
+      render :show, status: :unprocessable_entity
     end
   end
 
@@ -35,7 +36,8 @@ class MaterialsController < ApplicationController
     if @material.update(material_params)
       redirect_to business_materials_path(@business), notice: t("materials.messages.updated")
     else
-      render :edit, status: :unprocessable_entity
+      flash.now[:alert] = t('materials.messages.name_required')
+      render :show, status: :unprocessable_entity
     end
   end
 

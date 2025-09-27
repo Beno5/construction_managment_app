@@ -26,7 +26,8 @@ class WorkersController < ApplicationController
     if @worker.save
       redirect_to business_workers_path(@business), notice: t('workers.messages.created')
     else
-      render :new, status: :unprocessable_entity
+      flash.now[:alert] = t('workers.messages.first_name_required')
+      render :show, status: :unprocessable_entity 
     end
   end
 
@@ -34,7 +35,8 @@ class WorkersController < ApplicationController
     if @worker.update(worker_params)
       redirect_to business_workers_path(@business), notice: t('workers.messages.updated')
     else
-      render :edit, status: :unprocessable_entity
+      flash.now[:alert] = t('workers.messages.first_name_required')
+      render :show, status: :unprocessable_entity
     end
   end
 
