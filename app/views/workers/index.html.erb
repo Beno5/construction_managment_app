@@ -26,7 +26,6 @@
              t('workers.form.profession') => :profession,
              t('workers.form.unit_of_measure') => ->(worker) { worker.unit_of_measure.humanize },
              t('workers.form.price_per_unit', currency: @current_business.currency_symbol) => ->(worker) { "#{worker.price_per_unit} #{worker.business.currency_symbol}" },
-             t('workers.form.is_team') => ->(worker) { worker.is_team ? t('workers.form.yes') : t('workers.form.no') },
              t('workers.form.description') => ->(worker) { content_tag(:span, worker.description.truncate(25), title: worker.description, class: "tooltip") }
            },
            turbo_frame_id: "workers-frame",
