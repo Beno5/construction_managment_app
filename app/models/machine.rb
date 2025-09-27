@@ -8,6 +8,4 @@ class Machine < ApplicationRecord
 
   # Validations
   validates :name, presence: true
-  validates :price_per_unit, numericality: { greater_than_or_equal_to: 0 }
-  validates :fixed_costs, numericality: { greater_than_or_equal_to: 0 }
 end

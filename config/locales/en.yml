@@ -151,6 +151,7 @@ en:
       created: "Material was successfully created."
       updated: "Material was successfully updated."
       deleted: "Material was successfully deleted."
+      name_required: "Name is required."
   machines:
     form:
       edit_title: "Edit %{name}"
@@ -168,6 +169,7 @@ en:
       created: "Machine was successfully created."
       updated: "Machine was successfully updated."
       deleted: "Machine was successfully deleted."
+      name_required: "Name is required."
   workers:
     form:
       edit_title: "Edit %{name}"
@@ -187,6 +189,7 @@ en:
       created: "Worker was successfully created."
       updated: "Worker was successfully updated."
       deleted: "Worker was successfully deleted."
+      first_name_required: "First name is required."
   projects:
     form:
       edit_title: "Edit %{name}"

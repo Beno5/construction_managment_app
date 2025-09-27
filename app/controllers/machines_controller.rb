@@ -27,7 +27,8 @@ class MachinesController < ApplicationController
     if @machine.save
       redirect_to business_machines_path(@business), notice: t("machines.messages.created")
     else
-      render :new, status: :unprocessable_entity
+      flash.now[:alert] = t('machines.messages.name_required')
+      render :show, status: :unprocessable_entity
     end
   end
 
@@ -35,7 +36,8 @@ class MachinesController < ApplicationController
     if @machine.update(machine_params)
       redirect_to business_machines_path(@business), notice: t("machines.messages.updated")
     else
-      render :edit, status: :unprocessable_entity
+      flash.now[:alert] = t('machines.messages.name_required')
+      render :show, status: :unprocessable_entity
     end
   end
 
