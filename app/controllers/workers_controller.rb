@@ -27,7 +27,7 @@ class WorkersController < ApplicationController
       redirect_to business_workers_path(@business), notice: t('workers.messages.created')
     else
       flash.now[:alert] = t('workers.messages.first_name_required')
-      render :show, status: :unprocessable_entity 
+      render :show, status: :unprocessable_entity
     end
   end
 

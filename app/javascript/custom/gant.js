@@ -4,6 +4,17 @@ document.addEventListener("turbo:load", function () {
   // Ako nema elementa, ne pokrećemo Gantt
   if (!ganttElement) return;
 
+  const isReadonly = ganttElement.dataset.readonly === "true";
+
+  // Ako je readonly → zabrani sve izmjene
+  if (isReadonly) {
+    gantt.config.readonly = true;
+    gantt.config.drag_links = false;
+    gantt.config.drag_move = false;
+    gantt.config.drag_resize = false;
+    gantt.config.drag_progress = false;
+  }
+
   gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
 
   // Skala - gore mjeseci, ispod dani

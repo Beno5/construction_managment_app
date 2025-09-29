@@ -1,1 +1,2 @@
-<%= render 'form', task: @task, project: @project, current_business: @current_business %>
+<%= render template: 'tasks/show',
+           locals: { task: @task, project: @project, current_business: @current_business } %>

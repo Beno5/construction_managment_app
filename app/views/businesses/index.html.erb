@@ -3,7 +3,7 @@
   paths = {
     businesses: businesses_path,
     new_business: new_business_path,
-    show_business: ->(business) { business_projects_path(business) },
+    show_business: ->(business) { business_path(business) },
     edit_business: ->(business) { edit_business_path(business) },
     delete_business: ->(business) { business_path(business) },
     select_business: ->(business) { select_business_path(business) }

@@ -5,14 +5,23 @@
       <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
         <div class="w-full md:w-1/2">
           <%= form_with url: norms_path, method: :get, data: { turbo_frame: "norms-frame", controller: "search" }, local: true do %>
-            <%= hidden_field_tag :sub_task_id, @sub_task.id if @sub_task.present? %>
-            <label for="search" class="sr-only">Search</label>
-            <div class="relative mt-1 lg:w-64 xl:w-96">
-              <input type="text" name="search" id="search" placeholder="Pretraži norme..."
-                     class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                     data-action="input->search#performSearch">
-            </div>
-          <% end %>
+  <%= hidden_field_tag :sub_task_id, @sub_task.id if @sub_task.present? %>
+  <label for="search" class="sr-only">Search</label>
+  <div class="relative mt-1 lg:w-64 xl:w-96">
+    <input type="text" 
+           name="search" 
+           id="search" 
+           placeholder="Pretraži norme..."
+           value="<%= params[:search] %>"
+           <%= "disabled" if @sub_task.new_record? %>
+           class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg 
+                  block w-full p-2.5 
+                  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                  <%= @sub_task.new_record? ? 'cursor-not-allowed bg-gray-200 dark:bg-gray-600' : 'focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500' %>"
+           data-action="<%= 'input->search#performSearch' unless @sub_task.new_record? %>">
+  </div>
+<% end %>
+
         </div>
       </div>
       <turbo-frame id="norms-frame">
@@ -34,7 +43,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @norms.each do |norm| %>
+              <% @norms&.each do |norm| %>
                 <tr class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <td class="px-4 py-3">
                     <%= check_box_tag "selected_norm_ids[]", norm.id, @pinned_norms.include?(norm),

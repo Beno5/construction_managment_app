@@ -88,11 +88,6 @@
           class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                           <li>
-                            <%= link_to t('tasks.actions.edit'), edit_business_project_task_path(@current_business, @project, task),
-          data: { turbo: false },
-          class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
-                          </li>
-                          <li>
                             <%= link_to t('tasks.actions.delete'), business_project_task_path(@current_business, @project, task),
           method: :delete,
           data: { turbo_confirm: t('tasks.actions.confirm_delete'), turbo_method: :delete },
@@ -129,11 +124,6 @@
                           <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "sub-task-#{sub_task.id}-dropdown-button" %>">
                             <li>
                               <%= link_to t('subtasks.actions.show'), business_project_task_sub_task_path(@business, @project, task, sub_task),
-          data: { turbo: false },
-          class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
-                            </li>
-                            <li>
-                              <%= link_to t('subtasks.actions.edit'), edit_business_project_task_sub_task_path(@business, @project, task, sub_task),
           data: { turbo: false },
           class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                             </li>

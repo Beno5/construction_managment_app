@@ -1,7 +1,7 @@
 class BusinessesController < ApplicationController
   include ActionView::RecordIdentifier
 
-  before_action :set_business, only: [:edit, :update, :destroy]
+  before_action :set_business, only: [:show, :update, :destroy]
   skip_before_action :set_current_business, only: [:select]
 
   def index
@@ -13,15 +13,10 @@ class BusinessesController < ApplicationController
     end
   end
 
+  def show; end
+
   def new
     @business = current_user.businesses.new
-  end
-
-  def edit
-    @business = current_user.businesses.find_by(id: params[:id])
-    return if @business
-
-    redirect_to businesses_path, alert: "Business not found."
   end
 
   def create
@@ -30,25 +25,18 @@ class BusinessesController < ApplicationController
 
     if @business.save
       redirect_to businesses_path, notice: t('businesses.messages.created')
-    elsif @business.errors[:name].any?
-      # Provjeri specifično za name error
-      redirect_to new_business_path, alert: "Name is required!"
     else
-      # Ostali validation errori
-      error_messages = @business.errors.full_messages.join(", ")
-      redirect_to new_business_path, alert: error_messages
+      flash.now[:alert] = t('workers.messages.first_name_required')
+      render :show, status: :unprocessable_entity
     end
   end
 
   def update
     if @business.update(business_params)
       redirect_to businesses_path, notice: t('businesses.messages.updated')
-    elsif @business.errors[:name].any?
-      # Isto i za update
-      redirect_to edit_business_path(@business), alert: "Name is required!"
     else
-      error_messages = @business.errors.full_messages.join(", ")
-      redirect_to edit_business_path(@business), alert: error_messages
+      flash.now[:alert] = t('businesses.messages.name_required')
+      render :show, status: :unprocessable_entity
     end
   end
 

@@ -4,6 +4,12 @@ sr:
       models:
         project:
           attributes:
+            name:
+              blank: "Naziv je obavezan"
+              taken: "Naziv projekta već postoji u ovoj firmi"
+            client_project_id:
+              blank: "Client Project ID je obavezan"
+              taken: "Client Project ID već postoji u ovoj firmi"
             base:
               invalid_dates: "Datum završetka ne može biti prije datuma početka"
         task:
@@ -130,7 +136,7 @@ sr:
       updated: "Firma je uspješno ažurirana."
       deleted: "Firma je uspješno obrisana."
       selected: "%{name} je sada odabrana."
-      not_found: "Firma nije pronađena."
+      name_required: "Naziv firme je obavezan."
     errors:
       name_required: "Naziv firme je obavezan!"
       validation_failed: "Molimo provjerite formu za greške."
@@ -305,9 +311,9 @@ sr:
       planned: "Planirano"
       real: "Realno"
     messages:
-      created: "Podzadatak je uspješno kreiran."
-      updated: "Podzadatak je uspješno ažuriran."
-      deleted: "Podzadatak je uspješno obrisan."
+      created: "Podpozicija je uspješno kreiran."
+      updated: "Podpozicija je uspješno ažuriran."
+      deleted: "Podpozicija je uspješno obrisan."
     errors:
       name_required: "Ime podpozicije je obavezno"
       validation_failed: "Podpoziciju nije moguće sačuvati"
