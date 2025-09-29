@@ -37,18 +37,7 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    if @project.update(project_params.except(:documents)) # Ažuriraj sve osim dokumenata
-      if params[:project][:documents].present?
-        existing_filenames = @project.documents.map { |doc| doc.filename.to_s }
-
-        params[:project][:documents].each do |new_file|
-          # Provjera da li je fajl validan i da nije duplikat
-          if new_file.is_a?(ActionDispatch::Http::UploadedFile) && !existing_filenames.include?(new_file.original_filename)
-            @project.documents.attach(new_file) # Dodaj nove fajlove
-          end
-        end
-      end
-
+    if @project.update(project_params)
       redirect_to business_projects_url(@business), notice: t('projects.messages.updated')
     else
       set_error_message
@@ -63,32 +52,6 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.turbo_stream # Ovo koristi destroy.turbo_stream.erb za uklanjanje kartice
       format.html { redirect_to business_projects_path(@business), notice: t('projects.messages.deleted') }
-    end
-  end
-
-  def remove_document
-    @project = @business.projects.find(params[:id])
-    document = @project.documents.find_by(id: params[:document_id])
-
-    if document
-      document.purge
-      respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.remove("document-#{params[:document_id]}")
-        end
-        format.html do
-          redirect_to edit_business_project_path(@business, @project), notice: "Document deleted successfully."
-        end
-      end
-    else
-      respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("document-#{params[:document_id]}",
-                                                    partial: "partials/error_message",
-                                                    locals: { message: "Document not found." })
-        end
-        format.html { redirect_to edit_business_project_path(@business, @project), alert: "Document not found." }
-      end
     end
   end
 
@@ -124,14 +87,12 @@ class ProjectsController < ApplicationController
   end
 
   def set_error_message
-    flash.now[:alert] = if @project.errors[:name].any?
-                          t('projects.errors.name_required')
-                        elsif @project.errors[:client_project_id].any?
-                          t('projects.errors.client_project_id_required')
-                        elsif @project.errors[:base].any?
-                          @project.errors[:base].first
-                        else
-                          t('projects.errors.validation_failed')
-                        end
+    if @project.errors[:name].any?
+      flash.now[:alert] = @project.errors[:name].first
+    elsif @project.errors[:client_project_id].any?
+      flash.now[:alert] = @project.errors[:client_project_id].first
+    elsif @project.errors[:base].any?
+      flash.now[:alert] = @project.errors[:base].first
+    end
   end
 end

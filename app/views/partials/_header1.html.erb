@@ -8,12 +8,6 @@
         <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
           <%= local_assigns[:title] || "Default Title" %>
         </h1>
-        <% if local_assigns[:edit_path].present? %>
-          <%= link_to t("table.actions.edit.default"),
-                  local_assigns[:edit_path],
-                  data: { turbo: false },
-                  class: "inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 rounded-lg dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" %>
-        <% end %>
       </div>
     </div>
     <div class="sm:flex mb-4">

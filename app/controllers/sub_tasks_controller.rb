@@ -17,10 +17,12 @@ class SubTasksController < ApplicationController
     @searched_norms = Norm.search(params[:search])
     @pinned_norms = @sub_task.pinned_norms
     @norms = (@pinned_norms + @searched_norms).uniq
+    @readonly_mode = false
   end
 
   def new
     @sub_task = @task.sub_tasks.new
+    @readonly_mode = true
   end
 
   def edit; end
@@ -31,10 +33,10 @@ class SubTasksController < ApplicationController
 
     if @sub_task.save
       redirect_to business_project_task_sub_task_path(@business, @task.project, @task, @sub_task),
-                  notice: t('sub_tasks.messages.created')
+                  notice: t('subtasks.messages.created')
     else
       set_error_message
-      render :new, status: :unprocessable_entity
+      render :show, status: :unprocessable_entity
     end
   end
 
@@ -45,7 +47,7 @@ class SubTasksController < ApplicationController
       respond_to do |format|
         format.html do
           redirect_to business_project_task_sub_task_path(@business, @task.project, @task, @sub_task),
-                      notice: t('sub_tasks.messages.updated')
+                      notice: t('subtasks.messages.updated')
         end
         format.json do
           render json: {

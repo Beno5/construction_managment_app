@@ -130,7 +130,7 @@ en:
       updated: "Business updated successfully."
       deleted: "Business deleted successfully."
       selected: "%{name} is now selected."
-      not_found: "Business not found."
+      name_required: "Business name is required."
     errors:
       name_required: "Business name is required!"
       validation_failed: "Please check the form for errors."

@@ -14,10 +14,14 @@ class TasksController < ApplicationController
     @task = @project.tasks.find(params[:id]) # Uveri se da ovo ne vraća nil
     @subtasks = @task.sub_tasks.search(params[:search])
     @documents = @task.documents.search(params[:search])
+    @readonly_mode = false
   end
 
   def new
-    @task = @project.tasks.new
+    @task = @project.tasks.build
+    @subtasks = @task.sub_tasks || SubTask.none
+    @documents = Document.none
+    @readonly_mode = true
   end
 
   def edit

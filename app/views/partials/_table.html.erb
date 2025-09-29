@@ -7,12 +7,25 @@
       <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
         <div class="w-full md:w-1/2">
           <!-- pazi ovdje dinamiku model_name kad pozivas iz indexa mora biti dinamicno sa Model imenima da bi fukncionisalo sve dinamicki :) -->
-          <form action="<%= local_assigns[:search_path] %>" method="GET" data-turbo-frame="<%= local_assigns[:frame_id] || "#{local_assigns[:model_name].downcase}-frame" %>" class="lg:pr-3" data-controller="search">
+          <form action="<%= local_assigns[:search_path] %>" 
+      method="GET" 
+      data-turbo-frame="<%= local_assigns[:frame_id] || "#{local_assigns[:model_name].downcase}-frame" %>" 
+      class="lg:pr-3" 
+      data-controller="search">
             <label for="search" class="sr-only">Search</label>
             <div class="relative mt-1 lg:w-64 xl:w-96">
-              <input type="text" name="search" id="search" placeholder="<%= t("table.search.#{local_assigns[:model_name].singularize.downcase}") %>..." 
-        class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-        data-action="input->search#performSearch">
+              <input type="text" 
+           name="search" 
+           id="search" 
+           placeholder="<%= t("table.search.#{local_assigns[:model_name].singularize.downcase}") %>..." 
+<%= "disabled" if (defined?(@sub_task) && @sub_task.new_record?) || (defined?(@task) && @task.new_record?) %>
+           class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg 
+                  block w-full p-2.5 
+                  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                  <%= (defined?(@sub_task) && @sub_task.new_record?) || (defined?(@task) && @task.new_record?) ? 
+                        'cursor-not-allowed bg-gray-200 dark:bg-gray-600' : 
+                        'focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500' %>"
+           data-action="<%= 'input->search#performSearch' unless defined?(@sub_task) && @sub_task.new_record? %>">
             </div>
           </form>
         </div>
@@ -22,14 +35,16 @@
           data-target="resource-modal"
           data-mode="create"
           data-type="StandardResource"
-          class="open-modal resource-modal inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+<%= "disabled" if (defined?(@sub_task) && @sub_task.new_record?) || (defined?(@task) && @task.new_record?) %>
+          class="open-modal resource-modal <%= "cursor-not-allowed" if (defined?(@sub_task) && @sub_task.new_record?) || (defined?(@task) && @task.new_record?) %> inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
               <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
               </svg>
               <%= t('table.new.resource') %>
             </button>
           <% elsif model_name == "Documents" %>
-            <button type="button" data-target="documents-modal" class="open-modal inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+            <button type="button" <%= "disabled" if (defined?(@sub_task) && @sub_task.new_record?) || (defined?(@task) && @task.new_record?) %>
+ data-target="documents-modal" class="open-modal <%= "cursor-not-allowed" if (defined?(@sub_task) && @sub_task.new_record?) || (defined?(@task) && @task.new_record?) %> inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
               <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
               </svg>
@@ -37,7 +52,13 @@
             </button>
           <% else %>
             <% if local_assigns[:new_path].present? %>
-              <%= link_to local_assigns[:new_path], class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" do %>
+              <%= button_to local_assigns[:new_path],
+      method: :get,
+      class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white 
+              rounded-lg #{'cursor-not-allowed bg-gray-400 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-600' if (defined?(@sub_task) && @sub_task.new_record?) || (defined?(@task) && @task.new_record?)}
+              bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 
+              dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800",
+      disabled: (defined?(@sub_task) && @sub_task.new_record?) || (defined?(@task) && @task.new_record?) do %>
                 <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
                 </svg>
@@ -132,11 +153,8 @@
                             </li>
                           <% end %>
                           <li>
-                            <% unless local_assigns[:model_name] == "Businesses" %>
-                              <%= link_to t("table.actions.show.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
-                            <% end %>
+                            <%= link_to t("table.actions.show.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
-                          
                           <li>
                             <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:delete_path].call(item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete, item_id: item.id, item_type: item.model_name }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white delete-item-link" %>
                           </li>

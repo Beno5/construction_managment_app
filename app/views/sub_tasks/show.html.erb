@@ -1,159 +1,101 @@
-<%= render 'partials/header1', 
-           title: t('subtasks.form.model_name') + ": " + @sub_task.name_with_position,
-           model_name: t('subtasks.form.model_name'),
-           search_path: nil,
-           new_path: nil,
-           edit_path: edit_business_project_task_sub_task_path(@current_business, @project, @task, @sub_task),
-           additional_crumbs: [
-             { name: @project.name, path: business_project_path(@current_business, @project) },
-             { name: t('breadcrums.task_overview', name: @task.name_with_position), path: business_project_task_path(@current_business, @project, @task) },
-             { name: t('breadcrums.subtask_overview', name: @sub_task.name_with_position), path: business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) }
-           ] %>
-<div class="grid grid-cols-6 gap-6">
-  <!-- Name -->
-  <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.name') %></label>
-    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.name %>
-    </div>
-  </div>
-  <!-- Description -->
-  <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.description') %></label>
-    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.description %>
-    </div>
-  </div>
-  <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.unit_of_measure') %></label>
-    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.unit_of_measure %>
-    </div>
-  </div>
-  <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.quantity') %></label>
-    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.quantity %>
-    </div>
-  </div>
-  <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.price_per_unit', currency: @current_business.currency_symbol) %></label>
-    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.price_per_unit %>
-    </div>
-  </div>
-  <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.planned_cost', currency: @current_business.currency_symbol) %></label>
-    <div class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.planned_cost %>
-    </div>
-  </div>
-  <!-- Planned Start Date -->
-  <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-      <%= t('subtasks.form.planned_start_date') %>
-    </label>
-    <div data-subtask-target="plannedStart" class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.planned_start_date.strftime("%d. %B %Y") if @sub_task.planned_start_date.present? %>
-    </div>
-  </div>
-  <!-- Planned End Date -->
-  <div class="col-span-6 sm:col-span-3">
-    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-      <%= t('subtasks.form.planned_end_date') %>
-    </label>
-    <div data-subtask-target="plannedEnd" class="shadow-sm bg-gray-100 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <%= @sub_task.planned_end_date.strftime("%d. %B %Y") if @sub_task.planned_end_date.present? %>
-    </div>
-  </div>
-  <!-- Custom Fields -->
-  <div class="col-span-6">
-    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('subtasks.form.custom_fields') %></h3>
-    <% @sub_task.custom_fields.each do |key, value| %>
-      <div class="col-span-6 sm:col-span-3">
-        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= key.humanize %></label>
-        <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-          <%= value %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-</div>
-<% 
+<%= render "form", project: @project, task: @task, sub_task: @sub_task %>
+<%
   model_name = "Resources"
   paths = {
-    create_resource: ->(resource) { url_for([:edit, @current_business, resource.activityable]) }, 
-    update_resource: ->(resource) { url_for([@current_business, resource.activityable]) }, 
+    create_resource: ->(resource) { url_for([:edit, @current_business, resource.activityable]) },
+    update_resource: ->(resource) { url_for([@current_business, resource.activityable]) },
     delete_resource: ->(resource) { url_for([@current_business, resource.activityable]) }
   }
 %>
 <%= render "partials/table_norms", norms: @norms %>
 <div data-controller="subtask"
      data-subtask-id="<%= @sub_task.id %>"
-     data-subtask-update-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) %>"
+     data-subtask-update-url-value="<%= @sub_task.persisted? ? business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) : "" %>"
      class="grid grid-cols-6 gap-6">
+  <!-- Duration -->
   <div class="col-span-6 sm:col-span-3">
     <label for="duration" class="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">Duration (days)</label>
     <input type="number" id="duration"
            value="<%= @sub_task.duration %>"
-           <%= "disabled" if @sub_task.duration&.zero? %>
-           class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-           data-subtask-target="duration" data-action="change->subtask#recalculate" />
+           <%= "disabled" if @readonly_mode %>
+           class="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 
+                  dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                  <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
+           data-subtask-target="duration"
+           data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
   </div>
+  <!-- Skilled -->
   <div class="col-span-6 sm:col-span-3">
     <label for="skilled" class="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">Skilled Workers</label>
     <input type="number" id="skilled"
            value="<%= @sub_task.num_workers_skilled %>"
-           <%= "disabled" if @sub_task.num_workers_skilled&.zero? %>
-           class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-           data-subtask-target="skilled" data-action="change->subtask#recalculate" />
+           <%= "disabled" if @readonly_mode %>
+           class="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 
+                  dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                  <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
+           data-subtask-target="skilled"
+           data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
   </div>
+  <!-- Unskilled -->
   <div class="col-span-6 sm:col-span-3">
     <label for="unskilled" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unskilled Workers</label>
     <input type="number" id="unskilled"
            value="<%= @sub_task.num_workers_unskilled %>"
-           <%= "disabled" if @sub_task.num_workers_unskilled&.zero? %>
-           class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-           data-subtask-target="unskilled" data-action="change->subtask#recalculate" />
+           <%= "disabled" if @readonly_mode %>
+           class="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 
+                  dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                  <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
+           data-subtask-target="unskilled"
+           data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
   </div>
+  <!-- Machines -->
   <div class="col-span-6 sm:col-span-3">
     <label for="machines" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Machines</label>
     <input type="number" id="machines"
            value="<%= @sub_task.num_machines %>"
-           <%= "disabled" if @sub_task.num_machines&.zero? %>
-           class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-           data-subtask-target="machines" data-action="change->subtask#recalculate" />
+           <%= "disabled" if @readonly_mode %>
+           class="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 
+                  dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                  <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
+           data-subtask-target="machines"
+           data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
   </div>
 </div>
-<%= render 'partials/table', 
-           collection: @activities, 
+<%= render 'partials/table',
+           collection: @activities || [],
            columns: {
-             t('tasks.form.name') => ->(activity) { activity.activityable.name }, 
-             t('tasks.form.type') => ->(activity) { activity.activity_type }, 
-             t('tasks.form.description') => ->(activity) { activity.activityable.description }, 
-             t('tasks.form.quantity') => ->(activity) { activity.quantity }, 
-             t('tasks.form.unit_of_measure') => ->(activity) { activity.activityable.unit_of_measure }, 
-             t('tasks.form.price_per_unit') => ->(activity) { activity.activityable.price_per_unit }, 
-             t('tasks.form.total_cost') => ->(activity) { activity.total_cost }, 
+             t('tasks.form.name') => ->(activity) { activity.activityable.name },
+             t('tasks.form.type') => ->(activity) { activity.activity_type },
+             t('tasks.form.description') => ->(activity) { activity.activityable.description },
+             t('tasks.form.quantity') => ->(activity) { activity.quantity },
+             t('tasks.form.unit_of_measure') => ->(activity) { activity.activityable.unit_of_measure },
+             t('tasks.form.price_per_unit') => ->(activity) { activity.activityable.price_per_unit },
+             t('tasks.form.total_cost') => ->(activity) { activity.total_cost },
            },
            turbo_frame_id: "resources-frame",
-           model_name: model_name, 
+           model_name: model_name,
            edit_path: "",
            show_path: "",
            delete_path: "",
            actions: [] %>
-<%= render "modals/modal_resource" %>
+<% if @sub_task.persisted? %>
+  <%= render "modals/modal_resource" %>
+<% end %>
 <div class="col-span-6 sm:col-span-3 mt-2">
   <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.total_cost') %></label>
-  <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+  <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5 
+              dark:bg-gray-700 dark:border-gray-600 dark:text-white">
     <%= @sub_task.total_cost %>
   </div>
 </div>
 <div class="bg-white p-6 rounded-lg shadow-md mt-6">
   <h2 class="text-xl font-bold mb-4"><%= t('projects.show.timeline_title') %></h2>
-  <div id="gantt_here" data-project-id="<%= @project.id %>" style="width: 100%; height: 500px;"></div>
+  <div id="gantt_here"
+     data-project-id="<%= @project.id %>"
+     data-readonly="<%= @readonly_mode %>"
+     style="width: 100%; height: 500px;"></div>
 </div>
-<% 
+<%
   model_name = "Documents"
   paths_doc = {
     new_document: new_business_project_document_path(@current_business, @project, @task, @sub_task),
@@ -162,10 +104,10 @@
     delete_document: ->(document) { business_project_document_path(@current_business, @project, document) }
   }
 %>
-<%= render 'partials/table', 
-           collection: @documents, 
+<%= render 'partials/table',
+           collection: @documents || [],
            columns: {
-             t('documents.form.name') => :name, 
+             t('documents.form.name') => :name,
              t('documents.form.description') => ->(document) { content_tag(:span, document.description&.truncate(25), title: document.description, class: "tooltip") },
              t('documents.form.category') => ->(document) { document.category.humanize },
              t('documents.form.file_name') => ->(document) { document.file.attached? ? document.file.filename.to_s.truncate(20) : t('documents.form.no_file') },
@@ -173,11 +115,13 @@
              t('documents.form.created_at') => ->(document) { document.created_at.strftime("%Y-%m-%d") }
            },
            turbo_frame_id: "documents-frame",
-           model_name: model_name, 
-           search_path: paths_doc[:documents], 
-           new_path: paths_doc[:new_document],
+           model_name: model_name,
+           search_path: paths_doc[:documents],
+           new_path: (@readonly_mode ? nil : paths_doc[:new_document]),
            edit_path: paths_doc[:edit_document],
            show_path: paths_doc[:show_document],
            delete_path: paths_doc[:delete_document],
-           actions: [] %>
-<%= render "modals/modal_documents" %>
+           actions: (@readonly_mode ? [] : [:edit, :delete]) %>
+<% if @sub_task.persisted? %>
+  <%= render "modals/modal_documents" %>
+<% end %>

@@ -1,65 +1,87 @@
 <%= render 'partials/header1', 
-           title: @project.persisted? ? t('projects.form.edit_title', name: @project.name) : t('projects.form.new_title'),
+           title: @project.persisted? ? 
+                    t('projects.form.edit_title', name: @project.name) : 
+                    t('projects.form.new_title'),
            model_name: t('projects.form.model_name'),
            search_path: nil,
            new_path: nil,
            additional_crumbs: [
-             (@project.persisted? ? { name: @project.name, path: business_project_path(@current_business, @project) } : { name: t('projects.form.new_title'), path: nil })
+             (@project.persisted? ? 
+               { name: @project.name, path: business_project_path(@current_business, @project) } : 
+               { name: t('projects.form.new_title'), path: nil })
            ] %>
-
-<%= form_with model: [@current_business, project], local: true, html: { multipart: true } do |f| %>
-  <div class="grid grid-cols-6 gap-6">
-    <!-- Client Project ID -->
-    <div class="col-span-6 sm:col-span-3">
-      <%= f.label :client_project_id, t('projects.form.client_project_id'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :client_project_id, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
-    </div>
-
-    <!-- Project Name -->
-    <div class="col-span-6 sm:col-span-3">
-      <%= f.label :name, t('projects.form.name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :name, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
-    </div>
-
-    <!-- Address -->
-    <div class="col-span-6 sm:col-span-3">
-      <%= f.label :address, t('projects.form.address'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :address, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-    </div>
-
-    <!-- Project Manager -->
-    <div class="col-span-6 sm:col-span-3">
-      <%= f.label :project_manager, t('projects.form.project_manager'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_field :project_manager, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600" %>
-    </div>
-
-    <!-- Estimated Cost -->
-    <div class="col-span-6 sm:col-span-3">
-      <%= f.label :planned_cost, t('projects.form.planned_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.number_field :planned_cost, step: 0.01, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
-    </div>
-
-    <!-- Status -->
-    <div class="col-span-6 sm:col-span-3">
-      <%= f.label :status, t('projects.form.status'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.select :status, Project.statuses.keys, {}, class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5" %>
-    </div>
-
-    <!-- Description -->
-    <div class="col-span-6">
-      <%= f.label :description, t('projects.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-      <%= f.text_area :description, rows: 4, class: "block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300" %>
-    </div>
-
-    <!-- Custom Fields -->
-    <div class="col-span-6">
-      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('projects.form.custom_fields') %></h3>
-      <%= render 'partials/custom_fields', custom_fields: @project.custom_fields, model: 'project' %>
+<section class="bg-gray-50 dark:bg-gray-900 pt-5">
+  <div class="mx-auto">
+    <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden p-6">
+      <%= form_with model: [@current_business, @project], 
+                    local: true, 
+                    html: { multipart: true },
+                    data: { controller: "track-changes", action: "submit->track-changes#reset" } do |f| %>
+        <div class="grid grid-cols-6 gap-6">
+          <!-- Client Project ID -->
+          <div class="col-span-6 sm:col-span-3">
+            <%= f.label :client_project_id, t('projects.form.client_project_id'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_field :client_project_id, 
+                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
+                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+          </div>
+          <!-- Project Name -->
+          <div class="col-span-6 sm:col-span-3">
+            <%= f.label :name, t('projects.form.name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_field :name, 
+                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
+                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+          </div>
+          <!-- Address -->
+          <div class="col-span-6 sm:col-span-3">
+            <%= f.label :address, t('projects.form.address'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_field :address, 
+                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
+                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+          </div>
+          <!-- Project Manager -->
+          <div class="col-span-6 sm:col-span-3">
+            <%= f.label :project_manager, t('projects.form.project_manager'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_field :project_manager, 
+                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
+                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+          </div>
+          <!-- Planned Cost -->
+          <div class="col-span-6 sm:col-span-3">
+            <%= f.label :planned_cost, t('projects.form.planned_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.number_field :planned_cost, step: 0.01, 
+                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
+                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+          </div>
+          <!-- Status -->
+          <div class="col-span-6 sm:col-span-3">
+            <%= f.label :status, t('projects.form.status'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.select :status, Project.statuses.keys, {}, 
+                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
+                  data: { action: "change->track-changes#markChanged", track_changes_target: "input" } %>
+          </div>
+          <!-- Description -->
+          <div class="col-span-6">
+            <%= f.label :description, t('projects.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.text_area :description, rows: 4, 
+                  class: "block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
+                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+          </div>
+          <!-- Custom Fields -->
+          <div class="col-span-6">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('projects.form.custom_fields') %></h3>
+            <%= render 'partials/custom_fields', custom_fields: @project.custom_fields, model: 'project' %>
+          </div>
+        </div>
+        <!-- Submit Button -->
+        <div class="flex items-center justify-end pt-6 border-t border-gray-200 rounded-b dark:border-gray-700">
+          <%= f.submit(
+                @project.persisted? ? t('projects.form.update_button') : t('projects.form.create_button'),
+                data: { track_changes_target: "saveButton", turbo: false },
+                class: "hidden text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-base px-6 py-3"
+              ) %>
+        </div>
+      <% end %>
     </div>
   </div>
-
-  <!-- Submit Button -->
-  <div class="flex items-center justify-end pt-6 border-t border-gray-200 rounded-b dark:border-gray-700">
-    <%= f.submit project.persisted? ? t('projects.form.update_button') : t('projects.form.create_button'), data: { turbo: false }, class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5" %>
-  </div>
-<% end %>
+</section>
