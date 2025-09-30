@@ -315,7 +315,8 @@ en:
       validation_failed: "Sub-task could not be saved"
   resources:
     form:
-      model_name: "Planned Resources"
+      model_name: "Resours"
+      model_name_pl: "Resourses"
       search_placeholder: "Search resources..."
       select_category: "Select category"
       select_resource: "Select resource"

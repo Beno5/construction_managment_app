@@ -1,7 +1,5 @@
 <%= render 'partials/header1',
-           title: @worker.persisted? ? 
-                    t('workers.form.edit_title', name: "#{@worker.first_name} #{@worker.last_name}") : 
-                    t('workers.form.new_title'),
+           title: @worker.persisted? ? "#{@worker.first_name} #{@worker.last_name}" : t('workers.form.new_title'),
            model_name: t('workers.form.model_name'),
            search_path: nil,
            new_path: nil,

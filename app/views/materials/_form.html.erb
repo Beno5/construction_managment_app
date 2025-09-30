@@ -1,7 +1,5 @@
 <%= render 'partials/header1', 
-           title: @material.persisted? ? 
-                     t('materials.form.edit_title', name: @material.name) : 
-                     t('materials.form.new_title'),
+           title: @material.persisted? ? @material.name : t('materials.form.new_title'),
            model_name: t('materials.form.model_name'),
            search_path: nil,
            new_path: nil,

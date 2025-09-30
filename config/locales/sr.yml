@@ -99,7 +99,7 @@ sr:
     workers: "Radnici"
     machines: "Mašine"
     materials: "Materijali"
-    businesses: "Biznisi"
+    businesses: "Firme"
     search: "Pretraži..."
   breadcrums:
     projects_overview: "SVI PROJEKTI (%{name})"
@@ -319,7 +319,8 @@ sr:
       validation_failed: "Podpoziciju nije moguće sačuvati"
   resources:
     form:
-      model_name: "Planirani Resursi"
+      model_name: "Resurs"
+      model_name_pl: "Resursi"
       search_placeholder: "Pretraži resurse..."
       select_category: "Odaberite kategoriju"
       select_resource: "Odaberite resurs"
