@@ -58,3 +58,24 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('delete-modal').classList.add('hidden');
     });
   });
+
+document.addEventListener("turbo:load", function () {
+  // Pokupi locale iz URL-a (?locale=sr ili ?locale=en)
+  const params = new URLSearchParams(window.location.search);
+  const locale = params.get("locale") || "sr"; // default sr ako nije postavljeno
+
+  // Definiši poruke po jeziku
+  const messages = {
+    sr: "Molimo popunite ovo polje.",
+    en: "Please fill out this field."
+  };
+
+  document.querySelectorAll("input[required], textarea[required], select[required]").forEach(function (el) {
+    el.oninvalid = function () {
+      this.setCustomValidity(messages[locale] || messages["sr"]);
+    };
+    el.oninput = function () {
+      this.setCustomValidity("");
+    };
+  });
+});
