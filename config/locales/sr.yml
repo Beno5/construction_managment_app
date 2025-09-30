@@ -121,6 +121,7 @@ sr:
       currency: "Valuta"
       update_button: "Ažuriraj Firmu"
       create_button: "Kreiraj Firmu"
+      basic_information: "Osnovne Informacije"
     index:
       columns:
         name: "Naziv"
@@ -229,6 +230,7 @@ sr:
       create_button: "Kreiraj Projekat"
     show:
       timeline_title: "Vremenska Linija Projekta (Gantogram)"
+      tasks_and_subtasks: "Pozicije i Podpozicije za Projekat"
     errors:
       name_required: "Ime projekta je obavezno i mora biti jedinstveno unutar firme"
       client_project_id_required: "ID klijentskog projekta je obavezan i mora biti jedinstven unutar firme"
@@ -240,6 +242,8 @@ sr:
       deleted: "Projekat je uspješno obrisan."
   tasks:
     add_new: "Dodaj novu poziciju"
+    show:
+      title: "Osnovne informacije: Pozicija (%{name})"
     table:
       id: "ID"
       name: "Naziv"
@@ -310,6 +314,7 @@ sr:
       info_communication: "Info i Komunikacija"
       planned: "Planirano"
       real: "Realno"
+      title: "Osnovne informacije: Podpozicija (%{name})"
     messages:
       created: "Podpozicija je uspješno kreiran."
       updated: "Podpozicija je uspješno ažuriran."

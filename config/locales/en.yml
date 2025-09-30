@@ -115,6 +115,7 @@ en:
       currency: "Currency"
       update_button: "Update Business"
       create_button: "Create Business"
+      basic_information: "Basic Information"
     index:
       columns:
         name: "Name"
@@ -223,6 +224,7 @@ en:
       create_button: "Create Project"
     show:
       timeline_title: "Project Timeline (Gantt Chart)"
+      tasks_and_subtasks: "Tasks and Subtasks for Project"
     errors:
       required_fields: "Project name and client project ID are required and must be unique"
       validation_failed: "Unable to save project due to validation errors"
@@ -236,6 +238,8 @@ en:
       deleted: "Project was successfully deleted."
   tasks:
     add_new: "Add New Task"
+    show:
+      title: "Basic Information: Task (%{name})"
     table:
       id: "ID"
       name: "Name"
@@ -306,6 +310,7 @@ en:
       info_communication: "Info and Communication"
       planned: "Planned"
       real: "Real"
+      title: "Basic Information: Subtask (%{name})"
     messages:
       created: "Sub-task was successfully created."
       updated: "Sub-task was successfully updated."
