@@ -1,9 +1,10 @@
-<h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mt-4"><%= t("norms.title") %></h2>
 <section class="bg-gray-50 dark:bg-gray-900 pt-5">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
       <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
         <div class="w-full md:w-1/2">
+          <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mb-4"><%= t("norms.title") %></h2>
+
           <%= form_with url: norms_path, method: :get, data: { turbo_frame: "norms-frame", controller: "search" }, local: true do %>
   <%= hidden_field_tag :sub_task_id, @sub_task.id if @sub_task.present? %>
   <label for="search" class="sr-only">Search</label>

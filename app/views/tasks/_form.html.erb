@@ -1,13 +1,13 @@
 <%= render 'partials/header1',
            title: @task.persisted? ?
-                      t('tasks.form.edit_title', name: @task.name) :
+                      t('breadcrums.task_overview', name: @task.name_with_position) :
                       t('tasks.form.new_title'),
            model_name: t('tasks.form.model_name'),
            search_path: nil,
            new_path: nil,
            additional_crumbs: [
-             { name: t('tasks.form.model_name'), path: business_project_tasks_path(@current_business, @project) },
-             { name: (@task.persisted? ? @task.name : t('tasks.form.new_title')),
+             { name: t('breadcrums.project_overview', name: @project.name), path: business_project_path(@current_business, @project) },
+             { name: (@task.persisted? ? t('breadcrums.task_overview', name: @task.name_with_position) : t('tasks.form.new_title')),
                path: (@task.persisted? ? business_project_task_path(@current_business, @project, @task) : nil) }
            ] %>
 <section class="bg-gray-50 dark:bg-gray-900 pt-5">

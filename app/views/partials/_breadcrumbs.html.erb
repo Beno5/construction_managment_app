@@ -1,8 +1,8 @@
 <nav class="flex mb-5" aria-label="Breadcrumb">
   <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
-    <% if controller_name == "businesses" %>
+<% if ["businesses", "workers", "materials", "machines"].include?(controller_name) %>
       <li class="inline-flex items-center">
-        <%= link_to "Businesses", businesses_path, class: "inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white" %>
+        <%= link_to t('sidebar.businesses'), businesses_path, class: "inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white" %>
       </li>
     <% elsif current_business %>
       <li class="inline-flex items-center">

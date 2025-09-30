@@ -1,5 +1,5 @@
 <%= render 'partials/header1', 
-           title: t('projects.form.model_name'), 
+           title: t("breadcrums.projects_overview", name: current_business.name), 
            model_name: t('projects.form.model_name'),
            show_search: true,
            search_path: business_projects_path(@current_business), 

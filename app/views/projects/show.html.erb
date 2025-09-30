@@ -10,7 +10,7 @@
   }
 %>
 <%= render 'partials/header1', 
-           title: t('projects.form.model_name') + ': ' + @project.name, 
+           title: t('breadcrums.project_overview', name: @project.name), 
            model_name: model_name, 
            search_path: paths[:project], 
            new_path: paths[:new_task],
@@ -18,6 +18,7 @@
            additional_crumbs: [
              { name: t('breadcrums.project_overview', name: @project.name), path: paths[:project] }
            ] %>
+
 <%= render 'partials/table_expandable_task' %>
 
 <div class="bg-white p-6 rounded-lg shadow-md mt-6">
