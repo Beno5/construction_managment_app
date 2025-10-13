@@ -20,7 +20,7 @@ User.create!(
 
 # Kreiranje korisnika sa poslovanjem
 user = User.create!(
-  email: "test@example.com",
+  email: "te1st@example.com",
   password: "password",
   password_confirmation: "password",
   terms: true

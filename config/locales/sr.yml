@@ -219,7 +219,7 @@ sr:
       task_count: "Broj Pozicija"
       not_available: "N/A"
       view_custom_fields: "Prikaži Prilagođena Polja"
-      add_task: "Dodaj Poziciju"
+      add_task: "Kreiraj Poziciju"
       view_project: "Pregled Projekta"
       edit_project: "Izmeni Projekat"
       delete_project: "Obriši Projekat"

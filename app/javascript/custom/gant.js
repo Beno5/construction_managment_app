@@ -212,3 +212,15 @@ function buildTooltip(id, start, end) {
 
   return html;
 }
+
+document.addEventListener("refresh-gantt", function () {
+  const ganttElement = document.getElementById("gantt_here");
+  if (!ganttElement) return;
+
+  const projectId = ganttElement.dataset.projectId;
+
+  gantt.clearAll();
+  gantt.load(`/api/gantt/project/${projectId}/data`, function () {
+    if (typeof gantt.openAll === "function") gantt.openAll();
+  });
+});
