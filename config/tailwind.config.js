@@ -51,6 +51,12 @@ module.exports = {
     'peer-checked:after:translate-x-full',
     'rtl:peer-checked:after:-translate-x-full',
     'peer-checked:after:border-white',
+    'justify-evenly',
+    'justify-between',
+    'justify-around',
+    'justify-center',
+    'gap-3',
+    'gap-y-3'
   ],
   darkMode: 'class', // Dark mode na temelju klase
   theme: {

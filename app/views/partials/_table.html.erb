@@ -68,9 +68,8 @@
           <% end %>
         </div>
       </div>
-      <% if turbo_frame_id.present? %>
         <turbo-frame id="<%= turbo_frame_id %>">
-        <% end %>
+        
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -156,7 +155,7 @@
                             <%= link_to t("table.actions.show.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                           <li>
-                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:delete_path].call(item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete, item_id: item.id, item_type: item.model_name }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white delete-item-link" %>
+                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:delete_path].call(item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete, item_id: item.id, item_type: item.model_name }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                         <% end %>
                       </ul>
@@ -167,9 +166,7 @@
             </tbody>
           </table>
         </div>
-        <% if turbo_frame_id.present? %>
         </turbo-frame>
-      <% end %>
       <%= render "partials/nav_pages" %>
     </div>
   </div>

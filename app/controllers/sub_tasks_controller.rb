@@ -77,9 +77,7 @@ class SubTasksController < ApplicationController
     @sub_task.destroy
 
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.remove(dom_id(@sub_task))
-      end
+      format.turbo_stream
       format.html do
         redirect_to business_project_task_path(@business, @task.project, @task),
                     notice: t('sub_tasks.messages.deleted')

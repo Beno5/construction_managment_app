@@ -1,1 +1,7 @@
 <%= turbo_stream.remove dom_id(@sub_task) %>
+<%= turbo_stream.after "sub_tasks-frame" do %>
+  <div id="trigger-refresh-gantt"></div>
+  <script>
+    document.dispatchEvent(new CustomEvent("refresh-gantt"))
+  </script>
+<% end %>
