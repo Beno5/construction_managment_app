@@ -1,7 +1,8 @@
 <!-- Editable Task Form -->
 <%= render "form", project: @project, task: @task %>
 <!-- Subtasks table -->
-<%= render 'partials/table',
+<%= turbo_frame_tag "table_subtasks-frame" do %>
+  <%= render 'partials/table',
            collection: (@subtasks || SubTask.none).ordered_by_position,
            columns: {
              t('tasks.table.id') => ->(subtask) { subtask.show_position },
@@ -18,16 +19,17 @@
            edit_path: ->(subtask) { @task.new_record? ? "#" : edit_business_project_task_sub_task_path(@current_business, @project, @task, subtask) },
            delete_path: ->(subtask) { @task.new_record? ? "#" : business_project_task_sub_task_path(@current_business, @project, @task, subtask) },
            actions: [] %>
+<% end %>
 <!-- Gantt -->
 <div class="bg-white p-6 rounded-lg shadow-md mt-6">
   <h2 class="text-xl font-bold mb-4"><%= t('projects.show.timeline_title') %></h2>
   <div id="gantt_here"
-     data-project-id="<%= @project.id %>"
-     data-readonly="<%= @readonly_mode %>"
-     style="width: 100%; height: 500px;"></div>
-</div>
-<!-- Documents table -->
-<%= render 'partials/table',
+    data-project-id="<%= @project.id %>"
+    data-readonly="<%= @readonly %>"
+    style="width: 100%; height: 600px;">
+  </div>
+  <!-- Documents table -->
+  <%= render 'partials/table',
            collection: @documents || Document.none,
            columns: {
              t('documents.form.name') => :name,
@@ -42,6 +44,6 @@
            show_path: ->(_) { "" },
            delete_path: ->(document) { business_project_document_path(@current_business, @project, document) },
            actions: [] %>
-<% if @task.persisted? %>
-  <%= render "modals/modal_documents" %>
-<% end %>
+  <% if @task.persisted? %>
+    <%= render "modals/modal_documents" %>
+  <% end %>

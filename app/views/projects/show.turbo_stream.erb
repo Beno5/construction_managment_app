@@ -1,2 +1,6 @@
-
-<%= turbo_stream.replace "tasks-frame", partial: "partials/table_expandable_task" %>
+<%= turbo_stream.replace "table_tasks-frame" do %>
+  <%= render partial: "partials/table_expandable_task" %>
+<% end %>
+<%= turbo_stream.after "gantt_here" do %>
+  <div data-controller="gantt-trigger"></div>
+<% end %>
