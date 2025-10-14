@@ -1,7 +1,25 @@
-<%= turbo_stream.remove dom_id(@sub_task) %>
-<%= turbo_stream.after "sub_tasks-frame" do %>
-  <div id="trigger-refresh-gantt"></div>
-  <script>
-    document.dispatchEvent(new CustomEvent("refresh-gantt"))
-  </script>
+<%= turbo_stream.replace "table_subtasks-frame" do %>
+  <%= render partial: "partials/table",
+             locals: {
+               collection: @task.sub_tasks.ordered_by_position,
+               columns: {
+                 t('tasks.table.id') => ->(s) { s.show_position },
+                 t('subtasks.form.name') => :name,
+                 t('subtasks.form.planned_start_date') => ->(s) { I18n.l(s.planned_start_date, format: :long) if s.planned_start_date },
+                 t('subtasks.form.planned_end_date') => ->(s) { I18n.l(s.planned_end_date, format: :long) if s.planned_end_date },
+                 t('subtasks.form.custom_fields') => :custom_fields
+               },
+               turbo_frame_id: "subtasks-frame",
+               model_name: "SubTasks",
+               search_path: business_project_task_path(@current_business, @project, @task),
+               new_path: new_business_project_task_sub_task_path(@current_business, @project, @task),
+               show_path: ->(s) { business_project_task_sub_task_path(@current_business, @project, @task, s) },
+               edit_path: ->(s) { edit_business_project_task_sub_task_path(@current_business, @project, @task, s) },
+               delete_path: ->(s) { business_project_task_sub_task_path(@current_business, @project, @task, s) },
+               actions: []
+             } %>
 <% end %>
+<%= turbo_stream.after "gantt_here" do %>
+  <div data-controller="gantt-trigger"></div>
+<% end %>
+

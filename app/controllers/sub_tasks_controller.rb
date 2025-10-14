@@ -77,9 +77,22 @@ class SubTasksController < ApplicationController
     @sub_task.destroy
 
     respond_to do |format|
-      format.turbo_stream
+      format.turbo_stream do
+        @project = @task.project
+
+        # 🧠 razlikuj viewe
+        if params[:delete_from_project] == "true"
+          # dolazi iz project#show
+          @tasks = @project.tasks.order(:position)
+          render "projects/show"
+        else
+          # dolazi iz task#show
+          render "sub_tasks/destroy"
+        end
+      end
+
       format.html do
-        redirect_to business_project_task_path(@business, @task.project, @task),
+        redirect_to business_project_task_path(@business, @project, @task),
                     notice: t('sub_tasks.messages.deleted')
       end
     end

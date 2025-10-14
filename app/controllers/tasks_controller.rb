@@ -54,9 +54,13 @@ class TasksController < ApplicationController
     @task.destroy
 
     respond_to do |format|
-      format.turbo_stream
+      format.turbo_stream do
+        @tasks = @project.tasks.order(:position)
+        render "projects/show"
+      end
       format.html do
-        redirect_to business_project_path(@business, @project, anchor: 'tasks'), notice: t('tasks.messages.deleted')
+        redirect_to business_project_path(@business, @project, anchor: 'tasks'),
+                    notice: t('tasks.messages.deleted')
       end
     end
   end
