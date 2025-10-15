@@ -92,7 +92,7 @@
                           <li>
                             <%= link_to t('tasks.actions.delete'), business_project_task_path(@current_business, @project, task),
           method: :delete,
-          data: { turbo_confirm: t('tasks.actions.confirm_delete'), turbo_method: :delete },
+          data: { turbo_confirm: t('confirmations.delete', name: task.name), turbo_method: :delete },
           class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                         </ul>
@@ -132,7 +132,7 @@
                             <li>
                               <%= link_to t('subtasks.actions.delete'), business_project_task_sub_task_path(@business, @project, task, sub_task, delete_from_project: true),
           method: :delete,
-          data: { turbo_confirm: t('subtasks.actions.confirm_delete'), turbo_method: :delete },
+          data: { turbo_confirm: t('confirmations.delete', name: sub_task.name), turbo_method: :delete },
           class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                             </li>
                           </ul>

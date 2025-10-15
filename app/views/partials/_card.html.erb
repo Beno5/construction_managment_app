@@ -57,7 +57,7 @@
     <% end %>
     <!-- Delete Project -->
     <%= link_to business_project_path(@current_business, project),
-              data: { turbo_method: :delete, turbo_confirm: t('projects.form.delete_confirmation') },
+              data: { turbo_method: :delete, turbo_confirm: t('confirmations.delete', name: project.name) },
               class: "min-w-[200px] text-center bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300 transition" do %>
       🗑️ <%= t('projects.form.delete_project') %>
     <% end %>
