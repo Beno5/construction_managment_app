@@ -126,7 +126,7 @@
                             data: { target: 'resource-modal', turbo: false, mode: 'edit', type: item.activityable_type, activity_id: item.id} %>
                           </li>
                           <li>
-                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), business_project_task_sub_task_activity_path(@business, @project, @task, @sub_task, item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), business_project_task_sub_task_activity_path(@business, @project, @task, @sub_task, item), method: :delete, data: { turbo_confirm: t('confirmations.delete', name: item.name), turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                         <% elsif model_name == "Documents"%>
                           <li>
@@ -141,7 +141,7 @@
                               data: { target: 'documents-modal', turbo: false, mode: 'edit', id: item.id, controller: "edit-document", action: "click->edit-document#loadDocument"} %>
                           </li>
                           <li>
-                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), document_path(item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), document_path(item), method: :delete, data: { turbo_confirm: t('confirmations.delete', name: item.name), turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                         <% else %>
                           <% if model_name == "Businesses"%>
@@ -155,7 +155,7 @@
                             <%= link_to t("table.actions.show.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                           <li>
-                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:delete_path].call(item), method: :delete, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete, item_id: item.id, item_type: item.model_name }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:delete_path].call(item), method: :delete, data: { turbo_confirm: t('confirmations.delete', name: item.name), turbo_method: :delete, item_id: item.id, item_type: item.model_name }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                         <% end %>
                       </ul>
