@@ -1,13 +1,31 @@
 <div id="custom-fields-container" data-model="<%= model %>">
   <% custom_fields.each_with_index do |(key, value), index| %>
     <div class="flex items-center space-x-2 mb-2" data-custom-field-index="<%= index %>">
-      <%= text_field_tag "#{model}[custom_fields][#{index}][key]", key, placeholder: "Key", class: "shadow-sm bg-gray-200 border border-gray-300 text-gray-500 sm:text-sm rounded-lg p-2.5 w-32" %>
-      <%= text_field_tag "#{model}[custom_fields][#{index}][value]", value, placeholder: "Value", class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5" %>
-      <button type="button" class="text-red-600 hover:text-red-800" onclick="removeCustomField(this)">Remove</button>
+      <%= text_field_tag "#{model}[custom_fields][#{index}][key]",
+                         key,
+                         placeholder: "Key",
+                         class: "shadow-sm bg-gray-200 border border-gray-300 text-gray-500 sm:text-sm rounded-lg p-2.5 w-32",
+                         data: { action: "input->track-changes#markChanged",
+                                 track_changes_target: "input" } %>
+      <%= text_field_tag "#{model}[custom_fields][#{index}][value]",
+                         value,
+                         placeholder: "Value",
+                         class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5",
+                         data: { action: "input->track-changes#markChanged",
+                                 track_changes_target: "input" } %>
+      <button type="button"
+              class="text-red-600 hover:text-red-800"
+              onclick="removeCustomField(this)">
+        Remove
+      </button>
     </div>
   <% end %>
 </div>
-<button type="button" id="add-custom-field" class="text-white bg-primary-600 hover:bg-primary-700 rounded-lg px-4 py-2 mt-4 mb-3">Add Custom Field</button>
+<button type="button"
+        id="add-custom-field"
+        class="text-white bg-primary-600 hover:bg-primary-700 rounded-lg px-4 py-2 mt-4 mb-3">
+  Add Custom Field
+</button>
 <script>
   document.addEventListener("turbo:load", setupCustomFields);
 
@@ -31,15 +49,51 @@
     newField.classList.add("flex", "items-center", "space-x-2", "mb-2");
 
     newField.innerHTML = `
-      <input type="text" name="${model}[custom_fields][${index}][key]" placeholder="Key" class="shadow-sm bg-gray-200 border border-gray-300 text-gray-500 sm:text-sm rounded-lg p-2.5 w-32">
-      <input type="text" name="${model}[custom_fields][${index}][value]" placeholder="Value" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5">
-      <button type="button" class="text-red-600 hover:text-red-800" onclick="removeCustomField(this)">Remove</button>
+      <input type="text"
+             name="${model}[custom_fields][${index}][key]"
+             placeholder="Key"
+             class="shadow-sm bg-gray-200 border border-gray-300 text-gray-500 sm:text-sm rounded-lg p-2.5 w-32"
+             data-action="input->track-changes#markChanged"
+             data-track-changes-target="input">
+
+      <input type="text"
+             name="${model}[custom_fields][${index}][value]"
+             placeholder="Value"
+             class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5"
+             data-action="input->track-changes#markChanged"
+             data-track-changes-target="input">
+
+      <button type="button"
+              class="text-red-600 hover:text-red-800"
+              onclick="removeCustomField(this)">
+        Remove
+      </button>
     `;
 
     container.appendChild(newField);
+
+    // Označi formu kao promijenjenu kad dodamo novi field
+    triggerTrackChanges();
   }
 
   function removeCustomField(button) {
     button.parentElement.remove();
+    // Označi promjenu i kod brisanja
+    triggerTrackChanges();
   }
+
+  // Funkcija koja trigeruje Stimulus event
+  function triggerTrackChanges() {
+    const event = new Event("input", { bubbles: true });
+    document.querySelector("[data-controller='track-changes']")?.dispatchEvent(event);
+  }
+
+    function removeCustomField(button) {
+button.parentElement.remove();
+// 👇 odmah pokaži dugme “Ažuriraj”
+const saveButton = document.querySelector("[data-track-changes-target='saveButton']");
+if (saveButton) {
+saveButton.classList.remove("hidden");
+}
+}
 </script>
