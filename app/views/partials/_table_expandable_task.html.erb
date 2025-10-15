@@ -4,7 +4,7 @@
       <!-- Header -->
       <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
         <div class="w-full md:w-1/2">
-<h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mb-4"> <%= t('projects.show.tasks_and_subtasks') %> </h2>
+          <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mb-4"> <%= t('projects.show.tasks_and_subtasks') %> </h2>
           <form action="<%= business_project_path(@current_business, @project) %>" method="GET" data-turbo-frame="tasks-frame" class="lg:pr-3" data-controller="search">
             <label for="search" class="sr-only">Search</label>
             <div class="relative mt-1 lg:w-64 xl:w-96">
@@ -62,9 +62,11 @@
                   <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_end_date, format: :long) if task.planned_end_date %></td>
                   <td class="px-4 py-3 font-bold"><%= render 'partials/custom_fields_tooltip', item: task %></td>
                   <td class="px-4 py-3">
-                    <%= link_to new_business_project_task_sub_task_path(@business, @project, task), data: { turbo: false}, class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" do %>
+                    <%= link_to new_business_project_task_sub_task_path(@business, @project, task),
+            data: { turbo: false },
+            class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-800 bg-gray-200 rounded-lg hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 transition" do %>
                       <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
                       </svg>
                       <%= t('subtasks.actions.add_new') %>
                     <% end %>

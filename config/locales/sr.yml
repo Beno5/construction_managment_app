@@ -224,8 +224,8 @@ sr:
       edit_project: "Izmeni Projekat"
       delete_project: "Obriši Projekat"
       delete_confirmation: "Da li ste sigurni da želite obrisati ovaj projekat?"
-      no_projects_message: "Nemate nijedan projekat. Dodajte novi da započnete!"
-      add_new_project: "Dodaj novi projekat"
+      no_projects_message: "Nemate nijedan projekat. Kreirajte novi da započnete!"
+      add_new_project: "Kreiraj novi projekat"
       update_button: "Ažuriraj Projekat"
       create_button: "Kreiraj Projekat"
     show:
@@ -241,7 +241,7 @@ sr:
       updated: "Projekat je uspješno ažuriran."
       deleted: "Projekat je uspješno obrisan."
   tasks:
-    add_new: "Dodaj novu poziciju"
+    add_new: "Kreiraj poziciju"
     show:
       title: "Osnovne informacije: Pozicija (%{name})"
     table:
@@ -299,14 +299,14 @@ sr:
       custom_fields: "Prilagođena Polja"
       update_button: "Ažuriraj Podpoziciju"
       create_button: "Kreiraj Podpoziciju"
-      add_new: "Dodaj Podpoziciju"
+      add_new: "Kreiraj Podpoziciju"
       unit_of_measure: "Jedinica Mjere"
       quantity: "Količina"
       price_per_unit: "Cijena po Jedinici (%{currency})"
       total_cost: "Ukupni Trošak"
     actions:
       show: "Prikaži Podpoziciju"
-      add_new: "Dodaj novu Podpoziciju"
+      add_new: "Kreiraj Podpoziciju"
       edit: "Izmeni Podpoziciju"
       delete: "Obriši Podpoziciju"
       confirm_delete: "Da li ste sigurni da želite obrisati ovu podpoziciju?"
@@ -330,7 +330,7 @@ sr:
       select_category: "Odaberite kategoriju"
       select_resource: "Odaberite resurs"
       select_unit: "Odaberite jedinicu mjere"
-      create_custom_resource: "Dodaj prilagodjeni resurs"
+      create_custom_resource: "Kreiraj prilagodjeni resurs"
     modal:
       title: "Kreiraj Resurs"
       standard: "Standardni Resurs"
@@ -364,11 +364,11 @@ sr:
     fixed_costs: "Fiksni troškovi"
     profession: "Profesija"
     total_cost: "Ukupni trošak"
-    add_activity: "Dodaj Aktivnost"         # Added if missing
+    add_activity: "Kreiraj Aktivnost"         # Added if missing
   real_resources:
     title: Stvarni resursi
     search_placeholder: "Pretraži resurse..."
-    add: "Dodaj stvarni resurs"
+    add: "Kreiraj stvarni resurs"
     table:
       start_date: "Pocetak aktivnosti"
       end_date: "Kraj aktivnosti"
@@ -392,10 +392,10 @@ sr:
       no_file: "Nema fajla"
       created_at: "Datum kreiranja"
     modal:
-      title: "Dodaj novi dokument"
+      title: "Kreiraj novi dokument"
       close: "Zatvori"
-      add_document: "Dodaj novi dokument"
-      upload: "Dodaj"
+      add_document: "Kreiraj novi dokument"
+      upload: "Kreiraj"
       choose_file: "Izaberi fajl"
       no_file_selected: "Nema fajla"
   norms:
@@ -411,25 +411,25 @@ sr:
       info: "Info"
   table:
     new:
-      resource: Dodaj novi resurs
-      document: Dodaj novi dokument
-      business: Dodaj novu firmu
-      machine: Dodaj novu mašinu
-      worker: Dodaj novog radnika
-      material: Dodaj novi materijal
-      project: Dodaj novi projekat
-      task: Dodaj novu poziciju
-      subtask: Dodaj novu podpoziciju
+      resource: Kreiraj novi resurs
+      document: Kreiraj novi dokument
+      business: Kreiraj firmu
+      machine: Kreiraj mašinu
+      worker: Kreiraj novog radnika
+      material: Kreiraj novi materijal
+      project: Kreiraj novi projekat
+      task: Kreiraj poziciju
+      subtask: Kreiraj podpoziciju
     empty:
-      resource: Nemate resursa. Dodajte novi resurs da započnete.
-      document: Nemate dokumenata. Dodajte novi dokument da započnete.
-      business: Nemate firmi. Dodajte novu firmu da započnete.
-      machine: Nemate mašina. Dodajte novu mašinu da započnete.
-      worker: Nemate radnika. Dodajte novog radnika da započnete.
-      material: Nemate materijala. Dodajte novi materijal da započnete.
-      project: Nemate projekata. Dodajte novi projekat da započnete.
-      task: Nemate pozicija. Dodajte novu poziciju da započnete.
-      subtask: Nemate podpozicija. Dodajte novu podpoziciju da započnete.
+      resource: Nemate resursa. Kreirajte novi resurs da započnete.
+      document: Nemate dokumenata. Kreirajte novi dokument da započnete.
+      business: Nemate firmi. Kreirajte firmu da započnete.
+      machine: Nemate mašina. Kreirajte mašinu da započnete.
+      worker: Nemate radnika. Kreirajte novog radnika da započnete.
+      material: Nemate materijala. Kreirajte novi materijal da započnete.
+      project: Nemate projekata. Kreirajte novi projekat da započnete.
+      task: Nemate pozicija. Kreirajte poziciju da započnete.
+      subtask: Nemate podpozicija. Kreirajte podpoziciju da započnete.
     search:
       resource: Pretraži resurse
       document: Pretraži dokumente
