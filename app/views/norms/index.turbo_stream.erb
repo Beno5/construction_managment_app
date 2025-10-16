@@ -1,0 +1,15 @@
+<%= turbo_stream.replace "norms-frame", partial: "partials/table", locals: {
+  collection: @norms,
+  columns: {
+    t('norms.form.name') => :name,
+    t('norms.form.description') => :description,
+    t('norms.form.unit_of_measure') => :unit_of_measure,
+    t('norms.form.norm_value') => ->(norm) { norm.norm_value.to_s },
+    t('norms.form.norm_type') => ->(norm) { t("activerecord.attributes.norm.norm_types.#{norm.norm_type}", default: norm.norm_type.humanize) },
+    t('norms.form.subtype') => ->(norm) { norm.subtype.present? ? t("activerecord.attributes.norm.subtypes.#{norm.subtype}", default: norm.subtype.humanize) : '-' },
+    t('norms.form.info') => :info
+  },
+  turbo_frame_id: "norms-frame",
+  edit_path: ->(norm) { edit_business_norm_path(@current_business, norm) },
+  delete_path: ->(norm) { business_norm_path(@current_business, norm) }
+} %>

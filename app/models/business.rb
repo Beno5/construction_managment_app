@@ -4,6 +4,7 @@ class Business < ApplicationRecord
   has_many :workers, dependent: :destroy
   has_many :machines, dependent: :destroy
   has_many :materials, dependent: :destroy
+  has_many :norms, dependent: :destroy
 
   enum :currency, { euro: 0, dolar: 1, dinar: 2 }
 

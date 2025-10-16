@@ -42,6 +42,13 @@
                 <span><%= t('sidebar.materials') %></span>
               <% end %>
             </li>
+            <!-- Norms -->
+            <li>
+              <%= link_to business_norms_path(@current_business), data: { turbo: false }, class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
+                <span class="mr-2">📐</span>
+                <span><%= t('sidebar.norms') %></span>
+              <% end %>
+            </li>
             <!-- Businesses -->
             <li>
               <%= link_to businesses_path, data: { turbo: false }, class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>

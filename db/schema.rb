@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_09_26_181104) do
+ActiveRecord::Schema[7.0].define(version: 2025_10_16_113823) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -157,6 +157,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_26_181104) do
     t.string "tags", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "business_id"
+    t.bigint "user_id"
+    t.jsonb "custom_fields", default: {}
+    t.index ["business_id"], name: "index_norms_on_business_id"
+    t.index ["user_id"], name: "index_norms_on_user_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -300,6 +305,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_26_181104) do
   add_foreign_key "machines", "users"
   add_foreign_key "materials", "businesses"
   add_foreign_key "materials", "users"
+  add_foreign_key "norms", "businesses"
+  add_foreign_key "norms", "users"
   add_foreign_key "projects", "businesses"
   add_foreign_key "projects", "users"
   add_foreign_key "real_activities", "activities"
