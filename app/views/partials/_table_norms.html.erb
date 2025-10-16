@@ -4,12 +4,11 @@
       <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
         <div class="w-full md:w-1/2">
           <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mb-4"><%= t("norms.title") %></h2>
-
-          <%= form_with url: norms_path, method: :get, data: { turbo_frame: "norms-frame", controller: "search" }, local: true do %>
-  <%= hidden_field_tag :sub_task_id, @sub_task.id if @sub_task.present? %>
-  <label for="search" class="sr-only">Search</label>
-  <div class="relative mt-1 lg:w-64 xl:w-96">
-    <input type="text" 
+          <%= form_with url: business_norms_path, method: :get, data: { turbo_frame: "norms-frame", controller: "search" }, local: true do %>
+            <%= hidden_field_tag :sub_task_id, @sub_task.id if @sub_task.present? %>
+            <label for="search" class="sr-only">Search</label>
+            <div class="relative mt-1 lg:w-64 xl:w-96">
+              <input type="text" 
            name="search" 
            id="search" 
            placeholder="Pretraži norme..."
@@ -20,9 +19,8 @@
                   dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
                   <%= @sub_task.new_record? ? 'cursor-not-allowed bg-gray-200 dark:bg-gray-600' : 'focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500' %>"
            data-action="<%= 'input->search#performSearch' unless @sub_task.new_record? %>">
-  </div>
-<% end %>
-
+            </div>
+          <% end %>
         </div>
       </div>
       <turbo-frame id="norms-frame">
@@ -56,7 +54,6 @@
                           norm_subtype: norm.worker? ? norm.subtype : nil,
                           norm_unit: norm.unit_of_measure
                         }.compact %>
-
                   </td>
                   <td class="px-4 py-3"><%= norm.name %></td>
                   <td class="px-4 py-3"><%= norm.description&.truncate(50) %></td>

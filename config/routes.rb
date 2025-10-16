@@ -3,8 +3,9 @@ Rails.application.routes.draw do
   root to: "businesses#index"
 
   # Business routes
-  resources :norms
+  
   resources :businesses do
+    resources :norms
     resources :machines
     resources :workers
     resources :materials

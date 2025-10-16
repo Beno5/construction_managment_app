@@ -95,6 +95,7 @@ en:
     machines: "Machines"
     materials: "Materials"
     businesses: "Businesses"
+    norms: "Norms"
   breadcrums:
     projects_overview: "ALL PROJECTS (%{name})"
     project_overview: "PROJECT OVERVIEW (%{name})"
@@ -408,7 +409,12 @@ en:
       subtype: "Subtype"
       norm_type: "Norm Type"
       info: "Info"
-
+      select_unit: "Select a unit"
+    messages:
+      created: "Norm successfully created."
+      updated: "Norm successfully updated."
+      deleted: "Norm deleted."
+      validation_error: "Please check required fields."
   table:
     new:
       resource: "Add New Resource"
@@ -420,6 +426,7 @@ en:
       project: "Add New Project"
       task: "Add New Task"
       subtask: "Add New Subtask"
+      norm: "Add New Norm"
     empty:
       resource: "You don't have any resources. Add a new resource to get started."
       document: "You don't have any documents. Add a new document to get started."
@@ -430,6 +437,7 @@ en:
       project: "You don't have any projects. Add a new project to get started."
       task: "You don't have any tasks. Add a new task to get started."
       subtask: "You don't have any subtasks. Add a new subtask to get started."
+      norm: "You don't have any norms. Add a new norm to get started."
     search:
       resource: "Search resources"
       document: "Search documents"
@@ -440,6 +448,7 @@ en:
       project: "Search projects"
       task: "Search tasks"
       subtask: "Search subtasks"
+      norms: "Search norms"
     actions:
       open:
         document: "Open document"
@@ -454,6 +463,7 @@ en:
         project: "Edit project"
         task: "Edit task"
         subtask: "Edit subtask"
+        norm: "Edit norm"
       delete:
         resource: "Delete resource"
         document: "Delete document"
@@ -464,6 +474,7 @@ en:
         project: "Delete project"
         task: "Delete task"
         subtask: "Delete subtask"
+        norm: "Delete norm"
       show:
         resource: "Show resource"
         document: "Show document"
@@ -474,3 +485,4 @@ en:
         project: "Show project"
         task: "Show task"
         subtask: "Show subtask"
+        norm: "Show norm"

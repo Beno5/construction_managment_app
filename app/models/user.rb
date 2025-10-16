@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_many :materials
   has_many :custom_resources
   has_many :real_activities
+  has_many :norms
 
   
   # Include default devise modules. Others available are:

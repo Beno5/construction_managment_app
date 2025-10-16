@@ -1,4 +1,5 @@
 class FetchDataController < ApplicationController
+  include UnitsHelper
   protect_from_forgery except: [:unit_options, :resources, :resource_details, :get_activity_and_resource_infos,
                                 :get_activity_and_real_activity_infos, :get_document, :check_activity]
 
@@ -7,13 +8,13 @@ class FetchDataController < ApplicationController
     material_units = Material.unit_of_measures.keys.map { |k| [k.humanize, k] }
     machine_units = Machine.unit_of_measures.keys.map { |k| [k.humanize, k] }
 
-    all_units = (worker_units + material_units + machine_units).uniq { |_, v| v }
+    (worker_units + material_units + machine_units).uniq { |_, v| v }
 
     render json: {
       worker: worker_units.to_h,
       material: material_units.to_h,
       machine: machine_units.to_h,
-      custom: all_units.to_h
+      custom: all_unit_options.to_h
     }
   end
 

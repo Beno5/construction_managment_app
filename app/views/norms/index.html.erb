@@ -1,4 +1,38 @@
-<div>
-  <h1 class="font-bold text-4xl">Norms#index</h1>
-  <p>Find me in app/views/norms/index.html.erb</p>
-</div>
+<%
+  model_name = "Norms" # koristi se za dinamične partiale
+
+  paths = {
+    norms: business_norms_path(@current_business),
+    new_norm: new_business_norm_path(@current_business),
+    edit_norm: ->(norm) { edit_business_norm_path(@current_business, norm) },
+    show_norm: ->(norm) { business_norm_path(@current_business, norm) },
+    delete_norm: ->(norm) { business_norm_path(@current_business, norm) }
+  }
+%>
+<%= render 'partials/header1',
+           title: t('norms.title'),
+           model_name: model_name,
+           search_path: paths[:norms],
+           new_path: paths[:new_norm],
+           additional_crumbs: [
+             { name: t('norms.title'), path: paths[:norms] }
+           ] %>
+<%= render 'partials/table',
+           collection: @norms,
+           columns: {
+             t('norms.form.name') => :name,
+             t('norms.form.description') => :description,
+             t('norms.form.unit_of_measure') => :unit_of_measure,
+             t('norms.form.norm_value') => ->(norm) { norm.norm_value.to_s },
+             t('norms.form.norm_type') => ->(norm) { t("activerecord.attributes.norm.norm_types.#{norm.norm_type}") rescue norm.norm_type.humanize },
+             t('norms.form.subtype') => ->(norm) { norm.subtype ? t("activerecord.attributes.norm.subtypes.#{norm.subtype}") : '-' },
+             t('norms.form.info') => :info
+           },
+           turbo_frame_id: "norms-frame",
+           model_name: model_name,
+           search_path: paths[:norms],
+           new_path: paths[:new_norm],
+           edit_path: paths[:edit_norm],
+           show_path: paths[:show_norm],
+           delete_path: paths[:delete_norm],
+           actions: [] %>

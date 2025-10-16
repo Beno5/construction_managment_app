@@ -100,6 +100,7 @@ sr:
     machines: "Mašine"
     materials: "Materijali"
     businesses: "Firme"
+    norms: "Norme"
     search: "Pretraži..."
   breadcrums:
     projects_overview: "SVI PROJEKTI (%{name})"
@@ -412,6 +413,12 @@ sr:
       subtype: "Podtip"
       norm_type: "Tip Norme"
       info: "Info"
+      select_unit: "Odaberite jedinicu"
+    messages:
+      created: "Norma uspješno kreirana."
+      updated: "Norma uspješno ažurirana."
+      deleted: "Norma obrisana."
+      validation_error: "Molimo provjerite obavezna polja."
   table:
     new:
       resource: Kreiraj novi resurs
@@ -423,6 +430,7 @@ sr:
       project: Kreiraj novi projekat
       task: Kreiraj poziciju
       subtask: Kreiraj podpoziciju
+      norm: Kreiraj normu
     empty:
       resource: Nemate resursa. Kreirajte novi resurs da započnete.
       document: Nemate dokumenata. Kreirajte novi dokument da započnete.
@@ -433,6 +441,7 @@ sr:
       project: Nemate projekata. Kreirajte novi projekat da započnete.
       task: Nemate pozicija. Kreirajte poziciju da započnete.
       subtask: Nemate podpozicija. Kreirajte podpoziciju da započnete.
+      norm: Nemate normi. Kreirajte normu da započnete.
     search:
       resource: Pretraži resurse
       document: Pretraži dokumente
@@ -443,6 +452,7 @@ sr:
       project: Pretraži projekte
       task: Pretraži pozicije
       subtask: Pretraži podpozicije
+      norm: Pretraži norme
     actions:
       open: 
         document: Otvori dokument
@@ -457,6 +467,7 @@ sr:
         project: Izmeni projekat
         task: Izmeni poziciju
         subtask: Izmeni podpoziciju
+        norm: Izmeni normu
       delete: 
         resource: Obriši resurs
         document: Obriši dokument
@@ -467,6 +478,7 @@ sr:
         project: Obriši projekat
         task: Obriši poziciju
         subtask: Obriši podpoziciju
+        norm: Obriši normu
       show:
         resource: Prikaži resurs
         document: Prikaži dokument
@@ -477,6 +489,7 @@ sr:
         project: Prikaži projekat
         task: Prikaži poziciju
         subtask: Prikaži podpoziciju
+        norm: Prikaži normu
 
 
 
