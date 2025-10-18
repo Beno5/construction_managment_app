@@ -94,36 +94,59 @@ class FetchDataController < ApplicationController
     item_id = params[:item_id]
     item_type = params[:item_type].delete('"').constantize
 
-    if [Business, Task, SubTask].include?(item_type)
-      render json: { has_activities: false }
-      return
-    end
+    case item_type.name
+    when "Norm"
+      # Norme se koriste u SubTaskNorm povezanoj tabeli
+      sub_task_norms = SubTaskNorm.includes(sub_task: { task: :project }).where(norm_id: item_id)
 
-    item = item_type.find(item_id)
-    activities = item.activities.includes(sub_task: { task: :project })
+      if sub_task_norms.exists?
+        details = sub_task_norms.map do |relation|
+          sub_task = relation.sub_task
+          task = sub_task.task
+          project = task.project
 
-    if activities.exists?
-      activity_details = activities.map do |activity|
-        sub_task = activity.sub_task
-        task = sub_task.task
-        project = task.project
-        {
-          business_id: project.business.id,
-          project_id: project.id,
-          task_id: task.id,
-          sub_task_id: sub_task.id,
-          project_name: project.name,
-          task_name: task.name,
-          sub_task_name: sub_task.name
-        }
+          {
+            business_id: project.business.id,
+            project_id: project.id,
+            project_name: project.name,
+            task_id: task.id,
+            task_name: task.name,
+            sub_task_id: sub_task.id,
+            sub_task_name: sub_task.name
+          }
+        end
+
+        render json: { has_activities: true, activity_details: details }
+      else
+        render json: { has_activities: false }
       end
 
-      render json: {
-        has_activities: true,
-        activity_details: activity_details
-      }
     else
-      render json: { has_activities: false }
+      # Default logika za ostale modele
+      item = item_type.find(item_id)
+      activities = item.activities.includes(sub_task: { task: :project })
+
+      if activities.exists?
+        activity_details = activities.map do |activity|
+          sub_task = activity.sub_task
+          task = sub_task.task
+          project = task.project
+
+          {
+            business_id: project.business.id,
+            project_id: project.id,
+            task_id: task.id,
+            sub_task_id: sub_task.id,
+            project_name: project.name,
+            task_name: task.name,
+            sub_task_name: sub_task.name
+          }
+        end
+
+        render json: { has_activities: true, activity_details: activity_details }
+      else
+        render json: { has_activities: false }
+      end
     end
   end
 

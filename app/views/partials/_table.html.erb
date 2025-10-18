@@ -68,8 +68,7 @@
           <% end %>
         </div>
       </div>
-        <turbo-frame id="<%= turbo_frame_id %>">
-        
+      <turbo-frame id="<%= turbo_frame_id %>">
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -126,7 +125,11 @@
                             data: { target: 'resource-modal', turbo: false, mode: 'edit', type: item.activityable_type, activity_id: item.id} %>
                           </li>
                           <li>
-                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), business_project_task_sub_task_activity_path(@business, @project, @task, @sub_task, item), method: :delete, data: { turbo_confirm: t('confirmations.delete', name: item.name), turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"),
+                             business_project_task_sub_task_activity_path(@business, @project, @task, @sub_task, item),
+                             method: :delete, data: { turbo_confirm: t('confirmations.delete', name: item.try(:name) || item.try(:activityable)&.name),
+                             turbo_method: :delete, item_id: item.id, item_type: item.model_name },
+                             class: "delete-item-link block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                         <% elsif model_name == "Documents"%>
                           <li>
@@ -152,10 +155,23 @@
                             </li>
                           <% end %>
                           <li>
-                            <%= link_to t("table.actions.show.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:show_path].call(item), data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <%= link_to t("table.actions.show.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:show_path].call(item),
+                             data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                           <li>
-                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), local_assigns[:delete_path].call(item), method: :delete, data: { turbo_confirm: t('confirmations.delete', name: item.name), turbo_method: :delete, item_id: item.id, item_type: item.model_name }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <% has_dependencies =
+                              (item.respond_to?(:activities) && item.activities.exists?) ||
+                              (item.respond_to?(:sub_tasks) && item.sub_tasks.exists?) %>
+                            <% link_class = "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                            <% link_class += " delete-item-link" if has_dependencies %>
+                            <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"),
+                              local_assigns[:delete_path].call(item), method: :delete,
+                              data: {
+                                turbo_method: :delete,
+                                item_id: item.id,
+                                item_type: item.model_name
+                              },
+                              class: link_class %>
                           </li>
                         <% end %>
                       </ul>
@@ -166,7 +182,7 @@
             </tbody>
           </table>
         </div>
-        </turbo-frame>
+      </turbo-frame>
       <%= render "partials/nav_pages" %>
     </div>
   </div>

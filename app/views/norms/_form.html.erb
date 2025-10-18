@@ -44,7 +44,7 @@
           </div>
           <!-- Jedinica mjere -->
           <div class="col-span-6 sm:col-span-3">
-            <%= f.label :unit_of_measure, t('norms.form.unit_of_measure'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.label :unit_of_measure, t('norms.form.unit_of_measure'),  class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
             <%= f.select :unit_of_measure,
         options_for_select(all_unit_options, @norm.unit_of_measure),
         { include_blank: t('norms.form.select_unit', default: 'Odaberite jedinicu') },
@@ -72,11 +72,26 @@
                   class: "block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
                   data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
           </div>
-          <!-- Custom Polja -->
-          <div class="col-span-6">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('norms.form.custom_fields', default: 'Prilagođena polja') %></h3>
-            <%= render 'partials/custom_fields', custom_fields: @norm.custom_fields, model: 'norm' %>
+          <% if @norm.persisted? %>
+          <!-- Automatsko ažuriranje kalkulacija -->
+          <div class="col-span-6 sm:col-span-3">
+            <div class="flex items-center space-x-2">
+              <%= f.check_box :auto_calculate,
+          class: "w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600",
+          data: { action: "change->track-changes#markChanged", track_changes_target: "input" } %>
+              <%= f.label :auto_calculate, t('norms.form.auto_calculate'),
+          class: "text-sm font-medium text-gray-900 dark:text-white" %>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <%= t('norms.form.auto_calculate_hint') %>
+            </p>
           </div>
+          <% end %>
+        </div>
+        <!-- Custom Polja -->
+        <div class="col-span-6 mt-2">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('norms.form.custom_fields', default: 'Prilagođena polja') %></h3>
+          <%= render 'partials/custom_fields', custom_fields: @norm.custom_fields, model: 'norm' %>
         </div>
         <!-- Submit Button -->
         <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
