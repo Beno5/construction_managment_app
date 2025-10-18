@@ -35,6 +35,7 @@ class NormsController < ApplicationController
 
   def update
     if @norm.update(norm_params)
+      update_norms_in_sub_tasks(@norm) if @norm.auto_calculate?
       redirect_to business_norms_path(@business),
                   notice: t("norms.messages.updated", default: "Norma uspješno ažurirana.")
     else
@@ -55,6 +56,12 @@ class NormsController < ApplicationController
   end
 
   private
+
+  def update_norms_in_sub_tasks(norm)
+    norm.sub_tasks.each do |sub_task|
+      SubTaskPlanningCalculator.new(sub_task).call(true)
+    end
+  end
 
   # -------------------------------------------------
   # Business kontekst
@@ -120,6 +127,7 @@ class NormsController < ApplicationController
       :subtype,
       :unit_of_measure,
       :norm_value,
+      :auto_calculate,
       tags: [],
       custom_fields: [:key, :value]
     ).tap do |whitelisted|

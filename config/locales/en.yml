@@ -104,6 +104,10 @@ en:
   confirmations:
     delete: "Are you sure you want to delete this %{name}?"
     unsaved_changes: "You have unsaved changes. Are you sure you want to leave this page?"
+    delete_modal:
+      title: "Cannot Delete"
+      message: "This item cannot be deleted because it is currently used in related sub-tasks."
+      ok_button: "OK"
   businesses:
     form:
       edit_title: "Edit %{name}"
@@ -410,6 +414,8 @@ en:
       norm_type: "Norm Type"
       info: "Info"
       select_unit: "Select a unit"
+      auto_calculate: "Auto-update calculations"
+      auto_calculate_hint: "When enabled, any change to this norm automatically updates all sub-tasks that use it, keeping all calculations in sync with the new value. When disabled, existing sub-tasks keep their old values, and the new norm applies only to future edits or new sub-tasks."
     messages:
       created: "Norm successfully created."
       updated: "Norm successfully updated."

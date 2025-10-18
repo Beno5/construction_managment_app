@@ -110,6 +110,10 @@ sr:
   confirmations:
     delete: "Da li ste sigurni da želite obrisati %{name}?"
     unsaved_changes: "Imate nesačuvane izmene. Da li ste sigurni da želite napustiti stranicu?"
+    delete_modal:
+      title: "Brisanje nije moguće"
+      message: "Ovaj element nije moguće obrisati jer se koristi u ovim podpozicijama."
+      ok_button: "U redu"
   businesses:
     form:
       edit_title: "Izmeni %{name}"
@@ -414,6 +418,8 @@ sr:
       norm_type: "Tip Norme"
       info: "Info"
       select_unit: "Odaberite jedinicu"
+      auto_calculate: "Automatski ažuriraj kalkulacije"
+      auto_calculate_hint: "Ako je uključeno, svaka promjena norme automatski ažurira sve podpozicije koje je koriste, pa su sve kalkulacije odmah usklađene s novom vrijednošću norme. Ako je isključeno, postojeće podpozicije zadržavaju stare vrijednosti, a nova norma se primjenjuje samo na buduće izmjene ili nove podpozicije."
     messages:
       created: "Norma uspješno kreirana."
       updated: "Norma uspješno ažurirana."
