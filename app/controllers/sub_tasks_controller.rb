@@ -13,10 +13,15 @@ class SubTasksController < ApplicationController
 
   def show
     @activities = @sub_task.activities.search(params[:search])
-    @documents = @sub_task.documents.search(params[:search])
-    @searched_norms = current_business.norms.search(params[:search])
-    @pinned_norms = @sub_task.pinned_norms
-    @norms = (@pinned_norms + @searched_norms).uniq
+    @documents  = @sub_task.documents.search(params[:search])
+
+    # 🔹 Ispravna verzija — paginacija na kraju
+    @searched_norms = current_business.norms.search(params[:norm_search])
+    @pinned_norms   = @sub_task.pinned_norms
+    combined_norms  = (@pinned_norms + @searched_norms).uniq
+
+    @norms = Kaminari.paginate_array(combined_norms).page(params[:norm_page]).per(10)
+
     @readonly_mode = false
   end
 

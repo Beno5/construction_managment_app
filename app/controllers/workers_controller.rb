@@ -5,10 +5,11 @@ class WorkersController < ApplicationController
   before_action :set_worker, only: [:show, :edit, :update, :destroy]
 
   def index
-    @workers = current_business.workers.search(params[:search])
+    @workers = current_business.workers.search(params[:search]).page(params[:page]).per(10)
+
     respond_to do |format|
-      format.html # Renderuje standardni HTML za klasične prelaze
-      format.turbo_stream # Renderuje Turbo Stream za pretragu
+      format.html
+      format.turbo_stream
     end
   end
 

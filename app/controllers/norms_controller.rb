@@ -67,7 +67,7 @@ class NormsController < ApplicationController
   # Business kontekst
   # -------------------------------------------------
   def business_norms
-    @norms = current_business.norms.search(params[:search])
+    @norms = current_business.norms.search(params[:search]).page(params[:page]).per(10)
     respond_to do |format|
       format.html # standardni HTML prikaz
       format.turbo_stream # Turbo Stream za live pretragu
@@ -78,7 +78,7 @@ class NormsController < ApplicationController
   # SubTask kontekst (pinovane norme)
   # -------------------------------------------------
   def sub_tasks_norms
-    @searched_norms = Norm.search(params[:search])
+    @searched_norms = Norm.search(params[:search]).page(params[:page]).per(10)
 
     if params[:sub_task_id].present?
       @sub_task = SubTask.find(params[:sub_task_id])

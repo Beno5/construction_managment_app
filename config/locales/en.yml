@@ -1,4 +1,9 @@
 en:
+  pagination:
+      showing: "Showing"
+      of: "of"
+      previous: "Previous"
+      next: "Next"
   activerecord:
     errors:
       models:

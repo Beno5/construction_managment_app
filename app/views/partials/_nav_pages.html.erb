@@ -1,33 +1,79 @@
-<nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
-        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-          Showing
-          <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
-          of
-          <span class="font-semibold text-gray-900 dark:text-white">1000</span>
-        </span>
-        <ul class="inline-flex items-stretch -space-x-px">
+<%# partials/_nav_pages.html.erb %>
+<% collection = local_assigns[:collection] || instance_variable_get("@#{local_assigns[:model_name].downcase.pluralize}") rescue nil %>
+
+<% if collection.present? && collection.respond_to?(:total_pages) %>
+  <% page_param = "#{local_assigns[:model_name].downcase.singularize}_page".to_sym %>
+
+  <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+       aria-label="Table navigation">
+    <!-- Tekst lijevo -->
+    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+      <%= t("pagination.showing") %>
+      <span class="font-semibold text-gray-900 dark:text-white">
+        <%= collection.offset_value + 1 %>–<%= [collection.offset_value + collection.length, collection.total_count].min %>
+      </span>
+      <%= t("pagination.of") %>
+      <span class="font-semibold text-gray-900 dark:text-white">
+        <%= collection.total_count %>
+      </span>
+    </span>
+
+    <!-- Navigacija -->
+    <ul class="inline-flex items-stretch -space-x-px">
+      <%# PREVIOUS %>
+      <% if collection.prev_page %>
+        <li>
+          <%= link_to url_for(params.to_unsafe_h.merge(page_param => collection.prev_page)),
+                      data: { turbo_frame: "#{local_assigns[:model_name].downcase}-frame" },
+                      class: "flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white",
+                      aria: { label: t("pagination.previous") } do %>
+<span class="text-lg">&#8592;</span>  <!-- lijeva strelica -->
+          <% end %>
+        </li>
+      <% else %>
+        <li>
+          <span class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-400 bg-gray-100 rounded-l-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-600">
+<span class="text-lg">&#8592;</span>  <!-- lijeva strelica -->
+          </span>
+        </li>
+      <% end %>
+
+      <%# PAGE NUMBERS %>
+      <% window = 2
+         start_page = [collection.current_page - window, 1].max
+         end_page = [collection.current_page + window, collection.total_pages].min %>
+      <% (start_page..end_page).each do |page| %>
+        <% if page == collection.current_page %>
           <li>
-            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white" aria-label="Previous">
-              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M9.293 6.293a1 1 0 00-1.414 1.414L11.586 10l-3.707 3.707a1 1 0 001.414 1.414l5-5a1 1 0 000-1.414l-5-5z" clip-rule="evenodd" />
-              </svg>
-            </a>
+            <span class="flex items-center justify-center h-full py-1.5 px-3 text-sm font-medium text-white bg-primary-600 border border-gray-300 rounded-md"><%= page %></span>
           </li>
+        <% else %>
           <li>
-            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 text-sm font-medium text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">1</a>
+            <%= link_to page,
+                        url_for(params.to_unsafe_h.merge(page_param => page)),
+                        data: { turbo_frame: "#{local_assigns[:model_name].downcase}-frame" },
+                        class: "flex items-center justify-center h-full py-1.5 px-3 text-sm font-medium text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white" %>
           </li>
-          <li>
-            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 text-sm font-medium text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">2</a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 text-sm font-medium text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">3</a>
-          </li>
-          <li>
-            <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white" aria-label="Next">
-              <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M10.707 6.293a1 1 0 011.414 1.414L8.414 10l3.707 3.707a1 1 0 01-1.414 1.414l-5-5a1 1 0 010-1.414l5-5z" clip-rule="evenodd" />
-              </svg>
-            </a>
-          </li>
-        </ul>
-      </nav>
+        <% end %>
+      <% end %>
+
+      <%# NEXT %>
+      <% if collection.next_page %>
+        <li>
+          <%= link_to url_for(params.to_unsafe_h.merge(page_param => collection.next_page)),
+                      data: { turbo_frame: "#{local_assigns[:model_name].downcase}-frame" },
+                      class: "flex items-center justify-center h-full py-1.5 px-3 text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 rounded-r-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white",
+                      aria: { label: t("pagination.next") } do %>
+<span class="text-lg">&#8594;</span>  <!-- desna strelica -->
+          <% end %>
+        </li>
+      <% else %>
+        <li>
+          <span class="flex items-center justify-center h-full py-1.5 px-3 text-gray-400 bg-gray-100 border border-gray-300 rounded-r-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-600">
+<span class="text-lg">&#8594;</span>  <!-- desna strelica -->
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+<% end %>

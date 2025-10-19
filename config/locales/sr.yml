@@ -1,4 +1,9 @@
 sr:
+  pagination:
+    showing: "Prikazano"
+    of: "od"
+    previous: "Prethodna"
+    next: "Sljedeća"
   activerecord:
     errors:
       models:
