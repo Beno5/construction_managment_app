@@ -22,9 +22,15 @@ class SubTask < ApplicationRecord
   after_destroy :reorder_sub_tasks
   after_save :trigger_update_service
 
-  scope :ordered_by_position, -> { all.sort_by { |t| t.position.to_s.split('.').map(&:to_i) } }
+  scope :ordered_by_position, -> { order(:position) }
 
   enum :unit_of_measure, { kg: 0, m2: 1, m3: 2, pieces: 3, ton: 4, liters: 5, roll: 6, bag: 7, set: 8 }
+
+  scope :search, lambda { |query|
+    return all unless query.present?
+
+    where("name ILIKE ? OR description ILIKE ?", "%#{query}%", "%#{query}%")
+  }
 
   def calculate_duration
     return unless planned_start_date.present? && planned_end_date.present?

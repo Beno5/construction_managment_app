@@ -11,9 +11,9 @@ class TasksController < ApplicationController
 
   def show
     @project = @business.projects.find(params[:project_id])
-    @task = @project.tasks.find(params[:id]) # Uveri se da ovo ne vraća nil
-    @subtasks = @task.sub_tasks.search(params[:search])
-    @documents = @task.documents.search(params[:search])
+    @task = @project.tasks.find(params[:id])
+    @subtasks = @task.sub_tasks.search(params[:search]).order(:position).page(params[:subtask_page]).per(10)
+    @documents = @task.documents.search(params[:search]).order(created_at: :desc).page(params[:document_page]).per(10)
     @readonly_mode = false
   end
 

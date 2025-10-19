@@ -14,8 +14,17 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    @tasks = @project.tasks.search(params[:search])
-    @documents = @project.documents.search(params[:search])
+    @tasks = @project.tasks
+                     .search(params[:search])
+                     .order(:position)
+                     .page(params[:task_page])
+                     .per(10)
+
+    @documents = @project.documents
+                         .search(params[:search])
+                         .order(created_at: :desc)
+                         .page(params[:document_page])
+                         .per(10)
   end
 
   def new

@@ -7,7 +7,10 @@
     delete_resource: ->(resource) { url_for([@current_business, resource.activityable]) }
   }
 %>
-<%= render "partials/table_norms", norms: @norms %>
+<%= render "partials/table_norms",
+           norms: @norms,
+           frame_id: "norms-frame",
+           search_path: @sub_task.persisted? ? business_project_task_sub_task_path(@business, @project, @task, @sub_task) : "" %>
 <div data-controller="subtask"
      data-subtask-id="<%= @sub_task.id %>"
      data-subtask-update-url-value="<%= @sub_task.persisted? ? business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) : "" %>"

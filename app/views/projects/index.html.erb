@@ -4,7 +4,7 @@
            show_search: true,
            search_path: business_projects_path(@current_business), 
            frame_id: "projects-frame",
-           new_path: new_business_project_path(@current_business),
+           new_path: @projects.any? ? new_business_project_path(@current_business) : nil,
            additional_crumbs: [] %>
 
 
