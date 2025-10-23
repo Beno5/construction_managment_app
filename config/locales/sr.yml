@@ -408,6 +408,7 @@ sr:
       title: "Kreiraj novi dokument"
       close: "Zatvori"
       add_document: "Kreiraj novi dokument"
+      edit_document: "Ažuriraj dokument"
       upload: "Kreiraj"
       choose_file: "Izaberi fajl"
       no_file_selected: "Nema fajla"
