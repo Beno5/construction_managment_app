@@ -1,9 +1,13 @@
 <!-- Modal for New Document -->
-<div id="documents-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900 bg-opacity-50 modal">
+<div id="documents-modal"
+     class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900 bg-opacity-50 modal"
+     data-controller="edit-document">
   <div class="relative w-full max-w-xl h-auto bg-white rounded-lg shadow-lg dark:bg-gray-800">
     <!-- Modal Header -->
     <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200"><%= t('documents.modal.title') %></h2>
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
+        <%= t('documents.modal.title') %>
+      </h2>
     </div>
     <!-- Modal Body -->
     <div class="p-6 max-h-[70vh] overflow-y-auto">
@@ -23,42 +27,41 @@
         <%= f.hidden_field :authenticity_token, value: form_authenticity_token %>
         <div class="mb-4">
           <%= f.label :name, t('documents.form.name'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-          <%= f.text_field :name, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+          <%= f.text_field :name, required: true,
+            class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
         </div>
         <div class="mb-4">
           <%= f.label :description, t('documents.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-          <%= f.text_area :description, class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+          <%= f.text_area :description, required: true,
+            class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
         </div>
         <div class="mb-4">
           <%= f.label :category, t('documents.form.category'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-          <%= f.select :category, Document.categories.keys.map { |c| [c.humanize, c] }, {}, 
+          <%= f.select :category, Document.categories.keys.map { |c| [c.humanize, c] }, {}, required: true,
             class: "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
         </div>
         <div class="mb-4">
           <%= f.label :file, t('documents.modal.upload'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
           <div class="flex items-center space-x-3">
-            <!-- Hidden file input -->
-            <%= f.file_field :file, class: "hidden", id: "file-upload" %>
-            <!-- Custom "Choose File" button -->
+            <%= f.file_field :file, class: "sr-only", id: "file-upload" %>
             <label for="file-upload" class="cursor-pointer text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5 ml-2">
               <%= t('documents.modal.choose_file') %>
             </label>
-            <!-- Span to display selected file name -->
             <span id="file-name" class="text-sm text-gray-500 dark:text-gray-400" data-edit-document-target="fileName">
               <%= @existing_file_name || t('documents.modal.no_file_selected') %>
             </span>
           </div>
         </div>
-        <div class="flex justify-end">
-          <%= f.submit t('documents.modal.add_document'), class: "px-4 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700" %>
+        <!-- Modal Footer (Submit + Close) -->
+        <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-700 space-x-3">
+          <%= f.submit t('documents.modal.add_document'),
+                class: "px-4 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700" %>
+          <button type="button"
+                  class="close-modal px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
+            <%= t('documents.mo1dal.close') %>
+          </button>
         </div>
       <% end %>
-    </div>
-    <!-- Modal Footer -->
-    <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-700">
-      <button type="button" class="close-modal px-4 py-2 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700">
-        <%= t('documents.modal.close') %>
-      </button>
     </div>
   </div>
 </div>

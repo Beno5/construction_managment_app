@@ -1,1 +1,8 @@
 <%= turbo_stream.remove "row_#{@project.id}" %>
+<% if @business.projects.empty? %>
+  <%= turbo_stream.append "projects-frame" do %>
+    <script>
+      window.location.reload();
+    </script>
+  <% end %>
+<% end %>

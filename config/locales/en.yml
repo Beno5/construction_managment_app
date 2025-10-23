@@ -404,6 +404,7 @@ en:
       title: "Create Document"
       close: "Close"
       add_document: "Add New Document"
+      edit_document: "Edit Document"
       update_button: "Update Document"
       no_file_selected: "No file selected"
       choose_file: "Choose File"
