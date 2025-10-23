@@ -12,8 +12,8 @@ class SubTasksController < ApplicationController
   end
 
   def show
-    @activities = @sub_task.activities.search(params[:search])
-    @documents  = @sub_task.documents.search(params[:search])
+    @activities = Kaminari.paginate_array(@sub_task.activities.search(params[:search])).page(params[:activity_page]).per(10)
+    @documents = Kaminari.paginate_array(@sub_task.documents.search(params[:search])).page(params[:document_page]).per(10)
 
     # 🔹 Ispravna verzija — paginacija na kraju
     @searched_norms = current_business.norms.search(params[:norm_search])

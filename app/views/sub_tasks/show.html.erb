@@ -1,10 +1,10 @@
 <%= render "form", project: @project, task: @task, sub_task: @sub_task %>
 <%
-  model_name = "Resources"
+  model_name = "Activities"
   paths = {
-    create_resource: ->(resource) { url_for([:edit, @current_business, resource.activityable]) },
-    update_resource: ->(resource) { url_for([@current_business, resource.activityable]) },
-    delete_resource: ->(resource) { url_for([@current_business, resource.activityable]) }
+    create_activity: ->(activity) { url_for([:edit, @current_business, activity.activityable]) },
+    update_activity: ->(activity) { url_for([@current_business, activity.activityable]) },
+    delete_activity: ->(activity) { url_for([@current_business, activity.activityable]) }
   }
 %>
 <%= render "partials/table_norms",
@@ -75,7 +75,7 @@
              t('tasks.form.price_per_unit') => ->(activity) { activity.activityable.price_per_unit },
              t('tasks.form.total_cost') => ->(activity) { activity.total_cost },
            },
-           turbo_frame_id: "resources-frame",
+           turbo_frame_id: "activities-frame",
            model_name: model_name,
            edit_path: "",
            show_path: "",

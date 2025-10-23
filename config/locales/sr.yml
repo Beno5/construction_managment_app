@@ -335,6 +335,10 @@ sr:
     errors:
       name_required: "Ime podpozicije je obavezno"
       validation_failed: "Podpoziciju nije moguće sačuvati"
+  activities:
+    form:
+      model_name: "Resurs"
+      model_name_pl: "Resursi"
   resources:
     form:
       model_name: "Resurs"
@@ -456,6 +460,7 @@ sr:
       norm: Nemate normi. Kreirajte normu da započnete.
     search:
       resource: Pretraži resurse
+      activity: Pretraži resurse
       document: Pretraži dokumente
       business: Pretraži firme
       machine: Pretraži mašine

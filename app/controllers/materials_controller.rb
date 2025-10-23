@@ -5,7 +5,8 @@ class MaterialsController < ApplicationController
   before_action :set_material, only: [:show, :edit, :update, :destroy]
 
   def index
-    @materials = current_business.materials.search(params[:search]).page(params[:page]).per(10)
+    @materials = current_business.materials.search(params[:search]).page(params[:material_page]).per(10)
+
     respond_to do |format|
       format.html # Renderuje standardni HTML za klasične prelaze
       format.turbo_stream # Renderuje Turbo Stream za pretragu
