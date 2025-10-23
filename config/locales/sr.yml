@@ -146,9 +146,9 @@ sr:
         owner_last_name: "Prezime vlasnika"
         currency: "Valuta"
     messages:
-      created: "Firma je uspješno kreirana."
-      updated: "Firma je uspješno ažurirana."
-      deleted: "Firma je uspješno obrisana."
+      created: "Firma %{name} je uspješno kreirana."
+      updated: "Firma %{name} je uspješno ažurirana."
+      deleted: "Firma %{name} je uspješno obrisana."
       selected: "%{name} je sada odabrana."
       name_required: "Naziv firme je obavezan."
     errors:
