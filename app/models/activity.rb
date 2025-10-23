@@ -12,20 +12,19 @@ class Activity < ApplicationRecord
   after_save :update_parent_sub_task
 
   def self.search(query)
-    if query.present?
-      query_downcase = query.downcase
-      activities = preload(:activityable).all
-      activities.select do |activity|
-        activity.activity_type.downcase.include?(query_downcase) ||
-          activity.quantity.to_s.downcase.include?(query_downcase) ||
-          activity.total_cost.to_s.downcase.include?(query_downcase) ||
-          activity.activityable.name.downcase.include?(query_downcase) ||
-          activity.activityable.description.downcase.include?(query_downcase) ||
-          activity.activityable.unit_of_measure.downcase.include?(query_downcase) ||
-          activity.activityable.price_per_unit.to_s.downcase.include?(query_downcase)
-      end
-    else
-      all
+    scope = all.includes(:activityable)
+
+    return scope unless query.present?
+
+    query_downcase = query.downcase
+    scope.select do |activity|
+      activity.activity_type.to_s.downcase.include?(query_downcase) ||
+        activity.quantity.to_s.downcase.include?(query_downcase) ||
+        activity.total_cost.to_s.downcase.include?(query_downcase) ||
+        activity.activityable&.name&.downcase&.include?(query_downcase) ||
+        activity.activityable&.description&.downcase&.include?(query_downcase) ||
+        activity.activityable&.unit_of_measure&.downcase&.include?(query_downcase) ||
+        activity.activityable&.price_per_unit.to_s.downcase.include?(query_downcase)
     end
   end
 

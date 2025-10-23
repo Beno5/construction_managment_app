@@ -5,7 +5,7 @@ class WorkersController < ApplicationController
   before_action :set_worker, only: [:show, :edit, :update, :destroy]
 
   def index
-    @workers = current_business.workers.search(params[:search]).page(params[:page]).per(10)
+    @workers = current_business.workers.search(params[:search]).page(params[:worker_page]).per(10)
 
     respond_to do |format|
       format.html

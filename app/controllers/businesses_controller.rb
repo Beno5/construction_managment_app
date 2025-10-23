@@ -5,7 +5,7 @@ class BusinessesController < ApplicationController
   skip_before_action :set_current_business, only: [:select]
 
   def index
-    @businesses = current_user.businesses.search(params[:search])
+    @businesses = current_user.businesses.search(params[:search]).page(params[:business_page]).per(10)
 
     respond_to do |format|
       format.html # Renderuje standardni HTML za klasične prelaze

@@ -5,7 +5,7 @@ class MachinesController < ApplicationController
   before_action :set_machine, only: [:show, :edit, :update, :destroy]
 
   def index
-    @machines = current_business.machines.search(params[:search]).page(params[:page]).per(10)
+    @machines = current_business.machines.search(params[:search]).page(params[:machine_page]).per(10)
     respond_to do |format|
       format.html # Renderuje standardni HTML za klasične prelaze
       format.turbo_stream # Renderuje Turbo Stream za pretragu
