@@ -58,8 +58,8 @@
                   <td class="px-4 py-3"><%= norm.name %></td>
                   <td class="px-4 py-3"><%= norm.description&.truncate(50) %></td>
                   <td class="px-4 py-3"><%= norm.norm_value %></td>
-                  <td class="px-4 py-3"><%= norm.norm_type.humanize %></td>
-                  <td class="px-4 py-3"><%= norm.subtype&.humanize || '-' %></td>
+                  <td class="px-4 py-3"><%= t_enum(norm, :norm_type) %></td>
+                  <td class="px-4 py-3"><%= t_enum(norm, :subtype) %></td>
                   <td class="px-4 py-3"><%= norm.unit_of_measure %></td>
                   <td class="px-4 py-3"><%= norm.info %></td>
                 </tr>
@@ -67,7 +67,7 @@
             </tbody>
           </table>
         </div>
-<%= render "partials/nav_pages", collection: norms, model_name: "Norms", turbo_frame_id: local_assigns[:frame_id] || "norms-frame" %>
+        <%= render "partials/nav_pages", collection: norms, model_name: "Norms", turbo_frame_id: local_assigns[:frame_id] || "norms-frame" %>
       </turbo-frame>
     </div>
   </div>

@@ -5,6 +5,15 @@ en:
       previous: "Previous"
       next: "Next"
   activerecord:
+    attributes:
+      norm:
+        norm_type:
+          worker: "Worker"
+          material: "Material"
+          machine: "Machine"
+        subtype:
+          skilled: "Skilled"
+          unskilled: "Unskilled"
     errors:
       models:
         project:
