@@ -5,6 +5,15 @@ sr:
     previous: "Prethodna"
     next: "Sljedeća"
   activerecord:
+    attributes:
+      norm:
+        norm_type:
+          worker: "Radnik"
+          material: "Materijal"
+          machine: "Mašina"
+        subtype:
+          skilled: "Kvalifikovani"
+          unskilled: "Nekvalifikovani"
     errors:
       models:
         project:
