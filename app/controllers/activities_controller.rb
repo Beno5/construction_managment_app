@@ -9,20 +9,21 @@ class ActivitiesController < ApplicationController
     if params[:activity][:activity_id].present? && params[:activity][:activity_id] != "undefined"
       @activity = Activity.find(params[:activity][:activity_id])
       if @activity.update(params_mapped)
+
         redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
-                    notice: 'Resurs je uspešno kreiran.'
+                    notice: t('activities.messages.updated', name: @activity.activityable_type)
       else
         redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
-                    alert: 'Greška pri ažuriranju resursa.'
+                    alert: t('activities.messages.update_error')
       end
     else
       @activity = @sub_task.activities.new(params_mapped)
       if @activity.save
         redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
-                    notice: 'Resurs je uspešno kreiran.'
+                    notice: t('activities.messages.created', name: @activity.activityable.name)
       else
         redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
-                    alert: 'Greška pri kreiranju resursa.'
+                    alert: t('activities.messages.create_error')
       end
     end
   end
@@ -32,26 +33,22 @@ class ActivitiesController < ApplicationController
 
     if @activity.update(params_mapped)
       redirect_to project_task_sub_task_path(@sub_task.task.project, @sub_task.task, @sub_task),
-                  notice: 'Resurs je uspešno ažuriran.'
+                  notice: t('activities.messages.updated', name: @activity.activityable.name)
     else
+      flash.now[:alert] = t('activities.messages.update_error')
       render :edit
     end
   end
 
   def destroy
-    @activity = Activity.find(params[:id])
+    name = @activity.activityable.name
     @activity.destroy
 
     respond_to do |format|
-      format.turbo_stream do
-        flash.now[:notice] = 'Resurs je uspešno obrisan.'
-        # ovo ne radi
-      end
+      format.turbo_stream # koristi destroy.turbo_stream.erb
       format.html do
-        redirect_to business_project_task_sub_task_path(
-          business, @project, @task, @sub_task
-        ),
-                    notice: 'Resurs je uspešno obrisan.'
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
+                    notice: t('activities.messages.deleted', name: name)
       end
     end
   end

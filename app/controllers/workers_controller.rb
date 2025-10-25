@@ -24,8 +24,10 @@ class WorkersController < ApplicationController
   def create
     @worker = @business.workers.new(worker_params)
     @worker.user_id = current_user.id
+
     if @worker.save
-      redirect_to business_workers_path(@business), notice: t('workers.messages.created')
+      full_name = [@worker.first_name, @worker.last_name].compact.join(" ")
+      redirect_to business_workers_path(@business), notice: t('workers.messages.created', name: full_name)
     else
       flash.now[:alert] = t('workers.messages.first_name_required')
       render :show, status: :unprocessable_entity
@@ -34,7 +36,8 @@ class WorkersController < ApplicationController
 
   def update
     if @worker.update(worker_params)
-      redirect_to business_workers_path(@business), notice: t('workers.messages.updated')
+      full_name = [@worker.first_name, @worker.last_name].compact.join(" ")
+      redirect_to business_workers_path(@business), notice: t('workers.messages.updated', name: full_name)
     else
       flash.now[:alert] = t('workers.messages.first_name_required')
       render :show, status: :unprocessable_entity
@@ -42,14 +45,14 @@ class WorkersController < ApplicationController
   end
 
   def destroy
-    @worker = current_business.workers.find(params[:id])
+    full_name = [@worker.first_name, @worker.last_name].compact.join(" ")
     @worker.destroy
 
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.remove(dom_id(@worker))
+      format.turbo_stream
+      format.html do
+        redirect_to business_workers_path(current_business), notice: t('workers.messages.deleted', name: full_name)
       end
-      format.html { redirect_to business_workers_path(current_business), notice: t('workers.messages.deleted') }
     end
   end
 

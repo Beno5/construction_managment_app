@@ -168,10 +168,10 @@ sr:
       update_button: "Ažuriraj Materijal"
       create_button: "Kreiraj Materijal"
     messages:
-      created: "Materijal je uspješno kreiran."
-      updated: "Materijal je uspješno ažuriran."
-      deleted: "Materijal je uspješno obrisan."
-      name_required: "Ime materijala je obavezno."
+      created: "Materijal %{name} je uspješno kreiran."
+      updated: "Materijal %{name} je uspješno ažuriran."
+      deleted: "Materijal %{name} je uspješno obrisan."
+      name_required: "Naziv materijala je obavezan."
   machines:
     form:
       edit_title: "Izmeni %{name}"
@@ -186,10 +186,10 @@ sr:
       update_button: "Ažuriraj Mašinu"
       create_button: "Kreiraj Mašinu"
     messages:
-      created: "Mašina je uspješno kreirana."
-      updated: "Mašina je uspješno ažurirana."
-      deleted: "Mašina je uspješno obrisana."
-      name_required: "Ime mašine je obavezno."
+      created: "Mašina %{name} je uspješno kreirana."
+      updated: "Mašina %{name} je uspješno ažurirana."
+      deleted: "Mašina %{name} je uspješno obrisana."
+      name_required: "Naziv mašine je obavezan."
   workers:
     form:
       edit_title: "Izmeni %{name}"
@@ -206,9 +206,9 @@ sr:
       update_button: "Ažuriraj Radnika"
       create_button: "Kreiraj Radnika"
     messages:
-      created: "Radnik je uspješno kreiran."
-      updated: "Radnik je uspješno ažuriran."
-      deleted: "Radnik je uspješno obrisan."
+      created: "Radnik %{name} je uspješno kreiran."
+      updated: "Radnik %{name} je uspješno ažuriran."
+      deleted: "Radnik %{name} je uspješno obrisan."
       first_name_required: "Ime radnika je obavezno."
   projects:
     form:
@@ -250,9 +250,10 @@ sr:
       invalid_dates: "Datum završetka mora biti nakon datuma početka"
       validation_failed: "Projekat nije moguće sačuvati"
     messages:
-      created: "Projekat je uspješno kreiran."
-      updated: "Projekat je uspješno ažuriran."
-      deleted: "Projekat je uspješno obrisan."
+      created: "Projekat %{name} je uspješno kreiran."
+      updated: "Projekat %{name} je uspješno ažuriran."
+      deleted: "Projekat %{name} je uspješno obrisan."
+      name_required: "Naziv projekta je obavezan."
   tasks:
     add_new: "Kreiraj poziciju"
     show:
@@ -287,9 +288,10 @@ sr:
       real_end_date: "Stvarni Datum Zavrsetka"
       real_cost: "Stvarni Trošak (%{currency})"
     messages:
-      created: "Zadatak je uspješno kreiran."
-      updated: "Zadatak je uspješno ažuriran."
-      deleted: "Zadatak je uspješno obrisan."
+      created: "Pozicija %{name} je uspješno kreirana."
+      updated: "Pozicija %{name} je uspješno ažurirana."
+      deleted: "Pozicija %{name} je uspješno obrisana."
+      name_required: "Naziv pozicije je obavezan."
     errors:
       name_required: "Ime zadatka je obavezno"
       validation_failed: "Zadatak nije moguće sačuvati"
@@ -329,9 +331,10 @@ sr:
       real: "Realno"
       title: "Osnovne informacije: Podpozicija (%{name})"
     messages:
-      created: "Podpozicija je uspješno kreiran."
-      updated: "Podpozicija je uspješno ažuriran."
-      deleted: "Podpozicija je uspješno obrisan."
+      created: "Podpozicija %{name} je uspješno kreirana."
+      updated: "Podpozicija %{name} je uspješno ažurirana."
+      deleted: "Podpozicija %{name} je uspješno obrisana."
+      name_required: "Naziv podpozicije je obavezan."
     errors:
       name_required: "Ime podpozicije je obavezno"
       validation_failed: "Podpoziciju nije moguće sačuvati"
@@ -339,6 +342,12 @@ sr:
     form:
       model_name: "Resurs"
       model_name_pl: "Resursi"
+    messages:
+      created: "Resurs %{name} je uspješno kreiran."
+      updated: "Resurs %{name} je uspješno ažuriran."
+      deleted: "Resurs %{name} je uspješno obrisan."
+      create_error: "Greška pri kreiranju resursa."
+      update_error: "Greška pri ažuriranju resursa."
   resources:
     form:
       model_name: "Resurs"
@@ -416,6 +425,12 @@ sr:
       upload: "Kreiraj"
       choose_file: "Izaberi fajl"
       no_file_selected: "Nema fajla"
+    messages:
+      created: "Dokument %{name} je uspješno kreiran."
+      updated: "Dokument %{name} je uspješno ažuriran."
+      deleted: "Dokument %{name} je uspješno obrisan."
+      create_error: "Greška pri kreiranju dokumenta."
+      update_error: "Greška pri ažuriranju dokumenta."
   norms:
     title: "Norme"
     form:
@@ -431,12 +446,13 @@ sr:
       auto_calculate: "Automatski ažuriraj kalkulacije"
       auto_calculate_hint: "Ako je uključeno, svaka promjena norme automatski ažurira sve podpozicije koje je koriste, pa su sve kalkulacije odmah usklađene s novom vrijednošću norme. Ako je isključeno, postojeće podpozicije zadržavaju stare vrijednosti, a nova norma se primjenjuje samo na buduće izmjene ili nove podpozicije."
     messages:
-      created: "Norma uspješno kreirana."
-      updated: "Norma uspješno ažurirana."
-      deleted: "Norma obrisana."
+      created: "Norma %{name} je uspješno kreirana."
+      updated: "Norma %{name} je uspješno ažurirana."
+      deleted: "Norma %{name} je uspješno obrisana."
       validation_error: "Molimo provjerite obavezna polja."
   table:
     new:
+      project: Kreiraj novi projekat
       resource: Kreiraj novi resurs
       document: Kreiraj novi dokument
       business: Kreiraj firmu
@@ -476,6 +492,7 @@ sr:
       edit: 
         default: Izmeni
         resource: Izmeni resurs
+        activity: Izmeni resurs
         document: Izmeni dokument
         business: Izmeni firmu
         machine: Izmeni mašinu
@@ -487,6 +504,7 @@ sr:
         norm: Izmeni normu
       delete: 
         resource: Obriši resurs
+        activity: Obriši resurs
         document: Obriši dokument
         business: Obriši firmu
         machine: Obriši mašinu
@@ -498,6 +516,7 @@ sr:
         norm: Obriši normu
       show:
         resource: Prikaži resurs
+        activity: Prikaži resurs
         document: Prikaži dokument
         business: Prikaži firmu
         machine: Prikaži mašinu

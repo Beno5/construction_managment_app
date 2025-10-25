@@ -15,37 +15,45 @@ class DocumentsController < ApplicationController
       # Update existing document
       @document = Document.find(params[:document][:document_id])
       if @document.update(document_params)
-        redirect_to appropriate_path, notice: 'Dokument je uspešno ažuriran.'
+        redirect_to appropriate_path,
+                    notice: t('documents.messages.updated', name: @document.name)
       else
-        redirect_to appropriate_path, alert: 'Greška pri ažuriranju Dokumenta.'
+        redirect_to appropriate_path,
+                    alert: t('documents.messages.update_error')
       end
     else
       # Create new document
       @document = @parent.documents.new(document_params)
       if @document.save
-        redirect_to appropriate_path, notice: 'Dokument je uspešno kreiran.'
+        redirect_to appropriate_path,
+                    notice: t('documents.messages.created', name: @document.name)
       else
-        render :new
+        flash.now[:alert] = t('documents.messages.create_error')
+        render :new, status: :unprocessable_entity
       end
     end
   end
 
   def update
     if @document.update(document_params)
-      redirect_to parent_path(@document), notice: 'Dokument je uspješno ažuriran.'
+      redirect_to parent_path(@document),
+                  notice: t('documents.messages.updated', name: @document.name)
     else
-      render :edit
+      flash.now[:alert] = t('documents.messages.update_error')
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
+    name = @document.name
     @document.destroy
 
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.remove(@document)
+      format.turbo_stream # koristi destroy.turbo_stream.erb ako postoji
+      format.html do
+        redirect_to appropriate_path,
+                    notice: t('documents.messages.deleted', name: name)
       end
-      format.html { redirect_to appropriate_path, notice: "Document was successfully deleted." }
     end
   end
 

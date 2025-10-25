@@ -9,62 +9,50 @@ class CustomResourcesController < ApplicationController
   def edit; end
 
   def create
-    if params[:custom_resource][:activity_id].present? && params[:custom_resource][:activity_id] != "undefined"
-      activity = Activity.find(params[:custom_resource][:activity_id])
-      ActiveRecord::Base.transaction do
-        raise ActiveRecord::RecordInvalid.new(@activity) unless activity.activityable.update(custom_resource_params)
-
-        custom_resource = activity.activityable
-        activity.update(
-          activity_type: custom_resource.category,
-          start_date: custom_resource.start_date,
-          end_date: custom_resource.end_date,
-          activityable: custom_resource,
-          quantity: custom_resource.quantity,
-          total_cost: custom_resource.total_cost
-        )
+    if params[:activity][:activity_id].present? && params[:activity][:activity_id] != "undefined"
+      @activity = Activity.find(params[:activity][:activity_id])
+      if @activity.update(params_mapped)
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
+                    notice: t('activities.messages.updated', name: @activity.activityable_type)
+      else
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
+                    alert: t('activities.messages.update_error')
       end
-      redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
-                  notice: 'Custom resource i aktivnost uspešno ažurirani.'
     else
-      ActiveRecord::Base.transaction do
-        @custom_resource = @sub_task.custom_resources.new(custom_resource_params)
-        @custom_resource.user = current_user
-        @custom_resource.save!
-
-        @sub_task.activities.create!(
-          activity_type: @custom_resource.category,
-          start_date: @custom_resource.start_date,
-          end_date: @custom_resource.end_date,
-          activityable: @custom_resource,
-          quantity: @custom_resource.quantity,
-          total_cost: @custom_resource.total_cost
-        )
+      @activity = @sub_task.activities.new(params_mapped)
+      if @activity.save
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
+                    notice: t('activities.messages.created', name: @activity.activityable.name)
+      else
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
+                    alert: t('activities.messages.create_error')
       end
-      redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
-                  notice: 'Custom resource i aktivnost uspešno kreirani.'
     end
-  rescue ActiveRecord::RecordInvalid => e
-    redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task, anchor: 'planned'),
-                alert: "Greška pri kreiranju ili ažuriranju custom resursa i aktivnosti: #{e.message}"
   end
 
   def update
-    if @custom_resource.update(custom_resource_params)
-      redirect_to edit_task_path(@sub_task.task), notice: "Custom resource successfully updated."
+    @activity = @sub_task.activities.find(params[:activity][:activity_id])
+
+    if @activity.update(params_mapped)
+      redirect_to project_task_sub_task_path(@sub_task.task.project, @sub_task.task, @sub_task),
+                  notice: t('activities.messages.updated', name: @activity.activityable.name)
     else
-      render :edit, status: :unprocessable_entity
+      flash.now[:alert] = t('activities.messages.update_error')
+      render :edit
     end
   end
 
   def destroy
-    ActiveRecord::Base.transaction do
-      @custom_resource.activity.destroy if @custom_resource.activity
-      @custom_resource.destroy!
+    name = @activity.activityable.name
+    @activity.destroy
+
+    respond_to do |format|
+      format.turbo_stream # koristi destroy.turbo_stream.erb
+      format.html do
+        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
+                    notice: t('activities.messages.deleted', name: name)
+      end
     end
-    redirect_to edit_task_path(@sub_task.task), notice: "Custom resource successfully deleted."
-  rescue ActiveRecord::RecordInvalid
-    redirect_to edit_task_path(@sub_task.task), alert: "Error deleting custom resource."
   end
 
   private

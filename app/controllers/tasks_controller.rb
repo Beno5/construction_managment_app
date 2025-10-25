@@ -33,7 +33,8 @@ class TasksController < ApplicationController
     @task.user_id = current_user.id
 
     if @task.save
-      redirect_to business_project_path(@business, @project), notice: t('tasks.messages.created')
+      redirect_to business_project_path(@business, @project),
+                  notice: t('tasks.messages.created', name: @task.name)
     else
       set_error_message
       render :new, status: :unprocessable_entity
@@ -42,7 +43,8 @@ class TasksController < ApplicationController
 
   def update
     if @task.update(task_params)
-      redirect_to business_project_path(@business, @project), notice: t('tasks.messages.updated')
+      redirect_to business_project_path(@business, @project),
+                  notice: t('tasks.messages.updated', name: @task.name)
     else
       set_error_message
       render :edit, status: :unprocessable_entity
@@ -50,7 +52,7 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    @task = @project.tasks.find(params[:id])
+    name = @task.name
     @task.destroy
 
     respond_to do |format|
@@ -60,7 +62,7 @@ class TasksController < ApplicationController
       end
       format.html do
         redirect_to business_project_path(@business, @project, anchor: 'tasks'),
-                    notice: t('tasks.messages.deleted')
+                    notice: t('tasks.messages.deleted', name: name)
       end
     end
   end

@@ -24,7 +24,7 @@ class BusinessesController < ApplicationController
     @business.user_id = current_user.id
 
     if @business.save
-      redirect_to businesses_path, notice: t('businesses.messages.created')
+      redirect_to businesses_path, notice: t('businesses.messages.created', name: @business.name)
     else
       flash.now[:alert] = t('workers.messages.first_name_required')
       render :show, status: :unprocessable_entity
@@ -33,7 +33,7 @@ class BusinessesController < ApplicationController
 
   def update
     if @business.update(business_params)
-      redirect_to businesses_path, notice: t('businesses.messages.updated')
+      redirect_to businesses_path, notice: t('businesses.messages.updated', name: @business.name)
     else
       flash.now[:alert] = t('businesses.messages.name_required')
       render :show, status: :unprocessable_entity
@@ -41,13 +41,14 @@ class BusinessesController < ApplicationController
   end
 
   def destroy
+    name = @business.name
     @business.destroy
 
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: turbo_stream.remove("row_#{@business.id}")
       end
-      format.html { redirect_to businesses_path, notice: t('businesses.messages.deleted') }
+      format.html { redirect_to businesses_path, notice: t('businesses.messages.deleted', name: name) }
     end
   end
 

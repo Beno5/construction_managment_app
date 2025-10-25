@@ -38,7 +38,7 @@ class SubTasksController < ApplicationController
 
     if @sub_task.save
       redirect_to business_project_task_sub_task_path(@business, @task.project, @task, @sub_task),
-                  notice: t('subtasks.messages.created')
+                  notice: t('subtasks.messages.created', name: @sub_task.name)
     else
       set_error_message
       render :show, status: :unprocessable_entity
@@ -52,7 +52,7 @@ class SubTasksController < ApplicationController
       respond_to do |format|
         format.html do
           redirect_to business_project_task_sub_task_path(@business, @task.project, @task, @sub_task),
-                      notice: t('subtasks.messages.updated')
+                      notice: t('subtasks.messages.updated', name: @sub_task.name)
         end
         format.json do
           render json: {
@@ -79,6 +79,7 @@ class SubTasksController < ApplicationController
 
   def destroy
     @sub_task = @task.sub_tasks.find(params[:id])
+    name = @sub_task.name
     @sub_task.destroy
 
     respond_to do |format|
@@ -98,7 +99,7 @@ class SubTasksController < ApplicationController
 
       format.html do
         redirect_to business_project_task_path(@business, @project, @task),
-                    notice: t('sub_tasks.messages.deleted')
+                    notice: t('subtasks.messages.deleted', name: name)
       end
     end
   end
