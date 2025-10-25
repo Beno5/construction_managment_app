@@ -25,7 +25,8 @@ class MachinesController < ApplicationController
     @machine.user_id = current_user.id
 
     if @machine.save
-      redirect_to business_machines_path(@business), notice: t("machines.messages.created")
+      redirect_to business_machines_path(@business),
+                  notice: t("machines.messages.created", name: @machine.name)
     else
       flash.now[:alert] = t('machines.messages.name_required')
       render :show, status: :unprocessable_entity
@@ -34,7 +35,8 @@ class MachinesController < ApplicationController
 
   def update
     if @machine.update(machine_params)
-      redirect_to business_machines_path(@business), notice: t("machines.messages.updated")
+      redirect_to business_machines_path(@business),
+                  notice: t("machines.messages.updated", name: @machine.name)
     else
       flash.now[:alert] = t('machines.messages.name_required')
       render :show, status: :unprocessable_entity
@@ -42,14 +44,15 @@ class MachinesController < ApplicationController
   end
 
   def destroy
-    @machine = current_business.machines.find(params[:id])
+    name = @machine.name
     @machine.destroy
 
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.remove(dom_id(@machine))
+      format.turbo_stream
+      format.html do
+        redirect_to business_machines_path(current_business),
+                    notice: t("machines.messages.deleted", name: name)
       end
-      format.html { redirect_to business_machines_path(current_business), notice: t("machines.messages.deleted") }
     end
   end
 

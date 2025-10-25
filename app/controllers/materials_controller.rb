@@ -26,7 +26,8 @@ class MaterialsController < ApplicationController
     @material.user_id = current_user.id
 
     if @material.save
-      redirect_to business_materials_path(@business), notice: t("materials.messages.created")
+      redirect_to business_materials_path(@business),
+                  notice: t("materials.messages.created", name: @material.name)
     else
       flash.now[:alert] = t('materials.messages.name_required')
       render :show, status: :unprocessable_entity
@@ -35,7 +36,8 @@ class MaterialsController < ApplicationController
 
   def update
     if @material.update(material_params)
-      redirect_to business_materials_path(@business), notice: t("materials.messages.updated")
+      redirect_to business_materials_path(@business),
+                  notice: t("materials.messages.updated", name: @material.name)
     else
       flash.now[:alert] = t('materials.messages.name_required')
       render :show, status: :unprocessable_entity
@@ -43,13 +45,14 @@ class MaterialsController < ApplicationController
   end
 
   def destroy
-    @material = current_business.materials.find(params[:id])
+    name = @material.name
     @material.destroy
 
     respond_to do |format|
-      format.turbo_stream
+      format.turbo_stream # koristi destroy.turbo_stream.erb
       format.html do
-        redirect_to business_materials_path(current_business), notice: t("materials.messages.deleted")
+        redirect_to business_materials_path(current_business),
+                    notice: t("materials.messages.deleted", name: name)
       end
     end
   end

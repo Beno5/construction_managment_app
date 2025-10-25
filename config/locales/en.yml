@@ -140,11 +140,12 @@ en:
         owner_last_name: "Owner Last Name"
         currency: "Currency"
     messages:
-      created: "Business created successfully."
-      updated: "Business updated successfully."
-      deleted: "Business deleted successfully."
+      created: "Business %{name} was created successfully."
+      updated: "Business %{name} was updated successfully."
+      deleted: "Business %{name} was deleted successfully."
       selected: "%{name} is now selected."
       name_required: "Business name is required."
+      not_found: "Business not found."
     errors:
       name_required: "Business name is required!"
       validation_failed: "Please check the form for errors."
@@ -162,10 +163,10 @@ en:
       update_button: "Update Material"
       create_button: "Create Material"
     messages:
-      created: "Material was successfully created."
-      updated: "Material was successfully updated."
-      deleted: "Material was successfully deleted."
-      name_required: "Name is required."
+      created: "Material %{name} was created successfully."
+      updated: "Material %{name} was updated successfully."
+      deleted: "Material %{name} was deleted successfully."
+      name_required: "Material name is required."
   machines:
     form:
       edit_title: "Edit %{name}"
@@ -180,10 +181,10 @@ en:
       update_button: "Update Machine"
       create_button: "Create Machine"
     messages:
-      created: "Machine was successfully created."
-      updated: "Machine was successfully updated."
-      deleted: "Machine was successfully deleted."
-      name_required: "Name is required."
+      created: "Machine %{name} was created successfully."
+      updated: "Machine %{name} was updated successfully."
+      deleted: "Machine %{name} was deleted successfully."
+      name_required: "Machine name is required."
   workers:
     form:
       edit_title: "Edit %{name}"
@@ -200,10 +201,10 @@ en:
       update_button: "Update Worker"
       create_button: "Create Worker"
     messages:
-      created: "Worker was successfully created."
-      updated: "Worker was successfully updated."
-      deleted: "Worker was successfully deleted."
-      first_name_required: "First name is required."
+      created: "Worker %{name} was created successfully."
+      updated: "Worker %{name} was updated successfully."
+      deleted: "Worker %{name} was deleted successfully."
+      first_name_required: "Worker first name is required."
   projects:
     form:
       edit_title: "Edit %{name}"
@@ -246,9 +247,10 @@ en:
       invalid_dates: "End date must be after start date"
       validation_failed: "Project could not be saved"
     messages:
-      created: "Project was successfully created."
-      updated: "Project was successfully updated."
-      deleted: "Project was successfully deleted."
+      created: "Project %{name} was created successfully."
+      updated: "Project %{name} was updated successfully."
+      deleted: "Project %{name} was deleted successfully."
+      name_required: "Project name is required."
   tasks:
     add_new: "Add New Task"
     show:
@@ -283,9 +285,10 @@ en:
       real_end_date: "Real End Date"
       real_cost: "Real Cost (%{currency})"
     messages:
-      created: "Task was successfully created."
-      updated: "Task was successfully updated."
-      deleted: "Task was successfully deleted."
+      created: "Task %{name} was created successfully."
+      updated: "Task %{name} was updated successfully."
+      deleted: "Task %{name} was deleted successfully."
+      name_required: "Task name is required."
     errors:
       name_required: "Task name is required"
       validation_failed: "Task could not be saved"
@@ -325,9 +328,10 @@ en:
       real: "Real"
       title: "Basic Information: Subtask (%{name})"
     messages:
-      created: "Sub-task was successfully created."
-      updated: "Sub-task was successfully updated."
-      deleted: "Sub-task was successfully deleted."
+      created: "Sub-task %{name} was created successfully."
+      updated: "Sub-task %{name} was updated successfully."
+      deleted: "Sub-task %{name} was deleted successfully."
+      name_required: "Sub-task name is required."
     errors:
       name_required: "Sub-task name is required"
       validation_failed: "Sub-task could not be saved"
@@ -335,6 +339,12 @@ en:
     form:
       model_name: "Resource"
       model_name_pl: "Resources"
+    messages:
+      created: "Resource %{name} was created successfully."
+      updated: "Resource %{name} was updated successfully."
+      deleted: "Resource %{name} was deleted successfully."
+      create_error: "Error creating resource."
+      update_error: "Error updating resource."
   resources:
     form:
       model_name: "Resours"
@@ -412,6 +422,12 @@ en:
       update_button: "Update Document"
       no_file_selected: "No file selected"
       choose_file: "Choose File"
+    messages:
+      created: "Document %{name} was created successfully."
+      updated: "Document %{name} was updated successfully."
+      deleted: "Document %{name} was deleted successfully."
+      create_error: "Error creating document."
+      update_error: "Error updating document."
   norms:
     title: "Norms"
     form:
@@ -427,12 +443,13 @@ en:
       auto_calculate: "Auto-update calculations"
       auto_calculate_hint: "When enabled, any change to this norm automatically updates all sub-tasks that use it, keeping all calculations in sync with the new value. When disabled, existing sub-tasks keep their old values, and the new norm applies only to future edits or new sub-tasks."
     messages:
-      created: "Norm successfully created."
-      updated: "Norm successfully updated."
-      deleted: "Norm deleted."
-      validation_error: "Please check required fields."
+      created: "Norm %{name} was created successfully."
+      updated: "Norm %{name} was updated successfully."
+      deleted: "Norm %{name} was deleted successfully."
+      validation_error: "Please check the required fields."
   table:
     new:
+      project: "Add New Project"
       resource: "Add New Resource"
       document: "Add New Document"
       business: "Add New Business"

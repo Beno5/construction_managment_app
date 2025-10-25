@@ -38,7 +38,8 @@ class ProjectsController < ApplicationController
     @project.user_id = current_user.id
 
     if @project.save
-      redirect_to business_projects_url(@business), notice: t('projects.messages.created')
+      redirect_to business_projects_url(@business),
+                  notice: t('projects.messages.created', name: @project.name)
     else
       set_error_message
       render :new, status: :unprocessable_entity, locals: { locale: params[:locale] }
@@ -47,7 +48,8 @@ class ProjectsController < ApplicationController
 
   def update
     if @project.update(project_params)
-      redirect_to business_projects_url(@business), notice: t('projects.messages.updated')
+      redirect_to business_projects_url(@business),
+                  notice: t('projects.messages.updated', name: @project.name)
     else
       set_error_message
       render :edit, status: :unprocessable_entity, locals: { locale: params[:locale] }
@@ -55,12 +57,14 @@ class ProjectsController < ApplicationController
   end
 
   def destroy
-    @project = @business.projects.find(params[:id])
+    name = @project.name
     @project.destroy
 
     respond_to do |format|
-      format.turbo_stream # Ovo koristi destroy.turbo_stream.erb za uklanjanje kartice
-      format.html { redirect_to business_projects_path(@business), notice: t('projects.messages.deleted') }
+      format.turbo_stream # koristi destroy.turbo_stream.erb
+      format.html do
+        redirect_to business_projects_path(@business), notice: t('projects.messages.deleted', name: name)
+      end
     end
   end
 

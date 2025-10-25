@@ -26,9 +26,9 @@ class NormsController < ApplicationController
 
     if @norm.save
       redirect_to business_norms_path(@business),
-                  notice: t("norms.messages.created", default: "Norma uspješno kreirana.")
+                  notice: t("norms.messages.created", name: @norm.name)
     else
-      flash.now[:alert] = t("norms.messages.validation_error", default: "Molimo provjerite obavezna polja.")
+      flash.now[:alert] = t("norms.messages.validation_error")
       render :new, status: :unprocessable_entity
     end
   end
@@ -37,20 +37,22 @@ class NormsController < ApplicationController
     if @norm.update(norm_params)
       update_norms_in_sub_tasks(@norm) if @norm.auto_calculate?
       redirect_to business_norms_path(@business),
-                  notice: t("norms.messages.updated", default: "Norma uspješno ažurirana.")
+                  notice: t("norms.messages.updated", name: @norm.name)
     else
-      flash.now[:alert] = t("norms.messages.validation_error", default: "Molimo provjerite obavezna polja.")
+      flash.now[:alert] = t("norms.messages.validation_error")
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
+    name = @norm.name
     @norm.destroy
 
     respond_to do |format|
       format.turbo_stream
       format.html do
-        redirect_to business_norms_path(@business), notice: t("norms.messages.deleted", default: "Norma obrisana.")
+        redirect_to business_norms_path(@business),
+                    notice: t("norms.messages.deleted", name: name)
       end
     end
   end
@@ -69,8 +71,8 @@ class NormsController < ApplicationController
   def business_norms
     @norms = current_business.norms.search(params[:search]).page(params[:norm_page]).per(10)
     respond_to do |format|
-      format.html # standardni HTML prikaz
-      format.turbo_stream # Turbo Stream za live pretragu
+      format.html
+      format.turbo_stream
     end
   end
 
