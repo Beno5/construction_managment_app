@@ -1,4 +1,11 @@
 sr:
+  user_mailer:
+    welcome_email:
+      subject: "Dobrodošli na Conormio!"
+      greeting: "Zdravo %{email},"
+      body_html: "Vaš nalog je uspješno kreiran. Možete se prijaviti klikom na dugme ispod:"
+      button_text: "Prijavi se na Conormio"
+      signature: "Hvala što koristite Conormio!"
   pagination:
     showing: "Prikazano"
     of: "od"

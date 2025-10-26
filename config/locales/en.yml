@@ -1,4 +1,11 @@
 en:
+  user_mailer:
+    welcome_email:
+      subject: "Welcome to Conormio!"
+      greeting: "Hello %{email},"
+      body_html: "Your account has been created successfully. You can log in using the button below:"
+      button_text: "Log in to Conormio"
+      signature: "Thank you for joining us!"
   pagination:
       showing: "Showing"
       of: "of"

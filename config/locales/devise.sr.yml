@@ -34,6 +34,13 @@ sr:
       send_paranoid_instructions: "Ako vaša email adresa postoji u našoj bazi, dobićete email sa linkom za resetovanje lozinke."
       updated: "Vaša lozinka je uspešno promenjena. Sada ste prijavljeni."
       updated_not_active: "Vaša lozinka je uspešno promenjena."
+      new:
+        title: "Zaboravili ste lozinku?"
+        description: "Bez brige! Unesite vaš email, i poslaćemo vam uputstva za resetovanje lozinke."
+        email_label: "Vaš email"
+        submit: "Resetuj lozinku"
+        accept_terms_html: "Prihvatam %{terms_link}"
+        terms: "Uslove korišćenja"
     registrations:
       destroyed: "Zbogom! Vaš nalog je uspešno otkazan. Nadamo se da ćemo se ponovo videti uskoro."
       signed_up: "Dobrodošli! Uspešno ste se registrovali."
@@ -47,6 +54,15 @@ sr:
       signed_in: "Uspešno ste se prijavili."
       signed_out: "Uspešno ste se odjavili."
       already_signed_out: "Već ste odjavljeni."
+      new:
+        title: "Prijavite se na platformu"
+        email_label: "Vaš email"
+        password_label: "Vaša lozinka"
+        remember_me: "Zapamti me"
+        lost_password: "Zaboravljena lozinka?"
+        submit: "Prijavi se"
+        not_registered: "Nemate nalog?"
+        create_account: "Kreirajte nalog"
     unlocks:
       send_instructions: "U nekoliko minuta ćete dobiti email sa uputstvima za otključavanje vašeg naloga."
       send_paranoid_instructions: "Ako vaš nalog postoji, dobićete email sa uputstvima za otključavanje."

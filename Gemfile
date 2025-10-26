@@ -99,3 +99,5 @@ group :test do
 end
 
 gem "kaminari", "~> 1.2"
+
+gem "letter_opener", "~> 1.10"

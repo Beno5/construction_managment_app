@@ -8,18 +8,28 @@ class User < ApplicationRecord
   has_many :real_activities
   has_many :norms
 
-  
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  # Devise modules
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  # Validacija email-a
+  # Validations
   validates :email, presence: true, uniqueness: true
-
-  # Validacija lozinke
   validates :password, presence: true, length: { minimum: 6 }
   validates :terms, acceptance: true
-end
-        
 
+  # Default locale fallback
+  after_initialize :set_default_locale, if: :new_record?
+
+  # Send welcome email after signup
+  after_commit :send_welcome_email, on: :create
+
+  private
+
+  def set_default_locale
+    I18n.locale = :sr if I18n.locale.blank?
+  end
+
+  def send_welcome_email
+    UserMailer.welcome_email(self).deliver_later
+  end
+end
