@@ -21,9 +21,6 @@ sr:
             name:
               blank: "Naziv je obavezan"
               taken: "Naziv projekta već postoji u ovoj firmi"
-            client_project_id:
-              blank: "Client Project ID je obavezan"
-              taken: "Client Project ID već postoji u ovoj firmi"
             base:
               invalid_dates: "Datum završetka ne može biti prije datuma početka"
         task:
@@ -225,7 +222,6 @@ sr:
       new_title: "Novi Projekat"
       model_name: "Projekt"
       model_name_pl: "Projekti"
-      client_project_id: "ID Klijentskog Projekta"
       name: "Naziv Projekta"
       address: "Adresa Projekta"
       project_manager: "Menadžer Projekta"
@@ -255,7 +251,6 @@ sr:
       tasks_and_subtasks: "Pozicije i Podpozicije za Projekat"
     errors:
       name_required: "Ime projekta je obavezno i mora biti jedinstveno unutar firme"
-      client_project_id_required: "ID klijentskog projekta je obavezan i mora biti jedinstven unutar firme"
       invalid_dates: "Datum završetka mora biti nakon datuma početka"
       validation_failed: "Projekat nije moguće sačuvati"
     messages:
@@ -484,17 +479,19 @@ sr:
       subtask: Nemate podpozicija. Kreirajte podpoziciju da započnete.
       norm: Nemate normi. Kreirajte normu da započnete.
     search:
-      resource: Pretraži resurse
-      activity: Pretraži resurse
-      document: Pretraži dokumente
-      business: Pretraži firme
-      machine: Pretraži mašine
-      worker: Pretraži radnike
-      material: Pretraži materijale
-      project: Pretraži projekte
-      task: Pretraži pozicije
-      subtask: Pretraži podpozicije
-      norm: Pretraži norme
+      default: "Pretraži"
+      label: "Pretraga"
+      resource: "Pretraži resurse"
+      activity: "Pretraži resurse"
+      document: "Pretraži dokumente"
+      business: "Pretraži firme"
+      machine: "Pretraži mašine"
+      worker: "Pretraži radnike"
+      material: "Pretraži materijale"
+      project: "Pretraži projekte"
+      task: "Pretraži pozicije"
+      subtask: "Pretraži podpozicije"
+      norm: "Pretraži norme"
     actions:
       open: 
         document: Otvori dokument

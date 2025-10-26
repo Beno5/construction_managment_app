@@ -220,7 +220,6 @@ en:
       new_title: "New Project"
       model_name: "Project"
       model_name_pl: "Projects"
-      client_project_id: "Client Project ID"
       name: "Project Name"
       address: "Project Address"
       project_manager: "Project Manager"
@@ -252,7 +251,6 @@ en:
       required_fields: "Project name and client project ID are required and must be unique"
       validation_failed: "Unable to save project due to validation errors"
       name_required: "Project name is required and must be unique within the business"
-      client_project_id_required: "Client project ID is required and must be unique within the business"
       invalid_dates: "End date must be after start date"
       validation_failed: "Project could not be saved"
     messages:
@@ -481,8 +479,10 @@ en:
       subtask: "You don't have any subtasks. Add a new subtask to get started."
       norm: "You don't have any norms. Add a new norm to get started."
     search:
+      default: "Search"
+      label: "Search"
       resource: "Search resources"
-      activity: "Search activities"
+      activity: "Search resources"
       document: "Search documents"
       business: "Search businesses"
       machine: "Search machines"
@@ -491,7 +491,7 @@ en:
       project: "Search projects"
       task: "Search tasks"
       subtask: "Search subtasks"
-      norms: "Search norms"
+      norm: "Search norms"
     actions:
       open:
         document: "Open document"

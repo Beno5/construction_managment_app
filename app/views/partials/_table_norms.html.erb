@@ -11,7 +11,7 @@
               <input type="text" 
            name="search" 
            id="search" 
-           placeholder="Pretraži norme..."
+           placeholder="<%= t('table.search.norm', default: t('table.search.default')) %>"
            value="<%= params[:search] %>"
            <%= "disabled" if @sub_task.new_record? %>
            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg 

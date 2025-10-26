@@ -11,8 +11,6 @@ class Project < ApplicationRecord
   enum :status, { pending: 0, active: 1, completed: 2, canceled: 3, paused: 4 }
 
   # Validations
-  validates :client_project_id, presence: true,
-                                uniqueness: { scope: :business_id }
   validates :name, presence: true,
                    uniqueness: { scope: :business_id }
 

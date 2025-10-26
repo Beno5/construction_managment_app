@@ -7,7 +7,6 @@ class Document < ApplicationRecord
 
   enum :category, { nothing: 0, plan: 1, report: 2, doc_order: 3, offer: 4, other: 5 }, default: :nothing
 
-  validates :name, presence: true
   validate :must_belong_to_at_least_one
 
   private

@@ -84,7 +84,6 @@ class ProjectsController < ApplicationController
       :planned_cost, # Dodato real_cost
       :description,
       :status,
-      :client_project_id,
       documents: [],
       custom_fields: [:key, :value]
     ).tap do |whitelisted|
@@ -102,8 +101,6 @@ class ProjectsController < ApplicationController
   def set_error_message
     if @project.errors[:name].any?
       flash.now[:alert] = @project.errors[:name].first
-    elsif @project.errors[:client_project_id].any?
-      flash.now[:alert] = @project.errors[:client_project_id].first
     elsif @project.errors[:base].any?
       flash.now[:alert] = @project.errors[:base].first
     end
