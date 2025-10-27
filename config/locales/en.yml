@@ -1,4 +1,20 @@
 en:
+  users:
+    edit:
+      title: "Edit Profile"
+      model_name: "User"
+      basic_information: "Basic Information"
+      name: "Full Name"
+      email: "Email"
+      locale: "Language"
+      password: "Password"
+      password_placeholder: "Leave blank to keep current"
+      update_button: "Save Changes"
+      delete_account: "Delete Account"
+      delete_confirm: "Are you sure you want to delete your account?"
+    messages:
+      updated: "Profile successfully updated."
+      too_short: "is too short (minimum is %{count} characters)"
   user_mailer:
     welcome_email:
       subject: "Welcome to Conormio!"

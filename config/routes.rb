@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
 
   devise_for :users, controllers: {
-    passwords: 'users/passwords'
+    passwords: 'users/passwords',
+    registrations: 'users/registrations',
+
   }
   root to: "businesses#index"
 

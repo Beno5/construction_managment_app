@@ -8,25 +8,24 @@ class User < ApplicationRecord
   has_many :real_activities
   has_many :norms
 
-  # Devise modules
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  # Validations
   validates :email, presence: true, uniqueness: true
-  validates :password, presence: true, length: { minimum: 6 }
-  validates :terms, acceptance: true
+  validates :password, presence: true, length: { minimum: 6 }, if: :password_required?
+  validates :terms, acceptance: true, on: :create
 
-  # Default locale fallback
   after_initialize :set_default_locale, if: :new_record?
-
-  # Send welcome email after signup
   after_commit :send_welcome_email, on: :create
 
   private
 
+  def password_required?
+    new_record? || password.present?
+  end
+
   def set_default_locale
-    I18n.locale = :sr if I18n.locale.blank?
+    self.locale ||= 'sr'
   end
 
   def send_welcome_email

@@ -1,4 +1,20 @@
 sr:
+  users:
+    edit:
+      title: "Uredi profil"
+      model_name: "Korisnik"
+      basic_information: "Osnovne informacije"
+      name: "Ime i prezime"
+      email: "Email adresa"
+      locale: "Jezik"
+      password: "Lozinka"
+      password_placeholder: "Ostavi prazno ako ne želiš promijeniti"
+      update_button: "Sačuvaj promjene"
+      delete_account: "Obriši nalog"
+      delete_confirm: "Da li ste sigurni da želite obrisati svoj nalog?"
+    messages:
+      updated: "Profil je uspješno ažuriran."
+      too_short: "mora imati najmanje %{count} znakova"
   user_mailer:
     welcome_email:
       subject: "Dobrodošli na Conormio!"
@@ -48,6 +64,10 @@ sr:
           attributes:
             base:
               invalid_dates: "Datum završetka ne može biti prije datuma početka"
+        user:
+          attributes:
+            password:
+              too_short: "Lozinka mora imati najmanje %{count} znakova"
   date:
     formats:
       default: "%Y-%m-%d"
