@@ -7,7 +7,9 @@
     <table align="center" width="100%" style="max-width: 600px; background: #ffffff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.05); padding: 40px;">
       <tr>
         <td align="center">
-          <%= image_tag 'logo_con.png', alt: 'BonacApp', style: 'height: 55px; margin-bottom: 25px;' %>
+          <%= image_tag asset_path('logo_con.png'),
+                        alt: 'BonacApp',
+                        style: 'height: 55px; margin-bottom: 25px;' %>
           <%= yield %>
           <p style="margin-top: 40px; font-size: 12px; color: #9ca3af;">
             © <%= Time.current.year %> BonacApp. All rights reserved.

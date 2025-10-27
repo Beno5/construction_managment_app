@@ -63,6 +63,8 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "construction_managment_app_production"
 
   config.action_mailer.perform_caching = false
+  config.action_mailer.asset_host = 'https://constr-man-app-33fe0a36d495.herokuapp.com'
+
 
   # === Mailtrap SMTP (test sandbox) ===
   config.action_mailer.default_url_options = { host: 'constr-man-app-33fe0a36d495.herokuapp.com', protocol: 'https' }
