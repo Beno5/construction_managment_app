@@ -64,6 +64,22 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  # === Mailtrap SMTP (test sandbox) ===
+  config.action_mailer.default_url_options = { host: 'constr-man-app-33fe0a36d495.herokuapp.com/', protocol: 'https' }
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    user_name: ENV['MAILTRAP_USER'],
+    password:  ENV['MAILTRAP_PASS'],
+    address:   'sandbox.smtp.mailtrap.io',
+    port:      587,
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
+
+  config.action_mailer.raise_delivery_errors = true
+
+
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
