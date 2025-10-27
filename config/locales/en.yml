@@ -6,6 +6,16 @@ en:
       body_html: "Your account has been created successfully. You can log in using the button below:"
       button_text: "Log in to Conormio"
       signature: "Thank you for joining us!"
+    reset_password:
+      title: "Reset your password"
+      greeting: "Hello %{email}!"
+      instruction: "Someone has requested a link to change your password. You can do this through the link below."
+      button_text: "Change my password"
+      warning: "If you didn’t request this, please ignore this email. Your password won’t change until you access the link above and create a new one."
+    password_changed:
+      title: "Password changed successfully"
+      greeting: "Hello %{email}!"
+      message: "We're contacting you to notify you that your password has been changed."
   pagination:
       showing: "Showing"
       of: "of"

@@ -6,6 +6,16 @@ sr:
       body_html: "Vaš nalog je uspješno kreiran. Možete se prijaviti klikom na dugme ispod:"
       button_text: "Prijavi se na Conormio"
       signature: "Hvala što koristite Conormio!"
+    reset_password:
+      title: "Resetujte vašu lozinku"
+      greeting: "Zdravo %{email}!"
+      instruction: "Neko je zatražio promjenu vaše lozinke. To možete uraditi putem linka ispod."
+      button_text: "Promijeni lozinku"
+      warning: "Ako niste vi zatražili ovu promjenu, slobodno ignorišite ovaj email. Vaša lozinka se neće promijeniti dok ne kliknete na link iznad i ne kreirate novu."
+    password_changed:
+      title: "Lozinka je uspješno promijenjena"
+      greeting: "Zdravo %{email}!"
+      message: "Obavještavamo vas da je vaša lozinka uspješno promijenjena."
   pagination:
     showing: "Prikazano"
     of: "od"
