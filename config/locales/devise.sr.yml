@@ -32,7 +32,7 @@ sr:
       no_token: "Ne možete pristupiti ovoj stranici bez tokena koji ste dobili putem email-a za resetovanje lozinke."
       send_instructions: "U nekoliko minuta ćete dobiti email sa uputstvima za resetovanje lozinke."
       send_paranoid_instructions: "Ako vaša email adresa postoji u našoj bazi, dobićete email sa linkom za resetovanje lozinke."
-      updated: "Vaša lozinka je uspešno promenjena. Sada ste prijavljeni."
+      updated: "Vaša lozinka je uspešno promenjena."
       updated_not_active: "Vaša lozinka je uspešno promenjena."
       new:
         title: "Zaboravili ste lozinku?"
