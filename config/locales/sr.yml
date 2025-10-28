@@ -66,6 +66,10 @@ sr:
               invalid_dates: "Datum završetka ne može biti prije datuma početka"
         user:
           attributes:
+            email:
+              taken: "Ova email adresa je već registrovana"
+            password_confirmation:
+              confirmation: "Lozinke se ne poklapaju"
             password:
               too_short: "Lozinka mora imati najmanje %{count} znakova"
   date:

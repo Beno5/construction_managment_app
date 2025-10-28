@@ -20,7 +20,7 @@
       <%= render "partials/flash_messages" %>
     </div>
     <!-- Glavni wrapper za sadržaj -->
-    <main class="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col">11111
+    <main class="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col">
       <% if controller_name.in?(["sessions", "passwords"]) || 
      (controller_name == "registrations" && !action_name.in?(["edit", "update"])) %>
       <div class="flex items-center justify-center flex-grow px-6">

@@ -7,10 +7,10 @@ sr:
     failure:
       already_authenticated: "Već ste prijavljeni."
       inactive: "Vaš nalog još uvek nije aktiviran."
-      invalid: "Nevalidni %{authentication_keys} ili lozinka."
+      invalid: "Pogrešan email ili lozinka."
       locked: "Vaš nalog je zaključan."
       last_attempt: "Imate još jedan pokušaj pre nego što vaš nalog bude zaključan."
-      not_found_in_database: "Nevalidni %{authentication_keys} ili lozinka."
+      not_found_in_database: "Pogrešan email ili lozinka."
       timeout: "Vaš sesija je istekao. Molimo vas da se ponovo prijavite."
       unauthenticated: "Morate biti prijavljeni ili se registrovati pre nego što nastavite."
       unconfirmed: "Morate potvrditi vašu email adresu pre nego što nastavite."

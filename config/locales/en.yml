@@ -61,6 +61,13 @@ en:
           attributes:
             base:
               invalid_dates: "End date cannot be before start date"
+        user:
+          email:
+            taken: "This email address is already registered"
+          password_confirmation:
+            confirmation: "Passwords do not match"
+          password:
+            too_short: "Password is too short (minimum is %{count} characters)"
   date:
     formats:
       default: "%Y-%m-%d"
