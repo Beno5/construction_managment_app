@@ -63,6 +63,8 @@ gem 'rails-erd'
 gem 'font-awesome-sass', '~> 6.0'
 gem 'i18n-js'
 gem 'business_time'
+gem "roo"
+
 
 
 
