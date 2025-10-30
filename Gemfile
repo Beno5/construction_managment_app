@@ -64,6 +64,8 @@ gem 'font-awesome-sass', '~> 6.0'
 gem 'i18n-js'
 gem 'business_time'
 gem "roo"
+gem "openai", "~> 0.34.1"
+
 
 
 
@@ -103,3 +105,4 @@ end
 gem "kaminari", "~> 1.2"
 
 gem "letter_opener", "~> 1.10"
+

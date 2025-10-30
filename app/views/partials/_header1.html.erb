@@ -22,17 +22,52 @@
           </form>
         <% end %>
         <!-- Buttons -->
+        <!-- Buttons -->
         <div class="flex items-center ml-auto space-x-2 sm:space-x-3">
           <% if local_assigns[:new_path].present? %>
-            <%= link_to local_assigns[:new_path], class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" do %>
+            <%= link_to local_assigns[:new_path],
+                class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" do %>
               <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
               </svg>
-              <%= t('table.new.project') %> <!-- This is only for project because other button is in Table directly -->
+              <%= t('table.new.project') %>
             <% end %>
           <% end %>
+          <%= form_with url: import_ai_business_projects_path(current_business),
+              method: :post,
+              multipart: true,
+              data: { turbo: false },
+              html: { id: "ai-import-form", class: "inline-block" } do |f| %>
+            <button type="button"
+          id="ai-import-button"
+          class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+              <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+              </svg>
+              <span>AI Import</span>
+            </button>
+            <%= f.file_field :file,
+                   accept: ".xlsx,.xls,.ods",
+                   class: "hidden",
+                   id: "ai-import-file",
+                   onchange: "document.getElementById('ai-import-form').submit();" %>
+          <% end %>
+         
         </div>
       <% end %>
     </div>
   </div>
 </div>
+ <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const button = document.getElementById("ai-import-button");
+    const fileInput = document.getElementById("ai-import-file");
+
+    if (button && fileInput) {
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        fileInput.click();
+      });
+    }
+  });
+</script>

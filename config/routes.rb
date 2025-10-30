@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     end
 
     resources :projects do
+        post :import_ai, on: :collection
       resources :tasks do
         resources :sub_tasks do
           post "pinned_norms/:norm_id", to: "pinned_norms#create"
