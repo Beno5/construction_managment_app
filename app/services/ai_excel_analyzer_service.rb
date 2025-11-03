@@ -8,7 +8,7 @@ class AiExcelAnalyzerService
   def initialize(file_path, project_fallback_name = "Unnamed Project")
     @file_path = Pathname.new(file_path).to_s
     @project_fallback_name = project_fallback_name
-    @client = OpenAI::Client.new(api_key: ENV.fetch("OPENAI_API_KEY", nil))
+    @client = OpenAI_CLIENT || OpenAI::Client.new(api_key: ENV.fetch("OPENAI_API_KEY", nil))
   end
 
   # Glavna metoda
