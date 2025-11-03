@@ -80,7 +80,7 @@ class ProjectsController < ApplicationController
 
     Rails.logger.info "📂 [AI Import] Uploaded file saved to: #{tmp_path}"
 
-    ai_result = AiExcelAnalyzerService.new(tmp_path, "Imported Project").analyze
+    ai_result = AiExcelAnalyzerService.new(tmp_path).analyze
     Rails.logger.info "🤖 [AI Import] AI analysis completed. Parsed data keys: #{begin
       ai_result.keys
     rescue StandardError

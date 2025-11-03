@@ -4,104 +4,112 @@ require "json"
 
 class AiExcelAnalyzerService
   TARGET_UNITS = %w[kg m2 m3 pieces ton liters roll bag set].freeze
+  CHUNK_SIZE = 200 # koliko redova po chunku šaljemo GPT-u
 
-  def initialize(file_path, project_fallback_name = "Unnamed Project")
+  def initialize(file_path)
     @file_path = Pathname.new(file_path).to_s
-    @project_fallback_name = project_fallback_name
+    @filename = File.basename(@file_path, File.extname(@file_path)).titleize
+    @project_fallback_name = default_fallback_name
     @client = OpenAI_CLIENT || OpenAI::Client.new(api_key: ENV.fetch("OPENAI_API_KEY", nil))
   end
 
-  # Glavna metoda
   def analyze
-    flat_text = flatten_excel(@file_path)
-    prompt = build_prompt(flat_text)
+    chunks = flatten_excel_in_chunks(@file_path)
+    all_results = []
 
-    response = @client.chat.completions.create(
-      model: "gpt-4o-mini",
-      temperature: 0.2,
-      messages: [
-        { role: "system", content: "You are an AI that analyzes messy Excel construction files." },
-        { role: "user", content: prompt }
-      ]
-    )
+    chunks.each_with_index do |chunk_text, i|
+      prompt = build_prompt(chunk_text, chunk_number: i + 1, total_chunks: chunks.size)
 
-    raw = response.choices.first.message[:content]
-    parse_json_safe(raw)
+      puts "📦 Sending chunk #{i + 1}/#{chunks.size} to GPT..."
+      response = @client.chat.completions.create(
+        model: ENV.fetch("OPENAI_MODEL", "gpt-4.1"),
+        temperature: 0.2,
+        messages: [
+          { role: "system", content: "You are an AI that analyzes messy Excel construction files." },
+          { role: "user", content: prompt }
+        ]
+      )
+
+      raw = response.choices.first.message[:content]
+      json = parse_json_safe(raw)
+      all_results << json
+    end
+
+    merge_results(all_results)
   end
 
   private
 
-  # Parsiranje JSON odgovora uz fallback
+  # fallback ime projekta
+  def default_fallback_name
+    count = Project.count + 1
+    "Imported Project #{count}"
+  end
+
+  # Parsiraj JSON sa fallback-om ako je djelimično oštećen
   def parse_json_safe(raw)
     JSON.parse(raw)
   rescue JSON::ParserError
-    # pokušaj izvući JSON ako model vrati s komentarima ili dodatnim tekstom
     json_str = raw.match(/\{.*\}/m)&.to_s
-    json_str ? JSON.parse(json_str) : { error: "Invalid JSON response", raw: raw }
+    json_str ? JSON.parse(json_str) : { "error" => "Invalid JSON", "raw" => raw }
   end
 
-  # Pretvori sve sheetove u čitljiv tekst za GPT
-  def flatten_excel(path)
+  # Podijeli Excel na chunkove po 200 redova
+  def flatten_excel_in_chunks(path)
     xls = Roo::Spreadsheet.open(path)
-    out = +""
+    chunks = []
 
     xls.sheets.each do |sheet_name|
       sheet = xls.sheet(sheet_name)
-      out << "\n=== SHEET: #{sheet_name} ===\n"
+      rows = []
 
-      sheet.each_row_streaming(pad_cells: true).first(200).each_with_index do |row, i|
+      sheet.each_row_streaming(pad_cells: true).each_with_index do |row, i|
         values = row.map { |c| normalize_cell_value(c&.value) }
         next if values.all?(&:blank?)
 
-        out << "#{i + 1}\t" << values[0, 20].join("\t") << "\n"
+        rows << "#{i + 1}\t" << values[0, 20].join("\t") << "\n"
+
+        if (i + 1) % CHUNK_SIZE == 0
+          chunks << "=== SHEET: #{sheet_name} (Part #{chunks.size + 1}) ===\n" + rows.join
+          rows = []
+        end
       end
+
+      chunks << "=== SHEET: #{sheet_name} (Part #{chunks.size + 1}) ===\n" + rows.join unless rows.empty?
     end
 
-    out
+    chunks
   end
 
-  # Normalizacija pojedinačne ćelije
   def normalize_cell_value(value)
     case value
-    when Date
-      value.strftime("%Y-%m-%d")
-    when BigDecimal, Float
-      value.to_f.round(2)
+    when Date then value.strftime("%Y-%m-%d")
+    when BigDecimal, Float then value.to_f.round(2)
     else
       value.to_s.strip.gsub(/\s+/, " ")
     end
   end
 
-  # Prompt za AI
-  def build_prompt(flat_text)
+  def build_prompt(flat_text, chunk_number:, total_chunks:)
     <<~PROMPT
       Ti si AI koji analizira neuređene Excel predmere/predračune sa Balkana.
-      Iz sledećeg teksta (to je sirovi ispis Excel sheet-ova) detektuj projekat, taskove (glavne sekcije) i subtaskove (pojedinačne pozicije).
-      Vrati STROGO JSON sa sledećim ključevima i bez dodatnog teksta:
+      Analiziraš dokument "#{@filename}" (deo #{chunk_number} od #{total_chunks}).
+
+      Za ovaj deo, detektuj taskove i subtaskove. Vrati STROGO JSON u sledećem formatu:
 
       {
         "project": {
-          "name": String,
-          "description": String|null,
-          "address": String|null,
-          "project_manager": String|null,
-          "planned_cost": Number|null,
+          "name": "#{@filename}",
           "tasks": [
             {
               "name": String,
               "description": String|null,
-              "planned_cost": Number|null,
               "sub_tasks": [
                 {
                   "name": String,
                   "description": String|null,
-                  "unit_of_measure": "kg"|"m2"|"m3"|"pieces"|"ton"|"liters"|"roll"|"bag"|"set"|null,
-                  "quantity": Number|null,
-                  "price_per_unit": Number|null,
-                  "total_cost": Number|null,
-                  "planned_start_date": "YYYY-MM-DD"|null,
-                  "planned_end_date": "YYYY-MM-DD"|null,
-                  "custom_fields": Object|null
+                  "unit_of_measure": String|null,
+                  "quantity": Number|null
                 }
               ]
             }
@@ -110,15 +118,25 @@ class AiExcelAnalyzerService
       }
 
       Pravila:
-      - Hijerarhiju prepoznaj iz naslova/sekcija (npr. A., B., PRIPREMNI RADOVI...) kao Task; stavke ispod su SubTask.
-      - Jedinice mjere mapiraj u skup: #{TARGET_UNITS.join(', ')}; ako vidiš „kom“, mapiraj u "pieces"; „m1“ tretiraj kao "m".
-      - Brojeve i datume normalizej (decimalna tačka, YYYY-MM-DD). Ako ne možeš pouzdano izvući, stavi null.
-      - Ako se projekt ne može pouzdano imenovati, stavi "name": "#{@project_fallback_name}".
-      - Ne izmišljaj vrijednosti.
-      - Vrati samo JSON (bez komentara, objašnjenja ili teksta izvan JSON-a).
+      - Ne izmišljaj vrednosti.
+      - Ako ne možeš da odrediš nešto, stavi null.
+      - Vrati samo JSON bez dodatnog teksta.
 
-      INPUT (sirovi Excel kao tekst):
+      INPUT (deo Excel fajla):
       #{flat_text}
     PROMPT
+  end
+
+  # Spajanje svih JSON chunkova u jedan validan projekat
+  def merge_results(results)
+    valid = results.reject { |r| r["error"] }
+    base = valid.first || { "project" => { "name" => @project_fallback_name, "tasks" => [] } }
+
+    valid.drop(1).each do |res|
+      res_tasks = res.dig("project", "tasks") || []
+      base["project"]["tasks"].concat(res_tasks)
+    end
+
+    base
   end
 end
