@@ -70,12 +70,12 @@ class AiExcelAnalyzerService
         rows << "#{i + 1}\t" << values[0, 20].join("\t") << "\n"
 
         if (i + 1) % CHUNK_SIZE == 0
-          chunks << "=== SHEET: #{sheet_name} (Part #{chunks.size + 1}) ===\n" + rows.join
+          chunks << ("=== SHEET: #{sheet_name} (Part #{chunks.size + 1}) ===\n" + rows.join)
           rows = []
         end
       end
 
-      chunks << "=== SHEET: #{sheet_name} (Part #{chunks.size + 1}) ===\n" + rows.join unless rows.empty?
+      chunks << ("=== SHEET: #{sheet_name} (Part #{chunks.size + 1}) ===\n" + rows.join) unless rows.empty?
     end
 
     chunks
@@ -92,24 +92,43 @@ class AiExcelAnalyzerService
 
   def build_prompt(flat_text, chunk_number:, total_chunks:)
     <<~PROMPT
-      Ti si AI koji analizira neuređene Excel predmere/predračune sa Balkana.
-      Analiziraš dokument "#{@filename}" (deo #{chunk_number} od #{total_chunks}).
+      Analiziraj neuređene Excel predmere i predračune građevinskih radova (Srbija, BiH, Hrvatska) i
+      konvertuj ih u jasan JSON model sa hijerarhijom **Task → SubTask**.
 
-      Za ovaj deo, detektuj taskove i subtaskove. Vrati STROGO JSON u sledećem formatu:
+      📘 **Cilj:**
+      - Strukturiši sve radove, količine, materijale i troškove.
+      - Ako Excel ima više sheetova, tretiraj ih kao delove istog projekta — svaki sheet je novi **task**, ali svi pripadaju istom `project` objektu.
+      - Sve redove ispod subtaska koji sadrže materijal, spratove, količine, napomene i slične detalje spoji u `description` kao tekst.
 
+      📗 **FORMAT ODGOVORA (strogo JSON):**
       {
         "project": {
           "name": "#{@filename}",
+          "description": "Opis projekta ili ostale informacije koje ne znas gdje ces ako postoji, inače null",
+          "address": "Adresa projekta ako postoji, inače null",
+          "project_manager": "Ime projekt menadžera ako postoji, inače null",
+          "planned_cost": "ukupna vrednost ako postoji (broj ili null)",
+          "planned_start_date": "planirani početak ako postoji (npr. '2024-07-01') ili null",
+          "planned_end_date": "planirani završetak ako postoji (npr. '2024-07-01') ili null",
           "tasks": [
             {
-              "name": String,
-              "description": String|null,
+              "name": "Glavna grupa radova (npr. HIDRANTSKA MREŽA, ZIDARSKI RADOVI)",
+              "description": "Opis ako postoji, inače null",
+              "planned_cost": "ukupna vrednost ako postoji (broj ili null)",
+              "planned_start_date": "planirani početak ako postoji (npr. '2024-07-01') ili null",
+              "planned_end_date": "planirani završetak ako postoji (npr. '2024-07-01') ili null",
               "sub_tasks": [
                 {
-                  "name": String,
-                  "description": String|null,
-                  "unit_of_measure": String|null,
-                  "quantity": Number|null
+                  "name": "Konkretni rad (npr. Izrada priključka vodovoda)",
+                  "description": "Tekstualno: svi redovi ispod tog rada — npr. materijali, spratovi, količine, napomene...",
+                  "unit_of_measure": "npr. m, m2, m3, kom, kg, l, set, null ako ne postoji",
+                  "quantity": "npr. 279, null ako nema",
+                  "unit_price": "cena po jedinici ako postoji (broj ili null)",
+                  "total_cost": "ukupna vrednost ako postoji (broj ili null)",
+                  "custom_fields": {
+                    "hitno": "DA/NE ili null ako ne postoji",
+                    "napomena": "tekst ako postoji"
+                  }
                 }
               ]
             }
@@ -117,12 +136,21 @@ class AiExcelAnalyzerService
         }
       }
 
-      Pravila:
-      - Ne izmišljaj vrednosti.
-      - Ako ne možeš da odrediš nešto, stavi null.
-      - Vrati samo JSON bez dodatnog teksta.
+      📏 **Pravila:**
+      - Naslovi velikim slovima (npr. “HIDRANTSKA MREŽA”, “ZIDARSKI RADOVI”, “VODOINSTALACIJE”) su TASK.
+      - Redovi koji počinju brojem (npr. “1.”, “2.01”) su SUB_TASK.
+      - Sve ispod subtaska (materijali, spratovi, količine...) ide u njegov `description`.
+      - Prepoznaj `unit_of_measure` iz oznaka (“m”, “m2”, “m3”, “kom”, “kg”, “set”…).
+      - `quantity` = broj uz jedinicu (npr. “41 m3”, “1,00 kom”).
+      - Ako vidiš “cena”, “ukupno”, “€” → koristi za `unit_price` i `total_cost`.
+      - Ako postoji “HITNO”, “ROK”, “NAPOMENA” → stavi u `custom_fields`.
 
-      INPUT (deo Excel fajla):
+      ⚙️ **Uputstva:**
+      - Ignoriši nazive kolona (“Opis radova”, “JM”, “Količina”, “Cena”).
+      - Ne izmišljaj vrednosti — ako ne postoji, koristi `null`.
+      - Vrati isključivo čist JSON bez objašnjenja ili komentara.
+
+      📄 **Input (deo #{chunk_number}/#{total_chunks} iz fajla "#{@filename}", koji može sadržati više sheetova):**
       #{flat_text}
     PROMPT
   end
