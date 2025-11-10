@@ -3,151 +3,127 @@ require "roo"
 require "json"
 
 class ClaudeExcelAnalyzerService
-  MAX_ROWS_PER_SHEET = 1000 # ✅ Smanji sa 10k na 1k
-  MAX_COLUMNS = 15          # ✅ Ograniči broj kolona
-  REQUEST_TIMEOUT = 180
+  MAX_ROWS_PER_REQUEST = 500  # Pošalji sve odjednom ako je manje od 500
   
   def initialize(file_path)
     @file_path = Pathname.new(file_path).to_s
     @filename = File.basename(@file_path, File.extname(@file_path)).titleize
     @client = Anthropic::Client.new(
       access_token: ENV.fetch("ANTHROPIC_API_KEY"),
-      request_timeout: REQUEST_TIMEOUT
+      request_timeout: 180
     )
   end
 
   def analyze
-    excel_content = extract_excel_content_optimized
+    excel_text = flatten_excel_to_text(@file_path)
     
-    Rails.logger.info "📤 Šaljem #{excel_content.length} karaktera Claude-u (#{excel_content.length / 4} tokena approx)..."
+    Rails.logger.info "📤 Šaljem #{excel_text.length} karaktera Claude-u..."
     
     response = @client.messages(
       parameters: {
         model: "claude-sonnet-4-5-20250929",
         max_tokens: 16_000,
-        temperature: 0.1,
+        temperature: 0,
         messages: [
-          {
-            role: "user",
-            content: build_prompt(excel_content)
-          }
+          { role: "user", content: build_simple_prompt(excel_text) }
         ]
       }
     )
 
     parse_response(response)
-  rescue Faraday::TimeoutError => e
-    Rails.logger.error "⏱️ Claude timeout nakon #{REQUEST_TIMEOUT}s"
-    raise StandardError, "AI analiza traje predugo. Pokušajte sa manjim fajlom."
-  rescue Faraday::ConnectionFailed, Faraday::SSLError => e
-    Rails.logger.error "🌐 Connection error: #{e.message}"
-    raise StandardError, "Problem sa konekcijom. Provjerite internet vezu."
+  rescue => e
+    Rails.logger.error "❌ Greška: #{e.message}"
+    {
+      "project" => {
+        "name" => @filename,
+        "tasks" => [],
+        "error" => e.message
+      }
+    }
   end
 
   private
 
-  def extract_excel_content_optimized
-    xls = Roo::Spreadsheet.open(@file_path)
-    content = []
-    total_rows = 0
-
-    xls.sheets.each do |sheet_name|
+  # ✅ JEDNOSTAVNO - flatten cijeli Excel u text
+  def flatten_excel_to_text(path)
+    xls = Roo::Spreadsheet.open(path)
+    output = []
+    
+    # Uzmi sve sheet-ove ili prvi
+    sheets = xls.sheets.select { |s| s.match?(/sheet|predmer|vodovod|kanal/i) }
+    sheets = xls.sheets.first(1) if sheets.empty?
+    
+    sheets.each do |sheet_name|
       sheet = xls.sheet(sheet_name)
+      output << "=== SHEET: #{sheet_name} ==="
       
-      # ✅ Preskoči prazne sheet-ove
-      next if sheet.last_row.nil? || sheet.last_row == 0
-      
-      content << "\n" << "="*60
-      content << "\nSHEET: #{sheet_name} (#{sheet.last_row} rows)"
-      content << "\n" << "="*60 << "\n"
-      
-      sheet_rows = 0
-      last_row_was_empty = false
-      
-      sheet.each_row_streaming(pad_cells: true).each_with_index do |row, i|
-        break if sheet_rows >= MAX_ROWS_PER_SHEET
+      sheet.each_row_streaming(pad_cells: true).each_with_index do |row, idx|
+        values = row.map { |cell| clean_cell(cell&.value) }
+        next if values.all?(&:blank?)
         
-        # ✅ Uzmi samo prvih MAX_COLUMNS kolona
-        values = row[0...MAX_COLUMNS].map { |cell| normalize_cell_value(cell&.value) }
+        # Jednostavan format: kolone odvojene sa |
+        output << values[0..10].join(" | ")
         
-        # ✅ Preskoči prazne redove ali zadrži jedan za kontekst
-        if values.all?(&:blank?)
-          next if last_row_was_empty
-          last_row_was_empty = true
-          next
-        end
-        
-        last_row_was_empty = false
-        
-        # ✅ Kompresuj whitespace
-        row_text = values.join("\t").gsub(/\t+/, "\t").strip
-        content << "#{i + 1}\t#{row_text}\n" unless row_text.blank?
-        
-        sheet_rows += 1
-        total_rows += 1
+        break if idx > MAX_ROWS_PER_REQUEST
       end
-      
-      Rails.logger.info "📊 Sheet '#{sheet_name}': #{sheet_rows} redova (od #{sheet.last_row} total)"
     end
-
-    Rails.logger.info "📋 Ukupno poslato: #{total_rows} redova iz #{xls.sheets.size} sheet(ova)"
-    content.join
+    
+    output.join("\n")
   end
 
-  def normalize_cell_value(value)
+  def clean_cell(value)
     case value
     when Date, DateTime
       value.strftime("%Y-%m-%d")
     when BigDecimal, Float
-      # ✅ Skrati decimale
-      value.round(2).to_s.gsub(/\.0+$/, '')
+      value.round(2).to_s.delete_suffix(".0")
     when nil
       ""
     when String
-      # ✅ Trim i ukloni extra whitespace
-      value.strip.gsub(/\s+/, " ")[0...200] # Max 200 chars per cell
+      value.strip.gsub(/\s+/, " ").gsub(/['']/, '"')
     else
-      value.to_s.strip[0...200]
+      value.to_s.strip
     end
   end
 
-  def build_prompt(excel_content)
+  # ✅ KRATAK I JASAN PROMPT
+  def build_simple_prompt(excel_text)
     <<~PROMPT
-      Analiziraj ovaj građevinski predmer/predračun: "#{@filename}"
+      Analiziraj građevinski predmer i izvuci Tasks i SubTasks.
 
-      **KONTEKST:**
-      - Balkanski građevinski dokument (može biti neuređen)
-      - Različiti nazivi za iste jedinice (kom/komad/pcs, m2/m²/kvadrat)
-      - Tabele mogu imati merged cells, multiple headers, ukupne sume
-      - Neki redovi su naslovi, neki stavke, neki totali - koristi kontekst
-      - PRIORITET: Fokusiraj se na redove sa konkretnim količinama i stavkama
+      **PRAVILA:**
+      1. TASK = glavna pozicija (npr "A. PRIPREMNI RADOVI", "1  ZEMLJANI RADOVI", "ELEKTRO INSTALACIJE")
+      2. SUB_TASK = podpozicija sa količinom (npr "1.01", "1", "2.02")
+      3. Vrati SAMO JSON bez markdown-a
 
-      **ZADATAK:**
-      1. Identifikuj TASKS (pozicije) - glavne kategorije radova (npr "Zemljani radovi", "Betonski radovi")
-      2. Identifikuj SUB_TASKS (podpozicije) - konkretne stavke sa količinama
-      3. Izvuci: naziv, količinu, mjernu jedinicu, cijenu (ako postoji)
-      4. Grupiši logički povezane stavke pod isti TASK
+      **TASK IDENTIFIKACIJA (bilo koji od ovih):**
+      - Slova: "A.", "B.", "C."
+      - Brojevi: "1", "2", "3" (ako je cijeli red pozicija)
+      - VELIKA SLOVA u tekstu
 
-      **JEDINICE MJERE (normaliziraj):**
-      pieces (kom/komad/pcs), m (metar), m2 (kvadrat/m²), m3 (kub/m³), kg, ton, liters, roll, bag, set
+      **SUB_TASK IDENTIFIKACIJA:**
+      - Ima količinu I jedinicu mjere
+      - Dekadni brojevi: "1.01", "1.02", "2.01"
+      - Obični brojevi: "1", "2", "3" (ako ima količinu u istom redu)
 
-      **JSON FORMAT (bez dodatnog teksta ili markdown):**
+      **JSON FORMAT:**
       {
         "project": {
           "name": "#{@filename}",
           "description": null,
           "tasks": [
             {
-              "name": "Naziv pozicije",
-              "description": null,
+              "name": "IME pozicije (kratko, npr 'Pripremni radovi')",
+              "description": "Dodatni opis ako postoji (može biti null)",
               "sub_tasks": [
                 {
-                  "name": "Naziv stavke",
-                  "description": null,
-                  "unit_of_measure": "pieces|m|m2|m3|kg|ton|null",
-                  "quantity": 100.5,
-                  "price_per_unit": 50.00,
-                  "total_cost": 5025.00
+                  "name": "IME podpozicije (kratko, npr 'Geodetsko obeležavanje')",
+                  "description": "DETALJAN OPIS stavke (kompletan tekst iz Excel-a)",
+                  "unit_of_measure": "pieces|m|m2|m3|kg|ton|liters|pausal|hours|null",
+                  "quantity": 10.5,
+                  "price_per_unit": null,
+                  "total_cost": null,
+                  "custom_fields": {"code": "1.01"}
                 }
               ]
             }
@@ -155,59 +131,72 @@ class ClaudeExcelAnalyzerService
         }
       }
 
-      **PRAVILA:**
-      - NE izmišljaj podatke - koristi null
-      - Ignoriši prazne redove i naslove
-      - Vrati SAMO JSON (bez ```json``` oznaka)
-      - Ako nema dovoljno podataka za sub_task, preskoči ga
+      **KRITIČNO - NAME vs DESCRIPTION:**
+      - task.name = KRATKO IME pozicije (npr "Pripremni radovi")
+      - task.description = dodatne informacije ako postoje (ili null)
+      - subtask.name = KRATKO IME stavke (npr "Geodetsko obeležavanje")
+      - subtask.description = KOMPLETAN OPIS stavke (cijeli tekst iz Excel-a)
+
+      **JEDINICE MJERE (normalizuj ili null ako nepoznato):**
+      - m1/metar → m
+      - m²/kvadrat → m2
+      - m³/kubik → m3
+      - kom/komad/piece/pcs → pieces
+      - kg/kilogram → kg
+      - t/tona → ton
+      - l/litar → liters
+      - h/sat/sati → hours
+      - pauš/paušal/paušalno → pausal
+      - AKO NIJE U OVOJ LISTI → null
+
+      **VAŽNO:**
+      - Za "name" koristi KRATKO IME, ne kod (npr "Pripremni radovi", NE "A")
+      - Za "description" stavi KOMPLETAN opis stavke (ili null)
+      - Ignoriši redove bez količine i jedinice
+      - Koristi null za nedostajuće podatke
 
       **EXCEL:**
-      #{excel_content}
+      #{excel_text}
     PROMPT
   end
 
   def parse_response(response)
     raw_text = response.dig("content", 0, "text")
     
-    Rails.logger.info "🤖 Claude odgovor primljen (#{raw_text.length} chars)"
+    Rails.logger.info "🤖 Primljen odgovor: #{raw_text.length} chars"
     
-    # ✅ Bolje izvlačenje JSON-a
-    json_str = extract_json_from_text(raw_text)
+    # Strip markdown i izvuci JSON
+    json_str = raw_text.strip
+                       .gsub(/^```json\s*/, '')
+                       .gsub(/^```\s*/, '')
+                       .gsub(/\s*```$/, '')
+                       .strip
+    
+    # Nađi JSON objekat
+    if json_str[0] != '{'
+      match = json_str.match(/(\{.*\})/m)
+      json_str = match[1] if match
+    end
     
     result = JSON.parse(json_str)
     
-    # ✅ Validacija
-    unless result.dig("project", "tasks").is_a?(Array)
-      raise JSON::ParserError, "Invalid structure: missing project.tasks array"
-    end
+    tasks_count = result.dig("project", "tasks")&.size || 0
+    subtasks_count = result.dig("project", "tasks")&.sum { |t| t["sub_tasks"]&.size || 0 } || 0
+    
+    Rails.logger.info "✅ Parsovano: #{tasks_count} tasks, #{subtasks_count} subtasks"
     
     result
   rescue JSON::ParserError => e
-    Rails.logger.error "❌ JSON parse greška: #{e.message}"
-    Rails.logger.error "Raw (first 500 chars):\n#{raw_text[0...500]}"
+    Rails.logger.error "❌ JSON greška: #{e.message}"
+    Rails.logger.error "JSON string:\n#{json_str[0...1000]}"
     
     # Fallback
     {
       "project" => {
         "name" => @filename,
         "tasks" => [],
-        "error" => "Greška pri parsiranju: #{e.message}"
+        "error" => "Greška parsiranja JSON-a"
       }
     }
-  end
-
-  def extract_json_from_text(text)
-    # Pokušaj 1: Markdown code block
-    if text.include?("```")
-      match = text.match(/```(?:json)?\s*(\{.*?\})\s*```/m)
-      return match[1] if match
-    end
-    
-    # Pokušaj 2: Samo JSON objekat
-    match = text.match(/(\{.*\})/m)
-    return match[1] if match
-    
-    # Pokušaj 3: Cijeli text
-    text
   end
 end

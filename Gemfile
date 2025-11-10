@@ -66,6 +66,8 @@ gem 'business_time'
 gem "roo"
 gem "openai", "~> 0.34.1"
 gem 'anthropic', '~> 0.3.0'
+gem 'gemini-ai', '~> 4.2.0'
+
 
 
 
@@ -106,4 +108,3 @@ end
 gem "kaminari", "~> 1.2"
 
 gem "letter_opener", "~> 1.10"
-

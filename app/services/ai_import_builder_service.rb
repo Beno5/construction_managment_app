@@ -51,17 +51,48 @@ class AiImportBuilderService
     return nil if unit.blank?
     normalized = unit.to_s.downcase.strip
 
+    # ✅ KOMPLETNO MAPIRANJE SA FALLBACK-om
     case normalized
-    when "kom", "komad", "komada", "piece", "pieces"
+    # Komadi
+    when "kom", "komad", "komada", "piece", "pieces", "pcs"
       "pieces"
-    when "m2", "m²"
+    # Metri kvadratni
+    when "m2", "m²", "kvadrat", "kvadrata", "sqm"
       "m2"
-    when "m3", "m³"
+    # Metri kubni
+    when "m3", "m³", "kub", "kubik", "cubic"
       "m3"
-    when "m", "m1", "dužni metar", "meter", "metar"
+    # Obični metri
+    when "m", "m1", "metar", "metara", "meter"
       "m"
+    # Kilogrami
+    when "kg", "kilogram", "kilograma"
+      "kg"
+    # Tone
+    when "t", "ton", "tona", "tone"
+      "ton"
+    # Litri
+    when "l", "litar", "litara", "liters", "liter"
+      "liters"
+    # Sati
+    when "h", "sat", "sati", "hours", "hour"
+      "hours"
+    # Paušal
+    when "pauš", "paušal", "paušalno", "pausal", "pausalno", "kom paušalno"
+      "pausal"
+    # Roll
+    when "roll", "rola", "rolna"
+      "roll"
+    # Bag
+    when "bag", "vreća", "vreca", "kesа"
+      "bag"
+    # Set
+    when "set", "komplet"
+      "set"
     else
-      normalized
+      # ✅ FALLBACK - ako nije prepoznato, vrati null
+      Rails.logger.warn "⚠️ Nepoznata jedinica mjere: '#{unit}' → postavljam na null"
+      nil
     end
   end
 end

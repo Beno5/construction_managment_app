@@ -68,53 +68,54 @@ class ProjectsController < ApplicationController
     end
   end
 
- def import_ai
-  file = params[:file]
-  if file.blank?
-    redirect_to projects_path, alert: "Molimo odaberite Excel fajl."
-    return
+  def import_ai
+    file = params[:file]
+    if file.blank?
+      redirect_to projects_path, alert: "Molimo odaberite Excel fajl."
+      return
+    end
+
+    tmp_path = Rails.root.join("tmp", file.original_filename)
+    File.binwrite(tmp_path, file.read)
+
+    Rails.logger.info "📂 [AI Import] Uploaded file saved to: #{tmp_path}"
+
+    # ✅ SAMO OVO PROMENI - koristi Claude umesto OpenAI
+    ai_result = AiExcelAnalyzerService.new(tmp_path).analyze
+
+    Rails.logger.info "🤖 [AI Import] AI analysis completed. Parsed data keys: #{begin
+      ai_result.keys
+    rescue StandardError
+      'unknown'
+    end}"
+
+    builder = AiImportBuilderService.new(
+      ai_result,
+      user: current_user,
+      business: current_business
+    )
+
+    project = builder.build!
+
+    redirect_to business_projects_path(current_business),
+                notice: "✅ Projekat '#{project.name}' uspješno kreiran putem AI analize!"
+  rescue ActiveRecord::RecordInvalid => e
+    record = e.record
+    error_details = record.errors.full_messages.join(', ')
+    Rails.logger.error "❌ [AI Import] RecordInvalid: #{record.class.name} - #{error_details}"
+
+    redirect_to business_projects_path(current_business),
+                alert: "❌ Neuspješan import — #{record.class.name}: #{error_details}"
+  rescue JSON::ParserError => e
+    Rails.logger.error "❌ [AI Import] JSON parsing error: #{e.message}"
+    redirect_to business_projects_path(current_business),
+                alert: "❌ AI analiza nije vratila validan JSON format."
+  rescue StandardError => e
+    Rails.logger.error "💥 [AI Import] Unexpected error: #{e.class} - #{e.message}\n#{e.backtrace.take(5).join("\n")}"
+    redirect_to business_projects_path(current_business),
+                alert: "❌ Neočekivana greška: #{e.message}"
   end
 
-  tmp_path = Rails.root.join("tmp", file.original_filename)
-  File.binwrite(tmp_path, file.read)
-
-  Rails.logger.info "📂 [AI Import] Uploaded file saved to: #{tmp_path}"
-
-  # ✅ SAMO OVO PROMENI - koristi Claude umesto OpenAI
-  ai_result = ClaudeExcelAnalyzerService.new(tmp_path).analyze
-  
-  Rails.logger.info "🤖 [AI Import] AI analysis completed. Parsed data keys: #{begin
-    ai_result.keys
-  rescue StandardError
-    'unknown'
-  end}"
-
-  builder = AiImportBuilderService.new(
-    ai_result,
-    user: current_user,
-    business: current_business
-  )
-
-  project = builder.build!
-
-  redirect_to business_projects_path(current_business),
-              notice: "✅ Projekat '#{project.name}' uspješno kreiran putem AI analize!"
-rescue ActiveRecord::RecordInvalid => e
-  record = e.record
-  error_details = record.errors.full_messages.join(', ')
-  Rails.logger.error "❌ [AI Import] RecordInvalid: #{record.class.name} - #{error_details}"
-
-  redirect_to business_projects_path(current_business),
-              alert: "❌ Neuspješan import — #{record.class.name}: #{error_details}"
-rescue JSON::ParserError => e
-  Rails.logger.error "❌ [AI Import] JSON parsing error: #{e.message}"
-  redirect_to business_projects_path(current_business),
-              alert: "❌ AI analiza nije vratila validan JSON format."
-rescue StandardError => e
-  Rails.logger.error "💥 [AI Import] Unexpected error: #{e.class} - #{e.message}\n#{e.backtrace.take(5).join("\n")}"
-  redirect_to business_projects_path(current_business),
-              alert: "❌ Neočekivana greška: #{e.message}"
-end
   private
 
   def set_project
