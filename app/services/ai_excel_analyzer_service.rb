@@ -14,18 +14,29 @@ class AiExcelAnalyzerService
   end
 
   def analyze
-    chunks = flatten_excel_in_chunks(@file_path)
+    ext = File.extname(@file_path).downcase
+
+    flat_chunks =
+      case ext
+      when ".xlsx", ".xls", ".ods"
+        flatten_excel_in_chunks(@file_path)
+      when ".docx", ".doc"
+        flatten_word_in_chunks(@file_path)
+      else
+        raise "Unsupported file format: #{ext}"
+      end
+
     all_results = []
 
-    chunks.each_with_index do |chunk_text, i|
-      prompt = build_prompt(chunk_text, chunk_number: i + 1, total_chunks: chunks.size)
+    flat_chunks.each_with_index do |chunk_text, i|
+      prompt = build_prompt(chunk_text, chunk_number: i + 1, total_chunks: flat_chunks.size)
+      puts "📦 Sending chunk #{i + 1}/#{flat_chunks.size} to GPT..."
 
-      puts "📦 Sending chunk #{i + 1}/#{chunks.size} to GPT..."
       response = @client.chat.completions.create(
         model: ENV.fetch("OPENAI_MODEL", "gpt-4.1"),
         temperature: 0.2,
         messages: [
-          { role: "system", content: "You are an AI that analyzes messy Excel construction files." },
+          { role: "system", content: "You are an AI that analyzes messy construction documents (Excel or Word)." },
           { role: "user", content: prompt }
         ]
       )
@@ -78,6 +89,28 @@ class AiExcelAnalyzerService
       chunks << ("=== SHEET: #{sheet_name} (Part #{chunks.size + 1}) ===\n" + rows.join) unless rows.empty?
     end
 
+    chunks
+  end
+
+  def flatten_word_in_chunks(path)
+    require "docx"
+    doc = Docx::Document.open(path)
+
+    # Izvuci sve paragrafe u običan tekst
+    paragraphs = doc.paragraphs.map(&:text).reject(&:blank?)
+    chunks = []
+    buffer = []
+
+    paragraphs.each_with_index do |line, i|
+      buffer << line.strip
+
+      if (i + 1) % CHUNK_SIZE == 0
+        chunks << buffer.join("\n")
+        buffer = []
+      end
+    end
+
+    chunks << buffer.join("\n") unless buffer.empty?
     chunks
   end
 
