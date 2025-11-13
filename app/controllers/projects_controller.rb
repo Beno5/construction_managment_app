@@ -71,23 +71,21 @@ class ProjectsController < ApplicationController
   def import_ai
     file = params[:file]
     if file.blank?
-      redirect_to projects_path, alert: "Molimo odaberite fajl."
+      redirect_to business_projects_path(current_business), alert: "Molimo odaberite Excel fajl."
       return
     end
 
-    tmp_path = Rails.root.join("tmp", file.original_filename)
-    File.binwrite(tmp_path, file.read)
-    Rails.logger.info "📂 [AI Import] File saved to: #{tmp_path}"
+    base64_data = Base64.encode64(file.read)
 
-    # ⬇️ START JOB
     AiImportJob.perform_later(
-      tmp_path.to_s,
+      file.original_filename,
+      base64_data,
       current_user.id,
       current_business.id
     )
 
     redirect_to business_projects_path(current_business),
-                notice: "🤖 AI import je pokrenut! Projekat će se pojaviti kada analiza bude završena."
+                notice: "⏳ AI import je pokrenut… Biće gotovo uskoro!"
   end
 
   private
