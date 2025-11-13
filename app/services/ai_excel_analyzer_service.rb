@@ -6,9 +6,9 @@ class AiExcelAnalyzerService
   TARGET_UNITS = %w[kg m2 m3 pieces ton liters roll bag set].freeze
   CHUNK_SIZE = 200 # koliko redova po chunku šaljemo GPT-u
 
-  def initialize(file_path)
+  def initialize(file_path, original_filename)
     @file_path = Pathname.new(file_path).to_s
-    @filename = File.basename(@file_path, File.extname(@file_path)).titleize
+    @filename = File.basename(original_filename, File.extname(original_filename)).titleize
     @project_fallback_name = default_fallback_name
     @client = OpenAI_CLIENT || OpenAI::Client.new(api_key: ENV.fetch("OPENAI_API_KEY", nil))
   end

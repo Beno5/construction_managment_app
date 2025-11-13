@@ -14,7 +14,7 @@ class AiImportJob < ApplicationJob
     business = Business.find(business_id)
 
     # 3) AI Excel analiza
-    ai_result = AiExcelAnalyzerService.new(tmp_path).analyze
+    ai_result = AiExcelAnalyzerService.new(tmp_path, filename).analyze
     Rails.logger.info "🤖 [AIImportJob] AI finished. Keys: #{ai_result.keys rescue 'unknown'}"
 
     # 4) Kreiranje projekta
