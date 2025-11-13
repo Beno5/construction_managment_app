@@ -22,6 +22,8 @@ class AiExcelAnalyzerService
         flatten_excel_in_chunks(@file_path)
       when ".docx", ".doc"
         flatten_word_in_chunks(@file_path)
+      when ".pdf"
+        flatten_pdf_in_chunks(@file_path)
       else
         raise "Unsupported file format: #{ext}"
       end
@@ -112,6 +114,13 @@ class AiExcelAnalyzerService
 
     chunks << buffer.join("\n") unless buffer.empty?
     chunks
+  end
+
+  def flatten_pdf_in_chunks(path)
+    require "pdf/reader"
+    reader = PDF::Reader.new(path)
+    text = reader.pages.map(&:text).join("\n")
+    text.scan(/.{1,10000}/m) # chunk po 10k karaktera
   end
 
   def normalize_cell_value(value)

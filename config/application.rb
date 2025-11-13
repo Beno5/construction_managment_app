@@ -14,6 +14,8 @@ module ConstructionManagmentApp
     config.autoload_paths << Rails.root.join('app/services')
     config.i18n.available_locales = [:en, :sr]
     config.i18n.default_locale = :sr
+    config.active_job.queue_adapter = :sidekiq
+
 
     # Configuration for the application, engines, and railties goes here.
     #

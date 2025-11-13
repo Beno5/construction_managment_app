@@ -71,47 +71,23 @@ class ProjectsController < ApplicationController
   def import_ai
     file = params[:file]
     if file.blank?
-      redirect_to projects_path, alert: "Molimo odaberite Excel fajl."
+      redirect_to projects_path, alert: "Molimo odaberite fajl."
       return
     end
 
     tmp_path = Rails.root.join("tmp", file.original_filename)
     File.binwrite(tmp_path, file.read)
+    Rails.logger.info "📂 [AI Import] File saved to: #{tmp_path}"
 
-    Rails.logger.info "📂 [AI Import] Uploaded file saved to: #{tmp_path}"
-
-    ai_result = AiExcelAnalyzerService.new(tmp_path).analyze
-    Rails.logger.info "🤖 [AI Import] AI analysis completed. Parsed data keys: #{begin
-      ai_result.keys
-    rescue StandardError
-      'unknown'
-    end}"
-
-    builder = AiImportBuilderService.new(
-      ai_result,
-      user: current_user,
-      business: current_business
+    # ⬇️ START JOB
+    AiImportJob.perform_later(
+      tmp_path.to_s,
+      current_user.id,
+      current_business.id
     )
 
-    project = builder.build!
-
     redirect_to business_projects_path(current_business),
-                notice: "✅ Projekat '#{project.name}' uspješno kreiran putem AI analize!"
-  rescue ActiveRecord::RecordInvalid => e
-    record = e.record
-    error_details = record.errors.full_messages.join(', ')
-    Rails.logger.error "❌ [AI Import] RecordInvalid: #{record.class.name} - #{error_details}"
-
-    redirect_to business_projects_path(current_business),
-                alert: "❌ Neuspješan import — #{record.class.name}: #{error_details}"
-  rescue JSON::ParserError => e
-    Rails.logger.error "❌ [AI Import] JSON parsing error: #{e.message}"
-    redirect_to business_projects_path(current_business),
-                alert: "❌ AI analiza nije vratila validan JSON format."
-  rescue StandardError => e
-    Rails.logger.error "💥 [AI Import] Unexpected error: #{e.class} - #{e.message}\n#{e.backtrace.take(5).join("\n")}"
-    redirect_to business_projects_path(current_business),
-                alert: "❌ Neočekivana greška: #{e.message}"
+                notice: "🤖 AI import je pokrenut! Projekat će se pojaviti kada analiza bude završena."
   end
 
   private

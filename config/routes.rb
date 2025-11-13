@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  require "sidekiq/web"
+
+  # (opcionalno kasnije zaštititi admin authom:
+  # authenticate :user, ->(u) { u.admin? } do
+  #   mount Sidekiq::Web => "/sidekiq"
+  # end
+  mount Sidekiq::Web => "/sidekiq"
 
   devise_for :users, controllers: {
     passwords: 'users/passwords',

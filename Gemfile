@@ -65,12 +65,9 @@ gem 'i18n-js'
 gem 'business_time'
 gem "roo"
 gem "openai", "~> 0.34.1"
-# Gemfile
 gem "docx", "~> 0.10.0"
-
-
-
-
+gem "pdf-reader"
+gem "sidekiq"
 
 
 
@@ -108,4 +105,3 @@ end
 gem "kaminari", "~> 1.2"
 
 gem "letter_opener", "~> 1.10"
-

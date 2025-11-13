@@ -49,6 +49,7 @@ class AiImportBuilderService
 
   def map_unit(unit)
     return nil if unit.blank?
+
     normalized = unit.to_s.downcase.strip
 
     # ✅ KOMPLETNO MAPIRANJE SA FALLBACK-om
