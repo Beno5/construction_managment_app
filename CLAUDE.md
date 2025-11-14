@@ -264,6 +264,81 @@ The app is Heroku-ready:
 - Redis auto-configured for Sidekiq
 - Assets precompiled during build
 
+## Production Configuration (Heroku)
+
+### Redis Setup
+
+**Redis Cloud Add-on (Free Tier):**
+```bash
+# Add Redis Cloud addon to Heroku app
+heroku addons:create rediscloud:30
+
+# This creates REDISCLOUD_URL environment variable
+# Configure REDIS_URL to point to it
+heroku config:set REDIS_URL=$(heroku config:get REDISCLOUD_URL)
+```
+
+**What it's used for:**
+- Sidekiq background job queue
+- ActionCable adapter for WebSocket connections
+- Rails cache store (optional)
+
+**Configuration Files:**
+- `config/cable.yml` - ActionCable uses `REDIS_URL` in production
+- Sidekiq auto-detects `REDIS_URL` or `REDIS_TLS_URL`
+
+### ActionCable & Real-Time Features
+
+**Turbo Stream Notifications:**
+The app uses ActionCable + Turbo Streams for real-time notifications:
+- AI import completion notifications sent to users via `Turbo::StreamsChannel.broadcast_append_to`
+- Users subscribe to personal notification channels: `notifications_#{user.id}`
+- Subscription managed in `app/views/layouts/application.html.erb` via `turbo_stream_from`
+
+**How it works:**
+1. Background job completes (e.g., `AiImportJob`)
+2. Job broadcasts Turbo Stream to user's channel
+3. ActionCable delivers stream to connected browser
+4. Turbo automatically updates DOM with notification
+5. Stimulus controller (`auto_dismiss_controller.js`) auto-dismisses after 5 seconds
+
+**WebSocket Connections:**
+- Heroku automatically routes WebSocket connections to Rails app
+- No special configuration needed - works out-of-the-box
+- Connection URL: `wss://your-app.herokuapp.com/cable`
+- ActionCable handles WebSocket protocol negotiation
+
+**Production Configuration:**
+```ruby
+# config/cable.yml (already configured)
+production:
+  adapter: redis
+  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
+  channel_prefix: construction_managment_app_production
+```
+
+**Key Files:**
+- `app/jobs/ai_import_job.rb` - Broadcasts notifications after AI import
+- `app/javascript/controllers/auto_dismiss_controller.js` - Auto-dismisses notifications
+- `app/views/layouts/application.html.erb` - Subscribes users to notification streams
+- `app/views/partials/_turbo_notification.html.erb` - Notification template
+
+**Real-Time Features (Production-Ready):**
+- ✅ AI import completion notifications
+- ✅ Auto-refresh of project lists (planned)
+- ✅ Flash messages with auto-dismiss
+- ✅ WebSocket fallback to long-polling (automatic)
+
+**Testing WebSockets in Production:**
+```bash
+# Check ActionCable connection in browser console
+# Look for: [ActionCable] Connected to wss://...
+# Or in Rails logs:
+heroku logs --tail --dyno=web | grep ActionCable
+```
+
+**Note:** Real-time features work immediately after deploying to Heroku with Redis Cloud addon. No additional configuration required.
+
 ## RuboCop Configuration
 
 Key rules (see `.rubocop.yml`):
