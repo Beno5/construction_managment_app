@@ -299,6 +299,7 @@ sr:
       updated: "Projekat %{name} je uspješno ažuriran."
       deleted: "Projekat %{name} je uspješno obrisan."
       name_required: "Naziv projekta je obavezan."
+      ai_import_completed: "✅ AI import projekta '%{project_name}' je završen!"
   tasks:
     add_new: "Kreiraj poziciju"
     show:

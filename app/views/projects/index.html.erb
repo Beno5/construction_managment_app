@@ -1,3 +1,6 @@
+<%# Subscribe to real-time projects updates %>
+<%= turbo_stream_from "projects_#{current_business.id}" %>
+
 <%= render 'partials/header1', 
            title: t("breadcrums.projects_overview", name: current_business.name), 
            model_name: t('projects.form.model_name'),

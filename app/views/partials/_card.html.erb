@@ -12,7 +12,7 @@
     <p><span class="font-semibold"><%= t('projects.form.project_manager') %>:</span> <%= project.project_manager %></p>
     <p><span class="font-semibold"><%= t('projects.form.planned_start_date') %>:</span> <%= project.planned_start_date&.strftime("%d.%m.%Y") %></p>
     <p><span class="font-semibold"><%= t('projects.form.planned_end_date') %>:</span> <%= project.planned_end_date&.strftime("%d.%m.%Y") %></p>
-    <p><span class="font-semibold"><%= t('projects.form.planned_cost', currency: @current_business.currency_symbol) %>:</span> <%= project.planned_cost ? "#{project.planned_cost} #{@current_business.currency_symbol}" : t('projects.form.not_available') %></p>
+    <p><span class="font-semibold"><%= t('projects.form.planned_cost', currency: project.business.currency_symbol) %>:</span> <%= project.planned_cost ? "#{project.planned_cost} #{project.business.currency_symbol}" : t('projects.form.not_available') %></p>
     <p><span class="font-semibold"><%= t('projects.form.status') %>:</span> <%= project.status.humanize %></p>
     <p>
       <span class="font-semibold"><%= t('projects.form.description') %>:</span>
@@ -34,7 +34,7 @@
   <!-- Actions -->
   <div class="flex flex-wrap justify-evenly gap-3 gap-y-3 px-4 py-4">
     <!-- Add Task -->
-    <%= link_to new_business_project_task_path(@current_business, project),
+    <%= link_to new_business_project_task_path(project.business, project),
             class: "min-w-[200px] inline-flex items-center justify-center text-center bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 transition",
             data: { turbo: false } do %>
       <svg class="w-5 h-5 mr-2 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -43,19 +43,19 @@
       <%= t('projects.form.add_task') %>
     <% end %>
     <!-- View Project -->
-    <%= link_to business_project_path(@current_business, project),
+    <%= link_to business_project_path(project.business, project),
               class: "min-w-[200px] text-center bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 transition",
               data: { turbo: false } do %>
       📋 <%= t('projects.form.view_project') %>
     <% end %>
     <!-- Edit Project -->
-    <%= link_to edit_business_project_path(@current_business, project),
+    <%= link_to edit_business_project_path(project.business, project),
               class: "min-w-[200px] text-center  bg-gray-200 text-gray-900 px-4 py-2 rounded-lg  hover:bg-gray-300 focus:ring-4 focus:ring-yellow-300 transition",
               data: { turbo: false } do %>
       ✏️ <%= t('projects.form.edit_project') %>
     <% end %>
     <!-- Delete Project -->
-    <%= link_to business_project_path(@current_business, project),
+    <%= link_to business_project_path(project.business, project),
               data: { turbo_method: :delete, turbo_confirm: t('confirmations.delete', name: project.name) },
               class: "min-w-[200px] text-center bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300 transition" do %>
       🗑️ <%= t('projects.form.delete_project') %>

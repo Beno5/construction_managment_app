@@ -298,6 +298,7 @@ en:
       updated: "Project %{name} was updated successfully."
       deleted: "Project %{name} was deleted successfully."
       name_required: "Project name is required."
+      ai_import_completed: "✅ AI import of project '%{project_name}' completed!"
   tasks:
     add_new: "Add New Task"
     show:

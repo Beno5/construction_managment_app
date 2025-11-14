@@ -14,10 +14,21 @@
     <%= favicon_link_tag "favicon-32x32_con.png", rel: "icon", type: "image/png", sizes: "32x32" %>
   </head>
   <body class="bg-gray-50 dark:bg-gray-800 <%= 'bg-white dark:bg-gray-900' if params[:white_bg] %>">
+    <%# Subscribe to Turbo Stream notifications %>
+    <% if user_signed_in? %>
+      <%= turbo_stream_from "notifications_#{current_user.id}" %>
+    <% end %>
+    <%# Regular server-side flash messages %>
     <div id="flash-messages"
-     class="fixed left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500"
-     style="top: 1rem;">
+         class="fixed left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500"
+         style="top: 1rem;">
       <%= render "partials/flash_messages" %>
+    </div>
+    <%# Turbo Stream notifications container (real-time broadcasts) %>
+    <div id="turbo-notifications"
+         class="fixed left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500"
+         style="top: 1rem;">
+      <%# Real-time notifications append here %>
     </div>
     <!-- Glavni wrapper za sadržaj -->
     <main class="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col">
