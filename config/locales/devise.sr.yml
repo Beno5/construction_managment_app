@@ -54,6 +54,7 @@ sr:
       signed_in: "Uspešno ste se prijavili."
       signed_out: "Uspešno ste se odjavili."
       already_signed_out: "Već ste odjavljeni."
+      sign_out: Odjavi se
       new:
         title: "Prijavite se na platformu"
         email_label: "Vaš email"

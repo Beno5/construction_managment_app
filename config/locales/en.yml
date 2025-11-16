@@ -70,7 +70,7 @@ en:
             too_short: "Password is too short (minimum is %{count} characters)"
   date:
     formats:
-      default: "%Y-%m-%d"
+      default: "%d.%m.%Y"
       short: "%b %d"
       long: "%B %d, %Y"
     day_names:
@@ -150,6 +150,7 @@ en:
     materials: "Materials"
     businesses: "Businesses"
     norms: "Norms"
+    user_settings: "User Settings"
   breadcrums:
     projects_overview: "ALL PROJECTS (%{name})"
     project_overview: "PROJECT OVERVIEW (%{name})"

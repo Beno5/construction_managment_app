@@ -38,7 +38,7 @@
              t('documents.form.name') => :name,
              t('documents.form.description') => ->(document) { content_tag(:span, document.description&.truncate(25), title: document.description, class: "tooltip") },
              t('documents.form.size') => ->(document) { document.file.attached? ? "#{document.file.byte_size / 1024} KB" : t('documents.form.no_file') },
-             t('documents.form.created_at') => ->(document) { document.created_at.strftime("%Y-%m-%d") }
+             t('documents.form.created_at') => ->(document) { l(document.created_at.to_date) }
            },
            turbo_frame_id: "documents-frame",
            model_name: "Documents",
