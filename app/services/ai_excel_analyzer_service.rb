@@ -186,6 +186,8 @@ class AiExcelAnalyzerService
       - `quantity` = broj uz jedinicu (npr. “41 m3”, “1,00 kom”).
       - Ako vidiš “cena”, “ukupno”, “€” → koristi za `unit_price` i `total_cost`.
       - Ako postoji “HITNO”, “ROK”, “NAPOMENA” → stavi u `custom_fields`.
+      - **OBAVEZNO: Svaki `name` i `description` mora počinjati velikim slovom. Npr: "geodetska merenja" → "Geodetska merenja"**
+
 
       ⚙️ **Uputstva:**
       - Ignoriši nazive kolona (“Opis radova”, “JM”, “Količina”, “Cena”).
