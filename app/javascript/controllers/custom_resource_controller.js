@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
 
-    static targets = [
+  static targets = [
     "quantity",
     "pricePerUnit",
     "totalCost",
@@ -22,10 +22,10 @@ export default class extends Controller {
     });
   }
 
-  
+
   handleModalClick(event) {
     event.preventDefault(); // Sprečavamo da se link prati
-  
+
     const activityId_from_button = event.target.dataset.activityId
     const activityId = document.querySelector("[name='custom_resource[activity_id]']").value = activityId_from_button // ako je create button onda nema activityId 
     const form = this.element.querySelector("form");
@@ -42,15 +42,15 @@ export default class extends Controller {
     const mode = event.currentTarget.dataset.mode || "create";
     const type = event.currentTarget.dataset.type || "StandardResource";
 
-   
+
     // Ako je mode definisan i nije "create", uzimamo rowId
     let rowId = null;
     if (mode && mode !== "create") {
       rowId = event.target.closest('tr').id.split('_')[1]; // Dohvati ID reda (npr. 53)
     }
-    
+
     modal.dataset.mode = mode; // Postavi mode na modal
-    
+
     this.initializeModal(mode, type); // Pokreni inicijalizaciju na osnovu moda
 
     // Ako imamo rowId, pozivamo fetchData da dohvatimo podatke
@@ -58,34 +58,34 @@ export default class extends Controller {
       this.fetchData(rowId); // Dohvati podatke putem ID-a
     }
   }
-  
+
 
   async fetchData(rowId) {
     try {
       const response = await fetch(`/fetch_data/get_activity_and_resource_infos/${rowId}`, { method: 'GET' });
       const data = await response.json();
       console.log(data);
-  
+
       // Pozivamo updateResources2 sa await, što znači da čekamo da se završi pre nego što pozovemo updateModal
       await this.updateResources2(data.activity_type);
-      
+
       // Tek nakon što završi updateResources2, pozivamo updateModal
       this.updateModal(data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
-  
+
 
   updateModal(data) {
     const modal = document.getElementById('resource-modal');
-  
+
     // Check if the modal exists before continuing
     if (!modal) {
       console.error("Modal element not found!");
       return;
     }
-  
+
     // Check the activity type to determine if it's a CustomResource
     if (data.activityable_type === "CustomResource") {
 
@@ -98,31 +98,31 @@ export default class extends Controller {
       // If it's a CustomResource, populate the fields for CustomResource
       const categoryField = modal.querySelector("#custom_resource_category");
       if (categoryField) categoryField.value = data.activity_type;
-  
+
       const nameField = modal.querySelector("#custom_resource_name");
       if (nameField) nameField.value = data.resource_name;
-  
+
       const firstNameField = modal.querySelector("#custom_resource_first_name");
       if (firstNameField) firstNameField.value = data.resoruce_first_name || '';
-  
+
       const lastNameField = modal.querySelector("#custom_resource_last_name");
       if (lastNameField) lastNameField.value = data.resoruce_last_name || '';
-  
+
       const professionField = modal.querySelector("#custom_resource_profession");
       if (professionField) professionField.value = data.resoruce_profession || '';
-  
+
       const unitField = modal.querySelector("#custom_resource_unit_of_measure");
       if (unitField) unitField.value = data.resoruce_unit_of_measure;
-  
+
       const quantityField = modal.querySelector("#custom_resource_quantity");
       if (quantityField) quantityField.value = data.quantity;
-  
+
       const priceField = modal.querySelector("#custom_resource_price_per_unit");
       if (priceField) priceField.value = data.resoruce_price_per_unit;
-  
+
       const descriptionField = modal.querySelector("#custom_resource_description");
       if (descriptionField) descriptionField.value = data.resoruce_description;
-  
+
       const totalCostField = modal.querySelector("#custom_resource_total_cost");
       if (totalCostField) totalCostField.value = data.total_cost;
 
@@ -132,33 +132,33 @@ export default class extends Controller {
       const endDateField = modal.querySelector("#custom_resource_end_date");
       if (endDateField) endDateField.value = data.end_date || '';
 
-  
+
     } else {
       // If it's a different resource type, populate the fields accordingly
       const categoryField = modal.querySelector("#activity_category");
       if (categoryField) categoryField.value = data.activity_type;
-  
+
       const resourceField = modal.querySelector("#activity_resource");
       if (resourceField) resourceField.value = data.activityable_id; // Link to the resource
-  
+
       const quantityField = modal.querySelector("#activity_quantity");
       if (quantityField) quantityField.value = data.quantity;
-  
+
       const unitField = modal.querySelector("#activity_unit_of_measure");
       if (unitField) unitField.value = data.resoruce_unit_of_measure;
-  
+
       const priceField = modal.querySelector("#activity_price_per_unit");
       if (priceField) priceField.value = data.resoruce_price_per_unit;
-  
+
       const descriptionField = modal.querySelector("#activity_description");
       if (descriptionField) descriptionField.value = data.resoruce_description;
-  
+
       const professionField = modal.querySelector("#activity_profession");
       if (professionField) professionField.value = data.resoruce_profession || '';
-  
+
       const totalCostField = modal.querySelector("#activity_total_cost");
       if (totalCostField) totalCostField.value = data.total_cost;
-  
+
       const resourceNameField = modal.querySelector("#activity_resource_name");
       if (resourceNameField) resourceNameField.value = data.resource_name || '';
 
@@ -170,9 +170,9 @@ export default class extends Controller {
 
     }
   }
-  
 
- 
+
+
   async updateResources2(activity_type) {
     const category = activity_type;
     const resourceSelect = document.getElementById("activity_resource");
@@ -184,139 +184,154 @@ export default class extends Controller {
     if (!category || !businessId) return;
 
     try {
-        // Dohvatanje resursa
-        const resourceResponse = await fetch(`/fetch_data/resources?category=${category}&business_id=${businessId}`);
-        const resourceData = await resourceResponse.json();
+      // Dohvatanje resursa
+      const resourceResponse = await fetch(`/fetch_data/resources?category=${category}&business_id=${businessId}`);
+      const resourceData = await resourceResponse.json();
 
-        // Dohvatanje opcija jedinica mere
-        const unitResponse = await fetch('/fetch_data/unit_options');
-        const unitOptions = await unitResponse.json();
+      // Dohvatanje opcija jedinica mere
+      const unitResponse = await fetch('/fetch_data/unit_options');
+      const unitOptions = await unitResponse.json();
 
-        // Ispisivanje u konzolu kako bi proverio strukturu unitOptions
-        console.log("unitOptions: ", unitOptions);
+      // Ispisivanje u konzolu kako bi proverio strukturu unitOptions
+      console.log("unitOptions: ", unitOptions);
 
-        // Očisti dropdown menije
-        resourceSelect.innerHTML = "";
-        unitSelect.innerHTML = "";
+      // Očisti dropdown menije
+      resourceSelect.innerHTML = "";
+      unitSelect.innerHTML = "";
 
-        // Dodaj placeholder opciju za resurse
-        let placeholderOption = document.createElement("option");
-        placeholderOption.value = "";
-        placeholderOption.textContent = '-- Odaberite resurs --';
-        placeholderOption.selected = true;
-        placeholderOption.disabled = true;
-        resourceSelect.appendChild(placeholderOption);
+      // Dodaj placeholder opciju za resurse
+      let placeholderOption = document.createElement("option");
+      placeholderOption.value = "";
+      placeholderOption.textContent = '-- Odaberite resurs --';
+      placeholderOption.selected = true;
+      placeholderOption.disabled = true;
+      resourceSelect.appendChild(placeholderOption);
 
-        // Dodaj resurse u dropdown
-        resourceData.forEach(resource => {
-            let option = document.createElement("option");
-            option.value = resource.id;
-            option.textContent = resource.name;
-            resourceSelect.appendChild(option);
-        });
+      // Dodaj resurse u dropdown
+      resourceData.forEach(resource => {
+        let option = document.createElement("option");
+        option.value = resource.id;
+        option.textContent = resource.name;
+        resourceSelect.appendChild(option);
+      });
 
-        // Dodaj placeholder opciju za jedinice mere
-        let unitPlaceholder = document.createElement("option");
-        unitPlaceholder.value = "";
-        unitPlaceholder.textContent = ' -- Odaberite jedinicu mere --';
-        unitPlaceholder.selected = true;
-        unitPlaceholder.disabled = true;
-        unitSelect.appendChild(unitPlaceholder);
+      // Dodaj placeholder opciju za jedinice mere
+      let unitPlaceholder = document.createElement("option");
+      unitPlaceholder.value = "";
+      unitPlaceholder.textContent = ' -- Odaberite jedinicu mere --';
+      unitPlaceholder.selected = true;
+      unitPlaceholder.disabled = true;
+      unitSelect.appendChild(unitPlaceholder);
 
-        // Proveri koja kategorija je izabrana
-        console.log("Selected Category: ", category);
+      // Proveri koja kategorija je izabrana
+      console.log("Selected Category: ", category);
 
-        // Proveri strukturu unitOptions za selectedCategory
-        const units = unitOptions[category] || {};
-        console.log("Units for category: ", units); // Dodaj ispis da vidiš šta se nalazi
+      // Proveri strukturu unitOptions za selectedCategory
+      const units = unitOptions[category] || {};
+      console.log("Units for category: ", units); // Dodaj ispis da vidiš šta se nalazi
 
-        Object.entries(units).forEach(([key, label]) => {
-          let option = document.createElement("option");
-          option.value = key;
-          option.textContent = label;
-          unitSelect.appendChild(option);
+      Object.entries(units).forEach(([key, label]) => {
+        let option = document.createElement("option");
+        option.value = key;
+        option.textContent = label;
+        unitSelect.appendChild(option);
 
       });
-      
+
 
     } catch (error) {
-        console.error("Error fetching resources or unit options:", error);
+      console.error("Error fetching resources or unit options:", error);
     }
-}
+  }
 
 
 
 
 
 
-  
-  
-  
-initializeModal(mode, type) {
-  // ✅ Sigurnosni fallbackovi
-  mode = mode || "create";
-  type = type || "StandardResource";
 
-  const toggleContainer = document.getElementById('resource-toggle-container');
-  const formStandard = document.getElementById('standard-resources');
-  const customStandard = document.getElementById('custom-resources');
-  const formFields = this.element.querySelectorAll('input, select, textarea');
-  const submitButton = this.element.querySelector("input[type='submit']");
 
-  if (mode === "edit" || mode === "show") {
-    toggleContainer.classList.add('hidden');
+  initializeModal(mode, type) {
+    mode = mode || "create";
+    type = type || "StandardResource";
 
-    if (mode === "show") {
-      // 🔒 Show mode – zaključaj polja i sakrij submit
-      formFields.forEach(field => {
-        field.setAttribute("readonly", true);
-        field.disabled = true;
-      });
-      this.hideSubmitButton(submitButton);
+    const toggleContainer = document.getElementById('resource-toggle-container');
+    const formStandard = document.getElementById('standard-resources');
+    const customStandard = document.getElementById('custom-resources');
+    const formFields = this.element.querySelectorAll('input, select, textarea');
+    const submitButton = this.element.querySelector("input[type='submit']");
+
+    // ✅ DISABLE category select u edit mode-u
+    const categorySelect = document.querySelector("#custom_resource_category");
+
+    if (mode === "edit" || mode === "show") {
+      toggleContainer.classList.add('hidden');
+
+      // ✅ DISABLE category - ne može se mijenjati!
+      if (categorySelect) {
+        categorySelect.disabled = true;
+        categorySelect.classList.add('bg-gray-200', 'cursor-not-allowed');
+      }
+
+      if (mode === "show") {
+        formFields.forEach(field => {
+          field.setAttribute("readonly", true);
+          field.disabled = true;
+        });
+        this.hideSubmitButton(submitButton);
+      } else {
+        formFields.forEach(field => {
+          // Nemoj disable-ovati category - već je disabled gore
+          if (field !== categorySelect) {
+            field.removeAttribute("readonly");
+            field.disabled = false;
+          }
+        });
+        this.showSubmitButton(submitButton);
+      }
     } else {
-      // ✏ Edit mode – otključaj polja i prikaži submit
+      // CREATE mode
+      toggleContainer.classList.remove('hidden');
+
+      // ✅ ENABLE category u create mode-u
+      if (categorySelect) {
+        categorySelect.disabled = false;
+        categorySelect.classList.remove('bg-gray-200', 'cursor-not-allowed');
+      }
+
       formFields.forEach(field => {
         field.removeAttribute("readonly");
         field.disabled = false;
       });
       this.showSubmitButton(submitButton);
     }
-  } else {
-    // ➕ Create mode – prikaži toggle, otključaj polja i prikaži submit
-    toggleContainer.classList.remove('hidden');
-    formFields.forEach(field => {
-      field.removeAttribute("readonly");
-      field.disabled = false;
-    });
-    this.showSubmitButton(submitButton);
+
+    // Prikaz ispravne sekcije forme
+    if (type === "CustomResource") {
+      customStandard.classList.remove('hidden');
+      formStandard.classList.add('hidden');
+    } else {
+      formStandard.classList.remove('hidden');
+      customStandard.classList.add('hidden');
+    }
   }
 
-  // 📌 Prikaz ispravne sekcije forme
-  if (type === "CustomResource") {
-    customStandard.classList.remove('hidden');
-    formStandard.classList.add('hidden');
-  } else {
-    formStandard.classList.remove('hidden');
-    customStandard.classList.add('hidden');
+
+  hideSubmitButton(submitButton) {
+    if (submitButton) {
+      submitButton.style.display = 'none';  // Sakrij dugme
+    }
   }
-}
 
-
-hideSubmitButton(submitButton) {
-  if (submitButton) {
-    submitButton.style.display = 'none';  // Sakrij dugme
+  showSubmitButton(submitButton) {
+    if (submitButton) {
+      submitButton.style.display = 'inline-block';  // Prikazivanje dugmeta
+    }
   }
-}
-
-showSubmitButton(submitButton) {
-  if (submitButton) {
-    submitButton.style.display = 'inline-block';  // Prikazivanje dugmeta
-  }
-}
 
 
 
-  
+
 
 
 
@@ -330,38 +345,38 @@ showSubmitButton(submitButton) {
 
   updateResources(event) {
     const category = event.target.value || event.target.closest("form").querySelector("#activity_category").value;
-    
+
     this.clearFields(); // Clear previous fields
     this.hideAdditionalFields(); // Hide additional fields by default
-  
+
     // Show appropriate fields based on the selected category
     if (category === 'worker') {
       this.showWorkerFields(); // Show First Name and Last Name if category is 'worker'
     } else {
       this.showNameField(); // Show Name field if category isn't Worker or Custom Resource
     }
-  
+
     // Add other category-specific logic if needed
   }
-  
+
   clearFields() {
     const fields = [
-        "custom_resource[quantity]",
-        "custom_resource[price_per_unit]",
-        "custom_resource[total_cost]",
-        "custom_resource[name]",
-        "custom_resource[first_name]",
-        "custom_resource[last_name]",
-        "custom_resource[profession]",
-        "custom_resource[unit_of_measure]",
-        "custom_resource[description]"
+      "custom_resource[quantity]",
+      "custom_resource[price_per_unit]",
+      "custom_resource[total_cost]",
+      "custom_resource[name]",
+      "custom_resource[first_name]",
+      "custom_resource[last_name]",
+      "custom_resource[profession]",
+      "custom_resource[unit_of_measure]",
+      "custom_resource[description]"
     ];
 
     fields.forEach(fieldName => {
-        const field = document.querySelector(`[name='${fieldName}']`);
-        if (field) field.value = ''; // Očisti polje ako postoji
+      const field = document.querySelector(`[name='${fieldName}']`);
+      if (field) field.value = ''; // Očisti polje ako postoji
     });
-}
+  }
 
 
   hideAdditionalFields() {

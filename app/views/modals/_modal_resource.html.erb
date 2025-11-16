@@ -32,20 +32,29 @@
 
 <!-- JavaScript to toggle between Standard and Custom Resource content -->
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+  // ❌ NE RADI sa Turbo-om
+  // document.addEventListener("DOMContentLoaded", function() {
+
+  // ✅ RADI sa Turbo-om
+  document.addEventListener("turbo:load", function() {
     const toggle = document.getElementById("resource-toggle");
     const standardDiv = document.getElementById("standard-resources");
     const customDiv = document.getElementById("custom-resources");
 
-    toggle.addEventListener("change", function() {
-      if (toggle.checked) {
-        standardDiv.classList.add("hidden");
-        customDiv.classList.remove("hidden");
-      } else {
-        customDiv.classList.add("hidden");
-        standardDiv.classList.remove("hidden");
-      }
-    });
+    // Proveri da li listener već postoji (prevent duplicates)
+    if (toggle && !toggle.dataset.listenerAdded) {
+      toggle.dataset.listenerAdded = "true";
+
+      toggle.addEventListener("change", function() {
+        if (toggle.checked) {
+          standardDiv.classList.add("hidden");
+          customDiv.classList.remove("hidden");
+        } else {
+          customDiv.classList.add("hidden");
+          standardDiv.classList.remove("hidden");
+        }
+      });
+    }
   });
 
   function toggleColor() {
@@ -66,7 +75,8 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  // ✅ RADI sa Turbo-om
+  document.addEventListener('turbo:load', () => {
     toggleColor();
   });
 </script>

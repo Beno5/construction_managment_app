@@ -73,10 +73,12 @@ sr:
             password:
               too_short: "Lozinka mora imati najmanje %{count} znakova"
   date:
+    yamlsr:
+  date:
     formats:
-      default: "%Y-%m-%d"
-      short: "%b %d"
-      long: "%B %d, %Y"
+      default: "%d.%m.%Y"
+      short: "%d.%m."
+      long: "%d. %B %Y."
     day_names:
       - Nedelja
       - Ponedeljak
@@ -127,9 +129,9 @@ sr:
       - :day
   time:
     formats:
-      default: "%a, %d %b %Y %H:%M:%S %z"
-      short: "%d %b %H:%M"
-      long: "%B %d, %Y %H:%M"
+      default: "%d.%m.%Y %H:%M"
+      short: "%d.%m. %H:%M"
+      long: "%d. %B %Y. u %H:%M"
     am: "Pre podne"
     pm: "Popodne"
   devise:

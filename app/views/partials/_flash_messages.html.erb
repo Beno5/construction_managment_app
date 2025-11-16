@@ -1,16 +1,38 @@
 <% if notice.present? %>
-  <p class="notice bg-green-100 text-green-700 rounded-lg text-2xl"
-     style="padding:1rem 2rem;"
+  <!-- Notice container with relative positioning for absolute close button -->
+  <p class="notice bg-green-100 text-green-700 rounded-lg text-2xl relative"
+     style="padding: 1rem 3rem 1rem 2rem; position: relative;"
      data-controller="auto-dismiss"
      data-auto-dismiss-delay-value="5000">
     <%= notice %>
+    <!-- Close button positioned in top-right corner -->
+    <button type="button"
+            class="cursor-pointer text-green-700 hover:text-green-900 hover:bg-green-200 rounded-full p-1 transition-colors"
+            style="position: absolute; top: 0.5rem; right: 0.5rem;"
+            data-action="click->auto-dismiss#dismiss"
+            aria-label="Close notification">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+      </svg>
+    </button>
   </p>
 <% end %>
 <% if alert.present? %>
-  <p class="alert bg-red-100 text-red-700 rounded-lg text-2xl"
-     style="padding:1rem 2rem;"
+  <!-- Alert container with relative positioning for absolute close button -->
+  <p class="alert bg-red-100 text-red-700 rounded-lg text-2xl relative"
+     style="padding: 1rem 3rem 1rem 2rem; position: relative;"
      data-controller="auto-dismiss"
      data-auto-dismiss-delay-value="5000">
     <%= alert %>
+    <!-- Close button positioned in top-right corner -->
+    <button type="button"
+            class="cursor-pointer text-red-700 hover:text-red-900 hover:bg-red-200 rounded-full p-1 transition-colors"
+            style="position: absolute; top: 0.5rem; right: 0.5rem;"
+            data-action="click->auto-dismiss#dismiss"
+            aria-label="Close notification">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+      </svg>
+    </button>
   </p>
 <% end %>
