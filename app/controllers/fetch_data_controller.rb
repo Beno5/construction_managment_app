@@ -91,39 +91,44 @@ class FetchDataController < ApplicationController
   end
 
   def check_activity
-    item_id = params[:item_id]
+    item_id   = params[:item_id]
     item_type = params[:item_type].delete('"').constantize
 
-    case item_type.name
-    when "Norm"
-      # Norme se koriste u SubTaskNorm povezanoj tabeli
+    # 🟦 1) Ako je Norm → posebna logika
+    if item_type.name == "Norm"
       sub_task_norms = SubTaskNorm.includes(sub_task: { task: :project }).where(norm_id: item_id)
 
-      if sub_task_norms.exists?
-        details = sub_task_norms.map do |relation|
-          sub_task = relation.sub_task
-          task = sub_task.task
-          project = task.project
+      return render json: { has_activities: false } unless sub_task_norms.exists?
 
-          {
-            business_id: project.business.id,
-            project_id: project.id,
-            project_name: project.name,
-            task_id: task.id,
-            task_name: task.name,
-            sub_task_id: sub_task.id,
-            sub_task_name: sub_task.name
-          }
-        end
+      details = sub_task_norms.map do |relation|
+        sub_task = relation.sub_task
+        task = sub_task.task
+        project = task.project
 
-        render json: { has_activities: true, activity_details: details }
-      else
-        render json: { has_activities: false }
+        {
+          business_id: project.business.id,
+          project_id: project.id,
+          project_name: project.name,
+          task_id: task.id,
+          task_name: task.name,
+          sub_task_id: sub_task.id,
+          sub_task_name: sub_task.name
+        }
       end
 
+      return render json: { has_activities: true, activity_details: details }
+
+    end
+
+    # 🟧 2) Default logika za sve ostale modele
+    item = item_type.find(item_id)
+
+    case item_type.name
+    when "Activity"
+      # Aktivnost ne može imati child activities
+      render json: { has_activities: false }
+
     else
-      # Default logika za ostale modele
-      item = item_type.find(item_id)
       activities = item.activities.includes(sub_task: { task: :project })
 
       if activities.exists?

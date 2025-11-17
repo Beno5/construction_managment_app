@@ -1,4 +1,12 @@
+<%# Remove the project row from the table %>
 <%= turbo_stream.remove "row_#{@project.id}" %>
+
+<%# Update flash messages container with success notification %>
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "partials/turbo_notification", message: t('projects.messages.deleted', name: @project.name) %>
+<% end %>
+
+<%# Reload page if no projects remain %>
 <% if @business.projects.empty? %>
   <%= turbo_stream.append "projects-frame" do %>
     <script>

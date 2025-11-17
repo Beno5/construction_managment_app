@@ -26,8 +26,8 @@ class BusinessesController < ApplicationController
     if @business.save
       redirect_to businesses_path, notice: t('businesses.messages.created', name: @business.name)
     else
-      flash.now[:alert] = t('workers.messages.first_name_required')
-      render :show, status: :unprocessable_entity
+      set_error_message
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -35,19 +35,25 @@ class BusinessesController < ApplicationController
     if @business.update(business_params)
       redirect_to businesses_path, notice: t('businesses.messages.updated', name: @business.name)
     else
-      flash.now[:alert] = t('businesses.messages.name_required')
+      set_error_message
       render :show, status: :unprocessable_entity
     end
   end
 
   def destroy
     name = @business.name
+    business_id = @business.id
+
+    # Check if the deleted business is the current business
+    @was_current_business = (session[:current_business_id] == business_id)
+
+    # Clear current business from session if it's being deleted
+    session[:current_business_id] = nil if @was_current_business
+
     @business.destroy
 
     respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.remove("row_#{@business.id}")
-      end
+      format.turbo_stream # uses destroy.turbo_stream.erb
       format.html { redirect_to businesses_path, notice: t('businesses.messages.deleted', name: name) }
     end
   end
@@ -71,5 +77,15 @@ class BusinessesController < ApplicationController
 
   def set_business
     @business = current_user.businesses.find(params[:id])
+  end
+
+  def set_error_message
+    if @business.errors[:name].any?
+      flash.now[:alert] = @business.errors[:name].first
+    elsif @business.errors[:base].any?
+      flash.now[:alert] = @business.errors[:base].first
+    else
+      flash.now[:alert] = t('businesses.errors.validation_failed')
+    end
   end
 end

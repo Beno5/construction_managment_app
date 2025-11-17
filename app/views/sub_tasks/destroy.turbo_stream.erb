@@ -1,3 +1,4 @@
+<%# Replace the subtasks table with updated data %>
 <%= turbo_stream.replace "table_subtasks-frame" do %>
   <%= render partial: "partials/table",
              locals: {
@@ -19,6 +20,13 @@
                actions: []
              } %>
 <% end %>
+
+<%# Update flash messages container with success notification %>
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "partials/turbo_notification", message: t('subtasks.messages.deleted', name: @sub_task.name) %>
+<% end %>
+
+<%# Trigger Gantt chart refresh %>
 <%= turbo_stream.after "gantt_here" do %>
   <div data-controller="gantt-trigger"></div>
 <% end %>

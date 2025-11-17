@@ -62,12 +62,17 @@ en:
             base:
               invalid_dates: "End date cannot be before start date"
         user:
-          email:
-            taken: "This email address is already registered"
-          password_confirmation:
-            confirmation: "Passwords do not match"
-          password:
-            too_short: "Password is too short (minimum is %{count} characters)"
+          attributes:
+            email:
+              taken: "This email address is already registered"
+            password_confirmation:
+              confirmation: "Passwords do not match"
+            password:
+              too_short: "Password is too short (minimum is %{count} characters)"
+        business:
+          attributes:
+            name:
+              taken_for_user: "You already have a business with this name."
   date:
     formats:
       default: "%d.%m.%Y"
@@ -198,6 +203,7 @@ en:
       not_found: "Business not found."
     errors:
       name_required: "Business name is required!"
+      taken_for_user: "You already have a business with this name."
       validation_failed: "Please check the form for errors."
   materials:
     form:

@@ -1,1 +1,7 @@
+<%# Remove the task row from the table %>
 <%= turbo_stream.remove dom_id(@task) %>
+
+<%# Update flash messages container with success notification %>
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "partials/turbo_notification", message: t('tasks.messages.deleted', name: @task.name) %>
+<% end %>

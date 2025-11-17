@@ -1,2 +1,7 @@
-<!-- filepath: /home/benjamin/construction_managment/construction_managment_app/app/views/documents/_document.html.erb -->
+<%# Remove the document row from the table %>
 <%= turbo_stream.remove dom_id(@document) %>
+
+<%# Update flash messages container with success notification %>
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "partials/turbo_notification", message: t('documents.messages.deleted', name: @document.name) %>
+<% end %>

@@ -52,17 +52,34 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    name = @task.name
+    # Store name and ID before destroying
+    @deleted_item_name = @task.name
+    @deleted_item_id = dom_id(@task)
+
+    # Store task index for removing subtask rows with class 'sub-tasks-of-X'
+    # This matches the table structure where subtasks have class based on task index
+    @task_index = @project.tasks.order(:position).index(@task)
+
+    # Debug logging to verify variables are set
+    Rails.logger.debug "TasksController#destroy: @deleted_item_name = #{@deleted_item_name.inspect}"
+    Rails.logger.debug "TasksController#destroy: @deleted_item_id = #{@deleted_item_id.inspect}"
+    Rails.logger.debug "TasksController#destroy: @task_index = #{@task_index.inspect}"
+
     @task.destroy
 
     respond_to do |format|
       format.turbo_stream do
-        @tasks = @project.tasks.order(:position)
+        # Prevent Turbo Frame caching to ensure fresh renders on subsequent deletions
+        response.headers['X-Turbo-Cache-Control'] = 'no-cache'
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+
+        Rails.logger.debug "TasksController#destroy: Rendering projects/show with @deleted_item_id = #{@deleted_item_id.inspect}, @task_index = #{@task_index.inspect}"
+
         render "projects/show"
       end
       format.html do
         redirect_to business_project_path(@business, @project, anchor: 'tasks'),
-                    notice: t('tasks.messages.deleted', name: name)
+                    notice: t('tasks.messages.deleted', name: @deleted_item_name)
       end
     end
   end

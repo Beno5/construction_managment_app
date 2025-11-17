@@ -1,1 +1,7 @@
+<%# Remove the worker row from the table %>
 <%= turbo_stream.remove dom_id(@worker) %>
+
+<%# Update flash messages container with success notification %>
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "partials/turbo_notification", message: t('workers.messages.deleted', name: "#{@worker.first_name} #{@worker.last_name}".strip) %>
+<% end %>

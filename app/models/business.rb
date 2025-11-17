@@ -8,7 +8,7 @@ class Business < ApplicationRecord
 
   enum :currency, { euro: 0, dolar: 1, dinar: 2 }
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: { scope: :user_id, message: :taken_for_user }
 
   def currency_symbol
     {

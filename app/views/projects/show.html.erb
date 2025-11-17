@@ -18,7 +18,8 @@
            additional_crumbs: [
              { name: t('breadcrums.project_overview', name: @project.name), path: paths[:project] }
            ] %>
-<%= turbo_frame_tag "table_tasks-frame" do %>
+<%# Disable Turbo Frame caching to ensure fresh renders on each deletion %>
+<%= turbo_frame_tag "table_tasks-frame", data: { turbo_cache: false } do %>
   <%= render 'partials/table_expandable_task' %>
 <% end %>
 <div class="bg-white p-6 rounded-lg shadow-md mt-6">

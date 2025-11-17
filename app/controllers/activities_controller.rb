@@ -1,5 +1,6 @@
 class ActivitiesController < ApplicationController
   before_action :set_sub_task
+  before_action :set_activity, only: [:destroy]
 
   def new
     @activity = @sub_task.activities.new
@@ -9,21 +10,40 @@ class ActivitiesController < ApplicationController
     if params[:activity][:activity_id].present? && params[:activity][:activity_id] != "undefined"
       @activity = Activity.find(params[:activity][:activity_id])
       if @activity.update(params_mapped)
+        redirect_to business_project_task_sub_task_path(
+          @sub_task.task.project.business,
+          @sub_task.task.project,
+          @sub_task.task,
+          @sub_task
+        ), notice: t('activities.messages.updated', name: @activity.activityable_type)
 
-        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
-                    notice: t('activities.messages.updated', name: @activity.activityable_type)
       else
-        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
-                    alert: t('activities.messages.update_error')
+        redirect_to business_project_task_sub_task_path(
+          @sub_task.task.project.business,
+          @sub_task.task.project,
+          @sub_task.task,
+          @sub_task
+        ), alert: t('activities.messages.update_error')
       end
+
     else
       @activity = @sub_task.activities.new(params_mapped)
+
       if @activity.save
-        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
-                    notice: t('activities.messages.created', name: @activity.activityable.name)
+        redirect_to business_project_task_sub_task_path(
+          @sub_task.task.project.business,
+          @sub_task.task.project,
+          @sub_task.task,
+          @sub_task
+        ), notice: t('activities.messages.created', name: @activity.activityable&.name || "Aktivnost")
+
       else
-        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
-                    alert: t('activities.messages.create_error')
+        redirect_to business_project_task_sub_task_path(
+          @sub_task.task.project.business,
+          @sub_task.task.project,
+          @sub_task.task,
+          @sub_task
+        ), alert: t('activities.messages.create_error')
       end
     end
   end
@@ -32,8 +52,12 @@ class ActivitiesController < ApplicationController
     @activity = @sub_task.activities.find(params[:activity][:activity_id])
 
     if @activity.update(params_mapped)
-      redirect_to project_task_sub_task_path(@sub_task.task.project, @sub_task.task, @sub_task),
-                  notice: t('activities.messages.updated', name: @activity.activityable.name)
+      redirect_to project_task_sub_task_path(
+        @sub_task.task.project,
+        @sub_task.task,
+        @sub_task
+      ), notice: t('activities.messages.updated', name: @activity.activityable&.name || "Aktivnost")
+
     else
       flash.now[:alert] = t('activities.messages.update_error')
       render :edit
@@ -41,19 +65,42 @@ class ActivitiesController < ApplicationController
   end
 
   def destroy
-    name = @activity.activityable.name
+    # Uvijek sigurno dobavi naziv
+    name =
+      @activity.activityable&.name ||
+      @activity.name ||
+      t("activities.default_name", default: "Aktivnost")
+
     @activity.destroy
 
     respond_to do |format|
-      format.turbo_stream # koristi destroy.turbo_stream.erb
+      format.turbo_stream do
+        flash.now[:notice] = t("activities.messages.deleted", name: name)
+        render turbo_stream: [
+          turbo_stream.remove("activity_#{params[:id]}"),
+          turbo_stream.update("flash_messages", partial: "partials/flash_messages")
+        ]
+      end
+
       format.html do
-        redirect_to business_project_task_sub_task_path(@sub_task.task.project.business, @sub_task.task.project, @sub_task.task, @sub_task),
-                    notice: t('activities.messages.deleted', name: name)
+        redirect_back fallback_location: root_path,
+                      notice: t("activities.messages.deleted", name: name)
       end
     end
   end
 
   private
+
+  # ❗ PRAVILNO – više ne traži preko sub_task.activities
+  def set_activity
+    @activity = Activity.find_by(id: params[:id])
+
+    return unless @activity.nil?
+
+    redirect_back fallback_location: root_path,
+                  alert: t("activities.messages.not_found",
+                           default: "Aktivnost nije pronađena.") and return
+  end
 
   def set_sub_task
     @sub_task = SubTask.find(params[:sub_task_id])

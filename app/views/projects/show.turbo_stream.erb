@@ -1,6 +1,60 @@
-<%= turbo_stream.replace "table_tasks-frame" do %>
-  <%= render partial: "partials/table_expandable_task" %>
+<%
+  # Debug logging to verify template rendering
+  Rails.logger.debug "projects/show.turbo_stream.erb: @deleted_item_name = #{@deleted_item_name.inspect}"
+  Rails.logger.debug "projects/show.turbo_stream.erb: @deleted_item_id = #{@deleted_item_id.inspect}"
+  Rails.logger.debug "projects/show.turbo_stream.erb: @task_index = #{@task_index.inspect}" if defined?(@task_index)
+%>
+
+<%# TARGETED REMOVAL: Remove only the deleted row instead of replacing entire frame %>
+<%# This prevents Turbo caching issues that occur with full frame replacement %>
+<% if defined?(@deleted_item_id) && @deleted_item_id.present? %>
+  <%
+    Rails.logger.debug "projects/show.turbo_stream.erb: Removing element with ID = #{@deleted_item_id.inspect}"
+  %>
+  <%= turbo_stream.remove @deleted_item_id %>
+
+  <%# If deleting a Task (not SubTask), also remove all its orphaned SubTask rows %>
+  <%# SubTask rows have class 'sub-tasks-of-X' where X is the task index %>
+  <% if defined?(@task_index) && @task_index.present? %>
+    <%
+      Rails.logger.debug "projects/show.turbo_stream.erb: Removing subtask rows with class 'sub-tasks-of-#{@task_index}'"
+    %>
+    <%= turbo_stream.append "flash-messages" do %>
+      <script>
+        // Remove all subtask rows belonging to the deleted task
+        // SubTask rows have class 'sub-tasks-of-X' where X is task index
+        document.querySelectorAll('.sub-tasks-of-<%= @task_index %>').forEach(function(row) {
+          row.remove();
+        });
+      </script>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= Rails.logger.debug "projects/show.turbo_stream.erb: @deleted_item_id NOT present, cannot remove row" %>
 <% end %>
+
+<%# Show flash notification if this was triggered by a deletion %>
+<% if defined?(@deleted_item_name) && @deleted_item_name.present? %>
+  <%= turbo_stream.update "flash-messages" do %>
+    <%
+      # Determine message based on controller context
+      # SubTasks controller sets both @task and @sub_task
+      # Tasks controller only sets @task
+      message = if defined?(@sub_task) && @sub_task.present?
+        t('subtasks.messages.deleted', name: @deleted_item_name)
+      else
+        t('tasks.messages.deleted', name: @deleted_item_name)
+      end
+
+      Rails.logger.debug "projects/show.turbo_stream.erb: Rendering notification with message: #{message.inspect}"
+    %>
+    <%= render "partials/turbo_notification", message: message %>
+  <% end %>
+<% else %>
+  <%= Rails.logger.debug "projects/show.turbo_stream.erb: @deleted_item_name is NOT present, skipping flash notification" %>
+<% end %>
+
+<%# Trigger Gantt chart refresh %>
 <%= turbo_stream.after "gantt_here" do %>
   <div data-controller="gantt-trigger"></div>
 <% end %>

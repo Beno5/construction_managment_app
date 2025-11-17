@@ -1,1 +1,7 @@
+<%# Remove the material row from the table %>
 <%= turbo_stream.remove dom_id(@material) %>
+
+<%# Update flash messages container with success notification %>
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "partials/turbo_notification", message: t('materials.messages.deleted', name: @material.name) %>
+<% end %>

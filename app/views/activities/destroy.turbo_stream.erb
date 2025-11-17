@@ -1,3 +1,12 @@
+<%# Capture activity name before removal %>
+<% activity_name = @activity.activityable.name rescue @activity.activityable_type %>
+
+<%# Remove the activity rows from the table %>
 <%= turbo_stream.remove dom_id(@activity) %>
 <%= turbo_stream.remove "real-#{dom_id(@activity)}" %>
+
+<%# Update flash messages container with success notification %>
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render "partials/turbo_notification", message: t('activities.messages.deleted', name: activity_name) %>
+<% end %>
 

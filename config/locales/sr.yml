@@ -72,6 +72,10 @@ sr:
               confirmation: "Lozinke se ne poklapaju"
             password:
               too_short: "Lozinka mora imati najmanje %{count} znakova"
+        business:
+          attributes:
+            name:
+              taken_for_user: "Već imate firmu sa ovim nazivom."
   date:
     yamlsr:
   date:
@@ -203,6 +207,7 @@ sr:
       name_required: "Naziv firme je obavezan."
     errors:
       name_required: "Naziv firme je obavezan!"
+      taken_for_user: "Već imate firmu sa ovim nazivom."
       validation_failed: "Molimo provjerite formu za greške."
   materials:
     form:
