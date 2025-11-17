@@ -1,36 +1,139 @@
-<%
-  # Debug logging to verify template rendering
-  Rails.logger.debug "projects/show.turbo_stream.erb: @deleted_item_name = #{@deleted_item_name.inspect}"
-  Rails.logger.debug "projects/show.turbo_stream.erb: @deleted_item_id = #{@deleted_item_id.inspect}"
-  Rails.logger.debug "projects/show.turbo_stream.erb: @task_index = #{@task_index.inspect}" if defined?(@task_index)
-%>
-
-<%# TARGETED REMOVAL: Remove only the deleted row instead of replacing entire frame %>
-<%# This prevents Turbo caching issues that occur with full frame replacement %>
-<% if defined?(@deleted_item_id) && @deleted_item_id.present? %>
-  <%
-    Rails.logger.debug "projects/show.turbo_stream.erb: Removing element with ID = #{@deleted_item_id.inspect}"
-  %>
-  <%= turbo_stream.remove @deleted_item_id %>
-
-  <%# If deleting a Task (not SubTask), also remove all its orphaned SubTask rows %>
-  <%# SubTask rows have class 'sub-tasks-of-X' where X is the task index %>
-  <% if defined?(@task_index) && @task_index.present? %>
-    <%
-      Rails.logger.debug "projects/show.turbo_stream.erb: Removing subtask rows with class 'sub-tasks-of-#{@task_index}'"
-    %>
-    <%= turbo_stream.append "flash-messages" do %>
-      <script>
-        // Remove all subtask rows belonging to the deleted task
-        // SubTask rows have class 'sub-tasks-of-X' where X is task index
-        document.querySelectorAll('.sub-tasks-of-<%= @task_index %>').forEach(function(row) {
-          row.remove();
-        });
-      </script>
-    <% end %>
+<%# INNER FRAME REPLACEMENT: Replace only the inner tasks-frame (table content) %>
+<%# This approach: %>
+<%# 1. Removes deleted items (already destroyed in controller) %>
+<%# 2. Updates all position numbers (1, 2, 3 instead of 1, 3, 4 after deletion) %>
+<%# 3. Avoids outer frame caching issues (we're replacing inner frame only) %>
+<%# 4. Works for both Task and SubTask deletions %>
+<% if defined?(@deleted_item_name) && @deleted_item_name.present? %>
+  <%= turbo_stream.replace "tasks-frame" do %>
+    <turbo-frame id="tasks-frame" data-turbo-cache="false">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" class="px-4 py-3"></th>
+              <th scope="col" class="px-4 py-3"><%= t('tasks.table.id') %></th>
+              <th scope="col" class="px-4 py-3 w-88"><%= t('tasks.table.name') %></th>
+              <th scope="col" class="px-4 py-3 w-88"><%= t('tasks.table.description') %></th>
+              <th scope="col" class="px-4 py-3"><%= t('tasks.table.planned_start_date') %></th>
+              <th scope="col" class="px-4 py-3"><%= t('tasks.table.planned_end_date') %></th>
+              <th scope="col" class="px-4 py-3"></th>
+              <th scope="col" class="px-4 py-3">
+                <span class="sr-only"><%= t('tasks.table.actions') %></span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @tasks.ordered_by_position.each_with_index do |task, index| %>
+              <!-- TASK ROW -->
+              <tr id="<%= dom_id(task) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                <td class="px-4 py-3">
+                  <% if task.sub_tasks.any? %>
+                    <button type="button" class="toggle-sub-tasks" data-target=".sub-tasks-of-<%= index %>">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 chevron-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                  <% end %>
+                </td>
+                <td class="px-4 py-3 font-bold"><%= task.position %></td>
+                <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.name %>">
+                  <%= task.name&.truncate(150) %>
+                </td>
+                <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.description %>">
+                  <%= task.description&.truncate(150) %>
+                </td>
+                <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_start_date) if task.planned_start_date %></td>
+                <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_end_date) if task.planned_end_date %></td>
+                <td class="px-4 py-3">
+                  <%= link_to new_business_project_task_sub_task_path(@business, @project, task),
+                              data: { turbo: false },
+                              class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-800 bg-gray-200 rounded-lg hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 transition" do %>
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <%= t('subtasks.actions.add_new') %>
+                  <% end %>
+                </td>
+                <td class="px-4 py-3 flex items-center justify-end">
+                  <button id="<%= "task-#{task.id}-dropdown-button" %>"
+                          data-dropdown-toggle="<%= "task-#{task.id}-dropdown" %>"
+                          class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                          type="button">
+                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20">
+                      <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                    </svg>
+                  </button>
+                  <div id="<%= "task-#{task.id}-dropdown" %>"
+                       class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "task-#{task.id}-dropdown-button" %>">
+                      <li>
+                        <%= link_to t('tasks.actions.show'), business_project_task_path(@current_business, @project, task),
+                                    data: { turbo: false },
+                                    class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                      </li>
+                      <li>
+                        <%= link_to t('tasks.actions.delete'), business_project_task_path(@current_business, @project, task),
+                                    method: :delete,
+                                    data: { turbo_confirm: t('confirmations.delete', name: task.name), turbo_method: :delete },
+                                    class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              <!-- SUBTASK ROWS -->
+              <% task.sub_tasks.ordered_by_position.each do |sub_task| %>
+                <tr id="<%= dom_id(sub_task) %>" class="sub-tasks-of-<%= index %> border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <td class="px-4 py-3"></td>
+                  <td class="px-4 py-3 pl-8 text-gray-500"><%= sub_task.show_position %></td>
+                  <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.name %>">
+                    <%= sub_task.name&.truncate(150) %>
+                  </td>
+                  <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.description %>">
+                    <%= sub_task.description&.truncate(150) %>
+                  </td>
+                  <td class="px-4 py-3"><%= I18n.l(sub_task.planned_start_date) if sub_task.planned_start_date %></td>
+                  <td class="px-4 py-3"><%= I18n.l(sub_task.planned_end_date) if sub_task.planned_end_date %></td>
+                  <td class="px-4 py-3"></td>
+                  <td class="px-4 py-3 flex items-center justify-end">
+                    <button id="<%= "sub-task-#{sub_task.id}-dropdown-button" %>"
+                            data-dropdown-toggle="<%= "sub-task-#{sub_task.id}-dropdown" %>"
+                            class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                            type="button">
+                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20">
+                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                      </svg>
+                    </button>
+                    <div id="<%= "sub-task-#{sub_task.id}-dropdown" %>"
+                         class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                      <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "sub-task-#{sub_task.id}-dropdown-button" %>">
+                        <li>
+                          <%= link_to t('subtasks.actions.show'), business_project_task_sub_task_path(@business, @project, task, sub_task),
+                                      data: { turbo: false },
+                                      class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                        </li>
+                        <li>
+                          <%= link_to t('subtasks.actions.delete'), business_project_task_sub_task_path(@business, @project, task, sub_task, delete_from_project: true),
+                                      method: :delete,
+                                      data: { turbo_confirm: t('confirmations.delete', name: sub_task.name), turbo_method: :delete },
+                                      class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <%= render "partials/nav_pages",
+                 collection: @tasks,
+                 model_name: "Tasks",
+                 turbo_frame_id: "tasks-frame" %>
+    </turbo-frame>
   <% end %>
-<% else %>
-  <%= Rails.logger.debug "projects/show.turbo_stream.erb: @deleted_item_id NOT present, cannot remove row" %>
 <% end %>
 
 <%# Show flash notification if this was triggered by a deletion %>
@@ -45,13 +148,9 @@
       else
         t('tasks.messages.deleted', name: @deleted_item_name)
       end
-
-      Rails.logger.debug "projects/show.turbo_stream.erb: Rendering notification with message: #{message.inspect}"
     %>
     <%= render "partials/turbo_notification", message: message %>
   <% end %>
-<% else %>
-  <%= Rails.logger.debug "projects/show.turbo_stream.erb: @deleted_item_name is NOT present, skipping flash notification" %>
 <% end %>
 
 <%# Trigger Gantt chart refresh %>

@@ -22,13 +22,31 @@
 <%= turbo_frame_tag "table_tasks-frame", data: { turbo_cache: false } do %>
   <%= render 'partials/table_expandable_task' %>
 <% end %>
-<div class="bg-white p-6 rounded-lg shadow-md mt-6">
-  <h2 class="text-xl font-bold mb-4"><%= t('projects.show.timeline_title') %></h2>
-  <div id="gantt_here"
-    data-project-id="<%= @project.id %>"
-    data-readonly="<%= @readonly %>"
-    style="width: 100%; height: 600px;">
+<section class="bg-gray-50 dark:bg-gray-900 pt-5 mb-5" data-controller="toggle">
+  <div class="mx-auto">
+    <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden p-4">
+      <div class="flex items-center gap-4 mb-4">
+        <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white"><%= t('projects.show.timeline_title') %></h2>
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="checkbox"
+                 id="gantt-toggle"
+                 checked
+                 class="sr-only peer"
+                 data-action="change->toggle#toggle"
+                 data-toggle-target="switch">
+          <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+        </label>
+      </div>
+      <div data-toggle-target="content" class="transition-all duration-300">
+        <div id="gantt_here"
+          data-project-id="<%= @project.id %>"
+          data-readonly="<%= @readonly %>"
+          style="width: 100%; height: 600px;">
+        </div>
+      </div>
+    </div>
   </div>
+</section>
   <% 
   model_name = "Documents"
   paths_doc = {

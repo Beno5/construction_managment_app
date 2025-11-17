@@ -32,7 +32,6 @@ class AiExcelAnalyzerService
 
     flat_chunks.each_with_index do |chunk_text, i|
       prompt = build_prompt(chunk_text, chunk_number: i + 1, total_chunks: flat_chunks.size)
-      puts "📦 Sending chunk #{i + 1}/#{flat_chunks.size} to GPT..."
 
       response = @client.chat.completions.create(
         model: ENV.fetch("OPENAI_MODEL", "gpt-4.1"),

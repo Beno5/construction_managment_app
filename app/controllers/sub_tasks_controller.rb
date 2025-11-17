@@ -83,11 +83,6 @@ class SubTasksController < ApplicationController
     @deleted_item_name = @sub_task.name
     @deleted_item_id = dom_id(@sub_task)
 
-    # Debug logging to verify variables are set
-    Rails.logger.debug "SubTasksController#destroy: @deleted_item_name = #{@deleted_item_name.inspect}"
-    Rails.logger.debug "SubTasksController#destroy: @deleted_item_id = #{@deleted_item_id.inspect}"
-    Rails.logger.debug "SubTasksController#destroy: delete_from_project = #{params[:delete_from_project].inspect}"
-
     @sub_task.destroy
 
     respond_to do |format|
@@ -100,14 +95,13 @@ class SubTasksController < ApplicationController
 
         # Differentiate between views
         if params[:delete_from_project] == "true"
-          # Called from project#show - targeted row removal
-          Rails.logger.debug "SubTasksController#destroy: Rendering projects/show with @deleted_item_id = #{@deleted_item_id.inspect}"
+          # Called from project#show - frame replacement for position updates
+          # Reload tasks for table frame replacement (updates position numbers)
+          @tasks = @project.tasks.order(:position)
 
           render "projects/show"
         else
           # Called from task#show - subtask table refresh
-          Rails.logger.debug "SubTasksController#destroy: Rendering sub_tasks/destroy with @deleted_item_name = #{@deleted_item_name.inspect}"
-
           render "sub_tasks/destroy"
         end
       end

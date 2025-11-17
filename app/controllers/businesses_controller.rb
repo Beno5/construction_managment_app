@@ -80,12 +80,12 @@ class BusinessesController < ApplicationController
   end
 
   def set_error_message
-    if @business.errors[:name].any?
-      flash.now[:alert] = @business.errors[:name].first
-    elsif @business.errors[:base].any?
-      flash.now[:alert] = @business.errors[:base].first
-    else
-      flash.now[:alert] = t('businesses.errors.validation_failed')
-    end
+    flash.now[:alert] = if @business.errors[:name].any?
+                          @business.errors[:name].first
+                        elsif @business.errors[:base].any?
+                          @business.errors[:base].first
+                        else
+                          t('businesses.errors.validation_failed')
+                        end
   end
 end

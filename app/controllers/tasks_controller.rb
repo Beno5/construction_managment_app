@@ -60,11 +60,6 @@ class TasksController < ApplicationController
     # This matches the table structure where subtasks have class based on task index
     @task_index = @project.tasks.order(:position).index(@task)
 
-    # Debug logging to verify variables are set
-    Rails.logger.debug "TasksController#destroy: @deleted_item_name = #{@deleted_item_name.inspect}"
-    Rails.logger.debug "TasksController#destroy: @deleted_item_id = #{@deleted_item_id.inspect}"
-    Rails.logger.debug "TasksController#destroy: @task_index = #{@task_index.inspect}"
-
     @task.destroy
 
     respond_to do |format|
@@ -73,7 +68,8 @@ class TasksController < ApplicationController
         response.headers['X-Turbo-Cache-Control'] = 'no-cache'
         response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
 
-        Rails.logger.debug "TasksController#destroy: Rendering projects/show with @deleted_item_id = #{@deleted_item_id.inspect}, @task_index = #{@task_index.inspect}"
+        # Reload tasks for table frame replacement (updates position numbers)
+        @tasks = @project.tasks.order(:position)
 
         render "projects/show"
       end
