@@ -1,9 +1,23 @@
-<section class="bg-gray-50 dark:bg-gray-900 pt-5">
+<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
-      <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
-        <div class="w-full md:w-1/2">
-          <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mb-4"><%= t("norms.title") %></h2>
+      <div class="p-4">
+        <div class="flex items-center gap-4">
+          <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white"><%= t("norms.title") %></h2>
+          <label class="inline-flex items-center cursor-pointer">
+            <input type="checkbox"
+                   id="norms-toggle"
+                   checked
+                   class="sr-only peer"
+                   data-action="change->toggle#toggle"
+                   data-toggle-target="switch">
+            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+          </label>
+        </div>
+      </div>
+      <div data-toggle-target="content" class="transition-all duration-300">
+        <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4 pt-0">
+          <div class="w-full md:w-1/2">
           <%= form_with url: business_norms_path, method: :get, data: { turbo_frame: "norms-frame", controller: "search" }, local: true do %>
             <%= hidden_field_tag :sub_task_id, @sub_task.id if @sub_task.present? %>
             <label for="search" class="sr-only">Search</label>
@@ -21,13 +35,13 @@
            data-action="<%= 'input->search#performSearch' unless @sub_task.new_record? %>">
             </div>
           <% end %>
+          </div>
         </div>
-      </div>
-      <turbo-frame id="norms-frame">
-        <div class="overflow-x-auto"
-       data-controller="norms"
-       data-norms-subtask-id-value="<%= @sub_task.id %>">
-          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <turbo-frame id="norms-frame">
+          <div class="overflow-x-auto"
+         data-controller="norms"
+         data-norms-subtask-id-value="<%= @sub_task.id %>">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-4 py-3">
@@ -65,10 +79,11 @@
                 </tr>
               <% end %>
             </tbody>
-          </table>
-        </div>
-        <%= render "partials/nav_pages", collection: norms, model_name: "Norms", turbo_frame_id: local_assigns[:frame_id] || "norms-frame" %>
-      </turbo-frame>
+            </table>
+          </div>
+          <%= render "partials/nav_pages", collection: norms, model_name: "Norms", turbo_frame_id: local_assigns[:frame_id] || "norms-frame" %>
+        </turbo-frame>
+      </div>
     </div>
   </div>
 </section>

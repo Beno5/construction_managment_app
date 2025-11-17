@@ -10,13 +10,25 @@
              { name: t('breadcrums.task_overview', name: @task.name_with_position), path: business_project_task_path(@current_business, @project, @task) },
              { name: (@sub_task.persisted? ? t('breadcrums.subtask_overview', name: @sub_task.name_with_position) : t('subtasks.form.new_title')), path: (@sub_task.persisted? ? business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) : nil) }
            ] %>
-<section class="bg-gray-50 dark:bg-gray-900 pt-5">
+<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden p-4">
-      <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mb-4"><%= t("businesses.form.basic_information") %></h2>
-      <%= form_with model: [@current_business, @project, @task, @sub_task],
-                    local: true,
-                    data: { controller: "track-changes", action: "submit->track-changes#reset" } do |f| %>
+      <div class="flex items-center gap-4 mb-4">
+        <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white"><%= t("businesses.form.basic_information") %></h2>
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="checkbox"
+                 id="basic-info-toggle"
+                 checked
+                 class="sr-only peer"
+                 data-action="change->toggle#toggle"
+                 data-toggle-target="switch">
+          <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+        </label>
+      </div>
+      <div data-toggle-target="content" class="transition-all duration-300">
+        <%= form_with model: [@current_business, @project, @task, @sub_task],
+                      local: true,
+                      data: { controller: "track-changes", action: "submit->track-changes#reset" } do |f| %>
         <div class="grid grid-cols-6 gap-6">
           <!-- Name -->
           <div class="col-span-6 sm:col-span-3">
@@ -93,6 +105,7 @@
               ) %>
         </div>
       <% end %>
+      </div>
     </div>
   </div>
 </section>
