@@ -40,7 +40,7 @@
              t('tasks.form.description') => ->(activity) { activity.activityable.description }, 
              t('tasks.form.planned_start_date') => ->(activity) { l(activity.start_date) },
              t('tasks.form.quantity') => ->(activity) { activity.quantity }, 
-             t('tasks.form.unit_of_measure') => ->(activity) { activity.activityable.unit_of_measure }, 
+             t('tasks.form.unit_of_measure') => ->(activity) { t_enum(activity.activityable, :unit_of_measure) }, 
              t('tasks.form.price_per_unit') => ->(activity) { activity.activityable.price_per_unit }, 
              t('tasks.form.total_cost') => ->(activity) { activity.total_cost }, 
            },

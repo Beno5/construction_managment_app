@@ -6,7 +6,14 @@ class Worker < ApplicationRecord
   has_many :activities, as: :activityable
 
   # Enum za jedinicu vremena
-  enum :unit_of_measure, { hourly: 0, daily: 1, weekly: 2, monthly: 3, per_task: 4 }
+  enum :unit_of_measure, {
+    hourly: 0,
+    daily: 1,
+    weekly: 2,
+    monthly: 3,
+    per_task: 4,
+    pauschal: 5
+  }
 
   # Validations
   validates :first_name, presence: true

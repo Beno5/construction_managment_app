@@ -39,7 +39,7 @@
           <!-- Unit of Measure -->
           <div class="col-span-6 sm:col-span-3">
             <%= f.label :unit_of_measure, t('workers.form.unit_of_measure'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.select :unit_of_measure, Worker.unit_of_measures.keys.map { |unit| [unit.humanize, unit] }, {}, 
+            <%= f.select :unit_of_measure, Worker.unit_of_measures.keys.map { |key| [I18n.t("activerecord.attributes.worker.unit_of_measures.#{key}"), key] }, {},
                   class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
                   data: { action: "change->track-changes#markChanged", track_changes_target: "input" } %>
           </div>

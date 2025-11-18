@@ -3,7 +3,7 @@
   columns: {
              t('machines.form.name') => :name, 
              t('machines.form.description') => ->(machine) { content_tag(:span, machine.description.truncate(25), title: machine.description, class: "tooltip") },
-             t('machines.form.unit_of_measure') => ->(machine) { machine.unit_of_measure.humanize },
+             t('machines.form.unit_of_measure') => ->(machine) { t_enum(machine, :unit_of_measure) },
              t('machines.form.price_per_unit', currency: @current_business.currency_symbol) => ->(machine) { "#{machine.price_per_unit} #{machine.business.currency_symbol}" }, 
              t('machines.form.fixed_costs', currency: @current_business.currency_symbol) => :fixed_costs,
              t('machines.form.custom_fields') => :custom_fields

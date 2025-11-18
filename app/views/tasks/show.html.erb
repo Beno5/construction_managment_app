@@ -7,7 +7,7 @@
            columns: {
              t('tasks.table.id') => ->(subtask) { subtask.show_position },
              t('subtasks.form.name') => :name,
-             t('subtasks.form.unit_of_measure') => :unit_of_measure,
+             t('subtasks.form.unit_of_measure') => ->(subtask) { t_enum(subtask, :unit_of_measure) },
              t('subtasks.form.quantity') => :quantity,
              t('subtasks.form.planned_cost', currency: @project.business.currency_symbol) => :planned_cost,
              t('subtasks.form.price_per_unit', currency: @project.business.currency_symbol) => :price_per_unit,

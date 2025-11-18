@@ -24,8 +24,20 @@ class SubTask < ApplicationRecord
 
   scope :ordered_by_position, -> { order(:position) }
 
-  enum :unit_of_measure,
-       { kg: 0, m2: 1, m3: 2, pieces: 3, ton: 4, liters: 5, roll: 6, bag: 7, set: 8, m: 9, pausal: 10, hours: 11 }
+  enum :unit_of_measure, {
+    m: 0,
+    m2: 1,
+    m3: 2,
+    kg: 3,
+    ton: 4,
+    pieces: 5,
+    liters: 6,
+    roll: 7,
+    bag: 8,
+    set: 9,
+    hours: 10,
+    pauschal: 11
+  }
   scope :search, lambda { |query|
     return all unless query.present?
 

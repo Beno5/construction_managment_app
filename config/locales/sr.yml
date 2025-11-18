@@ -47,6 +47,48 @@ sr:
         subtype:
           skilled: "Kvalifikovani"
           unskilled: "Nekvalifikovani"
+      sub_task:
+        unit_of_measures:
+          m: 'Metar (m)'
+          m2: 'Kvadratni metar (m²)'
+          m3: 'Kubni metar (m³)'
+          kg: 'Kilogram (kg)'
+          ton: 'Tona (t)'
+          pieces: 'Komad (kom)'
+          liters: 'Litar (l)'
+          roll: 'Rola'
+          bag: 'Vreća'
+          set: 'Set'
+          hours: 'Sat (h)'
+          pauschal: 'Paušal'
+      material:
+        unit_of_measures:
+          kg: 'Kilogram (kg)'
+          m2: 'Kvadratni metar (m²)'
+          m3: 'Kubni metar (m³)'
+          pieces: 'Komad (kom)'
+          ton: 'Tona (t)'
+          liters: 'Litar (l)'
+          roll: 'Rola'
+          bag: 'Vreća'
+          set: 'Set'
+          pauschal: 'Paušal'
+      worker:
+        unit_of_measures:
+          hourly: 'Po satu'
+          daily: 'Po danu'
+          weekly: 'Sedmično'
+          monthly: 'Mjesečno'
+          per_task: 'Po zadatku'
+          pauschal: 'Paušal'
+      machine:
+        unit_of_measures:
+          hourly: 'Po satu'
+          daily: 'Po danu'
+          weekly: 'Sedmično'
+          monthly: 'Mjesečno'
+          per_task: 'Po zadatku'
+          pauschal: 'Paušal'
     errors:
       models:
         project:

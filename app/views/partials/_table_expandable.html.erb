@@ -72,7 +72,7 @@
                   <td class="px-4 py-3"><%= activity.activity_type %></td>
                   <td class="px-4 py-3"><%= activity.activityable.description %></td>
                   <td class="px-4 py-3"><%= activity.quantity %></td>
-                  <td class="px-4 py-3"><%= activity.activityable.unit_of_measure %></td>
+                  <td class="px-4 py-3"><%= t_enum(activity.activityable, :unit_of_measure) %></td>
                   <td class="px-4 py-3"><%= activity.activityable.price_per_unit %></td>
                   <td class="px-4 py-3"><%= activity.total_cost %></td>
                   <td class="px-4 py-3 flex items-center justify-end">
@@ -108,7 +108,7 @@
                               <td class="px-4 py-3"><%= real_activity.start_date %></td>
                               <td class="px-4 py-3"><%= real_activity.end_date %></td>
                               <td class="px-4 py-3"><%= real_activity.quantity %></td>
-                              <td class="px-4 py-3"><%= real_activity.activity.activityable.unit_of_measure %></td>
+                              <td class="px-4 py-3"><%= t_enum(real_activity.activity.activityable, :unit_of_measure) %></td>
                               <td class="px-4 py-3"><%= real_activity.activity.activityable.price_per_unit %></td>
                               <td class="px-4 py-3"><%= real_activity.total_cost %></td>
                               <td class="px-4 py-3 flex items-center justify-end">

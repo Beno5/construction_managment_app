@@ -47,6 +47,48 @@ en:
         subtype:
           skilled: "Skilled"
           unskilled: "Unskilled"
+      sub_task:
+        unit_of_measures:
+          m: 'Meter (m)'
+          m2: 'Square meter (m²)'
+          m3: 'Cubic meter (m³)'
+          kg: 'Kilogram (kg)'
+          ton: 'Ton (t)'
+          pieces: 'Piece (pcs)'
+          liters: 'Liter (l)'
+          roll: 'Roll'
+          bag: 'Bag'
+          set: 'Set'
+          hours: 'Hour (h)'
+          pauschal: 'Flat rate'
+      material:
+        unit_of_measures:
+          kg: 'Kilogram (kg)'
+          m2: 'Square meter (m²)'
+          m3: 'Cubic meter (m³)'
+          pieces: 'Piece (pcs)'
+          ton: 'Ton (t)'
+          liters: 'Liter (l)'
+          roll: 'Roll'
+          bag: 'Bag'
+          set: 'Set'
+          pauschal: 'Flat rate'
+      worker:
+        unit_of_measures:
+          hourly: 'Hourly'
+          daily: 'Daily'
+          weekly: 'Weekly'
+          monthly: 'Monthly'
+          per_task: 'Per task'
+          pauschal: 'Flat rate'
+      machine:
+        unit_of_measures:
+          hourly: 'Hourly'
+          daily: 'Daily'
+          weekly: 'Weekly'
+          monthly: 'Monthly'
+          per_task: 'Per task'
+          pauschal: 'Flat rate'
     errors:
       models:
         project:

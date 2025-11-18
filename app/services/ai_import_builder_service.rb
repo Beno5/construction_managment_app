@@ -52,47 +52,59 @@ class AiImportBuilderService
 
     normalized = unit.to_s.downcase.strip
 
-    # ✅ KOMPLETNO MAPIRANJE SA FALLBACK-om
+    # Map various input formats to SubTask enum keys
     case normalized
-    # Komadi
-    when "kom", "komad", "komada", "piece", "pieces", "pcs"
-      "pieces"
-    # Metri kvadratni
-    when "m2", "m²", "kvadrat", "kvadrata", "sqm"
-      "m2"
-    # Metri kubni
-    when "m3", "m³", "kub", "kubik", "cubic"
-      "m3"
-    # Obični metri
-    when "m", "m1", "metar", "metara", "meter"
+    # Meters (m)
+    when "m", "m1", "metar", "metara", "meter", "meters"
       "m"
-    # Kilogrami
-    when "kg", "kilogram", "kilograma"
+    
+    # Square meters (m2)
+    when "m2", "m²", "kvadrat", "kvadrata", "sqm", "square meter", "square meters"
+      "m2"
+    
+    # Cubic meters (m3)
+    when "m3", "m³", "kub", "kubik", "cubic", "cubic meter", "cubic meters"
+      "m3"
+    
+    # Kilograms (kg)
+    when "kg", "kilogram", "kilograma", "kilograms"
       "kg"
-    # Tone
-    when "t", "ton", "tona", "tone"
+    
+    # Tons (ton)
+    when "t", "ton", "tona", "tone", "tons"
       "ton"
-    # Litri
-    when "l", "litar", "litara", "liters", "liter"
+    
+    # Pieces (pieces)
+    when "kom", "komad", "komada", "piece", "pieces", "pcs", "stk", "stück"
+      "pieces"
+    
+    # Liters (liters)
+    when "l", "litar", "litara", "liters", "liter", "lit"
       "liters"
-    # Sati
-    when "h", "sat", "sati", "hours", "hour"
-      "hours"
-    # Paušal
-    when "pauš", "paušal", "paušalno", "pausal", "pausalno", "kom paušalno"
-      "pausal"
-    # Roll
-    when "roll", "rola", "rolna"
+    
+    # Roll (roll)
+    when "roll", "rola", "rolna", "rolls"
       "roll"
-    # Bag
-    when "bag", "vreća", "vreca", "kesа"
+    
+    # Bag (bag)
+    when "bag", "vreća", "vreca", "kesa", "bags", "vrece"
       "bag"
-    # Set
-    when "set", "komplet"
+    
+    # Set (set)
+    when "set", "komplet", "sets"
       "set"
+    
+    # Hours (hours)
+    when "h", "sat", "sati", "hours", "hour", "hr", "hrs"
+      "hours"
+    
+    # Pauschal (pauschal) - FIXED typo from 'pausal' to 'pauschal'
+    when "pauš", "paušal", "paušalno", "pausal", "pausalno", "pauschal", "kom paušalno", "flat rate", "lump sum"
+      "pauschal"
+    
     else
-      # ✅ FALLBACK - ako nije prepoznato, vrati null
-      Rails.logger.warn "⚠️ Nepoznata jedinica mjere: '#{unit}' → postavljam na null"
+      # Fallback - log warning and return nil
+      Rails.logger.warn "⚠️ [AIImport] Unknown unit: '#{unit}' → setting to null"
       nil
     end
   end

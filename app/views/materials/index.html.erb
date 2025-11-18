@@ -21,7 +21,7 @@
             columns: {
               t('materials.form.name') => :name,
               t('materials.form.price_per_unit', currency: @current_business.currency_symbol) => ->(material) { "#{material.price_per_unit} #{material.business.currency_symbol}" }, 
-              t('materials.form.unit_of_measure') => :unit_of_measure,
+              t('materials.form.unit_of_measure') => ->(material) { t_enum(material, :unit_of_measure) },
               t('materials.form.description') => :description,
               t('materials.form.custom_fields') => :custom_fields
             },
