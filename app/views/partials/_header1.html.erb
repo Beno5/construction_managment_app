@@ -47,7 +47,7 @@
               <span>AI Import</span>
             </button>
             <%= f.file_field :file,
-                   accept: ".xlsx,.xls,.ods",
+                   accept: ".xlsx,.xls,.ods,.docx,.doc,.pdf",
                    class: "hidden",
                    id: "ai-import-file",
                    onchange: "document.getElementById('ai-import-form').submit();" %>

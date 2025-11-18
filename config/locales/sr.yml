@@ -39,6 +39,13 @@ sr:
     next: "Sljedeća"
   activerecord:
     attributes:
+      project:
+        statuses:
+          pending: "Na čekanju"
+          active: "Aktivan"
+          completed: "Završen"
+          canceled: "Otkazan"
+          paused: "Pauziran"
       norm:
         norm_types:
           worker: "Radnik"

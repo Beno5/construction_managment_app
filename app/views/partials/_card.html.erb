@@ -13,7 +13,7 @@
     <p><span class="font-semibold"><%= t('projects.form.planned_start_date') %>:</span> <%= l(project.planned_start_date) if project.planned_start_date %></p>
     <p><span class="font-semibold"><%= t('projects.form.planned_end_date') %>:</span> <%= l(project.planned_end_date) if project.planned_end_date %></p>
     <p><span class="font-semibold"><%= t('projects.form.planned_cost', currency: project.business.currency_symbol) %>:</span> <%= project.planned_cost ? "#{project.planned_cost} #{project.business.currency_symbol}" : t('projects.form.not_available') %></p>
-    <p><span class="font-semibold"><%= t('projects.form.status') %>:</span> <%= project.status.humanize %></p>
+    <p><span class="font-semibold"><%= t('projects.form.status') %>:</span> <%= I18n.t("activerecord.attributes.project.statuses.#{project.status}", default: project.status.humanize) %></p>
     <p>
       <span class="font-semibold"><%= t('projects.form.description') %>:</span>
       <%= project.description.present? ? truncate(project.description, length: 100) : t('projects.form.not_available') %>

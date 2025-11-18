@@ -3,8 +3,7 @@ require "roo"
 require "json"
 
 class AiExcelAnalyzerService
-  TARGET_UNITS = %w[kg m2 m3 pieces ton liters roll bag set].freeze
-  CHUNK_SIZE = 200 # koliko redova po chunku šaljemo GPT-u
+  CHUNK_SIZE = 600 # koliko redova po chunku šaljemo GPT-u
 
   def initialize(file_path, original_filename)
     @file_path = Pathname.new(file_path).to_s

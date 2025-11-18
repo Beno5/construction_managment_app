@@ -39,6 +39,13 @@ en:
       next: "Next"
   activerecord:
     attributes:
+      project:
+        statuses:
+          pending: "Pending"
+          active: "Active"
+          completed: "Completed"
+          canceled: "Canceled"
+          paused: "Paused"
       norm:
         norm_types:
           worker: "Worker"
