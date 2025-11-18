@@ -32,21 +32,23 @@ class AiImportJob < ApplicationJob
     Rails.logger.info "🎉 [AIImportJob] Project created: #{project.id} - #{project.name}"
 
     # 5) Send real-time notification to user
+    project_url = Rails.application.routes.url_helpers.business_project_path(business, project, locale: user.locale || I18n.default_locale)
     Turbo::StreamsChannel.broadcast_append_to(
       "notifications_#{user.id}",
       target: "turbo-notifications",
       partial: "partials/turbo_notification",
       locals: {
-        message: I18n.t('projects.messages.ai_import_completed', project_name: project.name)
+        message: I18n.t('projects.messages.ai_import_completed', project_name: project.name),
+        project_url: project_url
       }
     )
     Rails.logger.info "📡 [AIImportJob] Notification sent to user #{user.id}"
 
     # 6) Refresh projects list for all users in this business
-    projects_html = business.projects.order(created_at: :desc).map do |project|
+    projects_html = business.projects.order(created_at: :desc).map do |p|
       ApplicationController.render(
         partial: "partials/card",
-        locals: { project: project }
+        locals: { project: p, highlight: (p.id == project.id) }
       )
     end.join
 

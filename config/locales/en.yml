@@ -355,6 +355,7 @@ en:
       deleted: "Project %{name} was deleted successfully."
       name_required: "Project name is required."
       ai_import_completed: "✅ AI import of project '%{project_name}' completed!"
+      view_project_link: "View Project →"
   tasks:
     add_new: "Add New Task"
     show:

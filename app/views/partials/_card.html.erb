@@ -1,6 +1,10 @@
-<div id="row_<%= project.id %>" 
-     class="w-full h-full flex flex-col justify-between p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 
-            dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+<div id="row_<%= project.id %>"
+     class="w-full h-full flex flex-col justify-between p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm
+            dark:border-gray-700 sm:p-6 dark:bg-gray-800"
+     <% if local_assigns[:highlight] %>
+       data-controller="highlight"
+       data-highlight-duration-value="5000"
+     <% end %>>
   <!-- Header -->
   <div class="flex justify-between items-center px-4 py-2">
     <h2 class="text-xl font-bold"><%= t('projects.form.name') %>: <%= project.name %></h2>

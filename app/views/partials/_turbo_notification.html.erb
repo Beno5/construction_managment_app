@@ -5,6 +5,13 @@
      data-controller="auto-dismiss"
      data-auto-dismiss-delay-value="5000">
     <%= message %>
+    <% if local_assigns[:project_url].present? %>
+      <a href="<%= project_url %>"
+         class="inline-block ml-3 text-primary-600 hover:text-primary-800"
+         data-turbo="false">
+        <%= t('projects.messages.view_project_link') %>
+      </a>
+    <% end %>
     <!-- Close button positioned in top-right corner -->
     <button type="button"
             class="cursor-pointer text-green-700 hover:text-green-900 hover:bg-green-200 rounded-full p-1 transition-colors"
