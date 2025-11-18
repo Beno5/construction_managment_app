@@ -64,6 +64,7 @@ gem 'font-awesome-sass', '~> 6.0'
 gem 'i18n-js'
 gem 'business_time'
 gem "roo"
+gem "roo-xls"
 gem "openai", "~> 0.34.1"
 gem "docx", "~> 0.10.0"
 gem "pdf-reader"
