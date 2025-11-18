@@ -10,7 +10,7 @@
              { name: (@task.persisted? ? t('breadcrums.task_overview', name: @task.name_with_position) : t('tasks.form.new_title')),
                path: (@task.persisted? ? business_project_task_path(@current_business, @project, @task) : nil) }
            ] %>
-<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle">
+<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle" data-section-id="task-form-basic-info" data-user-id="<%= current_user.id %>">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden p-4">
       <div class="flex items-center gap-4 mb-4">

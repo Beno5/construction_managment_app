@@ -91,7 +91,7 @@
     <%= @sub_task.total_cost %>
   </div>
 </div>
-<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle">
+<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle" data-section-id="subtask-gantt" data-user-id="<%= current_user.id %>">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden p-4">
       <div class="flex items-center gap-4 mb-4">
@@ -136,6 +136,7 @@
            },
            turbo_frame_id: "documents-frame",
            model_name: model_name,
+           context: "subtask",
            search_path: paths_doc[:documents],
            new_path: (@readonly_mode ? nil : paths_doc[:new_document]),
            edit_path: paths_doc[:edit_document],

@@ -37,7 +37,7 @@ class AiExcelAnalyzerService
         model: ENV.fetch("OPENAI_MODEL", "gpt-4.1"),
         temperature: 0.2,
         messages: [
-          { role: "system", content: "You are an AI that analyzes messy construction documents (Excel or Word)." },
+          { role: "system", content: "You are an AI that analyzes messy construction documents (Excel, Word or PDF)." },
           { role: "user", content: prompt }
         ]
       )

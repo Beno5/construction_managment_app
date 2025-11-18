@@ -1,4 +1,4 @@
-<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle">
+<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle" data-section-id="<%= local_assigns[:context] ? "#{local_assigns[:context]}-#{local_assigns[:model_name]&.parameterize}" : (local_assigns[:model_name]&.parameterize || 'table') %>" data-user-id="<%= current_user.id %>">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
       <div class="p-4">

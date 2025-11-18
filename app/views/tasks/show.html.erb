@@ -24,7 +24,7 @@
            actions: [] %>
 <% end %>
 <!-- Gantt -->
-<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle">
+<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle" data-section-id="task-gantt" data-user-id="<%= current_user.id %>">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden p-4">
       <div class="flex items-center gap-4 mb-4">
@@ -60,6 +60,7 @@
            },
            turbo_frame_id: "documents-frame",
            model_name: "Documents",
+           context: "task",
            new_path: new_business_project_document_path(@current_business, @project, @task),
            edit_path: ->(_) { "" },
            show_path: ->(_) { "" },
