@@ -40,11 +40,11 @@ en:
   activerecord:
     attributes:
       norm:
-        norm_type:
+        norm_types:
           worker: "Worker"
           material: "Material"
           machine: "Machine"
-        subtype:
+        subtypes:
           skilled: "Skilled"
           unskilled: "Unskilled"
       sub_task:

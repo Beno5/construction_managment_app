@@ -4,9 +4,15 @@ class FetchDataController < ApplicationController
                                 :get_activity_and_real_activity_infos, :get_document, :check_activity]
 
   def unit_options
-    worker_units = Worker.unit_of_measures.keys.map { |k| [k.humanize, k] }
-    material_units = Material.unit_of_measures.keys.map { |k| [k.humanize, k] }
-    machine_units = Machine.unit_of_measures.keys.map { |k| [k.humanize, k] }
+    worker_units = Worker.unit_of_measures.keys.map do |k|
+      [k, I18n.t("activerecord.attributes.worker.unit_of_measures.#{k}", default: k.humanize)]
+    end
+    material_units = Material.unit_of_measures.keys.map do |k|
+      [k, I18n.t("activerecord.attributes.material.unit_of_measures.#{k}", default: k.humanize)]
+    end
+    machine_units = Machine.unit_of_measures.keys.map do |k|
+      [k, I18n.t("activerecord.attributes.machine.unit_of_measures.#{k}", default: k.humanize)]
+    end
 
     (worker_units + material_units + machine_units).uniq { |_, v| v }
 
@@ -46,7 +52,7 @@ class FetchDataController < ApplicationController
 
     if resource
       render json: {
-        unit_of_measure: resource.unit_of_measure,
+        unit_of_measure: translate_unit_of_measure(resource),
         price_per_unit: resource.price_per_unit,
         description: resource.description,
         profession: resource.is_a?(Worker) ? resource.profession : nil,
@@ -71,7 +77,7 @@ class FetchDataController < ApplicationController
       # Dodajemo podatke iz povezanog modela
       resource_name: @resource.activityable.name,
       resoruce_description: @resource.activityable.description,
-      resoruce_unit_of_measure: @resource.activityable.unit_of_measure,
+      resoruce_unit_of_measure: translate_unit_of_measure(@resource.activityable),
       resoruce_price_per_unit: @resource.activityable.price_per_unit,
       resoruce_profession: @resource.activityable.try(:profession),
       resoruce_first_name: @resource.activityable.try(:first_name),
@@ -161,12 +167,24 @@ class FetchDataController < ApplicationController
 
     render json: {
       name: activity.activityable.name,
-      unit_of_measure: activity.activityable.unit_of_measure,
+      unit_of_measure: translate_unit_of_measure(activity.activityable),
       price_per_unit: activity.activityable.price_per_unit,
       quantity: real_activity&.quantity,
       start_date: real_activity&.start_date,
       end_date: real_activity&.end_date,
       total_cost: real_activity&.total_cost
     }
+  end
+
+  private
+
+  # Translate unit_of_measure enum value to localized text
+  def translate_unit_of_measure(resource)
+    return nil if resource.nil? || resource.unit_of_measure.blank?
+
+    I18n.t(
+      "activerecord.attributes.#{resource.model_name.i18n_key}.unit_of_measures.#{resource.unit_of_measure}",
+      default: resource.unit_of_measure.humanize
+    )
   end
 end

@@ -40,11 +40,11 @@ sr:
   activerecord:
     attributes:
       norm:
-        norm_type:
+        norm_types:
           worker: "Radnik"
           material: "Materijal"
           machine: "Mašina"
-        subtype:
+        subtypes:
           skilled: "Kvalifikovani"
           unskilled: "Nekvalifikovani"
       sub_task:
