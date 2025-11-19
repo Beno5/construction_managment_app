@@ -49,6 +49,10 @@
                 <th scope="col" class="px-4 py-3 w-88"><%= t('tasks.table.name') %></th>
                 <!-- Fixed width column for Description -->
                 <th scope="col" class="px-4 py-3 w-88"><%= t('tasks.table.description') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('subtasks.form.unit_of_measure') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('subtasks.form.quantity') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('subtasks.form.planned_cost', currency: @project.business.currency_symbol) %></th>
+                <th scope="col" class="px-4 py-3"><%= t('subtasks.form.price_per_unit', currency: @project.business.currency_symbol) %></th>
                 <th scope="col" class="px-4 py-3"><%= t('tasks.table.planned_start_date') %></th>
                 <th scope="col" class="px-4 py-3"><%= t('tasks.table.planned_end_date') %></th>
                 <th scope="col" class="px-4 py-3"></th>
@@ -79,6 +83,10 @@
                   <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.description %>">
                     <%= task.description&.truncate(150) %>
                   </td>
+                  <td class="px-4 py-3 font-bold"></td>
+                  <td class="px-4 py-3 font-bold"></td>
+                  <td class="px-4 py-3 font-bold"></td>
+                  <td class="px-4 py-3 font-bold"></td>
                   <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_start_date) if task.planned_start_date %></td>
                   <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_end_date) if task.planned_end_date %></td>
                   <td class="px-4 py-3">
@@ -133,6 +141,10 @@
                     <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.description %>">
                       <%= sub_task.description&.truncate(150) %>
                     </td>
+                    <td class="px-4 py-3"><%= t_enum(sub_task, :unit_of_measure) if sub_task.unit_of_measure %></td>
+                    <td class="px-4 py-3"><%= sub_task.quantity %></td>
+                    <td class="px-4 py-3"><%= sub_task.planned_cost %></td>
+                    <td class="px-4 py-3"><%= sub_task.price_per_unit %></td>
                     <td class="px-4 py-3"><%= I18n.l(sub_task.planned_start_date) if sub_task.planned_start_date %></td>
                     <td class="px-4 py-3"><%= I18n.l(sub_task.planned_end_date) if sub_task.planned_end_date %></td>
                     <td class="px-4 py-3"></td>
