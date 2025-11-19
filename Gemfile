@@ -69,6 +69,7 @@ gem "openai", "~> 0.34.1"
 gem "docx", "~> 0.10.0"
 gem "pdf-reader"
 gem "sidekiq"
+gem "concurrent-ruby", "~> 1.2" # For parallel chunk processing in AI imports
 
 
 
