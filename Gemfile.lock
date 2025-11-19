@@ -380,6 +380,7 @@ DEPENDENCIES
   business_time
   byebug
   capybara
+  concurrent-ruby (~> 1.2)
   debug
   devise
   docx (~> 0.10.0)

@@ -75,6 +75,14 @@ class ProjectsController < ApplicationController
       return
     end
 
+    # File size validation - max 20MB
+    max_size = 20.megabytes
+    if file.size > max_size
+      redirect_to business_projects_path(current_business),
+                  alert: "📁 Fajl je prevelik! Maksimalna veličina je #{max_size / 1.megabyte}MB, vaš fajl ima #{(file.size / 1.megabyte.to_f).round(2)}MB."
+      return
+    end
+
     base64_data = Base64.encode64(file.read)
 
     # Enqueue the job and get the job ID
