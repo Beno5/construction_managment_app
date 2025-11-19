@@ -434,6 +434,11 @@ sr:
       planned: "Planirano"
       real: "Realno"
       title: "Osnovne informacije: Podpozicija (%{name})"
+      calculator_title: "Kalkulator Resursa"
+      duration: "Trajanje (dani)"
+      skilled_workers: "Kvalifikovani Radnici"
+      unskilled_workers: "Nekvalifikovani Radnici"
+      machines: "Mašine"
     messages:
       created: "Podpozicija %{name} je uspješno kreirana."
       updated: "Podpozicija %{name} je uspješno ažurirana."

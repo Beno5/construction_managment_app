@@ -432,6 +432,11 @@ en:
       planned: "Planned"
       real: "Real"
       title: "Basic Information: Subtask (%{name})"
+      calculator_title: "Resource Calculator"
+      duration: "Duration (days)"
+      skilled_workers: "Skilled Workers"
+      unskilled_workers: "Unskilled Workers"
+      machines: "Machines"
     messages:
       created: "Sub-task %{name} was created successfully."
       updated: "Sub-task %{name} was updated successfully."

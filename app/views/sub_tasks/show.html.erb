@@ -11,69 +11,89 @@
            norms: @norms,
            frame_id: "norms-frame",
            search_path: @sub_task.persisted? ? business_project_task_sub_task_path(@business, @project, @task, @sub_task) : "" %>
-<div data-controller="subtask"
-     data-subtask-id="<%= @sub_task.id %>"
-     data-subtask-update-url-value="<%= @sub_task.persisted? ? business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) : "" %>"
-     class="grid grid-cols-6 gap-6">
-  <!-- Duration -->
-  <div class="col-span-6 sm:col-span-3">
-    <label for="duration" class="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">Duration (days)</label>
-    <input type="number" id="duration"
-           value="<%= @sub_task.duration %>"
-           <%= "disabled" if @readonly_mode %>
-           class="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 
-                  dark:bg-gray-700 dark:border-gray-600 dark:text-white
-                  <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
-           data-subtask-target="duration"
-           data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
+<section class="bg-gray-50 dark:bg-gray-900 pt-5 pb-5" data-controller="toggle" data-section-id="subtask-calculator" data-user-id="<%= current_user.id %>">
+  <div class="mx-auto">
+    <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden p-4">
+      <div class="flex items-center gap-4 mb-4">
+        <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white"><%= t('subtasks.show.calculator_title') %></h2>
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="checkbox"
+                 id="calculator-toggle"
+                 checked
+                 class="sr-only peer"
+                 data-action="change->toggle#toggle"
+                 data-toggle-target="switch">
+          <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+        </label>
+      </div>
+      <div data-toggle-target="content" class="transition-all duration-300">
+        <div data-controller="subtask"
+             data-subtask-id="<%= @sub_task.id %>"
+             data-subtask-update-url-value="<%= @sub_task.persisted? ? business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) : "" %>"
+             class="grid grid-cols-6 gap-6">
+          <!-- Duration -->
+          <div class="col-span-6 sm:col-span-3">
+            <label for="duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.show.duration') %></label>
+            <input type="number" id="duration"
+                   value="<%= @sub_task.duration %>"
+                   <%= "disabled" if @readonly_mode %>
+                   class="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5
+                          dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                          <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
+                   data-subtask-target="duration"
+                   data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
+          </div>
+          <!-- Skilled -->
+          <div class="col-span-6 sm:col-span-3">
+            <label for="skilled" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.show.skilled_workers') %></label>
+            <input type="number" id="skilled"
+                   value="<%= @sub_task.num_workers_skilled %>"
+                   <%= "disabled" if @readonly_mode %>
+                   class="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5
+                          dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                          <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
+                   data-subtask-target="skilled"
+                   data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
+          </div>
+          <!-- Unskilled -->
+          <div class="col-span-6 sm:col-span-3">
+            <label for="unskilled" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.show.unskilled_workers') %></label>
+            <input type="number" id="unskilled"
+                   value="<%= @sub_task.num_workers_unskilled %>"
+                   <%= "disabled" if @readonly_mode %>
+                   class="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5
+                          dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                          <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
+                   data-subtask-target="unskilled"
+                   data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
+          </div>
+          <!-- Machines -->
+          <div class="col-span-6 sm:col-span-3">
+            <label for="machines" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.show.machines') %></label>
+            <input type="number" id="machines"
+                   value="<%= @sub_task.num_machines %>"
+                   <%= "disabled" if @readonly_mode %>
+                   class="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5
+                          dark:bg-gray-700 dark:border-gray-600 dark:text-white
+                          <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
+                   data-subtask-target="machines"
+                   data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <!-- Skilled -->
-  <div class="col-span-6 sm:col-span-3">
-    <label for="skilled" class="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-white">Skilled Workers</label>
-    <input type="number" id="skilled"
-           value="<%= @sub_task.num_workers_skilled %>"
-           <%= "disabled" if @readonly_mode %>
-           class="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 
-                  dark:bg-gray-700 dark:border-gray-600 dark:text-white
-                  <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
-           data-subtask-target="skilled"
-           data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
-  </div>
-  <!-- Unskilled -->
-  <div class="col-span-6 sm:col-span-3">
-    <label for="unskilled" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unskilled Workers</label>
-    <input type="number" id="unskilled"
-           value="<%= @sub_task.num_workers_unskilled %>"
-           <%= "disabled" if @readonly_mode %>
-           class="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 
-                  dark:bg-gray-700 dark:border-gray-600 dark:text-white
-                  <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
-           data-subtask-target="unskilled"
-           data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
-  </div>
-  <!-- Machines -->
-  <div class="col-span-6 sm:col-span-3">
-    <label for="machines" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Machines</label>
-    <input type="number" id="machines"
-           value="<%= @sub_task.num_machines %>"
-           <%= "disabled" if @readonly_mode %>
-           class="shadow-sm border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 
-                  dark:bg-gray-700 dark:border-gray-600 dark:text-white
-                  <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
-           data-subtask-target="machines"
-           data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
-  </div>
-</div>
+</section>
 <%= render 'partials/table',
            collection: @activities || [],
            columns: {
-             t('tasks.form.name') => ->(activity) { activity.activityable.name },
-             t('tasks.form.type') => ->(activity) { activity.activity_type },
-             t('tasks.form.description') => ->(activity) { activity.activityable.description },
-             t('tasks.form.quantity') => ->(activity) { activity.quantity },
-             t('tasks.form.unit_of_measure') => ->(activity) { t_enum(activity.activityable, :unit_of_measure) },
-             t('tasks.form.price_per_unit') => ->(activity) { activity.activityable.price_per_unit },
-             t('tasks.form.total_cost') => ->(activity) { activity.total_cost },
+             t('resources.table.name') => ->(activity) { activity.activityable.name },
+             t('resources.table.type') => ->(activity) { activity.activity_type },
+             t('resources.table.description') => ->(activity) { activity.activityable.description },
+             t('resources.table.quantity') => ->(activity) { activity.quantity },
+             t('resources.table.unit_of_measure') => ->(activity) { t_enum(activity.activityable, :unit_of_measure) },
+             t('resources.table.price_per_unit') => ->(activity) { activity.activityable.price_per_unit },
+             t('resources.table.total_cost') => ->(activity) { activity.total_cost },
            },
            turbo_frame_id: "activities-frame",
            model_name: model_name,
