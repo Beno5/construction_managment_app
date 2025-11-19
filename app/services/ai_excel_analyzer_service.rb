@@ -3,7 +3,7 @@ require "roo"
 require "json"
 
 class AiExcelAnalyzerService
-  CHUNK_SIZE = 600 # koliko redova po chunku šaljemo GPT-u
+  CHUNK_SIZE = 400 # koliko redova po chunku šaljemo GPT-u
 
   def initialize(file_path, original_filename)
     @file_path = Pathname.new(file_path).to_s
@@ -74,15 +74,32 @@ class AiExcelAnalyzerService
       sheet = xls.sheet(sheet_name)
       rows = []
 
-      sheet.each_row_streaming(pad_cells: true).each_with_index do |row, i|
-        values = row.map { |c| normalize_cell_value(c&.value) }
-        next if values.all?(&:blank?)
+      # Use streaming for .xlsx (memory efficient), regular iteration for .xls and .ods
+      if sheet.respond_to?(:each_row_streaming)
+        # For .xlsx files - streaming approach
+        sheet.each_row_streaming(pad_cells: true).each_with_index do |row, i|
+          values = row.map { |c| normalize_cell_value(c&.value) }
+          next if values.all?(&:blank?)
 
-        rows << "#{i + 1}\t" << values[0, 20].join("\t") << "\n"
+          rows << "#{i + 1}\t" << values[0, 20].join("\t") << "\n"
 
-        if (i + 1) % CHUNK_SIZE == 0
-          chunks << ("=== SHEET: #{sheet_name} (Part #{chunks.size + 1}) ===\n" + rows.join)
-          rows = []
+          if (i + 1) % CHUNK_SIZE == 0
+            chunks << ("=== SHEET: #{sheet_name} (Part #{chunks.size + 1}) ===\n" + rows.join)
+            rows = []
+          end
+        end
+      else
+        # For .xls and .ods files - regular iteration
+        sheet.each_with_index do |row, i|
+          values = row.map { |c| normalize_cell_value(c) }
+          next if values.all?(&:blank?)
+
+          rows << "#{i + 1}\t" << values[0, 20].join("\t") << "\n"
+
+          if (i + 1) % CHUNK_SIZE == 0
+            chunks << ("=== SHEET: #{sheet_name} (Part #{chunks.size + 1}) ===\n" + rows.join)
+            rows = []
+          end
         end
       end
 
