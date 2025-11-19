@@ -2,9 +2,15 @@
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
       <div class="p-4">
-        <% if ["Documents", "SubTasks", "Activities"].include?(local_assigns[:model_name]) %>
+        <% if ["Documents", "SubTasks", "Activities", "Workers", "Machines", "Materials"].include?(local_assigns[:model_name]) %>
           <div class="flex items-center gap-4 mb-4">
-            <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white"><%= t("#{local_assigns[:model_name].downcase}.form.model_name_pl") %></h2>
+            <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white">
+              <% if ["Workers", "Machines", "Materials"].include?(local_assigns[:model_name]) %>
+                <%= t("#{local_assigns[:model_name].downcase}.index.section_title") %>
+              <% else %>
+                <%= t("#{local_assigns[:model_name].downcase}.form.model_name_pl") %>
+              <% end %>
+            </h2>
             <label class="inline-flex items-center cursor-pointer">
               <input type="checkbox"
                      id="<%= local_assigns[:model_name].downcase %>-toggle"

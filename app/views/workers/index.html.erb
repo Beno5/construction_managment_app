@@ -1,4 +1,4 @@
-<% 
+<%
   model_name = "Workers"
   paths = {
     workers: business_workers_path(@current_business),
@@ -9,10 +9,10 @@
   }
 %>
 
-<%= render 'partials/header1', 
-           title: t('workers.form.model_name'), 
-           model_name: model_name, 
-           search_path: paths[:workers], 
+<%= render 'partials/header1',
+           title: t('workers.index.title'),
+           model_name: model_name,
+           search_path: paths[:workers],
            new_path: paths[:new_worker],
            additional_crumbs: [
              { name: t('workers.form.model_name'), path: paths[:workers] }

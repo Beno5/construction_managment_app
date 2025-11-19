@@ -255,6 +255,9 @@ en:
       taken_for_user: "You already have a business with this name."
       validation_failed: "Please check the form for errors."
   materials:
+    index:
+      title: "MATERIALS OVERVIEW"
+      section_title: "Materials"
     form:
       edit_title: "Edit %{name}"
       new_title: "New Material"
@@ -273,6 +276,9 @@ en:
       deleted: "Material %{name} was deleted successfully."
       name_required: "Material name is required."
   machines:
+    index:
+      title: "MACHINES OVERVIEW"
+      section_title: "Machines"
     form:
       edit_title: "Edit %{name}"
       new_title: "New Machine"
@@ -291,6 +297,9 @@ en:
       deleted: "Machine %{name} was deleted successfully."
       name_required: "Machine name is required."
   workers:
+    index:
+      title: "WORKERS OVERVIEW"
+      section_title: "Workers"
     form:
       edit_title: "Edit %{name}"
       new_title: "New Worker"

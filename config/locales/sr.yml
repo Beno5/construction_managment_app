@@ -259,6 +259,9 @@ sr:
       taken_for_user: "Već imate firmu sa ovim nazivom."
       validation_failed: "Molimo provjerite formu za greške."
   materials:
+    index:
+      title: "PREGLED MATERIJALA"
+      section_title: "Materijali"
     form:
       edit_title: "Izmeni %{name}"
       new_title: "Novi Materijal"
@@ -277,6 +280,9 @@ sr:
       deleted: "Materijal %{name} je uspješno obrisan."
       name_required: "Naziv materijala je obavezan."
   machines:
+    index:
+      title: "PREGLED MAŠINA"
+      section_title: "Mašine"
     form:
       edit_title: "Izmeni %{name}"
       new_title: "Nova Mašina"
@@ -295,6 +301,9 @@ sr:
       deleted: "Mašina %{name} je uspješno obrisana."
       name_required: "Naziv mašine je obavezan."
   workers:
+    index:
+      title: "PREGLED RADNIKA"
+      section_title: "Radnici"
     form:
       edit_title: "Izmeni %{name}"
       new_title: "Novi Radnik"
