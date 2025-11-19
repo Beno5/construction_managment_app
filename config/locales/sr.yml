@@ -324,6 +324,12 @@ sr:
       deleted: "Radnik %{name} je uspješno obrisan."
       first_name_required: "Ime radnika je obavezno."
   projects:
+    import:
+      in_progress: "AI import u toku..."
+      estimated_time: "Preostalo vrijeme: ~%{time}"
+      processing_file: "Obrađujem: %{filename}"
+      stop_import: "Zaustavi Import"
+      import_cancelled: "AI import je zaustavljen"
     form:
       edit_title: "Izmeni %{name}"
       new_title: "Novi Projekat"

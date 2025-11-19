@@ -57,51 +57,51 @@ class AiImportBuilderService
     # Meters (m)
     when "m", "m1", "metar", "metara", "meter", "meters"
       "m"
-    
+
     # Square meters (m2)
     when "m2", "m²", "kvadrat", "kvadrata", "sqm", "square meter", "square meters"
       "m2"
-    
+
     # Cubic meters (m3)
     when "m3", "m³", "kub", "kubik", "cubic", "cubic meter", "cubic meters"
       "m3"
-    
+
     # Kilograms (kg)
     when "kg", "kilogram", "kilograma", "kilograms"
       "kg"
-    
+
     # Tons (ton)
     when "t", "ton", "tona", "tone", "tons"
       "ton"
-    
+
     # Pieces (pieces)
     when "kom", "komad", "komada", "piece", "pieces", "pcs", "stk", "stück"
       "pieces"
-    
+
     # Liters (liters)
     when "l", "litar", "litara", "liters", "liter", "lit"
       "liters"
-    
+
     # Roll (roll)
     when "roll", "rola", "rolna", "rolls"
       "roll"
-    
+
     # Bag (bag)
     when "bag", "vreća", "vreca", "kesa", "bags", "vrece"
       "bag"
-    
+
     # Set (set)
     when "set", "komplet", "sets"
       "set"
-    
+
     # Hours (hours)
     when "h", "sat", "sati", "hours", "hour", "hr", "hrs"
       "hours"
-    
+
     # Pauschal (pauschal) - FIXED typo from 'pausal' to 'pauschal'
     when "pauš", "paušal", "paušalno", "pausal", "pausalno", "pauschal", "kom paušalno", "flat rate", "lump sum"
       "pauschal"
-    
+
     else
       # Fallback - log warning and return nil
       Rails.logger.warn "⚠️ [AIImport] Unknown unit: '#{unit}' → setting to null"

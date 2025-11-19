@@ -77,15 +77,110 @@ class ProjectsController < ApplicationController
 
     base64_data = Base64.encode64(file.read)
 
-    AiImportJob.perform_later(
+    # Enqueue the job and get the job ID
+    job = AiImportJob.perform_later(
       file.original_filename,
       base64_data,
       current_user.id,
       current_business.id
     )
 
+    # Store import status in cache with job ID (expires in 30 minutes as a safety net)
+    cache_key = "ai_import_in_progress_#{current_user.id}_#{current_business.id}"
+    Rails.cache.write(cache_key, {
+                        started_at: Time.current.iso8601,
+                        filename: file.original_filename,
+                        estimated_duration: 120, # seconds (2 minutes default estimate)
+                        job_id: job.job_id
+                      }, expires_in: 30.minutes)
+
     redirect_to business_projects_path(current_business),
                 notice: "⏳ AI import je pokrenut… Biće gotovo uskoro!"
+  end
+
+  def import_status
+    cache_key = "ai_import_in_progress_#{current_user.id}_#{current_business.id}"
+    status = Rails.cache.read(cache_key)
+
+    render json: {
+      in_progress: status.present?,
+      started_at: status&.dig(:started_at),
+      filename: status&.dig(:filename),
+      estimated_duration: status&.dig(:estimated_duration)
+    }
+  end
+
+  def cancel_import
+    cache_key = "ai_import_in_progress_#{current_user.id}_#{current_business.id}"
+    import_data = Rails.cache.read(cache_key)
+
+    if import_data
+      job_id = import_data[:job_id]
+
+      # Mark the job as cancelled in cache so the job can check this flag
+      cancelled_key = "ai_import_cancelled_#{job_id}"
+      Rails.cache.write(cancelled_key, true, expires_in: 1.hour)
+
+      # Try to find and delete the Sidekiq job
+      begin
+        require 'sidekiq/api'
+
+        # Check scheduled jobs
+        scheduled_set = Sidekiq::ScheduledSet.new
+        scheduled_job = scheduled_set.find { |job| job.jid == job_id }
+        if scheduled_job
+          scheduled_job.delete
+          Rails.logger.info "🗑️  [CancelImport] Deleted scheduled Sidekiq job: #{job_id}"
+        end
+
+        # Check retry set
+        retry_set = Sidekiq::RetrySet.new
+        retry_job = retry_set.find { |job| job.jid == job_id }
+        if retry_job
+          retry_job.delete
+          Rails.logger.info "🗑️  [CancelImport] Deleted retry Sidekiq job: #{job_id}"
+        end
+
+        # Check queue
+        queue = Sidekiq::Queue.new('default')
+        queue.each do |job|
+          next unless job.jid == job_id
+
+          job.delete
+          Rails.logger.info "🗑️  [CancelImport] Deleted queued Sidekiq job: #{job_id}"
+          break
+        end
+
+        # Check currently running jobs
+        workers = Sidekiq::Workers.new
+        workers.each do |_process_id, _thread_id, work|
+          if work['payload']['jid'] == job_id
+            Rails.logger.info "⚠️  [CancelImport] Job #{job_id} is currently running, marked as cancelled"
+            # Job is running, can't kill it but we set the cancelled flag
+          end
+        end
+      rescue StandardError => e
+        Rails.logger.error "❌ [CancelImport] Error cancelling Sidekiq job: #{e.message}"
+      end
+
+      # Clear the cache
+      Rails.cache.delete(cache_key)
+
+      # Send Turbo Stream notification
+      Turbo::StreamsChannel.broadcast_append_to(
+        "notifications_#{current_user.id}",
+        target: "turbo-notifications",
+        partial: "partials/turbo_notification",
+        locals: {
+          message: "⚠️ #{t('projects.import.import_cancelled')}",
+          type: "warning"
+        }
+      )
+
+      render json: { success: true }
+    else
+      render json: { success: false, message: "No import in progress" }, status: :not_found
+    end
   end
 
   private

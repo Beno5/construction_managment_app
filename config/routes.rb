@@ -27,6 +27,8 @@ Rails.application.routes.draw do
 
     resources :projects do
         post :import_ai, on: :collection
+        get :import_status, on: :collection
+        delete :cancel_import, on: :collection
       resources :tasks do
         resources :sub_tasks do
           post "pinned_norms/:norm_id", to: "pinned_norms#create"

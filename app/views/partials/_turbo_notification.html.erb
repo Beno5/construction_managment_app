@@ -1,6 +1,28 @@
 <% if message.present? %>
+  <%
+    # Determine notification styling based on type
+    notification_type = local_assigns[:type] || "success"
+
+    case notification_type
+    when "error"
+      bg_color = "bg-red-100"
+      text_color = "text-red-700"
+      hover_bg = "hover:bg-red-200"
+      hover_text = "hover:text-red-900"
+    when "warning"
+      bg_color = "bg-yellow-100"
+      text_color = "text-yellow-700"
+      hover_bg = "hover:bg-yellow-200"
+      hover_text = "hover:text-yellow-900"
+    else # success
+      bg_color = "bg-green-100"
+      text_color = "text-green-700"
+      hover_bg = "hover:bg-green-200"
+      hover_text = "hover:text-green-900"
+    end
+  %>
   <!-- Turbo notification container with relative positioning for absolute close button -->
-  <p class="notice bg-green-100 text-green-700 rounded-lg text-2xl relative"
+  <p class="notice <%= bg_color %> <%= text_color %> rounded-lg text-2xl relative"
      style="padding: 1rem 3rem 1rem 2rem; position: relative;"
      data-controller="auto-dismiss"
      data-auto-dismiss-delay-value="5000">
@@ -14,7 +36,7 @@
     <% end %>
     <!-- Close button positioned in top-right corner -->
     <button type="button"
-            class="cursor-pointer text-green-700 hover:text-green-900 hover:bg-green-200 rounded-full p-1 transition-colors"
+            class="cursor-pointer <%= text_color %> <%= hover_text %> <%= hover_bg %> rounded-full p-1 transition-colors"
             style="position: absolute; top: 0.5rem; right: 0.5rem;"
             data-action="click->auto-dismiss#dismiss"
             aria-label="Close notification">

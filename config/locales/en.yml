@@ -320,6 +320,12 @@ en:
       deleted: "Worker %{name} was deleted successfully."
       first_name_required: "Worker first name is required."
   projects:
+    import:
+      in_progress: "AI import in progress..."
+      estimated_time: "Estimated time remaining: ~%{time}"
+      processing_file: "Processing: %{filename}"
+      stop_import: "Stop Import"
+      import_cancelled: "AI import was cancelled"
     form:
       edit_title: "Edit %{name}"
       new_title: "New Project"
