@@ -9,8 +9,13 @@ class AiImportBuilderService
   def build!
     project_data = @data["project"] || {}
 
+    # Generate unique project name to avoid validation errors
+    project_name = generate_unique_project_name(
+      project_data["name"].presence || "AI Imported Project"
+    )
+
     project = @business.projects.create!(
-      name: project_data["name"].presence || "AI Imported Project",
+      name: project_name,
       description: project_data["description"],
       address: project_data["address"],
       project_manager: project_data["project_manager"],
@@ -46,6 +51,20 @@ class AiImportBuilderService
   end
 
   private
+
+  def generate_unique_project_name(base_name)
+    # Check if project with this name already exists in the business
+    return base_name unless @business.projects.exists?(name: base_name)
+
+    # If exists, append "_copy" with next available number
+    counter = 1
+    loop do
+      new_name = "#{base_name}_copy_#{counter}"
+      break new_name unless @business.projects.exists?(name: new_name)
+
+      counter += 1
+    end
+  end
 
   def map_unit(unit)
     return nil if unit.blank?
