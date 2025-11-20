@@ -9,6 +9,7 @@ This is a **Construction Management Application** built with Ruby on Rails 7.0.8
 **Tech Stack:**
 - Backend: Rails 7.0.8, PostgreSQL
 - Frontend: Hotwire (Turbo + Stimulus), Tailwind CSS, Flowbite
+- JavaScript Bundler: ESBuild (via jsbundling-rails)
 - Background Jobs: Sidekiq with Redis
 - AI Integration: OpenAI API for document analysis
 - File Processing: Roo (Excel), Docx, PDF Reader
@@ -87,17 +88,26 @@ bundle exec rubocop -a
 bundle exec rubocop app/models/project.rb
 ```
 
-### Asset Pipeline
+### Asset Pipeline & JavaScript Building
 
 ```bash
+# Build JavaScript with ESBuild (one-time)
+yarn build
+
+# Watch JavaScript for changes (auto-rebuild)
+yarn build --watch
+
 # Compile Tailwind CSS
 bundle exec rails tailwindcss:build
 
 # Watch Tailwind (already included in bin/dev)
 bundle exec rails tailwindcss:watch
 
-# Precompile assets
+# Precompile all assets for production
 bundle exec rails assets:precompile
+
+# Clean compiled assets
+bundle exec rails assets:clobber
 ```
 
 ### Background Jobs
@@ -212,6 +222,67 @@ The app uses **Business** as the tenant boundary:
   - Used throughout the app for expandable content areas
   - State persisted in localStorage per user and section ID
   - Examples: project tasks table, norms table, form sections
+
+## JavaScript Bundling with ESBuild
+
+**Migration from Importmap to ESBuild:**
+The app was migrated from `importmap-rails` to `jsbundling-rails` with ESBuild for better performance, tree-shaking, and modern module bundling.
+
+**Current Setup:**
+- **Bundler**: ESBuild (via `jsbundling-rails` gem)
+- **Entry Point**: `app/javascript/application.js`
+- **Output**: `app/assets/builds/application.js` (619 KB bundle + 953 KB source maps)
+- **Dependencies**: Turbo (8.0.12), Stimulus (3.2.2), Flowbite (2.5.2)
+- **Build Scripts** (in `package.json`):
+  - `yarn build` - Production build (one-time)
+  - `yarn build --watch` - Development watch mode (auto-rebuild on changes)
+  - `yarn build:css` - Tailwind CSS build
+
+**Stimulus Controllers:**
+All 17 controllers are **manually registered** in `app/javascript/controllers/index.js`:
+```javascript
+import { application } from "./application"
+import ActivityController from "./activity_controller"
+// ... all other controllers
+
+application.register("activity", ActivityController)
+application.register("sidebar", SidebarController)
+// ... etc
+```
+
+**Development Workflow:**
+```bash
+# Start all development processes
+bin/dev
+
+# This runs (via Procfile.dev):
+# - Rails server on port 3000
+# - ESBuild watcher (yarn build --watch)
+# - Tailwind CSS watcher (rails tailwindcss:watch)
+```
+
+**Production Build:**
+```bash
+# Manual build (optional - Heroku does this automatically)
+yarn build
+bundle exec rails tailwindcss:build
+bundle exec rails assets:precompile
+```
+
+**Heroku Deployment:**
+- **Buildpacks Required** (in this order):
+  1. `heroku/nodejs` (runs `yarn install` and `yarn build`)
+  2. `heroku/ruby` (runs `bundle install` and `rails assets:precompile`)
+- Node.js buildpack **must run first** to build JavaScript before Rails asset precompilation
+- ESBuild automatically runs during `rails assets:precompile` via jsbundling-rails
+
+**Key Files:**
+- `Gemfile` - Contains `gem "jsbundling-rails"`
+- `package.json` - ESBuild build scripts and npm dependencies
+- `app/javascript/application.js` - Main entry point
+- `app/javascript/controllers/index.js` - Controller registration
+- `app/assets/builds/` - Output directory (gitignored)
+- `Procfile.dev` - Development process orchestration
 
 **FOUC (Flash of Unstyled Content) Prevention Pattern:**
 The app uses a multi-layered approach to prevent visual flashing on page load:
@@ -348,11 +419,26 @@ Example pattern:
 
 ## Deployment
 
-The app is Heroku-ready:
+The app is Heroku-ready with ESBuild:
 - `Procfile` defines web + worker dynos
 - Database URL via `ENV['DATABASE_URL']`
 - Redis auto-configured for Sidekiq
-- Assets precompiled during build
+- **Buildpacks required** (in order):
+  1. `heroku/nodejs` - Installs Node.js, runs `yarn install`, runs `yarn build`
+  2. `heroku/ruby` - Installs Ruby gems, runs `rails assets:precompile`
+- Assets precompiled during build (JavaScript built first, then Rails assets)
+- JavaScript bundle (~619 KB) created at `app/assets/builds/application.js`
+
+**First-time Heroku setup:**
+```bash
+# Add buildpacks in correct order
+heroku buildpacks:add heroku/nodejs -a your-app-name
+heroku buildpacks:add heroku/ruby -a your-app-name
+
+# Verify order
+heroku buildpacks -a your-app-name
+# Should show: 1. nodejs  2. ruby
+```
 
 ## Production Configuration (Heroku)
 
@@ -438,3 +524,38 @@ Key rules (see `.rubocop.yml`):
 - Tab width: 2 spaces
 - Frozen string literals: disabled
 - Excludes: db/schema.rb, config/**, bin/**, node_modules/**, vendor/**, public/**
+
+## Migration History
+
+### ESBuild Migration (November 2025)
+
+**What changed:**
+- **Removed**: `importmap-rails` gem
+- **Added**: `jsbundling-rails` gem
+- **JavaScript Bundler**: Migrated from Importmap to ESBuild
+- **Stimulus Controllers**: Changed from auto-loading to manual registration
+- **Layout**: Changed from `javascript_importmap_tags` to `javascript_include_tag`
+
+**Files modified:**
+- `Gemfile` - Replaced importmap with jsbundling
+- `package.json` - Added ESBuild, Turbo, Stimulus, Flowbite as npm packages
+- `app/javascript/application.js` - Updated imports to use relative paths
+- `app/javascript/controllers/index.js` - Manual controller registration
+- `app/views/layouts/application.html.erb` - Updated JavaScript inclusion
+- `Procfile.dev` - Added `yarn build --watch` process
+- Deleted: `config/importmap.rb`, `bin/importmap`
+
+**Why:**
+- Better performance (ESBuild is 10-100x faster than alternatives)
+- Tree-shaking (removes unused code)
+- Modern module bundling
+- Better npm package compatibility
+- Source maps for debugging
+- Smaller bundle sizes with optimization
+
+**Impact:**
+- No breaking changes to functionality
+- All 17 Stimulus controllers work identically
+- Turbo and Flowbite work as before
+- Development workflow improved with faster rebuilds
+- Production builds optimized for Heroku

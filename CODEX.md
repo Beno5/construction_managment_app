@@ -5,7 +5,7 @@
 - Supports planned vs real execution through activities and real activities tied to sub tasks, plus norms (productivity standards) that drive planning calculators.
 - Resource catalogs (workers, machines, materials, custom resources) live under each business; documents can attach to projects, tasks, or sub tasks.
 - AI import pipeline converts uploaded Excel/Word/PDF files into projects/tasks/sub tasks via OpenAI.
-- Tech stack: Ruby 3.2.2, Rails 7.0.8.6, PostgreSQL, Hotwire (Turbo + Stimulus + importmap), TailwindCSS, Devise auth, Sidekiq + Redis, Active Storage (local or S3 via Bucketeer), OpenAI SDK, Kaminari pagination, BusinessTime.
+- Tech stack: Ruby 3.2.2, Rails 7.0.8.6, PostgreSQL, Hotwire (Turbo + Stimulus bundled via ESBuild), TailwindCSS, Devise auth, Sidekiq + Redis, Active Storage (local or S3 via Bucketeer), OpenAI SDK, Kaminari pagination, BusinessTime, Flowbite UI components.
 
 ## Current Architecture
 - **CustomFields concern (CustomFields):** Before save, initializes `custom_fields` hash and strips blank values; helper methods to set/get/remove/list fields.
@@ -72,7 +72,8 @@
   - `subtask_controller`: Sends PATCH JSON to recalc sub task planning, updates displayed dates/counts.
   - `toggle_controller`: Collapsible section toggle with persisted state.
   - `track_changes_controller`: Tracks form changes to show save button and warn on unload.
-- **Custom JS (app/javascript/custom):** Dark mode toggle, custom confirm dialog, constants, flash message helpers, sidebar behavior, modal helpers, Gantt initialization trigger, etc., loaded via `app/javascript/application.js`.
+- **Custom JS (app/javascript/custom):** Dark mode toggle, custom confirm dialog, constants, flash message helpers, sidebar behavior, modal helpers, Gantt initialization trigger, etc., bundled via ESBuild and loaded from `app/javascript/application.js`.
+- **JavaScript bundling:** ESBuild compiles `app/javascript/application.js` into `app/assets/builds/application.js` (619KB bundle including Turbo, Stimulus, Flowbite, all controllers, and custom modules). All 17 Stimulus controllers are manually registered in `app/javascript/controllers/index.js`. Build runs via `yarn build` (production) or `yarn build --watch` (development).
 - **Views/partials:** Shared layout pieces in `app/views/partials` (headers/nav/sidebar, breadcrumbs, cards, tables, turbo notification, custom fields tooltip, loading overlay) and modal partials in `app/views/modals` (custom fields, resources, documents, delete confirmation). Task/sub task views use navbar partials for sections (planned vs real resources, info/communication, resources table). Turbo Stream templates exist for destroy actions across resources.
 
 ## File Handling
@@ -92,8 +93,9 @@
 - `SubTaskPlanningCalculator` runs on sub task updates and norm changes, performing multiple calculations and attribute updates including date adjustments.
 
 ## Developer Reference
-- **Setup:** `bin/setup` installs gems, runs `bundle check`/`bundle install`, `bin/rails db:prepare`, clears logs/tmp, restarts app. App uses Procfile: `web` (puma via config/puma.rb) and `worker` (sidekiq with config/sidekiq.yml). Dev env: `Procfile.dev` with `bin/rails server -p 3000` and `bin/rails tailwindcss:watch`. Tailwind and importmap; Yarn/Node deps tracked in package.json.
+- **Setup:** `bin/setup` installs gems, runs `bundle check`/`bundle install`, `bin/rails db:prepare`, clears logs/tmp, restarts app. App uses Procfile: `web` (puma via config/puma.rb) and `worker` (sidekiq with config/sidekiq.yml). Dev env: `Procfile.dev` runs three processes: `bin/rails server -p 3000`, `yarn build --watch` (ESBuild JavaScript watcher), and `bin/rails tailwindcss:watch` (Tailwind CSS watcher). Yarn/Node deps tracked in package.json; uses `jsbundling-rails` gem.
+- **JavaScript building:** ESBuild bundles `app/javascript/application.js` → `app/assets/builds/application.js`. Build scripts: `yarn build` (one-time production build), `yarn build --watch` (development watch mode). All Stimulus controllers manually registered in `app/javascript/controllers/index.js`. Production deployments (Heroku) require both Node.js and Ruby buildpacks (Node.js must run first to build assets before Rails precompilation).
 - **Environment variables:** `OPENAI_API_KEY` (optional `OPENAI_MODEL`), `REDIS_URL`/`REDISCLOUD_URL` (Redis connection + Sidekiq + Rails.cache), `BUCKETEER_AWS_ACCESS_KEY_ID`, `BUCKETEER_AWS_SECRET_ACCESS_KEY`, `BUCKETEER_AWS_REGION`, `BUCKETEER_BUCKET_NAME` for S3 storage. Devise uses standard credentials; BusinessTime/weekdays configured in initializer.
 - **Background jobs:** Run Sidekiq with `bundle exec sidekiq -C config/sidekiq.yml` (queue `default`, concurrency 5). Sidekiq Web mounted at `/sidekiq` (no auth in routes). AiImportJob enqueued via ProjectsController import.
 - **Imports:** Trigger AI import through POST `business/:business_id/projects/import_ai` with file param; status via `import_status`, cancellation via `cancel_import` (affects Sidekiq sets and cache flags).
-- **Assets/frontend:** Stimulus controllers auto-loaded via importmap (`app/javascript/controllers/index.js`); Tailwind config in `config/tailwind.config.js`; Flowbite vendor JS included.
+- **Assets/frontend:** Stimulus controllers manually registered in `app/javascript/controllers/index.js` and bundled via ESBuild. Tailwind config in `config/tailwind.config.js`. Flowbite (2.5.2) bundled as npm package. Built assets output to `app/assets/builds/` (gitignored, rebuilt on deploy). Layout uses `javascript_include_tag "application"` instead of importmap tags.
