@@ -13,7 +13,10 @@
     <%= render "partials/header" %>
     <%= favicon_link_tag "favicon-32x32_con.png", rel: "icon", type: "image/png", sizes: "32x32" %>
   </head>
-  <body class="bg-gray-50 dark:bg-gray-800 <%= 'bg-white dark:bg-gray-900' if params[:white_bg] %>">
+  <body class="bg-gray-50 dark:bg-gray-800 <%= 'bg-white dark:bg-gray-900' if params[:white_bg] %>" data-controller="loading">
+    <%# Global loading overlay %>
+    <%= render "partials/loading_overlay" %>
+
     <%# Subscribe to Turbo Stream notifications %>
     <% if user_signed_in? %>
       <%= turbo_stream_from "notifications_#{current_user.id}" %>

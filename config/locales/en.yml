@@ -647,3 +647,5 @@ en:
         task: "Show task"
         subtask: "Show subtask"
         norm: "Show norm"
+  loading:
+    please_wait: "Loading..."

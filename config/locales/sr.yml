@@ -652,7 +652,5 @@ sr:
         task: Prikaži poziciju
         subtask: Prikaži podpoziciju
         norm: Prikaži normu
-
-
-
-
+  loading:
+    please_wait: "Učitavanje..."
