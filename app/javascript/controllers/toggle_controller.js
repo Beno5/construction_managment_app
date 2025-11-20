@@ -2,37 +2,28 @@ import { Controller } from "@hotwired/stimulus"
 
 // Simple toggle controller for collapsible sections with sliding switch
 export default class extends Controller {
-  static targets = ["content", "switch"]
+  static targets = ["switch"]
 
   connect() {
-    // Restore toggle state from localStorage on page load
-    const sectionId = this.element.dataset.sectionId
-    const userId = this.element.dataset.userId
+    // State is already applied by inline script, just ensure visibility
+    // If for some reason inline script didn't run, ensure toggle-init is added
+    if (!this.element.classList.contains("toggle-init")) {
+      this.element.classList.add("toggle-init")
+    }
 
-    if (sectionId && userId) {
-      const storageKey = `toggle_${userId}_${sectionId}`
-      const savedState = localStorage.getItem(storageKey)
-
-      if (savedState !== null) {
-        const isChecked = savedState === "true"
-        this.switchTarget.checked = isChecked
-
-        // Apply the saved state to content visibility
-        if (isChecked) {
-          this.contentTarget.classList.remove("hidden")
-        } else {
-          this.contentTarget.classList.add("hidden")
-        }
-      }
+    // Sync checkbox state with current collapsed state
+    const isCollapsed = this.element.classList.contains("toggle-collapsed")
+    if (this.hasSwitchTarget) {
+      this.switchTarget.checked = !isCollapsed
     }
   }
 
   toggle() {
-    // Toggle content visibility based on switch state
+    // Toggle CSS class based on switch state
     if (this.switchTarget.checked) {
-      this.contentTarget.classList.remove("hidden")
+      this.element.classList.remove("toggle-collapsed")
     } else {
-      this.contentTarget.classList.add("hidden")
+      this.element.classList.add("toggle-collapsed")
     }
 
     // Save toggle state to localStorage

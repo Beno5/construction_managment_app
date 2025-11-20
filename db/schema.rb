@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_11_17_192157) do
+ActiveRecord::Schema[7.0].define(version: 2025_11_20_213545) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -295,13 +295,13 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_17_192157) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "activities", "sub_tasks"
+  add_foreign_key "activities", "sub_tasks", on_delete: :cascade
   add_foreign_key "businesses", "users"
-  add_foreign_key "custom_resources", "sub_tasks"
+  add_foreign_key "custom_resources", "sub_tasks", on_delete: :cascade
   add_foreign_key "custom_resources", "users"
-  add_foreign_key "documents", "projects"
-  add_foreign_key "documents", "sub_tasks"
-  add_foreign_key "documents", "tasks"
+  add_foreign_key "documents", "projects", on_delete: :cascade
+  add_foreign_key "documents", "sub_tasks", on_delete: :cascade
+  add_foreign_key "documents", "tasks", on_delete: :cascade
   add_foreign_key "machines", "businesses"
   add_foreign_key "machines", "users"
   add_foreign_key "materials", "businesses"
@@ -311,12 +311,12 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_17_192157) do
   add_foreign_key "projects", "businesses"
   add_foreign_key "projects", "users"
   add_foreign_key "real_activities", "activities"
-  add_foreign_key "real_activities", "sub_tasks"
+  add_foreign_key "real_activities", "sub_tasks", on_delete: :cascade
   add_foreign_key "real_activities", "users"
   add_foreign_key "sub_task_norms", "norms"
-  add_foreign_key "sub_task_norms", "sub_tasks"
-  add_foreign_key "sub_tasks", "tasks"
-  add_foreign_key "tasks", "projects"
+  add_foreign_key "sub_task_norms", "sub_tasks", on_delete: :cascade
+  add_foreign_key "sub_tasks", "tasks", on_delete: :cascade
+  add_foreign_key "tasks", "projects", on_delete: :cascade
   add_foreign_key "tasks", "users"
   add_foreign_key "workers", "businesses"
   add_foreign_key "workers", "users"

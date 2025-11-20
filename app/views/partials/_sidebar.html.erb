@@ -1,7 +1,36 @@
+<%# Inline script to prevent FOUC - runs before sidebar renders %>
+<script>
+  (function() {
+    const userId = '<%= current_user&.id %>';
+    if (userId) {
+      const storageKey = `sidebar_collapsed_${userId}`;
+      const isCollapsed = localStorage.getItem(storageKey) === 'true';
+      if (isCollapsed) {
+        document.documentElement.classList.add('sidebar-collapsed');
+      }
+    }
+  })();
+</script>
+
 <aside id="sidebar"
-       class="fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 hidden w-64 h-full pt-16 font-normal duration-75 lg:flex transition-width"
-       aria-label="Sidebar">
+       class="fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 hidden h-full pt-16 font-normal duration-300 lg:flex transition-all sidebar-width"
+       aria-label="Sidebar"
+       data-controller="sidebar"
+       data-user-id="<%= current_user&.id %>">
   <div class="relative flex flex-col flex-1 min-h-0 pt-0 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <!-- Toggle Button -->
+    <button data-action="click->sidebar#toggle"
+            class="absolute hidden lg:flex items-center justify-center w-8 h-8 text-gray-500 bg-white border border-gray-300 rounded-full -right-4 top-6 hover:bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-600 z-30 shadow-md"
+            title="Toggle sidebar">
+      <svg data-sidebar-target="toggleIcon"
+           class="w-4 h-4 transition-transform duration-300"
+           fill="none"
+           stroke="currentColor"
+           viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </button>
+
     <div class="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
       <div class="flex-1 px-3 space-y-1 bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
         <ul class="pb-2 space-y-2">
@@ -31,14 +60,14 @@
             <% if has_business %>
               <%= link_to business_projects_path(business),
                           data: { turbo: false },
-                          class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
-                <span class="mr-2">📒</span>
-                <span><%= t('sidebar.projects') %></span>
+                          class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 justify-center lg:justify-start" do %>
+                <span class="text-2xl flex-shrink-0">📒</span>
+                <span data-sidebar-target="text" class="ml-3 whitespace-nowrap"><%= t('sidebar.projects') %></span>
               <% end %>
             <% else %>
-              <div class="flex items-center p-2 text-lg text-gray-400 rounded-lg cursor-not-allowed dark:text-gray-600 dark:bg-gray-700/50">
-                <span class="mr-2">📒</span>
-                <span><%= t('sidebar.projects') %></span>
+              <div class="flex items-center p-2 text-lg text-gray-400 rounded-lg cursor-not-allowed dark:text-gray-600 dark:bg-gray-700/50 justify-center lg:justify-start">
+                <span class="text-2xl flex-shrink-0">📒</span>
+                <span data-sidebar-target="text" class="ml-3 whitespace-nowrap"><%= t('sidebar.projects') %></span>
               </div>
             <% end %>
           </li>
@@ -47,14 +76,14 @@
             <% if has_business %>
               <%= link_to business_workers_path(business),
                           data: { turbo: false },
-                          class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
-                <span class="mr-2">👷🏻‍♂️</span>
-                <span><%= t('sidebar.workers') %></span>
+                          class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 justify-center lg:justify-start" do %>
+                <span class="text-2xl flex-shrink-0">👷🏻‍♂️</span>
+                <span data-sidebar-target="text" class="ml-3 whitespace-nowrap"><%= t('sidebar.workers') %></span>
               <% end %>
             <% else %>
-              <div class="flex items-center p-2 text-lg text-gray-400 rounded-lg cursor-not-allowed dark:text-gray-600 dark:bg-gray-700/50">
-                <span class="mr-2">👷🏻‍♂️</span>
-                <span><%= t('sidebar.workers') %></span>
+              <div class="flex items-center p-2 text-lg text-gray-400 rounded-lg cursor-not-allowed dark:text-gray-600 dark:bg-gray-700/50 justify-center lg:justify-start">
+                <span class="text-2xl flex-shrink-0">👷🏻‍♂️</span>
+                <span data-sidebar-target="text" class="ml-3 whitespace-nowrap"><%= t('sidebar.workers') %></span>
               </div>
             <% end %>
           </li>
@@ -63,14 +92,14 @@
             <% if has_business %>
               <%= link_to business_machines_path(business),
                           data: { turbo: false },
-                          class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
-                <span class="mr-2">🏗️</span>
-                <span><%= t('sidebar.machines') %></span>
+                          class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 justify-center lg:justify-start" do %>
+                <span class="text-2xl flex-shrink-0">🏗️</span>
+                <span data-sidebar-target="text" class="ml-3 whitespace-nowrap"><%= t('sidebar.machines') %></span>
               <% end %>
             <% else %>
-              <div class="flex items-center p-2 text-lg text-gray-400 rounded-lg cursor-not-allowed dark:text-gray-600 dark:bg-gray-700/50">
-                <span class="mr-2">🏗️</span>
-                <span><%= t('sidebar.machines') %></span>
+              <div class="flex items-center p-2 text-lg text-gray-400 rounded-lg cursor-not-allowed dark:text-gray-600 dark:bg-gray-700/50 justify-center lg:justify-start">
+                <span class="text-2xl flex-shrink-0">🏗️</span>
+                <span data-sidebar-target="text" class="ml-3 whitespace-nowrap"><%= t('sidebar.machines') %></span>
               </div>
             <% end %>
           </li>
@@ -79,14 +108,14 @@
             <% if has_business %>
               <%= link_to business_materials_path(business),
                           data: { turbo: false },
-                          class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
-                <span class="mr-2">🧱</span>
-                <span><%= t('sidebar.materials') %></span>
+                          class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 justify-center lg:justify-start" do %>
+                <span class="text-2xl flex-shrink-0">🧱</span>
+                <span data-sidebar-target="text" class="ml-3 whitespace-nowrap"><%= t('sidebar.materials') %></span>
               <% end %>
             <% else %>
-              <div class="flex items-center p-2 text-lg text-gray-400 rounded-lg cursor-not-allowed dark:text-gray-600 dark:bg-gray-700/50">
-                <span class="mr-2">🧱</span>
-                <span><%= t('sidebar.materials') %></span>
+              <div class="flex items-center p-2 text-lg text-gray-400 rounded-lg cursor-not-allowed dark:text-gray-600 dark:bg-gray-700/50 justify-center lg:justify-start">
+                <span class="text-2xl flex-shrink-0">🧱</span>
+                <span data-sidebar-target="text" class="ml-3 whitespace-nowrap"><%= t('sidebar.materials') %></span>
               </div>
             <% end %>
           </li>
@@ -95,14 +124,14 @@
             <% if has_business %>
               <%= link_to business_norms_path(business),
                           data: { turbo: false },
-                          class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
-                <span class="mr-2">📐</span>
-                <span><%= t('sidebar.norms') %></span>
+                          class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 justify-center lg:justify-start" do %>
+                <span class="text-2xl flex-shrink-0">📐</span>
+                <span data-sidebar-target="text" class="ml-3 whitespace-nowrap"><%= t('sidebar.norms') %></span>
               <% end %>
             <% else %>
-              <div class="flex items-center p-2 text-lg text-gray-400 rounded-lg cursor-not-allowed dark:text-gray-600 dark:bg-gray-700/50">
-                <span class="mr-2">📐</span>
-                <span><%= t('sidebar.norms') %></span>
+              <div class="flex items-center p-2 text-lg text-gray-400 rounded-lg cursor-not-allowed dark:text-gray-600 dark:bg-gray-700/50 justify-center lg:justify-start">
+                <span class="text-2xl flex-shrink-0">📐</span>
+                <span data-sidebar-target="text" class="ml-3 whitespace-nowrap"><%= t('sidebar.norms') %></span>
               </div>
             <% end %>
           </li>
@@ -110,9 +139,9 @@
           <li>
             <%= link_to businesses_path,
                         data: { turbo: false },
-                        class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700" do %>
-              <span class="mr-2">🏢</span>
-              <span><%= t('sidebar.businesses') %></span>
+                        class: "flex items-center p-2 text-lg text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 justify-center lg:justify-start" do %>
+              <span class="text-2xl flex-shrink-0">🏢</span>
+              <span data-sidebar-target="text" class="ml-3 whitespace-nowrap"><%= t('sidebar.businesses') %></span>
             <% end %>
           </li>
          

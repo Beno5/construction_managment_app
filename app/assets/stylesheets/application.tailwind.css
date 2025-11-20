@@ -16,6 +16,60 @@
       height: calc(100vh - 4rem);
     }
   }
+
+  /* Sidebar collapse styles - prevents FOUC */
+  .sidebar-width {
+    width: 16rem; /* w-64 - default expanded */
+  }
+
+  .sidebar-collapsed .sidebar-width {
+    width: 5rem; /* w-20 - collapsed */
+  }
+
+  .sidebar-collapsed [data-sidebar-target="text"] {
+    display: none;
+  }
+
+  /* Main content margin adjustment */
+  #main-content {
+    margin-left: 0;
+  }
+
+  @media (min-width: 1024px) {
+    #main-content {
+      margin-left: 16rem; /* lg:ml-64 - default */
+    }
+
+    .sidebar-collapsed #main-content {
+      margin-left: 5rem; /* lg:ml-20 - collapsed */
+    }
+  }
+
+  /* Toggle collapse styles - prevents FOUC for collapsible sections */
+
+  /* Hide content while initializing to prevent FOUC */
+  [data-controller="toggle"]:not(.toggle-init) {
+    visibility: hidden;
+  }
+
+  /* Show after initialization */
+  [data-controller="toggle"].toggle-init {
+    visibility: visible;
+  }
+
+  /* Hide content when collapsed */
+  [data-controller="toggle"].toggle-collapsed [data-toggle-target="content"] {
+    display: none;
+  }
+
+  /* Override the peer-checked state when parent has toggle-collapsed */
+  [data-controller="toggle"].toggle-collapsed [data-toggle-target="switch"]:checked + div {
+    background-color: rgb(156 163 175); /* gray-400 instead of blue-600 */
+  }
+
+  [data-controller="toggle"].toggle-collapsed [data-toggle-target="switch"]:checked + div:after {
+    transform: translateX(0); /* Keep slider on left even when checked */
+  }
 }
 
 

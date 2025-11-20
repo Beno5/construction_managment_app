@@ -3,8 +3,8 @@ class Task < ApplicationRecord
 
   belongs_to :project
   belongs_to :user
-  has_many :sub_tasks, dependent: :destroy
-  has_many :documents, dependent: :destroy
+  has_many :sub_tasks, dependent: :delete_all
+  has_many :documents, dependent: :delete_all
 
   # Validacije
   validates :name, presence: true

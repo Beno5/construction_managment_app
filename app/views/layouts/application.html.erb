@@ -14,6 +14,73 @@
     <%= favicon_link_tag "favicon-32x32_con.png", rel: "icon", type: "image/png", sizes: "32x32" %>
   </head>
   <body class="bg-gray-50 dark:bg-gray-800 <%= 'bg-white dark:bg-gray-900' if params[:white_bg] %>" data-controller="loading">
+    <%# Inline script to prevent FOUC - must run synchronously before body renders %>
+    <% if user_signed_in? %>
+      <script>
+        (function() {
+          const userId = '<%= current_user.id %>';
+
+          // Function to apply toggle state to an element immediately
+          function applyToggleState(section) {
+            const sectionId = section.dataset.sectionId;
+            if (!sectionId) return;
+
+            const storageKey = `toggle_${userId}_${sectionId}`;
+            const savedState = localStorage.getItem(storageKey);
+
+            if (savedState === 'false') {
+              // Collapsed state
+              section.classList.add('toggle-collapsed');
+              const checkbox = section.querySelector('[data-toggle-target="switch"]');
+              if (checkbox) checkbox.checked = false;
+            }
+
+            // Mark as initialized
+            section.classList.add('toggle-init');
+          }
+
+          // Apply state to all existing toggle sections immediately
+          function initExistingToggles() {
+            const sections = document.querySelectorAll('[data-controller="toggle"]:not(.toggle-init)');
+            sections.forEach(applyToggleState);
+          }
+
+          // Use MutationObserver to catch dynamically added toggle sections
+          const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === 1) { // Element node
+                  // Check if the node itself is a toggle section
+                  if (node.matches && node.matches('[data-controller="toggle"]:not(.toggle-init)')) {
+                    applyToggleState(node);
+                  }
+                  // Check descendants
+                  const sections = node.querySelectorAll && node.querySelectorAll('[data-controller="toggle"]:not(.toggle-init)');
+                  if (sections) sections.forEach(applyToggleState);
+                }
+              });
+            });
+          });
+
+          // Start observing immediately
+          observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+          });
+
+          // Also init on DOM ready
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initExistingToggles);
+          } else {
+            initExistingToggles();
+          }
+
+          // Re-init on Turbo navigation
+          document.addEventListener('turbo:load', initExistingToggles);
+          document.addEventListener('turbo:render', initExistingToggles);
+        })();
+      </script>
+    <% end %>
     <%# Global loading overlay %>
     <%= render "partials/loading_overlay" %>
 
@@ -46,7 +113,7 @@
       <%= render "partials/navbar" %>
       <div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
         <%= render "partials/sidebar" %>
-        <div id="main-content" class="relative w-full h-full overflow-y-auto bg-gray-50 lg:ml-64 dark:bg-gray-900 p-6">
+        <div id="main-content" class="relative w-full h-full overflow-y-auto bg-gray-50 dark:bg-gray-900 p-6">
           <%= yield %>
         </div>
       </div>

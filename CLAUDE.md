@@ -138,6 +138,18 @@ User
 - Date validations: End dates must be after start dates across Project/Task/SubTask
 - Locale support: Serbian (sr) is the default locale, English (en) also available
 
+**Performance Optimization - Cascade Deletion:**
+All associations in the Project → Task → SubTask hierarchy use `dependent: :delete_all`:
+- **Project**: `has_many :tasks, dependent: :delete_all`
+- **Task**: `has_many :sub_tasks, dependent: :delete_all`
+- **SubTask**: `has_many :activities, :real_activities, :custom_resources, :documents, :sub_task_norms, dependent: :delete_all`
+
+**Important distinction:**
+- When deleting a **Project**: Uses SQL DELETE (no callbacks, extremely fast)
+- When deleting individual **Task/SubTask**: Callbacks still run normally (`after_destroy`, `reorder_tasks`, `UpdateDynamicAttributesService`)
+- This optimization only affects cascade deletion through parent records
+- Business logic (positioning, reordering, dynamic attributes) remains intact for manual deletions
+
 ### Multi-Tenancy Pattern
 
 The app uses **Business** as the tenant boundary:
@@ -176,6 +188,10 @@ The app uses **Business** as the tenant boundary:
 - `gantt_trigger_controller.js` - Gantt chart initialization
 - `norms_controller.js` - Norm selection and pinning
 - `real_resources_controller.js` - Real activity tracking
+- `sidebar_controller.js` - Collapsible sidebar with slim/expanded modes
+- `toggle_controller.js` - Collapsible sections with localStorage persistence
+- `auto_dismiss_controller.js` - Auto-dismisses notifications after timeout
+- `loading_controller.js` - Global loading overlay management
 
 **Hotwire Usage:**
 - Turbo Frames for partial page updates
@@ -186,6 +202,45 @@ The app uses **Business** as the tenant boundary:
 - Custom implementation with drag-and-drop
 - API endpoints in `Api::GanttController`
 - Links between tasks stored in `Link` model
+
+**UI Components:**
+- Collapsible sidebar with toggle button (desktop only)
+  - Expands to show icons + labels (256px wide)
+  - Collapses to show icons only (80px wide)
+  - User preference saved in localStorage per user
+- Collapsible sections with toggle switches
+  - Used throughout the app for expandable content areas
+  - State persisted in localStorage per user and section ID
+  - Examples: project tasks table, norms table, form sections
+
+**FOUC (Flash of Unstyled Content) Prevention Pattern:**
+The app uses a multi-layered approach to prevent visual flashing on page load:
+
+1. **Sidebar FOUC Prevention:**
+   - Inline script in `_sidebar.html.erb` runs synchronously before sidebar renders
+   - Checks localStorage and adds `sidebar-collapsed` class to `<html>` element
+   - CSS applies width/margin changes instantly based on this class
+   - No JavaScript manipulation needed - pure CSS-driven state
+
+2. **Toggle Sections FOUC Prevention:**
+   - Inline script in `application.html.erb` runs at start of `<body>`
+   - Uses MutationObserver to detect toggle sections as they're added to DOM
+   - Applies localStorage state and adds `toggle-collapsed` class immediately
+   - CSS hides sections with `visibility: hidden` until `toggle-init` class is added
+   - Stimulus controller only ensures fallback state sync
+
+**Pattern Benefits:**
+- Zero visual flash on page load or refresh
+- Works with Turbo navigation (`turbo:load`, `turbo:render` events)
+- User preferences persist across sessions
+- CSS-driven (faster than JavaScript DOM manipulation)
+
+**Key Files:**
+- `app/views/partials/_sidebar.html.erb` - Sidebar inline script
+- `app/views/layouts/application.html.erb` - Toggle sections inline script + MutationObserver
+- `app/assets/stylesheets/application.tailwind.css` - CSS rules for collapsed states
+- `app/javascript/controllers/sidebar_controller.js` - Sidebar toggle logic
+- `app/javascript/controllers/toggle_controller.js` - Toggle sections logic
 
 ## Configuration Notes
 
@@ -248,6 +303,41 @@ rescue StandardError => e
 ensure
   # Cleanup temp files
 end
+```
+
+### LocalStorage Persistence Pattern
+
+User preferences are stored in localStorage with user-specific keys:
+- **Sidebar state**: `sidebar_collapsed_{user_id}` (boolean)
+- **Toggle sections**: `toggle_{user_id}_{section_id}` (boolean)
+
+**When implementing new collapsible features:**
+1. Add `data-user-id="<%= current_user.id %>"` to the controller element
+2. Add `data-section-id="unique-section-name"` for toggle sections
+3. Store state as string: `localStorage.setItem(key, value.toString())`
+4. Read state: `localStorage.getItem(key) === 'true'`
+5. Use inline script for FOUC prevention (see pattern above)
+6. Apply CSS-based visibility/state changes for instant feedback
+
+### Preventing FOUC in New Features
+
+When adding collapsible/toggleable UI elements:
+1. **Add inline script** before the element renders (in partial or layout)
+2. **Check localStorage** synchronously and apply CSS class
+3. **Use CSS** for visual state (not JavaScript DOM manipulation)
+4. **Stimulus controller** only handles toggle events and state sync
+5. **Mark as initialized** with a CSS class (e.g., `toggle-init`, `sidebar-collapsed`)
+
+Example pattern:
+```erb
+<script>
+  (function() {
+    const state = localStorage.getItem('feature_state_<%= current_user.id %>');
+    if (state === 'collapsed') {
+      document.documentElement.classList.add('feature-collapsed');
+    }
+  })();
+</script>
 ```
 
 ## Testing Strategy

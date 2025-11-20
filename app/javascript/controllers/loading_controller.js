@@ -7,6 +7,10 @@ export default class extends Controller {
   connect() {
     // Track number of active requests to handle multiple simultaneous requests
     this.activeRequests = 0
+    // Track timeout for delayed loading display
+    this.loadingTimeout = null
+    // Delay before showing loading overlay (in milliseconds)
+    this.loadingDelay = 300
 
     // Bind event listeners
     this.boundShowLoading = this.showLoading.bind(this)
@@ -29,6 +33,12 @@ export default class extends Controller {
   }
 
   disconnect() {
+    // Clear any pending timeout
+    if (this.loadingTimeout) {
+      clearTimeout(this.loadingTimeout)
+      this.loadingTimeout = null
+    }
+
     // Clean up event listeners when controller is disconnected
     document.removeEventListener("turbo:submit-start", this.boundShowLoading)
     document.removeEventListener("turbo:before-fetch-request", this.boundShowLoading)
@@ -48,16 +58,24 @@ export default class extends Controller {
 
     console.log(`🟢 Loading started (${this.activeRequests} active requests)`, event.type)
 
-    // Show overlay only if it's not already visible
-    if (this.hasOverlayTarget && this.overlayTarget.classList.contains("hidden")) {
-      this.overlayTarget.classList.remove("hidden")
-
-      // Add fade-in animation
-      requestAnimationFrame(() => {
-        this.overlayTarget.classList.remove("opacity-0")
-        this.overlayTarget.classList.add("opacity-100")
-      })
+    // Clear any existing timeout
+    if (this.loadingTimeout) {
+      clearTimeout(this.loadingTimeout)
     }
+
+    // Only show overlay after delay (if request is still active)
+    this.loadingTimeout = setTimeout(() => {
+      // Only show if there are still active requests
+      if (this.activeRequests > 0 && this.hasOverlayTarget && this.overlayTarget.classList.contains("hidden")) {
+        this.overlayTarget.classList.remove("hidden")
+
+        // Add fade-in animation
+        requestAnimationFrame(() => {
+          this.overlayTarget.classList.remove("opacity-0")
+          this.overlayTarget.classList.add("opacity-100")
+        })
+      }
+    }, this.loadingDelay)
   }
 
   hideLoading(event) {
@@ -65,6 +83,12 @@ export default class extends Controller {
     this.activeRequests = Math.max(0, this.activeRequests - 1)
 
     console.log(`🔴 Loading ended (${this.activeRequests} active requests)`, event.type)
+
+    // Clear the timeout if request finished before delay
+    if (this.activeRequests === 0 && this.loadingTimeout) {
+      clearTimeout(this.loadingTimeout)
+      this.loadingTimeout = null
+    }
 
     // Only hide overlay when all requests are complete
     if (this.activeRequests === 0 && this.hasOverlayTarget) {
@@ -83,6 +107,12 @@ export default class extends Controller {
 
   handleError(event) {
     console.error("❌ Request error detected", event)
+
+    // Clear any pending timeout
+    if (this.loadingTimeout) {
+      clearTimeout(this.loadingTimeout)
+      this.loadingTimeout = null
+    }
 
     // Force hide loading on error
     this.activeRequests = 0

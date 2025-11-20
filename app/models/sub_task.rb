@@ -3,12 +3,12 @@ class SubTask < ApplicationRecord
 
   belongs_to :task
   belongs_to :user
-  has_many :activities, dependent: :destroy
-  has_many :real_activities, dependent: :destroy
-  has_many :custom_resources, dependent: :destroy
-  has_many :documents, dependent: :destroy
+  has_many :activities, dependent: :delete_all
+  has_many :real_activities, dependent: :delete_all
+  has_many :custom_resources, dependent: :delete_all
+  has_many :documents, dependent: :delete_all
 
-  has_many :sub_task_norms, dependent: :destroy
+  has_many :sub_task_norms, dependent: :delete_all
   has_many :pinned_norms, through: :sub_task_norms, source: :norm
 
   # Validacije
