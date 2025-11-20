@@ -8,7 +8,7 @@
     <%= csp_meta_tag %>
     <!-- CSS Files -->
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
     <!-- Header partial equivalent -->
     <%= render "partials/header" %>
     <%= favicon_link_tag "favicon-32x32_con.png", rel: "icon", type: "image/png", sizes: "32x32" %>

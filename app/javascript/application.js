@@ -1,12 +1,15 @@
-import "@hotwired/turbo-rails"; // Turbo must load first
-import "controllers"; // Stimulus controllers
-import "flowbite"; // External library
+// Import Hotwire Turbo & Stimulus
+import "@hotwired/turbo-rails"
+import "./controllers"
 
-// Custom modules
-import "custom/constants"; // Constants should load early if reused
-import "custom/dark-mode"; // Handles dark mode logic
-import "custom/sidebar"; // Sidebar logic
-import "custom/flash"; // Sidebar logic
-import "custom/modals";
-import "custom/custom_confirm";
-import "custom/gant";
+// Import Flowbite
+import "flowbite"
+
+// Import custom modules
+import "./custom/constants"
+import "./custom/dark-mode"
+import "./custom/sidebar"
+import "./custom/flash"
+import "./custom/modals"
+import "./custom/custom_confirm"
+import "./custom/gant"

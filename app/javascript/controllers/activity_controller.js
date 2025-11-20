@@ -55,17 +55,7 @@ export default class extends Controller {
   showSubmitButton(submitButton) {
     submitButton.style.display = 'inline-block';  // Prikazivanje dugmeta
   }
-  
-  
 
-  setFormReadOnly(form) {
-    const formFields = form.querySelectorAll('input, select, textarea'); // Svi inputi, select i textarea u formi
-    formFields.forEach(field => {
-      field.setAttribute("readonly", true);  // Postavi readonly
-      field.disabled = true; // Takođe onemogući interakciju sa poljem
-    });
-  }
-    
   
   
 

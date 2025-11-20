@@ -1,6 +1,16 @@
 {
+  "name": "construction_managment_app",
+  "private": true,
+  "scripts": {
+    "build": "esbuild app/javascript/application.js --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets --loader:.js=jsx --loader:.png=file --loader:.jpg=file --loader:.svg=file",
+    "build:css": "tailwindcss -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css",
+    "watch": "esbuild app/javascript/application.js --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets --watch --loader:.js=jsx --loader:.png=file --loader:.jpg=file --loader:.svg=file"
+  },
   "dependencies": {
-    "flowbite": "^3.1.2"
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.12",
+    "esbuild": "^0.24.0",
+    "flowbite": "^2.5.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
