@@ -33,16 +33,71 @@ class NormsController < ApplicationController
     end
   end
 
-  def update
-    if @norm.update(norm_params)
-      update_norms_in_sub_tasks(@norm) if @norm.auto_calculate?
-      redirect_to business_norms_path(@business),
-                  notice: t("norms.messages.updated", name: @norm.name)
-    else
-      flash.now[:alert] = t("norms.messages.validation_error")
-      render :edit, status: :unprocessable_entity
+def update
+  # Check optimistic locking if record_updated_at is provided (inline editing)
+  if params[:record_updated_at].present?
+    # Parse the timestamp sent by client
+    record_updated_at = Time.parse(params[:record_updated_at])
+
+    # Truncate both timestamps to second precision to avoid microsecond comparison issues
+    record_updated_at_sec = record_updated_at.change(usec: 0)
+    norm_updated_at_sec = @norm.updated_at.change(usec: 0)
+
+    # Only flag conflict if database timestamp is NEWER (by more than 1 second)
+    if norm_updated_at_sec > record_updated_at_sec
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: false,
+            conflict: true,
+            error: 'This record was modified by another user. Please refresh the page.'
+          }, status: :conflict
+        end
+        format.html do
+          redirect_back fallback_location: root_path,
+                        alert: 'This record was modified by another user. Please refresh the page.'
+        end
+      end
+      return
     end
   end
+
+  if @norm.update(norm_params)
+    respond_to do |format|
+      format.json do
+        render json: {
+          success: true,
+          data: {
+            id: @norm.id,
+            name: @norm.name,
+              code: @norm.code,
+              unit_of_measure: @norm.unit_of_measure,
+              quantity: @norm.quantity,
+              price_per_unit: @norm.price_per_unit,
+              description: @norm.description,
+            updated_at: @norm.updated_at.iso8601
+          }
+        }, status: :ok
+      end
+      format.html do
+        redirect_back fallback_location: root_path,
+                      notice: "Norm was successfully updated."
+      end
+    end
+  else
+    respond_to do |format|
+      format.json do
+        render json: {
+          success: false,
+          errors: @norm.errors.full_messages
+        }, status: :unprocessable_entity
+      end
+      format.html do
+        render :edit, status: :unprocessable_entity
+      end
+    end
+  end
+end
 
   def destroy
     name = @norm.name

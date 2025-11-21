@@ -1,4 +1,4 @@
-<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle" data-section-id="<%= local_assigns[:context] ? "#{local_assigns[:context]}-#{local_assigns[:model_name]&.parameterize}" : (local_assigns[:model_name]&.parameterize || 'table') %>" data-user-id="<%= current_user.id %>">
+<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle <%= 'toast' if local_assigns[:model_name] == 'Activities' || local_assigns[:model_name] == 'Documents' %>" data-section-id="<%= local_assigns[:context] ? "#{local_assigns[:context]}-#{local_assigns[:model_name]&.parameterize}" : (local_assigns[:model_name]&.parameterize || 'table') %>" data-user-id="<%= current_user.id %>">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
       <div class="p-4">
@@ -111,8 +111,41 @@
               <% end %>
               <% collection.each do |item| %>
                 <tr id="<%= dom_id(item) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <% columns.each do |_, attr| %>
-                    <td class="px-4 py-3">
+                  <% columns.each do |header, attr| %>
+                    <td class="px-4 py-3 <%= 'cursor-pointer' if local_assigns[:model_name] == 'Activities' && header == t('resources.table.quantity') %>
+                                           <%= 'cursor-pointer' if local_assigns[:model_name] == 'Documents' && (header == t('documents.form.name') || header == t('documents.form.description')) %>"
+                        <% if local_assigns[:model_name] == 'Activities' && header == t('resources.table.quantity') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="activity"
+                          data-inline-edit-field-value="quantity"
+                          data-inline-edit-type-value="number"
+                          data-inline-edit-url-value="<%= business_project_task_sub_task_activity_path(@business, @project, @task, @sub_task, item) %>"
+                          data-inline-edit-original-value="<%= item.quantity %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-action="dblclick->inline-edit#activate"
+                          title="Double-click to edit"
+                        <% elsif local_assigns[:model_name] == 'Documents' && header == t('documents.form.name') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="document"
+                          data-inline-edit-field-value="name"
+                          data-inline-edit-type-value="text"
+                          data-inline-edit-url-value="<%= business_project_document_path(@current_business, @project, item) %>"
+                          data-inline-edit-original-value="<%= item.name %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-inline-edit-required-value="true"
+                          data-action="dblclick->inline-edit#activate"
+                          title="Double-click to edit"
+                        <% elsif local_assigns[:model_name] == 'Documents' && header == t('documents.form.description') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="document"
+                          data-inline-edit-field-value="description"
+                          data-inline-edit-type-value="textarea"
+                          data-inline-edit-url-value="<%= business_project_document_path(@current_business, @project, item) %>"
+                          data-inline-edit-original-value="<%= item.description %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-action="dblclick->inline-edit#activate"
+                          title="Double-click to edit"
+                        <% end %>>
                       <% if attr.is_a?(Proc) %>
                         <%= attr.call(item) %>
                       <% elsif attr == :custom_fields && item.custom_fields.present? %>

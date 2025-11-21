@@ -41,15 +41,71 @@ class TasksController < ApplicationController
     end
   end
 
-  def update
-    if @task.update(task_params)
-      redirect_to business_project_path(@business, @project),
-                  notice: t('tasks.messages.updated', name: @task.name)
-    else
-      set_error_message
-      render :edit, status: :unprocessable_entity
+def update
+  # Check optimistic locking if record_updated_at is provided (inline editing)
+  if params[:record_updated_at].present?
+    # Parse the timestamp sent by client
+    record_updated_at = Time.parse(params[:record_updated_at])
+
+    # Truncate both timestamps to second precision to avoid microsecond comparison issues
+    record_updated_at_sec = record_updated_at.change(usec: 0)
+    task_updated_at_sec = @task.updated_at.change(usec: 0)
+
+    # Only flag conflict if database timestamp is NEWER (by more than 1 second)
+    if task_updated_at_sec > record_updated_at_sec
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: false,
+            conflict: true,
+            error: 'This record was modified by another user. Please refresh the page.'
+          }, status: :conflict
+        end
+        format.html do
+          redirect_back fallback_location: root_path,
+                        alert: 'This record was modified by another user. Please refresh the page.'
+        end
+      end
+      return
     end
   end
+
+  if @task.update(task_params)
+    respond_to do |format|
+      format.json do
+        render json: {
+          success: true,
+          data: {
+            id: @task.id,
+            name: @task.name,
+              position: @task.position,
+              planned_start_date: @task.planned_start_date,
+              planned_end_date: @task.planned_end_date,
+              status: @task.status,
+              description: @task.description,
+            updated_at: @task.updated_at.iso8601
+          }
+        }, status: :ok
+      end
+      format.html do
+        redirect_back fallback_location: root_path,
+                      notice: "Task was successfully updated."
+      end
+    end
+  else
+    respond_to do |format|
+      format.json do
+        render json: {
+          success: false,
+          errors: @task.errors.full_messages
+        }, status: :unprocessable_entity
+      end
+      format.html do
+        render :edit, status: :unprocessable_entity
+      end
+    end
+  end
+end
 
   def destroy
     # Store name and ID before destroying

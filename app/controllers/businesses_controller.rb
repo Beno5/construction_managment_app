@@ -32,11 +32,65 @@ class BusinessesController < ApplicationController
   end
 
   def update
+    # Check optimistic locking if record_updated_at is provided (inline editing)
+    if params[:record_updated_at].present?
+      record_updated_at = Time.parse(params[:record_updated_at])
+      record_updated_at_sec = record_updated_at.change(usec: 0)
+      business_updated_at_sec = @business.updated_at.change(usec: 0)
+
+      if business_updated_at_sec > record_updated_at_sec
+        respond_to do |format|
+          format.json do
+            render json: {
+              success: false,
+              conflict: true,
+              error: 'This record was modified by another user. Please refresh the page.'
+            }, status: :conflict
+          end
+          format.html do
+            redirect_to businesses_path, alert: 'This record was modified by another user. Please refresh the page.'
+          end
+        end
+        return
+      end
+    end
+
     if @business.update(business_params)
-      redirect_to businesses_path, notice: t('businesses.messages.updated', name: @business.name)
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: true,
+            data: {
+              id: @business.id,
+              name: @business.name,
+              address: @business.address,
+              phone_number: @business.phone_number,
+              vat_number: @business.vat_number,
+              registration_number: @business.registration_number,
+              owner_first_name: @business.owner_first_name,
+              owner_last_name: @business.owner_last_name,
+              currency: @business.currency,
+              updated_at: @business.updated_at.iso8601
+            }
+          }, status: :ok
+        end
+        format.html do
+          redirect_to businesses_path, notice: t('businesses.messages.updated', name: @business.name)
+        end
+      end
     else
-      set_error_message
-      render :show, status: :unprocessable_entity
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: false,
+            errors: @business.errors.full_messages
+          }, status: :unprocessable_entity
+        end
+        format.html do
+          set_error_message
+          render :show, status: :unprocessable_entity
+        end
+      end
     end
   end
 

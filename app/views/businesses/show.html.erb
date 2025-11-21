@@ -1,1 +1,205 @@
-<%= render 'form', business: @business %>
+<%
+  # Build currency options for inline editing
+  currency_options = Business.currencies.keys.each_with_object({}) do |key, hash|
+    hash[key] = key.capitalize
+  end
+%>
+
+<%= render 'partials/header1',
+           title: @business.name,
+           model_name: t('businesses.form.model_name'),
+           search_path: nil,
+           new_path: nil,
+           additional_crumbs: [
+             { name: t('sidebar.businesses'), path: businesses_path },
+             { name: @business.name, path: business_path(@business) }
+           ] %>
+
+<section class="bg-gray-50 dark:bg-gray-900 pt-5"
+         data-controller="toggle toast"
+         data-section-id="business-details"
+         data-user-id="<%= current_user.id %>">
+  <div class="mx-auto">
+    <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden p-4">
+      <div class="flex items-center gap-4 mb-4">
+        <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white">
+          <%= t("businesses.form.basic_information") %>
+        </h2>
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="checkbox"
+                 id="business-info-toggle"
+                 checked
+                 class="sr-only peer"
+                 data-action="change->toggle#toggle"
+                 data-toggle-target="switch">
+          <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+        </label>
+      </div>
+      <div data-toggle-target="content" class="transition-all duration-300">
+        <div class="grid grid-cols-6 gap-6">
+          <!-- Business Name -->
+          <div class="col-span-6 sm:col-span-3">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              <%= t('businesses.form.name') %>*
+            </label>
+            <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                 data-controller="inline-edit"
+                 data-inline-edit-model-value="business"
+                 data-inline-edit-field-value="name"
+                 data-inline-edit-type-value="text"
+                 data-inline-edit-url-value="<%= business_path(@business) %>"
+                 data-inline-edit-original-value="<%= @business.name %>"
+                 data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
+                 data-inline-edit-required-value="true"
+                 data-action="dblclick->inline-edit#activate"
+                 title="Double-click to edit">
+              <%= @business.name %>
+            </div>
+          </div>
+
+          <!-- Business Address -->
+          <div class="col-span-6 sm:col-span-3">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              <%= t('businesses.form.address') %>
+            </label>
+            <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                 data-controller="inline-edit"
+                 data-inline-edit-model-value="business"
+                 data-inline-edit-field-value="address"
+                 data-inline-edit-type-value="text"
+                 data-inline-edit-url-value="<%= business_path(@business) %>"
+                 data-inline-edit-original-value="<%= @business.address %>"
+                 data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
+                 data-action="dblclick->inline-edit#activate"
+                 title="Double-click to edit">
+              <%= @business.address %>
+            </div>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="col-span-6 sm:col-span-3">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              <%= t('businesses.form.phone_number') %>
+            </label>
+            <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                 data-controller="inline-edit"
+                 data-inline-edit-model-value="business"
+                 data-inline-edit-field-value="phone_number"
+                 data-inline-edit-type-value="text"
+                 data-inline-edit-url-value="<%= business_path(@business) %>"
+                 data-inline-edit-original-value="<%= @business.phone_number %>"
+                 data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
+                 data-action="dblclick->inline-edit#activate"
+                 title="Double-click to edit">
+              <%= @business.phone_number %>
+            </div>
+          </div>
+
+          <!-- VAT Number -->
+          <div class="col-span-6 sm:col-span-3">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              <%= t('businesses.form.vat_number') %>
+            </label>
+            <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                 data-controller="inline-edit"
+                 data-inline-edit-model-value="business"
+                 data-inline-edit-field-value="vat_number"
+                 data-inline-edit-type-value="text"
+                 data-inline-edit-url-value="<%= business_path(@business) %>"
+                 data-inline-edit-original-value="<%= @business.vat_number %>"
+                 data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
+                 data-action="dblclick->inline-edit#activate"
+                 title="Double-click to edit">
+              <%= @business.vat_number %>
+            </div>
+          </div>
+
+          <!-- Registration Number -->
+          <div class="col-span-6 sm:col-span-3">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              <%= t('businesses.form.registration_number') %>
+            </label>
+            <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                 data-controller="inline-edit"
+                 data-inline-edit-model-value="business"
+                 data-inline-edit-field-value="registration_number"
+                 data-inline-edit-type-value="text"
+                 data-inline-edit-url-value="<%= business_path(@business) %>"
+                 data-inline-edit-original-value="<%= @business.registration_number %>"
+                 data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
+                 data-action="dblclick->inline-edit#activate"
+                 title="Double-click to edit">
+              <%= @business.registration_number %>
+            </div>
+          </div>
+
+          <!-- Owner First Name -->
+          <div class="col-span-6 sm:col-span-3">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              <%= t('businesses.form.owner_first_name') %>
+            </label>
+            <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                 data-controller="inline-edit"
+                 data-inline-edit-model-value="business"
+                 data-inline-edit-field-value="owner_first_name"
+                 data-inline-edit-type-value="text"
+                 data-inline-edit-url-value="<%= business_path(@business) %>"
+                 data-inline-edit-original-value="<%= @business.owner_first_name %>"
+                 data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
+                 data-action="dblclick->inline-edit#activate"
+                 title="Double-click to edit">
+              <%= @business.owner_first_name %>
+            </div>
+          </div>
+
+          <!-- Owner Last Name -->
+          <div class="col-span-6 sm:col-span-3">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              <%= t('businesses.form.owner_last_name') %>
+            </label>
+            <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                 data-controller="inline-edit"
+                 data-inline-edit-model-value="business"
+                 data-inline-edit-field-value="owner_last_name"
+                 data-inline-edit-type-value="text"
+                 data-inline-edit-url-value="<%= business_path(@business) %>"
+                 data-inline-edit-original-value="<%= @business.owner_last_name %>"
+                 data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
+                 data-action="dblclick->inline-edit#activate"
+                 title="Double-click to edit">
+              <%= @business.owner_last_name %>
+            </div>
+          </div>
+
+          <!-- Currency -->
+          <div class="col-span-6 sm:col-span-3">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              <%= t('businesses.form.currency') %>
+            </label>
+            <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                 data-controller="inline-edit"
+                 data-inline-edit-model-value="business"
+                 data-inline-edit-field-value="currency"
+                 data-inline-edit-type-value="select"
+                 data-inline-edit-url-value="<%= business_path(@business) %>"
+                 data-inline-edit-original-value="<%= @business.currency %>"
+                 data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
+                 data-inline-edit-options-value='<%= currency_options.to_json %>'
+                 data-action="dblclick->inline-edit#activate"
+                 title="Double-click to edit">
+              <%= @business.currency&.capitalize %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+          <%= link_to businesses_path,
+              class: "px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700" do %>
+            <%= t('businesses.form.back_button', default: 'Back to Businesses') %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

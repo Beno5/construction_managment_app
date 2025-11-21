@@ -10,7 +10,7 @@
              { name: (@task.persisted? ? t('breadcrums.task_overview', name: @task.name_with_position) : t('tasks.form.new_title')),
                path: (@task.persisted? ? business_project_task_path(@current_business, @project, @task) : nil) }
            ] %>
-<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle" data-section-id="task-form-basic-info" data-user-id="<%= current_user.id %>">
+<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle toast" data-section-id="task-form-basic-info" data-user-id="<%= current_user.id %>">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden p-4">
       <div class="flex items-center gap-4 mb-4">
@@ -26,74 +26,196 @@
         </label>
       </div>
       <div data-toggle-target="content" class="transition-all duration-300">
-        <%= form_with model: [@current_business, @project, @task],
-                      local: true,
-                      data: { controller: "track-changes", action: "submit->track-changes#reset" } do |f| %>
-        <div class="grid grid-cols-6 gap-6">
-          <!-- Name -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :name, t('tasks.form.name') + '*', class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_field :name,  required: true,
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg
-                          focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5
-                          dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+        <% if @task.new_record? %>
+          <%= form_with model: [@current_business, @project, @task],
+                        local: true,
+                        data: { controller: "track-changes", action: "submit->track-changes#reset" } do |f| %>
+          <div class="grid grid-cols-6 gap-6">
+            <!-- Name -->
+            <div class="col-span-6 sm:col-span-3">
+              <%= f.label :name, t('tasks.form.name') + '*', class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+              <%= f.text_field :name,  required: true,
+                    class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                            focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5
+                            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
+                    data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+            </div>
+            <!-- Description -->
+            <div class="col-span-6 sm:col-span-3">
+              <%= f.label :description, t('tasks.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+              <%= f.text_area :description,
+                    class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                            focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5
+                            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
+                    data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+            </div>
+            <!-- Planned Start Date -->
+            <div class="col-span-6 sm:col-span-3">
+              <%= f.label :planned_start_date, t('tasks.form.planned_start_date'),
+                    class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+              <%= f.date_field :planned_start_date,
+                    class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                            block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
+                    data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+            </div>
+            <!-- Planned End Date -->
+            <div class="col-span-6 sm:col-span-3">
+              <%= f.label :planned_end_date, t('tasks.form.planned_end_date'),
+                    class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+              <%= f.date_field :planned_end_date,
+                    class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                            block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
+                    data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+            </div>
+            <!-- Planned Cost -->
+            <div class="col-span-6 sm:col-span-3">
+              <%= f.label :planned_cost, t('tasks.form.planned_cost', currency: @project.business.currency_symbol),
+                    class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+              <%= f.number_field :planned_cost, step: 0.01,
+                    class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                            block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
+                    data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+            </div>
+            <!-- Custom Fields -->
+            <div class="col-span-6">
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('tasks.form.custom_fields') %></h3>
+              <%= render 'partials/custom_fields', custom_fields: @task.custom_fields, model: 'task' %>
+            </div>
           </div>
-          <!-- Description -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :description, t('tasks.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_area :description,
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg
-                          focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5
-                          dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+          <!-- Save Button -->
+          <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
+            <%= f.submit(
+                  t('tasks.form.create_button'),
+                  data: { track_changes_target: "saveButton", turbo: false },
+                  class: "hidden text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-base px-6 py-3"
+                ) %>
           </div>
-          <!-- Planned Start Date -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :planned_start_date, t('tasks.form.planned_start_date'),
-                  class: "block mb-2 text-sm font-medium #{@task.sub_tasks.any? ? 'text-gray-500' : 'text-gray-900'} dark:text-white" %>
-            <%= f.date_field :planned_start_date,
-                  disabled: @task.sub_tasks.any?,
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg
-                          block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
-                          #{@task.sub_tasks.any? ? 'cursor-not-allowed bg-gray-200' : ''}",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+        <% end %>
+        <% else %>
+          <div class="grid grid-cols-6 gap-6">
+            <!-- Name -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <%= t('tasks.form.name') %>*
+              </label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="task"
+                   data-inline-edit-field-value="name"
+                   data-inline-edit-type-value="text"
+                   data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
+                   data-inline-edit-original-value="<%= @task.name %>"
+                   data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
+                   data-inline-edit-required-value="true"
+                   data-action="dblclick->inline-edit#activate"
+                   title="Double-click to edit">
+                <%= @task.name %>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <%= t('tasks.form.description') %>
+              </label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="task"
+                   data-inline-edit-field-value="description"
+                   data-inline-edit-type-value="textarea"
+                   data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
+                   data-inline-edit-original-value="<%= @task.description %>"
+                   data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
+                   data-action="dblclick->inline-edit#activate"
+                   title="Double-click to edit">
+                <%= @task.description %>
+              </div>
+            </div>
+
+            <!-- Planned Start Date -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium <%= @task.sub_tasks.any? ? 'text-gray-500' : 'text-gray-900' %> dark:text-white">
+                <%= t('tasks.form.planned_start_date') %>
+              </label>
+              <% if @task.sub_tasks.any? %>
+                <div class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed">
+                  <%= @task.planned_start_date ? I18n.l(@task.planned_start_date) : '' %>
+                </div>
+              <% else %>
+                <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                     data-controller="inline-edit"
+                     data-inline-edit-model-value="task"
+                     data-inline-edit-field-value="planned_start_date"
+                     data-inline-edit-type-value="date"
+                     data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
+                     data-inline-edit-original-value="<%= @task.planned_start_date %>"
+                     data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
+                     data-action="dblclick->inline-edit#activate"
+                     title="Double-click to edit">
+                  <%= @task.planned_start_date ? I18n.l(@task.planned_start_date) : '' %>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Planned End Date -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium <%= @task.sub_tasks.any? ? 'text-gray-500' : 'text-gray-900' %> dark:text-white">
+                <%= t('tasks.form.planned_end_date') %>
+              </label>
+              <% if @task.sub_tasks.any? %>
+                <div class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed">
+                  <%= @task.planned_end_date ? I18n.l(@task.planned_end_date) : '' %>
+                </div>
+              <% else %>
+                <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                     data-controller="inline-edit"
+                     data-inline-edit-model-value="task"
+                     data-inline-edit-field-value="planned_end_date"
+                     data-inline-edit-type-value="date"
+                     data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
+                     data-inline-edit-original-value="<%= @task.planned_end_date %>"
+                     data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
+                     data-action="dblclick->inline-edit#activate"
+                     title="Double-click to edit">
+                  <%= @task.planned_end_date ? I18n.l(@task.planned_end_date) : '' %>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Planned Cost -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <%= t('tasks.form.planned_cost', currency: @project.business.currency_symbol) %>
+              </label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="task"
+                   data-inline-edit-field-value="planned_cost"
+                   data-inline-edit-type-value="number"
+                   data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
+                   data-inline-edit-original-value="<%= @task.planned_cost %>"
+                   data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
+                   data-action="dblclick->inline-edit#activate"
+                   title="Double-click to edit">
+                <%= @task.planned_cost %>
+              </div>
+            </div>
+
+            <!-- Custom Fields -->
+            <div class="col-span-6">
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('tasks.form.custom_fields') %></h3>
+              <%= render 'partials/custom_fields', custom_fields: @task.custom_fields, model: 'task' %>
+            </div>
           </div>
-          <!-- Planned End Date -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :planned_end_date, t('tasks.form.planned_end_date'),
-                  class: "block mb-2 text-sm font-medium #{@task.sub_tasks.any? ? 'text-gray-500' : 'text-gray-900'} dark:text-white" %>
-            <%= f.date_field :planned_end_date,
-                  disabled: @task.sub_tasks.any?,
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg
-                          block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
-                          #{@task.sub_tasks.any? ? 'cursor-not-allowed bg-gray-200' : ''}",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+
+          <!-- Back Button -->
+          <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+            <%= link_to business_project_path(@current_business, @project),
+                class: "px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700" do %>
+              <%= t('tasks.form.back_button', default: 'Back to Project') %>
+            <% end %>
           </div>
-          <!-- Planned Cost -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :planned_cost, t('tasks.form.planned_cost', currency: @project.business.currency_symbol),
-                  class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.number_field :planned_cost, step: 0.01,
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg
-                          block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
-          </div>
-          <!-- Custom Fields -->
-          <div class="col-span-6">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('tasks.form.custom_fields') %></h3>
-            <%= render 'partials/custom_fields', custom_fields: @task.custom_fields, model: 'task' %>
-          </div>
-        </div>
-        <!-- Save Button -->
-        <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
-          <%= f.submit(
-                @task.persisted? ? t('tasks.form.update_button') : t('tasks.form.create_button'),
-                data: { track_changes_target: "saveButton", turbo: false },
-                class: "hidden text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-base px-6 py-3"
-              ) %>
-        </div>
-      <% end %>
+        <% end %>
       </div>
     </div>
   </div>

@@ -1,26 +1,142 @@
+<%
+  # Build status options for inline editing
+  status_options = Project.statuses.keys.each_with_object({}) do |key, hash|
+    hash[key] = I18n.t("activerecord.attributes.project.statuses.#{key}")
+  end
+%>
 <div id="row_<%= project.id %>"
      class="w-full h-full flex flex-col justify-between p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm
             dark:border-gray-700 sm:p-6 dark:bg-gray-800"
+     data-controller="<%= local_assigns[:highlight] ? 'highlight toast' : 'toast' %>"
      <% if local_assigns[:highlight] %>
-       data-controller="highlight"
        data-highlight-duration-value="5000"
      <% end %>>
   <!-- Header -->
   <div class="flex justify-between items-center px-4 py-2">
-    <h2 class="text-xl font-bold"><%= t('projects.form.name') %>: <%= project.name %></h2>
+    <h2 class="text-xl font-bold"><%= t('projects.form.name') %>:
+      <span class="inline-block"
+            data-controller="inline-edit"
+            data-inline-edit-model-value="project"
+            data-inline-edit-field-value="name"
+            data-inline-edit-type-value="text"
+            data-inline-edit-url-value="<%= business_project_path(@current_business, project) %>"
+            data-inline-edit-original-value="<%= project.name %>"
+            data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
+            data-inline-edit-required-value="true"
+            data-action="dblclick->inline-edit#activate"
+            title="Double-click to edit">
+        <%= project.name %>
+      </span>
+    </h2>
     <span class="text-sm font-semibold text-gray-600 dark:text-gray-400"><%= t('projects.form.task_count') %>: <%= project.tasks.count %></span>
   </div>
   <!-- Project Parameters -->
-  <div class="flex flex-col space-y-2 px-4 py-2 text-gray-700">
-    <p><span class="font-semibold"><%= t('projects.form.address') %>:</span> <%= project.address %></p>
-    <p><span class="font-semibold"><%= t('projects.form.project_manager') %>:</span> <%= project.project_manager %></p>
-    <p><span class="font-semibold"><%= t('projects.form.planned_start_date') %>:</span> <%= l(project.planned_start_date) if project.planned_start_date %></p>
-    <p><span class="font-semibold"><%= t('projects.form.planned_end_date') %>:</span> <%= l(project.planned_end_date) if project.planned_end_date %></p>
-    <p><span class="font-semibold"><%= t('projects.form.planned_cost', currency: project.business.currency_symbol) %>:</span> <%= project.planned_cost ? "#{project.planned_cost} #{project.business.currency_symbol}" : t('projects.form.not_available') %></p>
-    <p><span class="font-semibold"><%= t('projects.form.status') %>:</span> <%= I18n.t("activerecord.attributes.project.statuses.#{project.status}", default: project.status.humanize) %></p>
+  <div class="flex flex-col space-y-2 px-4 py-2 text-gray-700 dark:text-gray-300">
+    <p>
+      <span class="font-semibold"><%= t('projects.form.address') %>:</span>
+      <span data-controller="inline-edit"
+            data-inline-edit-model-value="project"
+            data-inline-edit-field-value="address"
+            data-inline-edit-type-value="text"
+            data-inline-edit-url-value="<%= business_project_path(@current_business, project) %>"
+            data-inline-edit-original-value="<%= project.address %>"
+            data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
+            data-action="dblclick->inline-edit#activate"
+            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded"
+            title="Double-click to edit">
+        <%= project.address %>
+      </span>
+    </p>
+    <p>
+      <span class="font-semibold"><%= t('projects.form.project_manager') %>:</span>
+      <span data-controller="inline-edit"
+            data-inline-edit-model-value="project"
+            data-inline-edit-field-value="project_manager"
+            data-inline-edit-type-value="text"
+            data-inline-edit-url-value="<%= business_project_path(@current_business, project) %>"
+            data-inline-edit-original-value="<%= project.project_manager %>"
+            data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
+            data-action="dblclick->inline-edit#activate"
+            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded"
+            title="Double-click to edit">
+        <%= project.project_manager %>
+      </span>
+    </p>
+    <p>
+      <span class="font-semibold"><%= t('projects.form.planned_start_date') %>:</span>
+      <span data-controller="inline-edit"
+            data-inline-edit-model-value="project"
+            data-inline-edit-field-value="planned_start_date"
+            data-inline-edit-type-value="date"
+            data-inline-edit-url-value="<%= business_project_path(@current_business, project) %>"
+            data-inline-edit-original-value="<%= project.planned_start_date %>"
+            data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
+            data-action="dblclick->inline-edit#activate"
+            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded"
+            title="Double-click to edit">
+        <%= l(project.planned_start_date) if project.planned_start_date %>
+      </span>
+    </p>
+    <p>
+      <span class="font-semibold"><%= t('projects.form.planned_end_date') %>:</span>
+      <span data-controller="inline-edit"
+            data-inline-edit-model-value="project"
+            data-inline-edit-field-value="planned_end_date"
+            data-inline-edit-type-value="date"
+            data-inline-edit-url-value="<%= business_project_path(@current_business, project) %>"
+            data-inline-edit-original-value="<%= project.planned_end_date %>"
+            data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
+            data-action="dblclick->inline-edit#activate"
+            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded"
+            title="Double-click to edit">
+        <%= l(project.planned_end_date) if project.planned_end_date %>
+      </span>
+    </p>
+    <p>
+      <span class="font-semibold"><%= t('projects.form.planned_cost', currency: project.business.currency_symbol) %>:</span>
+      <span data-controller="inline-edit"
+            data-inline-edit-model-value="project"
+            data-inline-edit-field-value="planned_cost"
+            data-inline-edit-type-value="number"
+            data-inline-edit-url-value="<%= business_project_path(@current_business, project) %>"
+            data-inline-edit-original-value="<%= project.planned_cost %>"
+            data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
+            data-action="dblclick->inline-edit#activate"
+            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded"
+            title="Double-click to edit">
+        <%= project.planned_cost ? "#{project.planned_cost} #{project.business.currency_symbol}" : t('projects.form.not_available') %>
+      </span>
+    </p>
+    <p>
+      <span class="font-semibold"><%= t('projects.form.status') %>:</span>
+      <span data-controller="inline-edit"
+            data-inline-edit-model-value="project"
+            data-inline-edit-field-value="status"
+            data-inline-edit-type-value="select"
+            data-inline-edit-url-value="<%= business_project_path(@current_business, project) %>"
+            data-inline-edit-original-value="<%= project.status %>"
+            data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
+            data-inline-edit-options-value='<%= status_options.to_json %>'
+            data-action="dblclick->inline-edit#activate"
+            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded"
+            title="Double-click to edit">
+        <%= I18n.t("activerecord.attributes.project.statuses.#{project.status}", default: project.status.humanize) %>
+      </span>
+    </p>
     <p>
       <span class="font-semibold"><%= t('projects.form.description') %>:</span>
-      <%= project.description.present? ? truncate(project.description, length: 100) : t('projects.form.not_available') %>
+      <span data-controller="inline-edit"
+            data-inline-edit-model-value="project"
+            data-inline-edit-field-value="description"
+            data-inline-edit-type-value="textarea"
+            data-inline-edit-url-value="<%= business_project_path(@current_business, project) %>"
+            data-inline-edit-original-value="<%= project.description %>"
+            data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
+            data-action="dblclick->inline-edit#activate"
+            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded block mt-1"
+            title="Double-click to edit">
+        <%= project.description.present? ? truncate(project.description, length: 100) : t('projects.form.not_available') %>
+      </span>
     </p>
     <% if project.custom_fields.present? %>
   <% custom_fields = JSON.parse(project.custom_fields.to_json) rescue {} %>
