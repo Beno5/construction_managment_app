@@ -17,6 +17,7 @@ import RealResourcesController from "./real_resources_controller"
 import SearchController from "./search_controller"
 import SidebarController from "./sidebar_controller"
 import SubtaskController from "./subtask_controller"
+import TaskDragController from "./task_drag_controller"
 import ToggleController from "./toggle_controller"
 import TrackChangesController from "./track_changes_controller"
 
@@ -36,5 +37,6 @@ application.register("real-resources", RealResourcesController)
 application.register("search", SearchController)
 application.register("sidebar", SidebarController)
 application.register("subtask", SubtaskController)
+application.register("task-drag", TaskDragController)
 application.register("toggle", ToggleController)
 application.register("track-changes", TrackChangesController)

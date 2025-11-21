@@ -19,7 +19,6 @@ class SubTask < ApplicationRecord
 
   before_create :assign_position
   after_destroy :trigger_update_service
-  after_destroy :reorder_sub_tasks
   after_save :trigger_update_service
 
   scope :ordered_by_position, -> { order(:position) }
@@ -62,12 +61,6 @@ class SubTask < ApplicationRecord
 
   def assign_position
     self.position = task.sub_tasks.maximum(:position).to_i + 1
-  end
-
-  def reorder_sub_tasks
-    task.sub_tasks.order(:position).each_with_index do |sub_task, index|
-      sub_task.update(position: index + 1)
-    end
   end
 
   def end_date_after_start_date

@@ -13,9 +13,8 @@ class Task < ApplicationRecord
   validate :end_date_after_start_date
 
   before_create :assign_position
-  after_destroy :reorder_tasks
 
-  scope :ordered_by_position, -> { all.sort_by { |t| t.position.to_s.split('.').map(&:to_i) } }
+  scope :ordered_by_position, -> { order(:position) }
 
   def name_with_position
     "#{position}. #{name}"
@@ -25,12 +24,6 @@ class Task < ApplicationRecord
 
   def assign_position
     self.position = (project.tasks.maximum(:position) || 0) + 1
-  end
-
-  def reorder_tasks
-    project.tasks.order(:position).each_with_index do |task, index|
-      task.update(position: index + 1)
-    end
   end
 
   def end_date_after_start_date
