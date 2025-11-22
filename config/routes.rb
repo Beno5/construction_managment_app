@@ -60,4 +60,6 @@ Rails.application.routes.draw do
   get 'fetch_data/get_document/:id', to: 'fetch_data#get_document'
   get 'fetch_data/check_activity/:item_id/:item_type', to: 'fetch_data#check_activity'
   get 'fetch_data/get_activity_and_real_activity_infos/:activity_id/:real_activity_id', to: 'fetch_data#get_activity_and_real_activity_infos'
+
+  resource :column_preferences, only: :update
 end

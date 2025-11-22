@@ -1,0 +1,35 @@
+<turbo-frame id="<%= "#{table_key}_table" %>">
+  <table class="table">
+    <thead>
+      <tr>
+        <% selected_columns.each do |column| %>
+          <th><%= column.humanize %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% records.each do |task| %>
+        <tr id="<%= dom_id(task) %>">
+          <% selected_columns.each do |column| %>
+            <td>
+              <% case column %>
+              <% when "name" %>
+                <%= task.name %>
+              <% when "description" %>
+                <%= task.description %>
+              <% when "planned_start_date" %>
+                <%= task.planned_start_date %>
+              <% when "planned_end_date" %>
+                <%= task.planned_end_date %>
+              <% when "planned_cost" %>
+                <%= task.planned_cost %>
+              <% else %>
+                <!-- TODO: handle additional columns for tasks -->
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</turbo-frame>

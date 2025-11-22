@@ -1,3 +1,6 @@
+<% project_task_columns ||= %w[position name description unit_of_measure quantity planned_cost price_per_unit planned_start_date planned_end_date] %>
+<% selected_project_task_columns ||= project_task_columns %>
+
 <section class="bg-gray-50 dark:bg-gray-900 pt-5 mb-5" data-controller="toggle" data-section-id="project-tasks-table" data-user-id="<%= current_user.id %>">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
@@ -29,6 +32,12 @@
           </form>
         </div>
         <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+          <%= render "shared/column_visibility_controls",
+                     table_key: "project_tasks",
+                     render_key: "project_tasks",
+                     available_columns: project_task_columns,
+                     selected_columns: selected_project_task_columns,
+                     context_params: { business_id: @business&.id || @current_business&.id, project_id: @project&.id } %>
           <%= link_to new_business_project_task_path(@current_business, @project), data: { turbo: false},  class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" do %>
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
@@ -44,17 +53,9 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-4 py-3"></th>
-                <th scope="col" class="px-4 py-3"><%= t('tasks.table.id') %></th>
-                <!-- Fixed width column for Name -->
-                <th scope="col" class="px-4 py-3 w-88"><%= t('tasks.table.name') %></th>
-                <!-- Fixed width column for Description -->
-                <th scope="col" class="px-4 py-3 w-88"><%= t('tasks.table.description') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('subtasks.form.unit_of_measure') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('subtasks.form.quantity') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('subtasks.form.planned_cost', currency: @project.business.currency_symbol) %></th>
-                <th scope="col" class="px-4 py-3"><%= t('subtasks.form.price_per_unit', currency: @project.business.currency_symbol) %></th>
-                <th scope="col" class="px-4 py-3"><%= t('tasks.table.planned_start_date') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('tasks.table.planned_end_date') %></th>
+                <% selected_project_task_columns.each do |column| %>
+                  <th scope="col" class="px-4 py-3 w-48"><%= column.humanize %></th>
+                <% end %>
                 <th scope="col" class="px-4 py-3"></th>
                 <th scope="col" class="px-4 py-3">
                   <span class="sr-only"><%= t('tasks.table.actions') %></span>
@@ -62,7 +63,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @tasks.ordered_by_position.each_with_index do |task, index| %>
+              <% tasks.each_with_index do |task, index| %>
                 <!-- TASK ROW -->
                 <tr id="<%= dom_id(task) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <td class="px-4 py-3">
@@ -74,21 +75,32 @@
                       </button>
                     <% end %>
                   </td>
-                  <td class="px-4 py-3 font-bold"><%= task.position %></td>
-                  <!-- Fixed width task name cell with text wrapping and tooltip -->
-                  <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.name %>">
-                    <%= task.name&.truncate(150) %>
-                  </td>
-                  <!-- Fixed width task description cell with text wrapping and tooltip -->
-                  <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.description %>">
-                    <%= task.description&.truncate(150) %>
-                  </td>
-                  <td class="px-4 py-3 font-bold"></td>
-                  <td class="px-4 py-3 font-bold"></td>
-                  <td class="px-4 py-3 font-bold"></td>
-                  <td class="px-4 py-3 font-bold"></td>
-                  <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_start_date) if task.planned_start_date %></td>
-                  <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_end_date) if task.planned_end_date %></td>
+                  <% selected_project_task_columns.each do |column| %>
+                    <td class="px-4 py-3 font-bold w-48 break-words" title="<%= task.send(column) if task.respond_to?(column) %>">
+                      <% case column %>
+                      <% when "position" %>
+                        <%= task.position %>
+                      <% when "name" %>
+                        <%= task.name&.truncate(150) %>
+                      <% when "description" %>
+                        <%= task.description&.truncate(150) %>
+                      <% when "unit_of_measure" %>
+                        <!-- TODO: map unit_of_measure for tasks if applicable -->
+                      <% when "quantity" %>
+                        <!-- TODO: map quantity for tasks if applicable -->
+                      <% when "planned_cost" %>
+                        <%= task.planned_cost %>
+                      <% when "price_per_unit" %>
+                        <!-- TODO: map price_per_unit for tasks if applicable -->
+                      <% when "planned_start_date" %>
+                        <%= I18n.l(task.planned_start_date) if task.planned_start_date %>
+                      <% when "planned_end_date" %>
+                        <%= I18n.l(task.planned_end_date) if task.planned_end_date %>
+                      <% else %>
+                        <!-- TODO: handle additional columns for tasks -->
+                      <% end %>
+                    </td>
+                  <% end %>
                   <td class="px-4 py-3">
                     <%= link_to new_business_project_task_sub_task_path(@business, @project, task),
             data: { turbo: false },
@@ -132,21 +144,32 @@
                 <% task.sub_tasks.ordered_by_position.each do |sub_task| %>
                   <tr id="<%= dom_id(sub_task) %>" class="sub-tasks-of-<%= index %> border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                     <td class="px-4 py-3"></td>
-                    <td class="px-4 py-3 pl-8 text-gray-500"><%= sub_task.show_position %></td>
-                    <!-- Fixed width subtask name cell with text wrapping and tooltip -->
-                    <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.name %>">
-                      <%= sub_task.name&.truncate(150) %>
-                    </td>
-                    <!-- Fixed width subtask description cell with text wrapping and tooltip -->
-                    <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.description %>">
-                      <%= sub_task.description&.truncate(150) %>
-                    </td>
-                    <td class="px-4 py-3"><%= t_enum(sub_task, :unit_of_measure) if sub_task.unit_of_measure %></td>
-                    <td class="px-4 py-3"><%= sub_task.quantity %></td>
-                    <td class="px-4 py-3"><%= sub_task.planned_cost %></td>
-                    <td class="px-4 py-3"><%= sub_task.price_per_unit %></td>
-                    <td class="px-4 py-3"><%= I18n.l(sub_task.planned_start_date) if sub_task.planned_start_date %></td>
-                    <td class="px-4 py-3"><%= I18n.l(sub_task.planned_end_date) if sub_task.planned_end_date %></td>
+                    <% selected_project_task_columns.each do |column| %>
+                      <td class="px-4 py-3 w-48 break-words" title="<%= sub_task.send(column) if sub_task.respond_to?(column) %>">
+                        <% case column %>
+                        <% when "position" %>
+                          <%= sub_task.show_position %>
+                        <% when "name" %>
+                          <%= sub_task.name&.truncate(150) %>
+                        <% when "description" %>
+                          <%= sub_task.description&.truncate(150) %>
+                        <% when "unit_of_measure" %>
+                          <%= t_enum(sub_task, :unit_of_measure) if sub_task.unit_of_measure %>
+                        <% when "quantity" %>
+                          <%= sub_task.quantity %>
+                        <% when "planned_cost" %>
+                          <%= sub_task.planned_cost %>
+                        <% when "price_per_unit" %>
+                          <%= sub_task.price_per_unit %>
+                        <% when "planned_start_date" %>
+                          <%= I18n.l(sub_task.planned_start_date) if sub_task.planned_start_date %>
+                        <% when "planned_end_date" %>
+                          <%= I18n.l(sub_task.planned_end_date) if sub_task.planned_end_date %>
+                        <% else %>
+                          <!-- TODO: handle additional columns for sub_tasks -->
+                        <% end %>
+                      </td>
+                    <% end %>
                     <td class="px-4 py-3"></td>
                     <td class="px-4 py-3 flex items-center justify-end">
                       <td class="px-4 py-3 flex items-center justify-end">
@@ -183,7 +206,7 @@
           </table>
         </div>
         <%= render "partials/nav_pages",
-           collection: @tasks,
+           collection: tasks,
            model_name: "Tasks",
            turbo_frame_id: "tasks-frame" %>
 

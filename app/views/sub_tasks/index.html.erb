@@ -1,0 +1,12 @@
+<!-- TODO: adjust layout/styling for your sub-task index -->
+<%= render "shared/column_visibility_controls",
+           table_key: "sub_tasks",
+           available_columns: @sub_task_columns,
+           selected_columns: @selected_sub_task_columns,
+           context_params: { business_id: @business.id, project_id: @project.id, task_id: @task.id } %>
+
+<%= render "sub_tasks/table",
+           table_key: "sub_tasks",
+           available_columns: @sub_task_columns,
+           selected_columns: @selected_sub_task_columns,
+           records: @sub_tasks %>

@@ -1,0 +1,12 @@
+<!-- TODO: adjust layout/styling for your tasks index -->
+<%= render "shared/column_visibility_controls",
+           table_key: "tasks",
+           available_columns: @task_columns,
+           selected_columns: @selected_task_columns,
+           context_params: { business_id: @business.id, project_id: @project.id } %>
+
+<%= render "tasks/table",
+           table_key: "tasks",
+           available_columns: @task_columns,
+           selected_columns: @selected_task_columns,
+           records: @tasks %>

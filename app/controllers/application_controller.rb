@@ -33,6 +33,11 @@ class ApplicationController < ActionController::Base
     session[:locale] = I18n.locale
   end
 
+  def selected_columns_for(table_key, default_columns)
+    session[:column_preferences] ||= {}
+    session[:column_preferences][table_key] || default_columns
+  end
+
   private
 
   def current_business

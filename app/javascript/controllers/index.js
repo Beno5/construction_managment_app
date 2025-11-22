@@ -19,6 +19,7 @@ import SidebarController from "./sidebar_controller"
 import SubtaskController from "./subtask_controller"
 import ToggleController from "./toggle_controller"
 import TrackChangesController from "./track_changes_controller"
+import ColumnVisibilityController from "./column_visibility_controller"
 
 // Register controllers
 application.register("activity", ActivityController)
@@ -38,3 +39,4 @@ application.register("sidebar", SidebarController)
 application.register("subtask", SubtaskController)
 application.register("toggle", ToggleController)
 application.register("track-changes", TrackChangesController)
+application.register("column-visibility", ColumnVisibilityController)

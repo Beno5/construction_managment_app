@@ -1,0 +1,28 @@
+<% render_key ||= table_key %>
+<div class="column-visibility" data-controller="column-visibility">
+  <details class="relative inline-block">
+    <summary class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 dark:hover:bg-gray-600">
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h10M4 18h7" />
+      </svg>
+      Columns
+    </summary>
+    <div class="dropdown-menu absolute right-0 z-20 mt-2 w-56 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg p-3">
+      <%= form_with url: column_preferences_path, method: :patch, data: { turbo_stream: true }, html: { data: { column_visibility_target: "form" } } do %>
+        <%= hidden_field_tag :table_key, table_key %>
+        <%= hidden_field_tag :render_key, render_key %>
+        <% (defined?(context_params) && context_params.present? ? context_params : {}).each do |key, value| %>
+          <%= hidden_field_tag key, value %>
+        <% end %>
+        <% available_columns.each do |column| %>
+          <div class="checkbox-row">
+            <label>
+              <%= check_box_tag "columns[]", column, selected_columns.include?(column), data: { action: "change->column-visibility#submit" }, id: "#{table_key}_column_#{column}" %>
+              <%= column.humanize %>
+            </label>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </details>
+</div>

@@ -19,6 +19,8 @@ class ProjectsController < ApplicationController
                      .order(:position)
                      .page(params[:task_page])
                      .per(10)
+    @project_task_columns = %w[position name description unit_of_measure quantity planned_cost price_per_unit planned_start_date planned_end_date]
+    @selected_project_task_columns = selected_columns_for("project_tasks", @project_task_columns)
 
     @documents = @project.documents
                          .search(params[:search])

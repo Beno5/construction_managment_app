@@ -9,6 +9,8 @@ class SubTasksController < ApplicationController
 
   def index
     @sub_tasks = @task.sub_tasks
+    @sub_task_columns = %w[name description quantity unit_of_measure planned_start_date planned_end_date price_per_unit]
+    @selected_sub_task_columns = selected_columns_for("sub_tasks", @sub_task_columns)
   end
 
   def show

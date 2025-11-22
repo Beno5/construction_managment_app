@@ -20,7 +20,10 @@
            ] %>
 <%# Disable Turbo Frame caching to ensure fresh renders on each deletion %>
 <%= turbo_frame_tag "table_tasks-frame", data: { turbo_cache: false } do %>
-  <%= render 'partials/table_expandable_task' %>
+  <%= render 'partials/table_expandable_task',
+             tasks: @tasks,
+             project_task_columns: @project_task_columns,
+             selected_project_task_columns: @selected_project_task_columns %>
 <% end %>
 <section class="bg-gray-50 dark:bg-gray-900 pt-5 mb-5" data-controller="toggle" data-section-id="project-gantt" data-user-id="<%= current_user.id %>">
   <div class="mx-auto">

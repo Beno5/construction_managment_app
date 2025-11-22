@@ -7,6 +7,8 @@ class TasksController < ApplicationController
 
   def index
     @tasks = @project.tasks
+    @task_columns = %w[name description planned_start_date planned_end_date planned_cost]
+    @selected_task_columns = selected_columns_for("tasks", @task_columns)
   end
 
   def show
