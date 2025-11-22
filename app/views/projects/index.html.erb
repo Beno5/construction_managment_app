@@ -11,13 +11,13 @@
            additional_crumbs: [] %>
 
 
-<turbo-frame id="projects-frame" data-turbo-cache="false">
+<turbo-frame id="projects-frame">
   <% if @projects.any? %>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">
-      <% @projects.each do |project| %>
-        <%= render partial: "partials/card", locals: { project: project } %>
-      <% end %>
-    </div>
+  <% @projects.each do |project| %>
+    <%= render partial: "partials/card", locals: { project: project } %>
+  <% end %>
+</div>
 
   <% else %>
     <div class="text-center py-12 px-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">

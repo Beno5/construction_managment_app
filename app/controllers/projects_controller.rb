@@ -5,7 +5,7 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update, :destroy]
 
   def index
-    @projects = @business.projects.search(params[:search]).order(created_at: :desc)
+    @projects = @business.projects.search(params[:search])
 
     respond_to do |format|
       format.html # Renderuje standardni HTML za klasične prelaze

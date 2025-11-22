@@ -91,13 +91,7 @@ class AiImportJob < ApplicationJob
     Turbo::StreamsChannel.broadcast_replace_to(
       "projects_#{business.id}",
       target: "projects-frame",
-      html: %(
-        <turbo-frame id="projects-frame" data-turbo-cache="false">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">
-            #{projects_html}
-          </div>
-        </turbo-frame>
-      )
+      html: %( <div class="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">#{projects_html}</div>)
     )
 
     Rails.logger.info "🔄 [AIImportJob] Projects list refreshed for business #{business.id}"
