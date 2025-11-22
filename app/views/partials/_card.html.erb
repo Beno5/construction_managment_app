@@ -13,7 +13,7 @@
   <!-- Project Parameters -->
   <div class="flex flex-col space-y-2 px-4 py-2 text-gray-700">
     <p><span class="font-semibold"><%= t('projects.form.address') %>:</span> <%= project.address %></p>
-    <p><span class="font-semibold"><%= t('projects.form.project_manager') %>:</span> <%= project.poke.project_manager %></p>
+    <p><span class="font-semibold"><%= t('projects.form.project_manager') %>:</span> <%= project.project_manager %></p>
     <p><span class="font-semibold"><%= t('projects.form.planned_start_date') %>:</span> <%= l(project.planned_start_date) if project.planned_start_date %></p>
     <p><span class="font-semibold"><%= t('projects.form.planned_end_date') %>:</span> <%= l(project.planned_end_date) if project.planned_end_date %></p>
     <p><span class="font-semibold"><%= t('projects.form.planned_cost', currency: project.business.currency_symbol) %>:</span> <%= project.planned_cost ? "#{project.planned_cost} #{project.business.currency_symbol}" : t('projects.form.not_available') %></p>
