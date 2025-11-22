@@ -186,6 +186,9 @@ en:
     user:
       user_settings: "User Settings"
     passwords:
+      new:
+        flash:
+          email_not_found: "Email not found. Please check and try again."
       edit:
         title: "Reset your password"
         password_label: "New password"

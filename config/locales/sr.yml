@@ -191,6 +191,9 @@ sr:
     user:
       user_settings: "Korisnička podešavanja"
     passwords:
+      new:
+        flash:
+          email_not_found: "Email nije pronađen. Provjerite i pokušajte ponovo."
       edit:
         title: "Resetujte lozinku"
         password_label: "Nova lozinka"
