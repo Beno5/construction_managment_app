@@ -190,6 +190,16 @@ sr:
   devise:
     user:
       user_settings: "Korisnička podešavanja"
+    passwords:
+      edit:
+        title: "Resetujte lozinku"
+        password_label: "Nova lozinka"
+        password_hint: "(minimum %{count} karaktera)"
+        password_confirmation_label: "Potvrdite novu lozinku"
+        submit: "Resetuj lozinku"
+        flash:
+          too_short: "Lozinka je prekratka (minimum je %{count} karaktera)."
+          mismatch: "Lozinke se ne poklapaju."
     registrations:
       new:
         create_account: "Kreirajte besplatan nalog"
