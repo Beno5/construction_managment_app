@@ -39,7 +39,7 @@ class SubTaskPlanningCalculator
     machine_output_per_hour  = num_machines / avg_norm(:machine)
 
     # Ukupni output po satu (jedinica/sat)
-    total_units_per_hour = kv_output_per_hour + nkv_output_per_hour + machine_output_per_hour
+    total_units_per_hour = kv_output_per_hour + nkv_output_per_hour + machine_outpu3t_per_hour
     return if total_units_per_hour.zero?
 
     # Output po danu

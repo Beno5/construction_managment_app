@@ -37,7 +37,7 @@ class SubTasksController < ApplicationController
     @sub_task.user_id = current_user.id
 
     if @sub_task.save
-      redirect_to business_project_task_sub_task_path(@business, @task.project, @task, @sub_task),
+      redirect_to business_project_path(@business, @project),
                   notice: t('subtasks.messages.created', name: @sub_task.name)
     else
       set_error_message
@@ -51,7 +51,7 @@ class SubTasksController < ApplicationController
 
       respond_to do |format|
         format.html do
-          redirect_to business_project_task_sub_task_path(@business, @task.project, @task, @sub_task),
+          redirect_to business_project_path(@business, @project),
                       notice: t('subtasks.messages.updated', name: @sub_task.name)
         end
         format.json do
