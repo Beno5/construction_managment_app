@@ -90,11 +90,21 @@
       </div>
       <turbo-frame id="<%= turbo_frame_id %>">
         <div class="overflow-x-auto">
-          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" data-controller="sort">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <% columns.each do |header, _| %>
-                  <th scope="col" class="px-4 py-3"><%= header %></th>
+                <% columns.each_with_index do |(header, _), index| %>
+                  <th scope="col"
+                      class="px-4 py-3"
+                      role="button"
+                      data-action="click->sort#sort"
+                      data-sort-target="header"
+                      data-sort-index="<%= index %>">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= header %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="<%= index %>">↕</span>
+                    </div>
+                  </th>
                 <% end %>
                 <th scope="col" class="px-4 py-3">
                   <span class="sr-only">Actions</span>
@@ -112,14 +122,16 @@
               <% collection.each do |item| %>
                 <tr id="<%= dom_id(item) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <% columns.each do |_, attr| %>
-                    <td class="px-4 py-3">
-                      <% if attr.is_a?(Proc) %>
-                        <%= attr.call(item) %>
-                      <% elsif attr == :custom_fields && item.custom_fields.present? %>
-                        <%= render 'partials/custom_fields_tooltip', item: item %>
-                      <% else %>
-                        <%= item.send(attr) %>
-                      <% end %>
+                    <% display_value =
+                      if attr.is_a?(Proc)
+                        attr.call(item)
+                      elsif attr == :custom_fields && item.custom_fields.present?
+                        render('partials/custom_fields_tooltip', item: item)
+                      else
+                        item.send(attr)
+                      end %>
+                    <td class="px-4 py-3" data-sort-value="<%= strip_tags(display_value.to_s).downcase %>">
+                      <%= display_value %>
                     </td>
                   <% end %>
                   <td class="px-4 py-3 flex items-center justify-end">

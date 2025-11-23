@@ -42,6 +42,7 @@
                           <%= @readonly_mode ? 'bg-gray-200 cursor-not-allowed' : 'bg-white' %>"
                    data-subtask-target="duration"
                    data-action="<%= 'change->subtask#recalculate' unless @readonly_mode %>" />
+            <p class="mt-1 pl-1 text-sm text-gray-600 dark:text-gray-300" data-subtask-target="formattedDuration"><%= formatted_duration_days_hours(@sub_task.duration, @current_business) %></p>
           </div>
           <!-- Skilled -->
           <div class="col-span-6 sm:col-span-3">

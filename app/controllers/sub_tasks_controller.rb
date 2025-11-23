@@ -61,6 +61,7 @@ class SubTasksController < ApplicationController
             num_workers_skilled: @sub_task.num_workers_skilled,
             num_workers_unskilled: @sub_task.num_workers_unskilled,
             num_machines: @sub_task.num_machines,
+            formatted_duration: view_context.formatted_duration_days_hours(@sub_task.duration, @business),
             planned_start_date: @sub_task.planned_start_date&.strftime("%Y-%m-%d"),
             planned_end_date: @sub_task.planned_end_date&.strftime("%Y-%m-%d")
           }

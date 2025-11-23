@@ -16,6 +16,7 @@ import NormsController from "./norms_controller"
 import RealResourcesController from "./real_resources_controller"
 import SearchController from "./search_controller"
 import SidebarController from "./sidebar_controller"
+import SortController from "./sort_controller"
 import SubtaskController from "./subtask_controller"
 import ToggleController from "./toggle_controller"
 import TrackChangesController from "./track_changes_controller"
@@ -35,6 +36,7 @@ application.register("norms", NormsController)
 application.register("real-resources", RealResourcesController)
 application.register("search", SearchController)
 application.register("sidebar", SidebarController)
+application.register("sort", SortController)
 application.register("subtask", SubtaskController)
 application.register("toggle", ToggleController)
 application.register("track-changes", TrackChangesController)
