@@ -1,6 +1,7 @@
 class MaterialsController < ApplicationController
   include ActionView::RecordIdentifier
 
+  before_action :require_business
   before_action :set_business
   before_action :set_material, only: [:show, :edit, :update, :destroy]
 
@@ -58,6 +59,11 @@ class MaterialsController < ApplicationController
   end
 
   private
+
+  def set_business
+    @business = current_user.businesses.find(params[:business_id])
+    @current_business = @business  # For backward compatibility with views
+  end
 
   def set_material
     @material = @business.materials.find(params[:id])

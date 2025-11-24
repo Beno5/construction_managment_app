@@ -258,11 +258,11 @@ sr:
         address: "Adresa"
         phone_number: "Broj telefona"
         vat_number: "PIB"
-      registration_number: "Matični broj"
-      owner_first_name: "Ime vlasnika"
-      owner_last_name: "Prezime vlasnika"
-      currency: "Valuta"
-      working_hours_per_day: "Radni sati/dan"
+        registration_number: "Matični broj"
+        owner_first_name: "Ime vlasnika"
+        owner_last_name: "Prezime vlasnika"
+        currency: "Valuta"
+        working_hours_per_day: "Radni sati/dan"
     messages:
       created: "Firma %{name} je uspješno kreirana."
       updated: "Firma %{name} je uspješno ažurirana."
@@ -273,6 +273,7 @@ sr:
       name_required: "Naziv firme je obavezan!"
       taken_for_user: "Već imate firmu sa ovim nazivom."
       validation_failed: "Molimo provjerite formu za greške."
+      no_business_selected: "Prvo morate kreirati firmu da biste pristupili ovoj stranici."
   materials:
     index:
       title: "PREGLED MATERIJALA"

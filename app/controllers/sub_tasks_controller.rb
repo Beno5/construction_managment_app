@@ -1,6 +1,7 @@
 class SubTasksController < ApplicationController
   include ActionView::RecordIdentifier
 
+  before_action :require_business
   before_action :set_business
   before_action :set_project
   before_action :set_task
@@ -115,6 +116,11 @@ class SubTasksController < ApplicationController
   end
 
   private
+
+  def set_business
+    @business = current_user.businesses.find(params[:business_id])
+    @current_business = @business  # For backward compatibility with views
+  end
 
   def set_task
     @task = @project.tasks.find(params[:task_id])

@@ -70,3 +70,167 @@ div[task_id^="st_"] .gantt_cell {
   /* font-normal */
   color: #6B7280;
 }
+
+/* ===================================================
+   MOBILE RESPONSIVE - GANTT CHART
+   =================================================== */
+
+/* Portrait mode (vertical) - Mobile devices */
+@media only screen and (max-width: 768px) and (orientation: portrait) {
+  /* Hide date columns in portrait mode - keep only ID and Name */
+  .gantt_grid_scale .gantt_grid_head_cell:nth-child(n+3),
+  .gantt_grid_data .gantt_cell:nth-child(n+3) {
+    display: none !important;
+  }
+
+  /* Reduce grid width to fit narrow screens */
+  .gantt_grid {
+    width: 200px !important;
+    min-width: 200px !important;
+    max-width: 200px !important;
+  }
+
+  /* Ensure timeline scrolls horizontally and doesn't overflow */
+  .gantt_task {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent timeline from creating extra whitespace */
+  .gantt_task_bg,
+  .gantt_task_content {
+    max-width: 100% !important;
+  }
+
+  /* Adjust container for mobile - responsive height */
+  #gantt_here {
+    height: 400px !important; /* Shorter height for mobile portrait */
+    overflow: hidden !important; /* Prevent container overflow */
+    width: 100vw !important; /* Force container to viewport width */
+    max-width: 100vw !important;
+  }
+
+  /* Force task area to not exceed container bounds */
+  .gantt_data_area {
+    overflow: hidden !important;
+  }
+
+  /* Ensure layout container doesn't create whitespace */
+  .gantt_layout_content {
+    max-height: 400px !important;
+    overflow: hidden !important;
+  }
+
+  /* Constrain the entire Gantt layout */
+  .gantt_container {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow: hidden !important;
+  }
+
+  /* Constrain canvas elements */
+  .gantt_task_bg canvas,
+  .gantt_task_content canvas {
+    max-width: calc(100vw - 200px) !important; /* Viewport width minus grid width */
+  }
+
+  /* Make ID column narrower on mobile */
+  .gantt_grid_data .gantt_cell:first-child {
+    width: 60px !important;
+  }
+
+  /* Make name column flexible */
+  .gantt_grid_data .gantt_cell:nth-child(2) {
+    width: 140px !important;
+  }
+
+  /* Adjust grid header cells */
+  .gantt_grid_scale .gantt_grid_head_cell:first-child {
+    width: 60px !important;
+  }
+
+  .gantt_grid_scale .gantt_grid_head_cell:nth-child(2) {
+    width: 140px !important;
+  }
+
+  /* Ensure task bars are visible */
+  .gantt_task_line {
+    min-width: 20px;
+  }
+
+  /* Improve touch targets */
+  .gantt_tree_icon,
+  .gantt_link_control {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  /* Larger font for better readability on small screens */
+  .gantt_grid_data .gantt_cell {
+    font-size: 13px;
+    padding: 4px 2px;
+  }
+
+  /* Reduce row height slightly to fit more rows on screen */
+  .gantt_row,
+  .gantt_task_row {
+    height: 32px !important;
+  }
+
+  .gantt_grid_scale,
+  .gantt_grid_head_cell {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* Visual indicator for horizontal scrolling */
+  .gantt_task::after {
+    content: '→';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(0, 0, 0, 0.3);
+    font-size: 20px;
+    pointer-events: none;
+    animation: scroll-hint 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-hint {
+    0%, 100% {
+      opacity: 0.3;
+      transform: translateY(-50%) translateX(0);
+    }
+    50% {
+      opacity: 0.7;
+      transform: translateY(-50%) translateX(5px);
+    }
+  }
+}
+
+/* Landscape mode (horizontal) - Keep full view */
+@media only screen and (max-width: 768px) and (orientation: landscape) {
+  /* Full Gantt view in landscape - no hiding */
+  .gantt_grid {
+    width: auto !important;
+  }
+
+  /* Enable horizontal scrolling */
+  #gantt_here {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .gantt_task {
+    overflow-x: auto !important;
+  }
+}
+
+/* Tablet and Desktop - Full view */
+@media only screen and (min-width: 769px) {
+  /* Normal desktop view - all columns visible */
+  .gantt_grid {
+    width: auto !important;
+  }
+}

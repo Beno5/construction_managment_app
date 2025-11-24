@@ -243,7 +243,6 @@ en:
       owner_first_name: "Owner First Name"
       owner_last_name: "Owner Last Name"
       currency: "Currency"
-      working_hours_per_day: "Working Hours/Day"
       working_hours_per_day: "Working hours per day"
       update_button: "Update Business"
       create_button: "Create Business"
@@ -258,6 +257,7 @@ en:
         owner_first_name: "Owner First Name"
         owner_last_name: "Owner Last Name"
         currency: "Currency"
+        working_hours_per_day: "Working Hours/Day"
     messages:
       created: "Business %{name} was created successfully."
       updated: "Business %{name} was updated successfully."
@@ -267,6 +267,7 @@ en:
       not_found: "Business not found."
     errors:
       name_required: "Business name is required!"
+      no_business_selected: "You must create a business first to access this page."
       taken_for_user: "You already have a business with this name."
       validation_failed: "Please check the form for errors."
   materials:
