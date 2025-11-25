@@ -14,7 +14,7 @@
   <!-- Header -->
   <div class="flex justify-between items-center px-4 py-2">
     <h2 class="text-xl font-bold"><%= t('projects.form.name') %>:
-      <span class="inline-block"
+      <span class="inline-block cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded min-w-[100px] min-h-[28px]"
             data-controller="inline-edit"
             data-inline-edit-model-value="project"
             data-inline-edit-field-value="name"
@@ -24,7 +24,7 @@
             data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
             data-inline-edit-required-value="true"
             data-action="dblclick->inline-edit#activate"
-            title="Double-click to edit">
+            title="<%= t('tooltips.double_click_to_edit') %>">
         <%= project.name %>
       </span>
     </h2>
@@ -42,9 +42,9 @@
             data-inline-edit-original-value="<%= project.address %>"
             data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
             data-action="dblclick->inline-edit#activate"
-            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded"
-            title="Double-click to edit">
-        <%= project.address %>
+            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+            title="<%= t('tooltips.double_click_to_edit') %>">
+        <%= project.address.presence || t('projects.form.not_available') %>
       </span>
     </p>
     <p>
@@ -57,9 +57,9 @@
             data-inline-edit-original-value="<%= project.project_manager %>"
             data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
             data-action="dblclick->inline-edit#activate"
-            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded"
-            title="Double-click to edit">
-        <%= project.project_manager %>
+            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+            title="<%= t('tooltips.double_click_to_edit') %>">
+        <%= project.project_manager.presence || t('projects.form.not_available') %>
       </span>
     </p>
     <p>
@@ -71,10 +71,12 @@
             data-inline-edit-url-value="<%= business_project_path(@current_business, project) %>"
             data-inline-edit-original-value="<%= project.planned_start_date %>"
             data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
+            data-inline-edit-disabled-value="<%= project.tasks.exists? %>"
+            data-inline-edit-disabled-message-value="<%= t('projects.inline_edit.locked_due_to_tasks') %>"
             data-action="dblclick->inline-edit#activate"
-            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded"
-            title="Double-click to edit">
-        <%= l(project.planned_start_date) if project.planned_start_date %>
+            class="px-1 rounded inline-block min-w-[100px] min-h-[24px] <%= project.tasks.exists? ? 'cursor-not-allowed text-gray-500 dark:text-gray-400' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700' %>"
+            title="<%= project.tasks.exists? ? t('projects.inline_edit.locked_due_to_tasks') : t('tooltips.double_click_to_edit') %>">
+        <%= project.planned_start_date ? l(project.planned_start_date) : t('projects.form.not_available') %>
       </span>
     </p>
     <p>
@@ -86,10 +88,12 @@
             data-inline-edit-url-value="<%= business_project_path(@current_business, project) %>"
             data-inline-edit-original-value="<%= project.planned_end_date %>"
             data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
+            data-inline-edit-disabled-value="<%= project.tasks.exists? %>"
+            data-inline-edit-disabled-message-value="<%= t('projects.inline_edit.locked_due_to_tasks') %>"
             data-action="dblclick->inline-edit#activate"
-            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded"
-            title="Double-click to edit">
-        <%= l(project.planned_end_date) if project.planned_end_date %>
+            class="px-1 rounded inline-block min-w-[100px] min-h-[24px] <%= project.tasks.exists? ? 'cursor-not-allowed text-gray-500 dark:text-gray-400' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700' %>"
+            title="<%= project.tasks.exists? ? t('projects.inline_edit.locked_due_to_tasks') : t('tooltips.double_click_to_edit') %>">
+        <%= project.planned_end_date ? l(project.planned_end_date) : t('projects.form.not_available') %>
       </span>
     </p>
     <p>
@@ -101,9 +105,11 @@
             data-inline-edit-url-value="<%= business_project_path(@current_business, project) %>"
             data-inline-edit-original-value="<%= project.planned_cost %>"
             data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
+            data-inline-edit-disabled-value="<%= project.tasks.exists? %>"
+            data-inline-edit-disabled-message-value="<%= t('projects.inline_edit.locked_due_to_tasks') %>"
             data-action="dblclick->inline-edit#activate"
-            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded"
-            title="Double-click to edit">
+            class="px-1 rounded inline-block min-w-[100px] min-h-[24px] <%= project.tasks.exists? ? 'cursor-not-allowed text-gray-500 dark:text-gray-400' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700' %>"
+            title="<%= project.tasks.exists? ? t('projects.inline_edit.locked_due_to_tasks') : t('tooltips.double_click_to_edit') %>">
         <%= project.planned_cost ? "#{project.planned_cost} #{project.business.currency_symbol}" : t('projects.form.not_available') %>
       </span>
     </p>
@@ -118,8 +124,8 @@
             data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
             data-inline-edit-options-value='<%= status_options.to_json %>'
             data-action="dblclick->inline-edit#activate"
-            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded"
-            title="Double-click to edit">
+            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+            title="<%= t('tooltips.double_click_to_edit') %>">
         <%= I18n.t("activerecord.attributes.project.statuses.#{project.status}", default: project.status.humanize) %>
       </span>
     </p>
@@ -133,8 +139,8 @@
             data-inline-edit-original-value="<%= project.description %>"
             data-inline-edit-record-updated-at-value="<%= project.updated_at.iso8601 %>"
             data-action="dblclick->inline-edit#activate"
-            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded block mt-1"
-            title="Double-click to edit">
+            class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded block mt-1 min-w-[100px] min-h-[24px]"
+            title="<%= t('tooltips.double_click_to_edit') %>">
         <%= project.description.present? ? truncate(project.description, length: 100) : t('projects.form.not_available') %>
       </span>
     </p>

@@ -7,6 +7,7 @@ import AiImportStatusController from "./ai_import_status_controller"
 import AutoDismissController from "./auto_dismiss_controller"
 import CustomResourceController from "./custom_resource_controller"
 import EditDocumentController from "./edit_document_controller"
+import FileUploadController from "./file_upload_controller"
 import GanttTriggerController from "./gantt_trigger_controller"
 import HelloController from "./hello_controller"
 import HighlightController from "./highlight_controller"
@@ -28,6 +29,7 @@ application.register("ai-import-status", AiImportStatusController)
 application.register("auto-dismiss", AutoDismissController)
 application.register("custom-resource", CustomResourceController)
 application.register("edit-document", EditDocumentController)
+application.register("file-upload", FileUploadController)
 application.register("gantt-trigger", GanttTriggerController)
 application.register("hello", HelloController)
 application.register("highlight", HighlightController)

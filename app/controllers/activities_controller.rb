@@ -49,7 +49,9 @@ class ActivitiesController < ApplicationController
   end
 
   def update
-    @activity = @sub_task.activities.find(params[:activity][:activity_id])
+    # Handle both inline editing (params[:id]) and modal editing (params[:activity][:activity_id])
+    activity_id = params[:id] || params.dig(:activity, :activity_id)
+    @activity = @sub_task.activities.find(activity_id)
 
     # Check optimistic locking if record_updated_at is provided (inline editing)
     if params[:record_updated_at].present?
@@ -63,19 +65,28 @@ class ActivitiesController < ApplicationController
             render json: {
               success: false,
               conflict: true,
-              error: 'This record was modified by another user. Please refresh the page.'
+              error: t('activities.messages.conflict')
             }, status: :conflict
           end
           format.html do
             redirect_to business_project_task_sub_task_path(@business, @project, @task, @sub_task),
-                        alert: 'This record was modified by another user. Please refresh the page.'
+                        alert: t('activities.messages.conflict')
           end
         end
         return
       end
     end
 
-    if @activity.update(params_mapped)
+    # Determine update parameters (inline editing vs modal)
+    update_params = if params[:record_updated_at].present?
+                      # Inline editing - only update the changed field
+                      activity_params
+                    else
+                      # Modal editing - use mapped params
+                      params_mapped
+                    end
+
+    if @activity.update(update_params)
       respond_to do |format|
         format.json do
           render json: {
@@ -83,8 +94,7 @@ class ActivitiesController < ApplicationController
             data: {
               id: @activity.id,
               quantity: @activity.quantity,
-              unit_price: @activity.unit_price,
-              total_price: @activity.total_price,
+              total_cost: @activity.total_cost,
               updated_at: @activity.updated_at.iso8601
             }
           }, status: :ok

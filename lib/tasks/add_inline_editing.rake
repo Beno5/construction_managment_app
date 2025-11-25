@@ -1,6 +1,6 @@
 namespace :inline_edit do
   desc "Add inline editing support to remaining controllers (Tasks, SubTasks, Norms)"
-  task :add_to_controllers => :environment do
+  task add_to_controllers: :environment do
     controllers = [
       {
         file: 'app/controllers/tasks_controller.rb',
@@ -39,8 +39,8 @@ namespace :inline_edit do
 
       # Find the update method
       if content =~ /(  def update\n.*?)(  def \w+|\z)/m
-        original_update = $1
-        rest_of_file = $2
+        original_update = Regexp.last_match(1)
+        Regexp.last_match(2)
 
         # Generate the new update method
         new_update = generate_update_method(controller_info)

@@ -2,7 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Third-party styles */
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 
+/* Custom components/utilities and overrides */
 
 @layer components {
   .btn-primary {
@@ -70,7 +73,60 @@
   [data-controller="toggle"].toggle-collapsed [data-toggle-target="switch"]:checked + div:after {
     transform: translateX(0); /* Keep slider on left even when checked */
   }
+
+  /* Ensure inline editable display fields keep consistent size even when empty */
+  [data-controller~="inline-edit"],
+  [data-inline-edit-field-value],
+  .inline-display-field {
+    @apply min-h-[40px] min-w-[120px];
+  }
+
+  /* Add placeholder space when empty so padding renders consistently */
+  [data-controller~="inline-edit"]:empty::before,
+  [data-inline-edit-field-value]:empty::before,
+  .inline-display-field:empty::before {
+    content: '\00a0';
+  }
+
+  /* Gantt view tweaks */
+  .gantt_grid_head_add,
+  .gantt_add {
+    display: none !important;
+  }
+
+  .gantt_task_line.task-red {
+    background: #e57373;
+    border-color: #d32f2f;
+  }
+
+  .gantt_task_progress.task-red {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .gantt_task_line.task-blue {
+    background: #64b5f6;
+    border-color: #1976d2;
+  }
+
+  .gantt_task_progress.task-blue {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .gantt_task_line.task-red:hover {
+    filter: brightness(0.95);
+  }
+
+  .gantt_task_line.task-blue:hover {
+    filter: brightness(1.05);
+  }
+
+  div[task_id^="t_"] .gantt_cell {
+    font-weight: 700;
+    color: #6b7280;
+  }
+
+  div[task_id^="st_"] .gantt_cell {
+    font-weight: 400;
+    color: #6b7280;
+  }
 }
-
-
-

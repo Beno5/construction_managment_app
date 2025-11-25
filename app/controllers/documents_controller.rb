@@ -47,12 +47,12 @@ class DocumentsController < ApplicationController
             render json: {
               success: false,
               conflict: true,
-              error: 'This record was modified by another user. Please refresh the page.'
+              error: t('documents.messages.conflict')
             }, status: :conflict
           end
           format.html do
             redirect_to parent_path(@document),
-                        alert: 'This record was modified by another user. Please refresh the page.'
+                        alert: t('documents.messages.conflict')
           end
         end
         return
@@ -68,6 +68,7 @@ class DocumentsController < ApplicationController
               id: @document.id,
               name: @document.name,
               description: @document.description,
+              file_size: @document.file.attached? ? @document.file.byte_size : nil,
               updated_at: @document.updated_at.iso8601
             }
           }, status: :ok
@@ -181,14 +182,8 @@ class DocumentsController < ApplicationController
     params.require(:document).permit(:name, :description, :category, :file)
   end
 
-  def parent_path(document)
-    case document
-    when SubTask
-      business_project_task_sub_task_document_path(@business, @project, @task, @sub_task, document)
-    when Task
-      business_project_task_document_path(@business, @project, @task, document)
-    when Project
-      business_project_document_path(@business, @project, document)
-    end
+  def parent_path(_document)
+    # Redirect back to the owning parent rather than the document itself
+    appropriate_path
   end
 end

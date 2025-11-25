@@ -52,7 +52,7 @@
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-inline-edit-required-value="true"
                  data-action="dblclick->inline-edit#activate"
-                 title="Double-click to edit">
+                 title="<%= t('tooltips.double_click_to_edit') %>">
               <%= @norm.name %>
             </div>
           </div>
@@ -72,8 +72,8 @@
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-inline-edit-options-value='<%= unit_options.to_json %>'
                  data-action="dblclick->inline-edit#activate"
-                 title="Double-click to edit">
-              <%= @norm.unit_of_measure %>
+                 title="<%= t('tooltips.double_click_to_edit') %>">
+              <%= translate_unit(@norm.unit_of_measure) %>
             </div>
           </div>
 
@@ -91,7 +91,7 @@
                  data-inline-edit-original-value="<%= @norm.norm_value %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-action="dblclick->inline-edit#activate"
-                 title="Double-click to edit">
+                 title="<%= t('tooltips.double_click_to_edit') %>">
               <%= @norm.norm_value %>
             </div>
           </div>
@@ -110,7 +110,7 @@
                  data-inline-edit-original-value="<%= @norm.info %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-action="dblclick->inline-edit#activate"
-                 title="Double-click to edit">
+                 title="<%= t('tooltips.double_click_to_edit') %>">
               <%= @norm.info %>
             </div>
           </div>
@@ -129,7 +129,7 @@
                  data-inline-edit-original-value="<%= @norm.description %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-action="dblclick->inline-edit#activate"
-                 title="Double-click to edit">
+                 title="<%= t('tooltips.double_click_to_edit') %>">
               <%= @norm.description %>
             </div>
           </div>

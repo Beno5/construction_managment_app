@@ -36,7 +36,9 @@ export default class extends Controller {
     original: String,
     recordUpdatedAt: String,
     options: { type: Object, default: {} },
-    required: { type: Boolean, default: false }
+    required: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false },
+    disabledMessage: String
   }
 
   connect() {
@@ -44,17 +46,50 @@ export default class extends Controller {
     this.input = null
     this.originalContent = this.element.innerHTML
     this.savingTimeout = null
+    this.isDirty = false
+
+    // Translation cache
+    this.translations = {
+      finishCurrentField: this.t('inline_edit.finish_current_field', 'Please finish editing the current field first.'),
+      unsavedChanges: this.t('inline_edit.unsaved_changes', 'You have unsaved changes. Leave anyway?')
+    }
   }
 
   disconnect() {
     if (this.savingTimeout) {
       clearTimeout(this.savingTimeout)
     }
+
+    // Release global locks / listeners if this element owned them
+    if (this.ownsGlobalLock()) {
+      this.releaseGlobalLock()
+    }
+    this.clearDirty()
   }
 
   // Activate edit mode on double-click
   activate(event) {
     if (this.isEditing) return
+
+    // Guard: prevent activation when field is locked (e.g., auto-calculated)
+    if (this.disabledValue) {
+      event.preventDefault()
+      event.stopPropagation()
+      if (this.disabledMessageValue) {
+        this.showToast(this.disabledMessageValue, 'error')
+      }
+      return
+    }
+
+    // Prevent concurrent edits across different inline-edit instances
+    if (window.__inlineEditActiveElement && window.__inlineEditActiveElement !== this.element) {
+      event.preventDefault()
+      event.stopPropagation()
+      this.showToast(this.translations.finishCurrentField, 'error')
+      return
+    }
+
+    this.acquireGlobalLock()
 
     event.preventDefault()
     event.stopPropagation()
@@ -80,6 +115,9 @@ export default class extends Controller {
 
     // Apply edit mode styles
     this.applyEditModeStyles()
+
+    // Mark as dirty while in edit mode to warn on navigation
+    this.markDirty()
   }
 
   createInput() {
@@ -212,20 +250,20 @@ export default class extends Controller {
 
       const data = await response.json()
 
-      if (response.ok && data.success) {
-        // Success!
-        this.handleSuccess(newValue, data.data)
-      } else if (response.status === 409) {
-        // Conflict - optimistic locking failed
-        this.handleConflict(data.error)
-      } else if (response.status === 422) {
-        // Validation error
-        this.handleValidationError(data.errors)
-      } else {
-        // Other error
-        this.handleError('Failed to save changes')
-      }
-    } catch (error) {
+    if (response.ok && data.success) {
+      // Success!
+      this.handleSuccess(newValue, data.data)
+    } else if (response.status === 409) {
+      // Conflict - optimistic locking failed
+      this.handleConflict(data.error)
+    } else if (response.status === 422) {
+      // Validation error
+      this.handleValidationError(data.errors)
+    } else {
+      // Other error
+      this.handleError('Failed to save changes')
+    }
+  } catch (error) {
       console.error('Inline edit error:', error)
       this.handleError('Network error. Please try again.')
     }
@@ -238,20 +276,28 @@ export default class extends Controller {
     this.element.innerHTML = this.originalContent
     this.element.classList.remove('border-blue-500', 'border-red-500', 'border-green-500')
     this.clearError()
+    this.clearDirty()
+    this.releaseGlobalLock()
   }
 
   handleSuccess(newValue, updatedData) {
+    this.stopLoading()
     this.isEditing = false
+    const updatedValue = updatedData && Object.prototype.hasOwnProperty.call(updatedData, this.fieldValue)
+      ? updatedData[this.fieldValue]
+      : newValue
+
+    const displayValue = this.formatDisplayValueForType(this.typeValue, updatedValue, this.optionsValue)
 
     // Update display with new value
-    if (this.typeValue === 'select' && this.optionsValue[newValue]) {
-      this.element.textContent = this.optionsValue[newValue]
+    if (this.typeValue === 'select' && this.optionsValue[updatedValue]) {
+      this.element.textContent = this.optionsValue[updatedValue]
     } else {
-      this.element.textContent = newValue
+      this.element.textContent = displayValue
     }
 
     // Update original value for next edit
-    this.originalValue = newValue
+    this.originalValue = updatedValue
 
     // Update record's updated_at timestamp for ALL fields of this record - CRITICAL FOR OPTIMISTIC LOCKING
     if (updatedData && updatedData.updated_at) {
@@ -260,6 +306,12 @@ export default class extends Controller {
       // Update ALL other inline-edit fields for the same record URL
       // This ensures all fields stay in sync after any field is updated
       this.updateAllFieldsTimestamp(updatedData.updated_at)
+
+      // Update values across all inline-edit fields for the same record so duplicated displays stay in sync
+      this.updateAllFieldsData(updatedData)
+
+      // Update related/parent records if payload includes them (e.g., task values recalculated from subtasks)
+      this.updateRelatedRecords(updatedData)
     }
 
     // Apply success styling (green border flash) - no border-2, just change color
@@ -268,6 +320,9 @@ export default class extends Controller {
 
     // Show success toast
     this.showToast('Saved successfully', 'success')
+
+    this.clearDirty()
+    this.releaseGlobalLock()
 
     // Remove success styling after 2 seconds
     setTimeout(() => {
@@ -295,7 +350,94 @@ export default class extends Controller {
     })
   }
 
+  updateAllFieldsData(updatedData) {
+    if (!updatedData) return
+
+    const allInlineEditElements = document.querySelectorAll('[data-controller~="inline-edit"]')
+
+    allInlineEditElements.forEach(element => {
+      const elementUrl = element.dataset.inlineEditUrlValue
+      const field = element.dataset.inlineEditFieldValue
+
+      if (elementUrl !== this.urlValue) return
+      if (!Object.prototype.hasOwnProperty.call(updatedData, field)) return
+
+      const type = element.dataset.inlineEditTypeValue || 'text'
+      const optionsRaw = element.dataset.inlineEditOptionsValue
+      let options = {}
+      if (optionsRaw) {
+        try {
+          options = JSON.parse(optionsRaw)
+        } catch (_) {
+          options = {}
+        }
+      }
+
+      const value = updatedData[field]
+      const display = this.formatDisplayValueForType(type, value, options)
+
+      // Update visible text only if element is not currently showing an input
+      if (!element.querySelector('input, textarea, select')) {
+        element.textContent = display
+      }
+
+      // Keep original value in sync for next edit
+      element.dataset.inlineEditOriginalValue = value
+    })
+  }
+
+  updateRelatedRecords(updatedData) {
+    if (!updatedData) return
+
+    const relatedRecords = []
+
+    // Current payload shape: data.parent_task from subtask updates
+    if (updatedData.parent_task) {
+      relatedRecords.push(updatedData.parent_task)
+    }
+
+    relatedRecords.forEach(record => {
+      this.updateFieldsForUrl(record)
+    })
+  }
+
+  updateFieldsForUrl(recordData) {
+    if (!recordData || !recordData.url) return
+
+    const { url, updated_at: updatedAt, ...fields } = recordData
+    const elements = document.querySelectorAll(`[data-controller~="inline-edit"][data-inline-edit-url-value="${url}"]`)
+
+    elements.forEach(element => {
+      const field = element.dataset.inlineEditFieldValue
+      if (!Object.prototype.hasOwnProperty.call(fields, field)) return
+
+      const type = element.dataset.inlineEditTypeValue || 'text'
+      const optionsRaw = element.dataset.inlineEditOptionsValue
+      let options = {}
+      if (optionsRaw) {
+        try {
+          options = JSON.parse(optionsRaw)
+        } catch (_) {
+          options = {}
+        }
+      }
+
+      const value = fields[field]
+      const display = this.formatDisplayValueForType(type, value, options)
+
+      if (!element.querySelector('input, textarea, select')) {
+        element.textContent = display
+      }
+
+      element.dataset.inlineEditOriginalValue = value
+      if (updatedAt) {
+        element.dataset.inlineEditRecordUpdatedAtValue = updatedAt
+      }
+    })
+  }
+
   handleConflict(errorMessage) {
+    this.stopLoading()
     const message = errorMessage || 'This record was modified by another user. Please refresh the page to see the latest changes.'
 
     if (confirm(`${message}\n\nDo you want to refresh the page now?`)) {
@@ -306,9 +448,11 @@ export default class extends Controller {
   }
 
   handleValidationError(errors) {
+    this.stopLoading()
     const errorMessage = Array.isArray(errors) ? errors.join(', ') : errors
     this.showError(errorMessage)
     this.showToast(errorMessage, 'error')
+    this.markDirty()
 
     // Keep in edit mode with red border - no border-2, just change color
     this.element.classList.remove('border-blue-500', 'border-green-500')
@@ -316,8 +460,10 @@ export default class extends Controller {
   }
 
   handleError(message) {
+    this.stopLoading()
     this.showError(message)
     this.showToast(message, 'error')
+    this.markDirty()
 
     // Keep in edit mode with red border - no border-2, just change color
     this.element.classList.remove('border-blue-500', 'border-green-500')
@@ -328,6 +474,62 @@ export default class extends Controller {
     if (this.input) {
       this.input.disabled = true
       this.input.classList.add('opacity-50', 'cursor-wait')
+    }
+  }
+
+  stopLoading() {
+    if (this.input) {
+      this.input.disabled = false
+      this.input.classList.remove('opacity-50', 'cursor-wait')
+    }
+  }
+
+  acquireGlobalLock() {
+    window.__inlineEditActiveElement = this.element
+    this.lockOwner = true
+  }
+
+  releaseGlobalLock() {
+    if (this.ownsGlobalLock()) {
+      delete window.__inlineEditActiveElement
+      this.lockOwner = false
+    }
+  }
+
+  ownsGlobalLock() {
+    return this.lockOwner && window.__inlineEditActiveElement === this.element
+  }
+
+  markDirty() {
+    if (this.isDirty) return
+
+    this.isDirty = true
+    this.boundBeforeUnload ||= (event) => {
+      event.preventDefault()
+      event.returnValue = this.translations.unsavedChanges
+      return this.translations.unsavedChanges
+    }
+    window.addEventListener('beforeunload', this.boundBeforeUnload)
+  }
+
+  clearDirty() {
+    if (!this.isDirty) return
+
+    this.isDirty = false
+    if (this.boundBeforeUnload) {
+      window.removeEventListener('beforeunload', this.boundBeforeUnload)
+    }
+  }
+
+  t(key, fallback = '') {
+    // Simple lookup from meta tag data-i18n JSON if present
+    try {
+      const el = document.querySelector('meta[name="i18n"]')
+      if (!el) return fallback
+      const map = JSON.parse(el.content || '{}')
+      return map[key] || fallback
+    } catch (e) {
+      return fallback
     }
   }
 
@@ -376,6 +578,42 @@ export default class extends Controller {
       detail: { message, type }
     })
     window.dispatchEvent(event)
+  }
+
+  formatDisplayValue(value) {
+    return this.formatDisplayValueForType(this.typeValue, value, this.optionsValue)
+  }
+
+  formatDisplayValueForType(type, value, options = {}) {
+    if (type === 'date') {
+      return this.formatDateValue(value)
+    }
+
+    if (type === 'select' && options && Object.prototype.hasOwnProperty.call(options, value)) {
+      return options[value]
+    }
+
+    return value
+  }
+
+  // Force dd.mm.yyyy regardless of browser locale to keep inline display consistent
+  formatDateValue(value) {
+    if (!value) return ''
+
+    // Accept both ISO "yyyy-mm-dd" and already formatted values
+    const isoMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
+    if (isoMatch) {
+      const [, year, month, day] = isoMatch
+      return `${day}.${month}.${year}`
+    }
+
+    // Fallback to Date parsing if something unexpected comes through
+    const date = new Date(value)
+    if (isNaN(date.getTime())) return value
+    const dd = String(date.getDate()).padStart(2, '0')
+    const mm = String(date.getMonth() + 1).padStart(2, '0')
+    const yyyy = date.getFullYear()
+    return `${dd}.${mm}.${yyyy}`
   }
 
   get csrfToken() {

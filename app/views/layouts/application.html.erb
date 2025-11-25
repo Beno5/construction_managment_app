@@ -4,6 +4,11 @@
     <title>Conormio</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-cache-control" content="no-cache">
+    <% inline_i18n = {
+         "inline_edit.finish_current_field" => t("inline_edit.finish_current_field"),
+         "inline_edit.unsaved_changes" => t("inline_edit.unsaved_changes")
+       }.to_json %>
+    <meta name="i18n" content="<%= inline_i18n %>">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <!-- CSS Files -->

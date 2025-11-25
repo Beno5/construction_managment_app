@@ -19,13 +19,26 @@ import { Controller } from "@hotwired/stimulus"
 //   - error: Red toast with manual dismiss option
 export default class extends Controller {
   connect() {
-    // Listen for toast events
+    // Ensure only one global listener is attached at a time to avoid duplicate toasts
+    if (window.__toastListenerAttached) {
+      this.isPrimaryListener = false
+      return
+    }
+
+    this.isPrimaryListener = true
     this.boundShowToast = this.showToast.bind(this)
+    window.__toastListenerAttached = true
+    window.__toastListener = this.boundShowToast
     window.addEventListener('toast:show', this.boundShowToast)
   }
 
   disconnect() {
-    window.removeEventListener('toast:show', this.boundShowToast)
+    // Only remove the global listener if this instance registered it
+    if (this.isPrimaryListener) {
+      window.removeEventListener('toast:show', this.boundShowToast)
+      delete window.__toastListenerAttached
+      delete window.__toastListener
+    }
   }
 
   showToast(event) {
@@ -45,7 +58,7 @@ export default class extends Controller {
         text: 'text-red-700',
         hoverText: 'hover:text-red-900',
         hoverBg: 'hover:bg-red-200',
-        delay: 0 // No auto-dismiss for errors
+        delay: 4000 // Auto-dismiss errors after a short time
       }
     }
 

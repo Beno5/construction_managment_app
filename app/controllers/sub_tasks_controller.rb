@@ -45,71 +45,71 @@ class SubTasksController < ApplicationController
     end
   end
 
-def update
-  # Check optimistic locking if record_updated_at is provided (inline editing)
-  if params[:record_updated_at].present?
-    # Parse the timestamp sent by client
-    record_updated_at = Time.parse(params[:record_updated_at])
+  def update
+    # Check optimistic locking if record_updated_at is provided (inline editing)
+    if params[:record_updated_at].present?
+      # Parse the timestamp sent by client
+      record_updated_at = Time.parse(params[:record_updated_at])
 
-    # Truncate both timestamps to second precision to avoid microsecond comparison issues
-    record_updated_at_sec = record_updated_at.change(usec: 0)
-    sub_task_updated_at_sec = @sub_task.updated_at.change(usec: 0)
+      # Truncate both timestamps to second precision to avoid microsecond comparison issues
+      record_updated_at_sec = record_updated_at.change(usec: 0)
+      sub_task_updated_at_sec = @sub_task.updated_at.change(usec: 0)
 
-    # Only flag conflict if database timestamp is NEWER (by more than 1 second)
-    if sub_task_updated_at_sec > record_updated_at_sec
+      # Only flag conflict if database timestamp is NEWER (by more than 1 second)
+      if sub_task_updated_at_sec > record_updated_at_sec
+        respond_to do |format|
+          format.json do
+            render json: {
+              success: false,
+              conflict: true,
+              error: 'This record was modified by another user. Please refresh the page.'
+            }, status: :conflict
+          end
+          format.html do
+            redirect_back fallback_location: root_path,
+                          alert: 'This record was modified by another user. Please refresh the page.'
+          end
+        end
+        return
+      end
+    end
+
+    if @sub_task.update(sub_task_params)
       respond_to do |format|
         format.json do
           render json: {
-            success: false,
-            conflict: true,
-            error: 'This record was modified by another user. Please refresh the page.'
-          }, status: :conflict
-        end
-        format.html do
-          redirect_back fallback_location: root_path,
-                        alert: 'This record was modified by another user. Please refresh the page.'
-        end
-      end
-      return
-    end
-  end
-
-  if @sub_task.update(sub_task_params)
-    respond_to do |format|
-      format.json do
-        render json: {
-          success: true,
-          data: {
-            id: @sub_task.id,
-            name: @sub_task.name,
+            success: true,
+            data: {
+              id: @sub_task.id,
+              name: @sub_task.name,
               position: @sub_task.position,
               planned_start_date: @sub_task.planned_start_date,
               planned_end_date: @sub_task.planned_end_date,
               duration: @sub_task.duration,
               description: @sub_task.description,
-            updated_at: @sub_task.updated_at.iso8601
-          }
-        }, status: :ok
+              updated_at: @sub_task.updated_at.iso8601
+            }
+          }, status: :ok
+        end
+        format.html do
+          redirect_back fallback_location: root_path,
+                        notice: "SubTask was successfully updated."
+        end
       end
-      format.html do
-        redirect_back fallback_location: root_path,
-                      notice: "SubTask was successfully updated."
-      end
-    end
-  else
-    respond_to do |format|
-      format.json do
-        render json: {
-          success: false,
-          errors: @sub_task.errors.full_messages
-        }, status: :unprocessable_entity
-      end
-      format.html do
-        render :edit, status: :unprocessable_entity
+    else
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: false,
+            errors: @sub_task.errors.full_messages
+          }, status: :unprocessable_entity
+        end
+        format.html do
+          render :edit, status: :unprocessable_entity
+        end
       end
     end
   end
-end
 
   def destroy
     @sub_task = @task.sub_tasks.find(params[:id])
