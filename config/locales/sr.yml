@@ -9,6 +9,7 @@ sr:
       locale: "Jezik"
       password: "Lozinka"
       password_placeholder: "Ostavi prazno ako ne želiš promijeniti"
+      new_password_placeholder: "Unesite novu lozinku"
       update_button: "Sačuvaj promjene"
       delete_account: "Obriši nalog"
       delete_confirm: "Da li ste sigurni da želite obrisati svoj nalog?"
@@ -148,10 +149,13 @@ sr:
           attributes:
             email:
               taken: "Ova email adresa je već registrovana"
+              invalid: "Email adresa nije validna"
             password_confirmation:
               confirmation: "Lozinke se ne poklapaju"
             password:
               too_short: "Lozinka mora imati najmanje %{count} znakova"
+              blank: "Lozinka ne može biti prazna"
+              invalid: "Lozinka nije validna"
         business:
           attributes:
             name:
@@ -221,6 +225,7 @@ sr:
   inline_edit:
     finish_current_field: "Molimo završite uređivanje trenutnog polja prvo."
     unsaved_changes: "Imate nesačuvane izmene. Da li sigurno želite da napustite stranicu?"
+    saved_successfully: "Uspješno sačuvano"
   devise:
     user:
       user_settings: "Korisnička podešavanja"
@@ -703,3 +708,8 @@ sr:
   tooltips:
     double_click_to_edit: "Dupli klik za izmjenu"
     double_click_to_change_file: "Dupli klik za promjenu fajla"
+  errors:
+    messages:
+      blank: "Ovo polje je obavezno"
+      validation_failed: "Molimo ispravite greške ispod"
+      required: "Ovo polje je obavezno"

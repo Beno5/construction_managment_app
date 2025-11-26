@@ -35,19 +35,36 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def update
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
 
-    if resource.update(account_update_params)
-      # osvježi sesiju i prijavu bez ponovnog login-a
-      bypass_sign_in resource, scope: resource_name
+    respond_to do |format|
+      if resource.update(account_update_params)
+        # osvježi sesiju i prijavu bez ponovnog login-a
+        bypass_sign_in resource, scope: resource_name
 
-      # odmah koristi novi jezik koji je user postavio
-      I18n.locale = resource.locale || I18n.default_locale
-      session[:locale] = I18n.locale
+        # odmah koristi novi jezik koji je user postavio
+        I18n.locale = resource.locale || I18n.default_locale
+        session[:locale] = I18n.locale
 
-      redirect_to edit_user_registration_path(locale: I18n.locale),
-                  notice: t('users.messages.updated', default: 'Profile successfully updated.')
-    else
-      flash.now[:alert] = resource.errors.full_messages.join(', ')
-      render :edit, status: :unprocessable_entity, locals: { locale: params[:locale] }
+        format.html do
+          redirect_to edit_user_registration_path(locale: I18n.locale),
+                      notice: t('users.messages.updated', default: 'Profile successfully updated.')
+        end
+
+        format.json do
+          render json: {
+            success: true,
+            data: resource.as_json(only: %i[name email locale updated_at])
+          }
+        end
+      else
+        format.html do
+          flash.now[:alert] = resource.errors.full_messages.join(', ')
+          render :edit, status: :unprocessable_entity, locals: { locale: params[:locale] }
+        end
+
+        format.json do
+          render json: { success: false, errors: resource.errors }, status: :unprocessable_entity
+        end
+      end
     end
   end
 

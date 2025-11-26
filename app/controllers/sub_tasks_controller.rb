@@ -75,6 +75,9 @@ class SubTasksController < ApplicationController
     end
 
     if @sub_task.update(sub_task_params)
+      # Reload task to get updated values from the service
+      @task.reload
+
       respond_to do |format|
         format.json do
           render json: {
@@ -87,7 +90,15 @@ class SubTasksController < ApplicationController
               planned_end_date: @sub_task.planned_end_date,
               duration: @sub_task.duration,
               description: @sub_task.description,
-              updated_at: @sub_task.updated_at.iso8601
+              updated_at: @sub_task.updated_at.iso8601,
+              task: {
+                id: @task.id,
+                url: business_project_task_path(@business, @task.project, @task),
+                planned_start_date: @task.planned_start_date,
+                planned_end_date: @task.planned_end_date,
+                planned_cost: @task.planned_cost,
+                updated_at: @task.updated_at.iso8601
+              }
             }
           }, status: :ok
         end

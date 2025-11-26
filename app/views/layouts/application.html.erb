@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="<%= I18n.locale %>" class="dark" data-locale="<%= I18n.locale %>">
   <head>
     <title>Conormio</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="turbo-cache-control" content="no-cache">
     <% inline_i18n = {
          "inline_edit.finish_current_field" => t("inline_edit.finish_current_field"),
-         "inline_edit.unsaved_changes" => t("inline_edit.unsaved_changes")
-       }.to_json %>
-    <meta name="i18n" content="<%= inline_i18n %>">
+         "inline_edit.unsaved_changes" => t("inline_edit.unsaved_changes"),
+         "inline_edit.saved_successfully" => t("inline_edit.saved_successfully"),
+         "errors.messages.blank" => t("errors.messages.blank", default: "This field is required"),
+         "errors.messages.validation_failed" => t("errors.messages.validation_failed", default: "Please fix the errors below"),
+         "errors.messages.required" => t("errors.messages.required", default: "This field is required")
+       }.to_json.html_safe %>
+    <meta name="i18n" content='<%= inline_i18n %>'>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <!-- CSS Files -->
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
     <!-- Header partial equivalent -->
     <%= render "partials/header" %>
@@ -99,6 +103,8 @@
          style="top: 1rem;">
       <%= render "partials/flash_messages" %>
     </div>
+    <%# Toast controller anchor to ensure global listener connects %>
+    <div data-controller="toast"></div>
     <%# Turbo Stream notifications container (real-time broadcasts) %>
     <div id="turbo-notifications"
          class="fixed left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500"

@@ -48,6 +48,25 @@ export default class extends Controller {
     this.savingTimeout = null
     this.isDirty = false
 
+    // Debug i18n on first connect
+    if (!window.__i18nDebugLogged) {
+      const metaTag = document.querySelector('meta[name="i18n"]')
+      const locale = document.documentElement.dataset.locale
+      console.log('=== i18n Debug ===')
+      console.log('Current locale:', locale)
+      console.log('i18n meta tag found:', !!metaTag)
+      if (metaTag) {
+        console.log('i18n meta tag content:', metaTag.content)
+        try {
+          const parsed = JSON.parse(metaTag.content)
+          console.log('Parsed i18n data:', parsed)
+        } catch (e) {
+          console.error('Error parsing i18n meta tag:', e)
+        }
+      }
+      window.__i18nDebugLogged = true
+    }
+
     // Translation cache
     this.translations = {
       finishCurrentField: this.t('inline_edit.finish_current_field', 'Please finish editing the current field first.'),
@@ -96,6 +115,7 @@ export default class extends Controller {
 
     this.isEditing = true
     this.originalContent = this.element.innerHTML
+    this.element.dataset.inlineEditActive = 'true'
 
     // Store original value if not set
     if (!this.hasOriginalValue) {
@@ -146,8 +166,12 @@ export default class extends Controller {
           input.appendChild(option)
         })
 
-        // For select, save immediately on change
+        // For select, save on change (when value actually changes)
         input.addEventListener('change', () => this.save())
+        // Also add keydown for Enter (save) and Escape (cancel)
+        input.addEventListener('keydown', (e) => this.handleKeydown(e))
+        // Add blur to save when clicking away (even if same value selected)
+        input.addEventListener('blur', () => this.handleBlur())
         break
 
       case 'number':
@@ -172,6 +196,14 @@ export default class extends Controller {
         input.className = 'w-full px-2 py-1 text-sm border-2 border-blue-500 rounded focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:text-white dark:border-blue-400'
         break
 
+      case 'password':
+        input = document.createElement('input')
+        input.type = 'password'
+        input.value = this.originalValue
+        input.placeholder = this.placeholderValue || ''
+        input.className = 'w-full px-2 py-1 text-sm border-2 border-blue-500 rounded focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:text-white dark:border-blue-400'
+        break
+
       default: // text
         input = document.createElement('input')
         input.type = 'text'
@@ -180,7 +212,7 @@ export default class extends Controller {
         break
     }
 
-    // Add event listeners (except select which has its own)
+    // Add event listeners (select already has its own listeners added in its case)
     if (this.typeValue !== 'select') {
       input.addEventListener('keydown', (e) => this.handleKeydown(e))
       input.addEventListener('blur', () => this.handleBlur())
@@ -215,7 +247,13 @@ export default class extends Controller {
 
     // Client-side validation
     if (this.requiredValue && !newValue) {
-      this.showError('This field is required')
+      const errorMessage = this.t('errors.messages.blank', 'This field is required')
+      this.showError(errorMessage)
+      this.showToast(errorMessage, 'error')
+
+      // Apply error styling
+      this.element.classList.remove('border-blue-500', 'border-green-500')
+      this.element.classList.add('border-red-500')
       return
     }
 
@@ -276,11 +314,13 @@ export default class extends Controller {
     this.clearError()
     this.clearDirty()
     this.releaseGlobalLock()
+    this.element.dataset.inlineEditActive = 'false'
   }
 
   handleSuccess(newValue, updatedData) {
     this.stopLoading()
     this.isEditing = false
+    this.element.dataset.inlineEditActive = 'false'
     const updatedValue = updatedData && Object.prototype.hasOwnProperty.call(updatedData, this.fieldValue)
       ? updatedData[this.fieldValue]
       : newValue
@@ -295,7 +335,12 @@ export default class extends Controller {
     }
 
     // Update original value for next edit
-    this.originalValue = updatedValue
+    // For password fields, keep originalValue empty for security
+    if (this.typeValue === 'password') {
+      this.originalValue = ''
+    } else {
+      this.originalValue = updatedValue
+    }
 
     // Update record's updated_at timestamp for ALL fields of this record - CRITICAL FOR OPTIMISTIC LOCKING
     if (updatedData && updatedData.updated_at) {
@@ -316,8 +361,9 @@ export default class extends Controller {
     this.element.classList.remove('border-blue-500', 'border-red-500')
     this.element.classList.add('border-green-500')
 
-    // Show success toast
-    this.showToast('Saved successfully', 'success')
+    // Show success toast with i18n
+    const successMessage = this.t('inline_edit.saved_successfully', 'Saved successfully')
+    this.showToast(successMessage, 'success')
 
     this.clearDirty()
     this.releaseGlobalLock()
@@ -387,12 +433,23 @@ export default class extends Controller {
   updateRelatedRecords(updatedData) {
     if (!updatedData) return
 
+    console.log('updateRelatedRecords called with:', updatedData)
+
     const relatedRecords = []
 
-    // Current payload shape: data.parent_task from subtask updates
+    // Handle task data from subtask updates
+    if (updatedData.task) {
+      console.log('Found task data:', updatedData.task)
+      relatedRecords.push(updatedData.task)
+    }
+
+    // Handle parent_task (legacy support)
     if (updatedData.parent_task) {
+      console.log('Found parent_task data:', updatedData.parent_task)
       relatedRecords.push(updatedData.parent_task)
     }
+
+    console.log('Related records to update:', relatedRecords)
 
     relatedRecords.forEach(record => {
       this.updateFieldsForUrl(record)
@@ -400,14 +457,37 @@ export default class extends Controller {
   }
 
   updateFieldsForUrl(recordData) {
-    if (!recordData || !recordData.url) return
+    if (!recordData || !recordData.url) {
+      console.log('updateFieldsForUrl: no recordData or url', recordData)
+      return
+    }
 
     const { url, updated_at: updatedAt, ...fields } = recordData
-    const elements = document.querySelectorAll(`[data-controller~="inline-edit"][data-inline-edit-url-value="${url}"]`)
+    console.log('updateFieldsForUrl - looking for elements with URL:', url)
+    console.log('updateFieldsForUrl - fields to update:', fields)
+
+    // Strip query parameters from the URL for matching (handles ?locale=sr variations)
+    const baseUrl = url.split('?')[0]
+    console.log('updateFieldsForUrl - base URL without query params:', baseUrl)
+
+    // Find all inline-edit elements and filter by matching base URL
+    const allElements = document.querySelectorAll('[data-controller~="inline-edit"]')
+    const elements = Array.from(allElements).filter(el => {
+      const elementUrl = el.dataset.inlineEditUrlValue
+      const elementBaseUrl = elementUrl ? elementUrl.split('?')[0] : ''
+      return elementBaseUrl === baseUrl
+    })
+
+    console.log('updateFieldsForUrl - found elements:', elements.length, elements)
 
     elements.forEach(element => {
       const field = element.dataset.inlineEditFieldValue
-      if (!Object.prototype.hasOwnProperty.call(fields, field)) return
+      console.log('updateFieldsForUrl - checking field:', field)
+
+      if (!Object.prototype.hasOwnProperty.call(fields, field)) {
+        console.log('updateFieldsForUrl - field not in data, skipping:', field)
+        return
+      }
 
       const type = element.dataset.inlineEditTypeValue || 'text'
       const optionsRaw = element.dataset.inlineEditOptionsValue
@@ -422,6 +502,8 @@ export default class extends Controller {
 
       const value = fields[field]
       const display = this.formatDisplayValueForType(type, value, options)
+
+      console.log('updateFieldsForUrl - updating field:', field, 'with value:', value, 'display:', display)
 
       if (!element.querySelector('input, textarea, select')) {
         element.textContent = display
@@ -447,9 +529,27 @@ export default class extends Controller {
 
   handleValidationError(errors) {
     this.stopLoading()
-    const errorMessage = Array.isArray(errors) ? errors.join(', ') : errors
+
+    // Handle different error formats
+    let errorMessage
+    if (Array.isArray(errors)) {
+      errorMessage = errors.join(', ')
+    } else if (typeof errors === 'object' && errors !== null) {
+      // Rails sends errors as {field: ["error1", "error2"]}
+      // Extract all error messages from all fields
+      const allErrors = Object.values(errors).flat()
+      errorMessage = allErrors.join(', ')
+    } else {
+      errorMessage = String(errors)
+    }
+
+    const i18nErrorMessage = this.t('errors.messages.validation_failed', 'Validation failed')
+
+    // Show error below field with i18n
     this.showError(errorMessage)
-    this.showToast(errorMessage, 'error')
+
+    // Show toast notification at top
+    this.showToast(`${i18nErrorMessage}: ${errorMessage}`, 'error')
     this.markDirty()
 
     // Keep in edit mode with red border - no border-2, just change color
@@ -459,7 +559,12 @@ export default class extends Controller {
 
   handleError(message) {
     this.stopLoading()
-    this.showError(message)
+
+    // Show error below field with i18n
+    const i18nErrorMessage = this.t('errors.messages.blank', 'This field is required')
+    this.showError(i18nErrorMessage)
+
+    // Show toast notification at top
     this.showToast(message, 'error')
     this.markDirty()
 
@@ -523,10 +628,22 @@ export default class extends Controller {
     // Simple lookup from meta tag data-i18n JSON if present
     try {
       const el = document.querySelector('meta[name="i18n"]')
-      if (!el) return fallback
+      if (!el) {
+        console.warn('i18n meta tag not found, using fallback:', fallback)
+        return fallback
+      }
       const map = JSON.parse(el.content || '{}')
-      return map[key] || fallback
+      const translation = map[key]
+
+      if (!translation) {
+        console.warn(`Translation not found for key: ${key}, using fallback:`, fallback)
+        return fallback
+      }
+
+      console.log(`Translation for ${key}:`, translation)
+      return translation
     } catch (e) {
+      console.error('Error reading i18n translations:', e)
       return fallback
     }
   }
@@ -589,6 +706,11 @@ export default class extends Controller {
 
     if (type === 'select' && options && Object.prototype.hasOwnProperty.call(options, value)) {
       return options[value]
+    }
+
+    // For password fields, always show asterisks instead of the actual value
+    if (type === 'password') {
+      return '••••••••'
     }
 
     return value

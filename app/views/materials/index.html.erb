@@ -9,9 +9,9 @@
   }
 
   # Build unit_of_measure options for inline editing
-  unit_options = Material.unit_of_measures.keys.each_with_object({}) do |key, hash|
+  unit_options = { "" => "" }.merge(Material.unit_of_measures.keys.each_with_object({}) do |key, hash|
     hash[key] = I18n.t("activerecord.attributes.material.unit_of_measures.#{key}")
-  end
+  end)
 %>
 
 <%= render 'partials/header1',

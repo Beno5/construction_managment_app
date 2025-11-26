@@ -1,8 +1,10 @@
 <%
-  # Build status options for inline editing
-  status_options = Project.statuses.keys.each_with_object({}) do |key, hash|
-    hash[key] = I18n.t("activerecord.attributes.project.statuses.#{key}")
-  end
+  # Build status options for inline editing with blank option
+  status_options = { "" => "" }.merge(
+    Project.statuses.keys.each_with_object({}) do |key, hash|
+      hash[key] = I18n.t("activerecord.attributes.project.statuses.#{key}")
+    end
+  )
 %>
 <div id="row_<%= project.id %>"
      class="w-full h-full flex flex-col justify-between p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm

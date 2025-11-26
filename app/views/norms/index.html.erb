@@ -11,7 +11,7 @@
   # Build unit_of_measure options for inline editing (from all resource types)
   unit_options = all_unit_options.each_with_object({}) do |(key, label), hash|
     hash[key] = label
-  end
+  end)
 %>
 
 <%= render 'partials/header1',

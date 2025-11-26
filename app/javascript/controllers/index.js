@@ -5,10 +5,12 @@ import { application } from "./application"
 import ActivityController from "./activity_controller"
 import AiImportStatusController from "./ai_import_status_controller"
 import AutoDismissController from "./auto_dismiss_controller"
+import CreateFormController from "./create_form_controller"
 import CustomFieldsController from "./custom_fields_controller"
 import CustomResourceController from "./custom_resource_controller"
 import EditDocumentController from "./edit_document_controller"
 import FileUploadController from "./file_upload_controller"
+import FormValidationController from "./form_validation_controller"
 import GanttTriggerController from "./gantt_trigger_controller"
 import HelloController from "./hello_controller"
 import HighlightController from "./highlight_controller"
@@ -28,10 +30,12 @@ import TrackChangesController from "./track_changes_controller"
 application.register("activity", ActivityController)
 application.register("ai-import-status", AiImportStatusController)
 application.register("auto-dismiss", AutoDismissController)
+application.register("create-form", CreateFormController)
 application.register("custom-fields", CustomFieldsController)
 application.register("custom-resource", CustomResourceController)
 application.register("edit-document", EditDocumentController)
 application.register("file-upload", FileUploadController)
+application.register("form-validation", FormValidationController)
 application.register("gantt-trigger", GanttTriggerController)
 application.register("hello", HelloController)
 application.register("highlight", HighlightController)

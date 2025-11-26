@@ -20,6 +20,7 @@ en:
       locale: "Language"
       password: "Password"
       password_placeholder: "Leave blank to keep current"
+      new_password_placeholder: "Enter new password"
       update_button: "Save Changes"
       delete_account: "Delete Account"
       delete_confirm: "Are you sure you want to delete your account?"
@@ -139,10 +140,13 @@ en:
           attributes:
             email:
               taken: "This email address is already registered"
+              invalid: "Email address is not valid"
             password_confirmation:
               confirmation: "Passwords do not match"
             password:
               too_short: "Password is too short (minimum is %{count} characters)"
+              blank: "Password cannot be blank"
+              invalid: "Password is not valid"
         business:
           attributes:
             name:
@@ -199,6 +203,7 @@ en:
   inline_edit:
     finish_current_field: "Please finish editing the current field first."
     unsaved_changes: "You have unsaved inline changes. Leave anyway?"
+    saved_successfully: "Saved successfully"
     order:
       - :year
       - :month
@@ -698,3 +703,8 @@ en:
   tooltips:
     double_click_to_edit: "Double-click to edit"
     double_click_to_change_file: "Double-click to change file"
+  errors:
+    messages:
+      blank: "This field is required"
+      validation_failed: "Please fix the errors below"
+      required: "This field is required"
