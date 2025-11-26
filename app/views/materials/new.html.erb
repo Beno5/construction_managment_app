@@ -1,1 +1,2 @@
-<%= render 'form', material: @material, current_business: @current_business %>
+<%= render template: 'materials/show',
+           locals: { material: @material, current_business: @current_business } %>

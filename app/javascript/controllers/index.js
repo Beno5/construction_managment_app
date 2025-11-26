@@ -5,6 +5,7 @@ import { application } from "./application"
 import ActivityController from "./activity_controller"
 import AiImportStatusController from "./ai_import_status_controller"
 import AutoDismissController from "./auto_dismiss_controller"
+import CustomFieldsController from "./custom_fields_controller"
 import CustomResourceController from "./custom_resource_controller"
 import EditDocumentController from "./edit_document_controller"
 import FileUploadController from "./file_upload_controller"
@@ -27,6 +28,7 @@ import TrackChangesController from "./track_changes_controller"
 application.register("activity", ActivityController)
 application.register("ai-import-status", AiImportStatusController)
 application.register("auto-dismiss", AutoDismissController)
+application.register("custom-fields", CustomFieldsController)
 application.register("custom-resource", CustomResourceController)
 application.register("edit-document", EditDocumentController)
 application.register("file-upload", FileUploadController)

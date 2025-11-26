@@ -83,6 +83,7 @@ class TasksController < ApplicationController
               planned_end_date: @task.planned_end_date,
               planned_cost: @task.planned_cost,
               description: @task.description,
+              custom_fields: @task.custom_fields,
               updated_at: @task.updated_at.iso8601
             }
           }, status: :ok
@@ -164,10 +165,17 @@ class TasksController < ApplicationController
       custom_fields: [:key, :value]
     ).tap do |whitelisted|
       if params[:task][:custom_fields]
-        transformed_custom_fields = params[:task][:custom_fields].to_unsafe_h.each_with_object({}) do |(_, field), hash|
-          hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
+        # Check if custom_fields is already a hash (inline editing) or array (form submission)
+        if params[:task][:custom_fields].is_a?(Hash)
+          # Inline editing: merge with existing custom fields
+          whitelisted[:custom_fields] = @task.custom_fields.merge(params[:task][:custom_fields].to_unsafe_h)
+        else
+          # Form submission: transform array to hash
+          transformed_custom_fields = params[:task][:custom_fields].to_unsafe_h.each_with_object({}) do |(_, field), hash|
+            hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
+          end
+          whitelisted[:custom_fields] = transformed_custom_fields
         end
-        whitelisted[:custom_fields] = transformed_custom_fields
       else
         whitelisted[:custom_fields] = {}
       end

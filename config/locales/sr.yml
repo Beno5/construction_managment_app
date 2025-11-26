@@ -37,6 +37,17 @@ sr:
     of: "od"
     previous: "Prethodna"
     next: "Sljedeća"
+  custom_fields:
+    field_name: "Naziv polja"
+    value: "Vrijednost"
+    field_name_placeholder: "Naziv polja"
+    value_placeholder: "Vrijednost"
+    add_field: "Dodaj prilagođeno polje"
+    remove: "Ukloni polje"
+    no_fields: "Nema definisanih prilagođenih polja"
+    edit_to_add: "Uredi ovaj zapis u formi da dodaš prilagođena polja"
+    enter_field_name: "Unesite naziv polja:"
+    enter_field_value: "Unesite vrijednost:"
   activerecord:
     attributes:
       project:

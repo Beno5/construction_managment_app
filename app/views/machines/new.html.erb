@@ -1,1 +1,2 @@
-<%= render 'form', machine: @machine, current_business: @current_business %>
+<%= render template: 'machines/show',
+           locals: { machine: @machine, current_business: @current_business } %>

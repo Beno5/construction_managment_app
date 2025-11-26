@@ -1,4 +1,15 @@
 en:
+  custom_fields:
+    field_name: "Field name"
+    value: "Value"
+    field_name_placeholder: "Field name"
+    value_placeholder: "Value"
+    add_field: "Add Custom Field"
+    remove: "Remove field"
+    no_fields: "No custom fields defined"
+    edit_to_add: "Edit this record in form mode to add custom fields"
+    enter_field_name: "Enter field name:"
+    enter_field_value: "Enter field value:"
   users:
     edit:
       title: "Edit Profile"

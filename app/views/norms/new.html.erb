@@ -1,1 +1,2 @@
-<%= render 'form', norm: @norm, current_business: @current_business %>
+<%= render template: 'norms/show',
+           locals: { norm: @norm, current_business: @current_business } %>

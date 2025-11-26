@@ -187,7 +187,7 @@
                       data-inline-edit-original-value="<%= task.planned_end_date %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
                       data-action="dblclick->inline-edit#activate"
-                      class="cursor-pointer hover:bg-gray-100 dark:hover-bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                       <%= I18n.l(task.planned_end_date) if task.planned_end_date %>
                     </span>
                   </td>

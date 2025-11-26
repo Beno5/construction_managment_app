@@ -229,11 +229,9 @@ export default class extends Controller {
     this.showLoading()
 
     try {
-      // Build request payload
+      // Build request payload - handle nested fields (e.g., custom_fields.key)
       const payload = {
-        [this.modelValue]: {
-          [this.fieldValue]: newValue
-        },
+        [this.modelValue]: this.buildNestedPayload(this.fieldValue, newValue),
         record_updated_at: this.recordUpdatedAtValue
       }
 
@@ -614,6 +612,28 @@ export default class extends Controller {
     const mm = String(date.getMonth() + 1).padStart(2, '0')
     const yyyy = date.getFullYear()
     return `${dd}.${mm}.${yyyy}`
+  }
+
+  // Build nested payload for fields like "custom_fields.key"
+  buildNestedPayload(fieldPath, value) {
+    const parts = fieldPath.split('.')
+
+    if (parts.length === 1) {
+      // Simple field: {field: value}
+      return { [fieldPath]: value }
+    }
+
+    // Nested field: {custom_fields: {key: value}}
+    const result = {}
+    let current = result
+
+    for (let i = 0; i < parts.length - 1; i++) {
+      current[parts[i]] = {}
+      current = current[parts[i]]
+    }
+
+    current[parts[parts.length - 1]] = value
+    return result
   }
 
   get csrfToken() {

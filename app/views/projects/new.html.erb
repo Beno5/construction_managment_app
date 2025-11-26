@@ -1,1 +1,2 @@
-<%= render "form", project: @project %>
+<%= render template: 'projects/show',
+           locals: { project: @project, current_business: @current_business } %>
