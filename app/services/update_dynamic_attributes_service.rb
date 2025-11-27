@@ -54,21 +54,17 @@ class UpdateDynamicAttributesService
     task = @record
     sub_tasks = task.sub_tasks
 
-    attributes = if sub_tasks.exists?
-                   {
-                     planned_start_date: sub_tasks.minimum(:planned_start_date),
-                     planned_end_date: sub_tasks.maximum(:planned_end_date),
-                     planned_cost: sub_tasks.sum(:planned_cost),
-                     real_start_date: sub_tasks.minimum(:real_start_date),
-                     real_end_date: sub_tasks.maximum(:real_end_date),
-                     real_cost: sub_tasks.sum(:real_cost)
-                   }
-                 else
-                   {
-                     planned_start_date: nil, planned_end_date: nil, planned_cost: 0,
-                     real_start_date: nil, real_end_date: nil, real_cost: 0
-                   }
-                 end
+    # If there are no subtasks, keep user-entered values (do nothing)
+    return unless sub_tasks.exists?
+
+    attributes = {
+      planned_start_date: sub_tasks.minimum(:planned_start_date),
+      planned_end_date: sub_tasks.maximum(:planned_end_date),
+      planned_cost: sub_tasks.sum(:planned_cost),
+      real_start_date: sub_tasks.minimum(:real_start_date),
+      real_end_date: sub_tasks.maximum(:real_end_date),
+      real_cost: sub_tasks.sum(:real_cost)
+    }
 
     task.update_columns(attributes)
   rescue ActiveRecord::ActiveRecordError => e
@@ -81,21 +77,17 @@ class UpdateDynamicAttributesService
   def update_project
     project = @record
     tasks = project.tasks
-    attributes = if tasks.exists?
-                   {
-                     planned_start_date: tasks.minimum(:planned_start_date),
-                     planned_end_date: tasks.maximum(:planned_end_date),
-                     planned_cost: tasks.sum(:planned_cost),
-                     real_start_date: tasks.minimum(:real_start_date),
-                     real_end_date: tasks.maximum(:real_end_date),
-                     real_cost: tasks.sum(:real_cost)
-                   }
-                 else
-                   {
-                     planned_start_date: nil, planned_end_date: nil, planned_cost: 0,
-                     real_start_date: nil, real_end_date: nil, real_cost: 0
-                   }
-                 end
+    # If there are no tasks, keep user-entered values (do nothing)
+    return unless tasks.exists?
+
+    attributes = {
+      planned_start_date: tasks.minimum(:planned_start_date),
+      planned_end_date: tasks.maximum(:planned_end_date),
+      planned_cost: tasks.sum(:planned_cost),
+      real_start_date: tasks.minimum(:real_start_date),
+      real_end_date: tasks.maximum(:real_end_date),
+      real_cost: tasks.sum(:real_cost)
+    }
 
     project.update_columns(attributes)
   rescue ActiveRecord::ActiveRecordError => e

@@ -41,59 +41,24 @@
           <div class="overflow-x-auto"
          data-controller="norms"
          data-norms-subtask-id-value="<%= @sub_task.id %>">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" data-controller="sort">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-4 py-3">
                 </th>
-                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="1">
-                  <div class="flex items-center gap-1 cursor-pointer select-none">
-                    <span><%= t('norms.form.name') %></span>
-                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="1">↕</span>
-                  </div>
-                </th>
-                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="2">
-                  <div class="flex items-center gap-1 cursor-pointer select-none">
-                    <span><%= t('norms.form.description') %></span>
-                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="2">↕</span>
-                  </div>
-                </th>
-                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="3">
-                  <div class="flex items-center gap-1 cursor-pointer select-none">
-                    <span><%= t('norms.form.norm_value') %></span>
-                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="3">↕</span>
-                  </div>
-                </th>
-                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="4">
-                  <div class="flex items-center gap-1 cursor-pointer select-none">
-                    <span><%= t('norms.form.norm_type') %></span>
-                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="4">↕</span>
-                  </div>
-                </th>
-                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="5">
-                  <div class="flex items-center gap-1 cursor-pointer select-none">
-                    <span><%= t('norms.form.subtype') %></span>
-                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="5">↕</span>
-                  </div>
-                </th>
-                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="6">
-                  <div class="flex items-center gap-1 cursor-pointer select-none">
-                    <span><%= t('norms.form.unit_of_measure') %></span>
-                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="6">↕</span>
-                  </div>
-                </th>
-                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="7">
-                  <div class="flex items-center gap-1 cursor-pointer select-none">
-                    <span><%= t('norms.form.info') %></span>
-                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="7">↕</span>
-                  </div>
-                </th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.name') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.description') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.norm_value') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.norm_type') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.subtype') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.unit_of_measure') %></th>
+                <th scope="col" class="px-4 py-3"><%= t('norms.form.info') %></th>
               </tr>
             </thead>
             <tbody>
               <% @norms&.each do |norm| %>
                 <tr class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <td class="px-4 py-3" data-sort-value="<%= @pinned_norms.include?(norm) ? '1' : '0' %>">
+                  <td class="px-4 py-3">
                     <%= check_box_tag "selected_norm_ids[]", norm.id, @pinned_norms.include?(norm),
                         class: "norm-checkbox",
                         disabled: norm_disabled?(norm, @pinned_norms) || norm_disabled_by_unit?(norm, @pinned_norms),
@@ -104,13 +69,13 @@
                           norm_unit: norm.unit_of_measure
                         }.compact %>
                   </td>
-                  <td class="px-4 py-3" data-sort-value="<%= norm.name.to_s.downcase %>"><%= norm.name %></td>
-                  <td class="px-4 py-3" data-sort-value="<%= norm.description.to_s.downcase %>"><%= norm.description&.truncate(50) %></td>
-                  <td class="px-4 py-3" data-sort-value="<%= norm.norm_value.to_s.downcase %>"><%= norm.norm_value %></td>
-                  <td class="px-4 py-3" data-sort-value="<%= t_enum(norm, :norm_type).to_s.downcase %>"><%= t_enum(norm, :norm_type) %></td>
-                  <td class="px-4 py-3" data-sort-value="<%= t_enum(norm, :subtype).to_s.downcase %>"><%= t_enum(norm, :subtype) %></td>
-                  <td class="px-4 py-3" data-sort-value="<%= norm.unit_of_measure.to_s.downcase %>"><%= norm.unit_of_measure %></td>
-                  <td class="px-4 py-3" data-sort-value="<%= norm.info.to_s.downcase %>"><%= norm.info %></td>
+                  <td class="px-4 py-3"><%= norm.name %></td>
+                  <td class="px-4 py-3"><%= norm.description&.truncate(50) %></td>
+                  <td class="px-4 py-3"><%= norm.norm_value %></td>
+                  <td class="px-4 py-3"><%= t_enum(norm, :norm_type) %></td>
+                  <td class="px-4 py-3"><%= t_enum(norm, :subtype) %></td>
+                  <td class="px-4 py-3"><%= translate_unit(norm.unit_of_measure) %></td>
+                  <td class="px-4 py-3"><%= norm.info %></td>
                 </tr>
               <% end %>
             </tbody>

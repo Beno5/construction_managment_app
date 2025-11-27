@@ -1,4 +1,15 @@
 en:
+  custom_fields:
+    field_name: "Field name"
+    value: "Value"
+    field_name_placeholder: "Field name"
+    value_placeholder: "Value"
+    add_field: "Add Custom Field"
+    remove: "Remove field"
+    no_fields: "No custom fields defined"
+    edit_to_add: "Edit this record in form mode to add custom fields"
+    enter_field_name: "Enter field name:"
+    enter_field_value: "Enter field value:"
   users:
     edit:
       title: "Edit Profile"
@@ -9,6 +20,7 @@ en:
       locale: "Language"
       password: "Password"
       password_placeholder: "Leave blank to keep current"
+      new_password_placeholder: "Enter new password"
       update_button: "Save Changes"
       delete_account: "Delete Account"
       delete_confirm: "Are you sure you want to delete your account?"
@@ -68,6 +80,20 @@ en:
           set: 'Set'
           hours: 'Hour (h)'
           pauschal: 'Flat rate'
+      task:
+        unit_of_measures:
+          m: 'Meter (m)'
+          m2: 'Square meter (m²)'
+          m3: 'Cubic meter (m³)'
+          kg: 'Kilogram (kg)'
+          ton: 'Ton (t)'
+          pieces: 'Piece (pcs)'
+          liters: 'Liter (l)'
+          roll: 'Roll'
+          bag: 'Bag'
+          set: 'Set'
+          hours: 'Hour (h)'
+          pauschal: 'Flat rate'
       material:
         unit_of_measures:
           kg: 'Kilogram (kg)'
@@ -96,6 +122,8 @@ en:
           monthly: 'Monthly'
           per_task: 'Per task'
           pauschal: 'Flat rate'
+      business:
+        working_hours_per_day: "Working hours per day"
     errors:
       models:
         project:
@@ -114,10 +142,13 @@ en:
           attributes:
             email:
               taken: "This email address is already registered"
+              invalid: "Email address is not valid"
             password_confirmation:
               confirmation: "Passwords do not match"
             password:
               too_short: "Password is too short (minimum is %{count} characters)"
+              blank: "Password cannot be blank"
+              invalid: "Password is not valid"
         business:
           attributes:
             name:
@@ -171,6 +202,10 @@ en:
       - Oct
       - Nov
       - Dec
+  inline_edit:
+    finish_current_field: "Please finish editing the current field first."
+    unsaved_changes: "You have unsaved inline changes. Leave anyway?"
+    saved_successfully: "Saved successfully"
     order:
       - :year
       - :month
@@ -387,6 +422,8 @@ en:
       name_required: "Project name is required."
       ai_import_completed: "✅ AI import of project '%{project_name}' completed!"
       view_project_link: "View Project →"
+    inline_edit:
+      locked_due_to_tasks: "This value is calculated from tasks. Edit or remove tasks to change it."
   tasks:
     add_new: "Add New Task"
     show:
@@ -414,6 +451,9 @@ en:
       planned_start_date: "Planned Start Date"
       planned_end_date: "Planned End Date"
       planned_cost: "Planned Cost (%{currency})"
+      unit_of_measure: "Unit of Measure"
+      quantity: "Quantity"
+      price_per_unit: "Price per Unit (%{currency})"
       custom_fields: "Custom Fields"
       update_button: "Update Task"
       create_button: "Create Task"
@@ -425,6 +465,9 @@ en:
       updated: "Task %{name} was updated successfully."
       deleted: "Task %{name} was deleted successfully."
       name_required: "Task name is required."
+      conflict: "This record was modified by another user. Please refresh the page."
+    inline_edit:
+      locked_due_to_subtasks: "This value is calculated from subtasks. Edit or remove subtasks to change it."
     errors:
       name_required: "Task name is required"
       validation_failed: "Task could not be saved"
@@ -490,6 +533,7 @@ en:
       deleted: "Resource %{name} was deleted successfully."
       create_error: "Error creating resource."
       update_error: "Error updating resource."
+      conflict: "This record was modified by another user. Please refresh the page."
   resources:
     form:
       model_name: "Resours"
@@ -557,6 +601,7 @@ en:
       description: "Description"
       category: "Category"
       size: "Size"
+      filename: "File"
       no_file: "No File"
       created_at: "Created At"
     modal:
@@ -573,6 +618,13 @@ en:
       deleted: "Document %{name} was deleted successfully."
       create_error: "Error creating document."
       update_error: "Error updating document."
+      conflict: "This record was modified by another user. Please refresh the page."
+  activity:
+    activity_types:
+      worker: "Worker"
+      machine: "Machine"
+      material: "Material"
+      custom: "Custom Resource"
   norms:
     title: "Norms"
     form:
@@ -592,6 +644,7 @@ en:
       updated: "Norm %{name} was updated successfully."
       deleted: "Norm %{name} was deleted successfully."
       validation_error: "Please check the required fields."
+      conflict: "This record was modified by another user. Please refresh the page."
   table:
     new:
       project: "Add New Project"
@@ -669,3 +722,11 @@ en:
         norm: "Show norm"
   loading:
     please_wait: "Loading..."
+  tooltips:
+    double_click_to_edit: "Double-click to edit"
+    double_click_to_change_file: "Double-click to change file"
+  errors:
+    messages:
+      blank: "This field is required"
+      validation_failed: "Please fix the errors below"
+      required: "This field is required"

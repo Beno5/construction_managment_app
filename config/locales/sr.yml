@@ -9,6 +9,7 @@ sr:
       locale: "Jezik"
       password: "Lozinka"
       password_placeholder: "Ostavi prazno ako ne želiš promijeniti"
+      new_password_placeholder: "Unesite novu lozinku"
       update_button: "Sačuvaj promjene"
       delete_account: "Obriši nalog"
       delete_confirm: "Da li ste sigurni da želite obrisati svoj nalog?"
@@ -37,6 +38,17 @@ sr:
     of: "od"
     previous: "Prethodna"
     next: "Sljedeća"
+  custom_fields:
+    field_name: "Naziv polja"
+    value: "Vrijednost"
+    field_name_placeholder: "Naziv polja"
+    value_placeholder: "Vrijednost"
+    add_field: "Dodaj prilagođeno polje"
+    remove: "Ukloni polje"
+    no_fields: "Nema definisanih prilagođenih polja"
+    edit_to_add: "Uredi ovaj zapis u formi da dodaš prilagođena polja"
+    enter_field_name: "Unesite naziv polja:"
+    enter_field_value: "Unesite vrijednost:"
   activerecord:
     attributes:
       project:
@@ -46,6 +58,12 @@ sr:
           completed: "Završen"
           canceled: "Otkazan"
           paused: "Pauziran"
+      activity:
+        activity_types:
+          worker: "Radnik"
+          machine: "Mašina"
+          material: "Materijal"
+          custom: "Prilagođeni resurs"
       norm:
         norm_types:
           worker: "Radnik"
@@ -96,6 +114,22 @@ sr:
           monthly: 'Mjesečno'
           per_task: 'Po zadatku'
           pauschal: 'Paušal'
+      business:
+        working_hours_per_day: "Radni sati po danu"
+      task:
+        unit_of_measures:
+          m: 'Metar (m)'
+          m2: 'Kvadratni metar (m²)'
+          m3: 'Kubni metar (m³)'
+          kg: 'Kilogram (kg)'
+          ton: 'Tona (t)'
+          pieces: 'Komad (kom)'
+          liters: 'Litar (l)'
+          roll: 'Rola'
+          bag: 'Vreća'
+          set: 'Set'
+          hours: 'Sat (h)'
+          pauschal: 'Paušal'
     errors:
       models:
         project:
@@ -117,14 +151,18 @@ sr:
           attributes:
             email:
               taken: "Ova email adresa je već registrovana"
+              invalid: "Email adresa nije validna"
             password_confirmation:
               confirmation: "Lozinke se ne poklapaju"
             password:
               too_short: "Lozinka mora imati najmanje %{count} znakova"
+              blank: "Lozinka ne može biti prazna"
+              invalid: "Lozinka nije validna"
         business:
           attributes:
             name:
               taken_for_user: "Već imate firmu sa ovim nazivom."
+            working_hours_per_day: "Radni sati po danu"
   date:
     yamlsr:
   date:
@@ -187,6 +225,10 @@ sr:
       long: "%d. %B %Y. u %H:%M"
     am: "Pre podne"
     pm: "Popodne"
+  inline_edit:
+    finish_current_field: "Molimo završite uređivanje trenutnog polja prvo."
+    unsaved_changes: "Imate nesačuvane izmene. Da li sigurno želite da napustite stranicu?"
+    saved_successfully: "Uspješno sačuvano"
   devise:
     user:
       user_settings: "Korisnička podešavanja"
@@ -389,6 +431,8 @@ sr:
       name_required: "Naziv projekta je obavezan."
       ai_import_completed: "✅ AI import projekta '%{project_name}' je završen!"
       view_project_link: "Pogledaj Projekat →"
+    inline_edit:
+      locked_due_to_tasks: "Vrednosti se računaju iz pozicija. Izmenite ili uklonite pozicije da biste ih promenili."
   tasks:
     add_new: "Kreiraj poziciju"
     show:
@@ -416,6 +460,9 @@ sr:
       planned_start_date: "Planirani Datum Početka"
       planned_end_date: "Planirani Datum Zavrsetka"
       planned_cost: "Planirani Trošak (%{currency})"
+      unit_of_measure: "Jedinica mere"
+      quantity: "Količina"
+      price_per_unit: "Cena po jedinici (%{currency})"
       custom_fields: "Prilagođena Polja"
       update_button: "Ažuriraj Poziciju"
       create_button: "Kreiraj Poziciju"
@@ -427,6 +474,9 @@ sr:
       updated: "Pozicija %{name} je uspješno ažurirana."
       deleted: "Pozicija %{name} je uspješno obrisana."
       name_required: "Naziv pozicije je obavezan."
+      conflict: "Ovaj zapis je izmijenio drugi korisnik. Molimo osvježite stranicu."
+    inline_edit:
+      locked_due_to_subtasks: "Vrednosti se računaju iz podpozicija. Izmenite podpozicije da biste ih promenili."
     errors:
       name_required: "Ime zadatka je obavezno"
       validation_failed: "Zadatak nije moguće sačuvati"
@@ -492,6 +542,7 @@ sr:
       deleted: "Resurs %{name} je uspješno obrisan."
       create_error: "Greška pri kreiranju resursa."
       update_error: "Greška pri ažuriranju resursa."
+      conflict: "Ovaj zapis je izmijenio drugi korisnik. Molimo osvježite stranicu."
   resources:
     form:
       model_name: "Resurs"
@@ -559,6 +610,7 @@ sr:
       description: "Opis"
       category: "Kategorija"
       size: "Veličina"
+      filename: "Fajl"
       no_file: "Nema fajla"
       created_at: "Datum kreiranja"
     modal:
@@ -575,6 +627,7 @@ sr:
       deleted: "Dokument %{name} je uspješno obrisan."
       create_error: "Greška pri kreiranju dokumenta."
       update_error: "Greška pri ažuriranju dokumenta."
+      conflict: "Ovaj zapis je izmijenio drugi korisnik. Molimo osvježite stranicu."
   norms:
     title: "Norme"
     form:
@@ -594,6 +647,7 @@ sr:
       updated: "Norma %{name} je uspješno ažurirana."
       deleted: "Norma %{name} je uspješno obrisana."
       validation_error: "Molimo provjerite obavezna polja."
+      conflict: "Ovaj zapis je izmijenio drugi korisnik. Molimo osvježite stranicu."
   table:
     new:
       project: Kreiraj projekat
@@ -674,3 +728,12 @@ sr:
         norm: Prikaži normu
   loading:
     please_wait: "Učitavanje..."
+  tooltips:
+    double_click_to_edit: "Dupli klik za izmjenu"
+    double_click_to_change_file: "Dupli klik za promjenu fajla"
+  errors:
+    messages:
+      blank: "Ovo polje je obavezno"
+      not_a_number: "Mora biti broj"
+      validation_failed: "Molimo ispravite greške ispod"
+      required: "Ovo polje je obavezno"

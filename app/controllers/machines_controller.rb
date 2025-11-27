@@ -35,12 +35,69 @@ class MachinesController < ApplicationController
   end
 
   def update
+    # Check optimistic locking if record_updated_at is provided (inline editing)
+    if params[:record_updated_at].present?
+      # Parse the timestamp sent by client
+      record_updated_at = Time.parse(params[:record_updated_at])
+
+      # Truncate both timestamps to second precision to avoid microsecond comparison issues
+      record_updated_at_sec = record_updated_at.change(usec: 0)
+      machine_updated_at_sec = @machine.updated_at.change(usec: 0)
+
+      # Only flag conflict if database timestamp is NEWER (by more than 1 second)
+      # This allows the same user to edit multiple times in the same session
+      if machine_updated_at_sec > record_updated_at_sec
+        respond_to do |format|
+          format.json do
+            render json: {
+              success: false,
+              conflict: true,
+              error: 'This record was modified by another user. Please refresh the page.'
+            }, status: :conflict
+          end
+          format.html do
+            redirect_to business_machines_path(@business),
+                        alert: 'This record was modified by another user. Please refresh the page.'
+          end
+        end
+        return
+      end
+    end
+
     if @machine.update(machine_params)
-      redirect_to business_machines_path(@business),
-                  notice: t("machines.messages.updated", name: @machine.name)
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: true,
+            data: {
+              id: @machine.id,
+              name: @machine.name,
+              unit_of_measure: @machine.unit_of_measure,
+              price_per_unit: @machine.price_per_unit,
+              fixed_costs: @machine.fixed_costs,
+              description: @machine.description,
+              updated_at: @machine.updated_at.iso8601
+            }
+          }, status: :ok
+        end
+        format.html do
+          redirect_to business_machines_path(@business),
+                      notice: t("machines.messages.updated", name: @machine.name)
+        end
+      end
     else
-      flash.now[:alert] = t('machines.messages.name_required')
-      render :show, status: :unprocessable_entity
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: false,
+            errors: @machine.errors.full_messages
+          }, status: :unprocessable_entity
+        end
+        format.html do
+          flash.now[:alert] = t('machines.messages.name_required')
+          render :show, status: :unprocessable_entity
+        end
+      end
     end
   end
 

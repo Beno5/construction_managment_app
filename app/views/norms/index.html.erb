@@ -1,13 +1,18 @@
 <%
-  model_name = "Norms" # koristi se za dinamične partiale
-
+  model_name = "Norms"
   paths = {
     norms: business_norms_path(@current_business),
     new_norm: new_business_norm_path(@current_business),
-    edit_norm: ->(norm) { edit_business_norm_path(@current_business, norm) },
     show_norm: ->(norm) { business_norm_path(@current_business, norm) },
+    edit_norm: ->(norm) { edit_business_norm_path(@current_business, norm) },
     delete_norm: ->(norm) { business_norm_path(@current_business, norm) }
   }
+
+  # Build unit_of_measure options for inline editing (from all resource types)
+ unit_options = all_unit_options.each_with_object({}) do |(key, label), hash|
+hash[key] = label
+end
+
 %>
 <%= render 'partials/header1',
            title: t('norms.title'),
@@ -17,22 +22,195 @@
            additional_crumbs: [
              { name: t('norms.title'), path: paths[:norms] }
            ] %>
-<%= render 'partials/table',
-           collection: @norms,
-           columns: {
-             t('norms.form.name') => :name,
-             t('norms.form.description') => :description,
-             t('norms.form.unit_of_measure') => :unit_of_measure,
-             t('norms.form.norm_value') => ->(norm) { norm.norm_value.to_s },
-             t('norms.form.norm_type') => ->(norm) { I18n.t("activerecord.attributes.norm.norm_types.#{norm.norm_type}", default: norm.norm_type.to_s.humanize) },
-             t('norms.form.subtype')   => ->(norm) { norm.subtype ? I18n.t("activerecord.attributes.norm.subtypes.#{norm.subtype}", default: norm.subtype.to_s.humanize) : '-' },
-             t('norms.form.info') => :info
-           },
-           turbo_frame_id: "norms-frame",
-           model_name: model_name,
-           search_path: paths[:norms],
-           new_path: paths[:new_norm],
-           edit_path: paths[:edit_norm],
-           show_path: paths[:show_norm],
-           delete_path: paths[:delete_norm],
-           actions: [] %>
+<section class="bg-gray-50 dark:bg-gray-900 pt-5"
+         data-controller="toggle toast"
+         data-section-id="norms-table"
+         data-user-id="<%= current_user.id %>">
+  <div class="mx-auto">
+    <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
+      <div class="p-4">
+        <div class="flex items-center gap-4 mb-4">
+          <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white">
+            <%= t("norms.index.section_title", default: "Norms") %>
+          </h2>
+          <label class="inline-flex items-center cursor-pointer">
+            <input type="checkbox"
+                   id="norms-toggle"
+                   checked
+                   class="sr-only peer"
+                   data-action="change->toggle#toggle"
+            data-toggle-target="switch">
+            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+          </label>
+        </div>
+      </div>
+      <div data-toggle-target="content" class="transition-all duration-300">
+        <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4 pt-0">
+          <div class="w-full md:w-1/2">
+            <form action="<%= paths[:norms] %>"
+                  method="GET"
+                  data-turbo-frame="norms-frame"
+                  class="lg:pr-3"
+                  data-controller="search">
+              <label for="search" class="sr-only">Search</label>
+              <div class="relative mt-1 lg:w-64 xl:w-96">
+                <input type="text"
+                       name="search"
+                       id="search"
+                       placeholder="<%= t("table.search.norm", default: "Search norms") %>..."
+                       class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                              focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5
+                              dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                              dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                       data-action="input->search#performSearch">
+              </div>
+            </form>
+          </div>
+          <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+            <%= button_to paths[:new_norm],
+                method: :get,
+                data: { turbo: false },
+                class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white
+                        bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300
+                        dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 rounded-lg" do %>
+              <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+              </svg>
+              <%= t("table.new.norm", default: "Add Norm") %>
+            <% end %>
+          </div>
+        </div>
+        <turbo-frame id="norms-frame">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" class="px-4 py-3"><%= t('norms.form.name') %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('norms.form.unit_of_measure') %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('norms.form.norm_value') %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('norms.form.info') %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('norms.form.description') %></th>
+                  <th scope="col" class="px-4 py-3">
+                    <span class="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if @norms.empty? %>
+                  <tr>
+                    <td colspan="6" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
+                      <p class="mb-4"><%= t("table.empty.norm", default: "No norms found") %></p>
+                    </td>
+                  </tr>
+                <% end %>
+                <% @norms.each do |norm| %>
+                  <tr id="<%= dom_id(norm) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <!-- Name (editable) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="norm"
+                        data-inline-edit-field-value="name"
+                        data-inline-edit-type-value="text"
+                        data-inline-edit-url-value="<%= business_norm_path(@current_business, norm) %>"
+                        data-inline-edit-original-value="<%= norm.name %>"
+                        data-inline-edit-record-updated-at-value="<%= norm.updated_at.iso8601 %>"
+                        data-inline-edit-required-value="true"
+                        data-action="dblclick->inline-edit#activate"
+                      title="<%= t('tooltips.double_click_to_edit') %>">
+                      <%= norm.name %>
+                    </td>
+                    <!-- Unit of Measure (editable select) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="norm"
+                        data-inline-edit-field-value="unit_of_measure"
+                        data-inline-edit-type-value="select"
+                        data-inline-edit-url-value="<%= business_norm_path(@current_business, norm) %>"
+                        data-inline-edit-original-value="<%= norm.unit_of_measure %>"
+                        data-inline-edit-record-updated-at-value="<%= norm.updated_at.iso8601 %>"
+                        data-inline-edit-options-value='<%= unit_options.to_json %>'
+                        data-action="dblclick->inline-edit#activate"
+                      title="<%= t('tooltips.double_click_to_edit') %>">
+                      <%= translate_unit(norm.unit_of_measure) %>
+                    </td>
+                    <!-- Norm Value (editable number) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="norm"
+                        data-inline-edit-field-value="norm_value"
+                        data-inline-edit-type-value="number"
+                        data-inline-edit-url-value="<%= business_norm_path(@current_business, norm) %>"
+                        data-inline-edit-original-value="<%= norm.norm_value %>"
+                        data-inline-edit-record-updated-at-value="<%= norm.updated_at.iso8601 %>"
+                        data-action="dblclick->inline-edit#activate"
+                      title="<%= t('tooltips.double_click_to_edit') %>">
+                      <%= norm.norm_value %>
+                    </td>
+                    <!-- Info (editable text) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="norm"
+                        data-inline-edit-field-value="info"
+                        data-inline-edit-type-value="text"
+                        data-inline-edit-url-value="<%= business_norm_path(@current_business, norm) %>"
+                        data-inline-edit-original-value="<%= norm.info %>"
+                        data-inline-edit-record-updated-at-value="<%= norm.updated_at.iso8601 %>"
+                        data-action="dblclick->inline-edit#activate"
+                      title="<%= t('tooltips.double_click_to_edit') %>">
+                      <%= norm.info %>
+                    </td>
+                    <!-- Description (editable textarea) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="norm"
+                        data-inline-edit-field-value="description"
+                        data-inline-edit-type-value="textarea"
+                        data-inline-edit-url-value="<%= business_norm_path(@current_business, norm) %>"
+                        data-inline-edit-original-value="<%= norm.description %>"
+                        data-inline-edit-record-updated-at-value="<%= norm.updated_at.iso8601 %>"
+                        data-action="dblclick->inline-edit#activate"
+                      title="<%= t('tooltips.double_click_to_edit') %>">
+                      <%= content_tag(:span, norm.description&.truncate(25), title: norm.description, class: "tooltip") %>
+                    </td>
+                    <!-- Actions -->
+                    <td class="px-4 py-3 flex items-center justify-end">
+                      <button id="<%= "norm-#{norm.id}-dropdown-button" %>"
+                              data-dropdown-toggle="<%= "norm-#{norm.id}-dropdown" %>"
+                              class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                              type="button">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                        </svg>
+                      </button>
+                      <div id="<%= "norm-#{norm.id}-dropdown" %>" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "norm-#{norm.id}-dropdown-button" %>">
+                          <li>
+                            <%= link_to t("table.actions.show.norm", default: "View"), paths[:show_norm].call(norm),
+                                data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                          </li>
+                          <li>
+                            <%= link_to t("table.actions.delete.norm", default: "Delete"),
+                                paths[:delete_norm].call(norm), method: :delete,
+                                data: {
+                                  turbo_confirm: t('confirmations.delete', name: norm.name),
+                                  turbo_method: :delete,
+                                  item_id: norm.id,
+                                  item_type: norm.model_name
+                                },
+                                class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+          <%= render "partials/nav_pages", collection: @norms, model_name: model_name %>
+        </turbo-frame>
+      </div>
+    </div>
+  </div>
+</section>
+<%= render 'modals/delete_modal' %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_11_23_120000) do
+ActiveRecord::Schema[7.0].define(version: 2025_11_26_220000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -230,7 +230,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_23_120000) do
     t.boolean "real_auto_calculation", default: true
     t.integer "position"
     t.decimal "price_per_unit", precision: 10, scale: 2
-    t.integer "unit_of_measure", default: 0
+    t.integer "unit_of_measure"
     t.integer "quantity"
     t.decimal "total_cost"
     t.decimal "duration", precision: 10, scale: 2
@@ -257,6 +257,9 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_23_120000) do
     t.decimal "progress", default: "0.0"
     t.integer "position"
     t.decimal "duration", precision: 10, scale: 2
+    t.integer "unit_of_measure"
+    t.integer "quantity"
+    t.decimal "price_per_unit", precision: 10, scale: 2
     t.index ["project_id"], name: "index_tasks_on_project_id"
     t.index ["user_id"], name: "index_tasks_on_user_id"
   end

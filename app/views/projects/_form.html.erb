@@ -1,83 +1,238 @@
-<%= render 'partials/header1', 
-           title: @project.persisted? ? 
-                    t('projects.form.edit_title', name: @project.name) : 
+<%= render 'partials/header1',
+           title: @project.persisted? ?
+                    t('projects.form.edit_title', name: @project.name) :
                     t('projects.form.new_title'),
            model_name: t('projects.form.model_name'),
            search_path: nil,
            new_path: nil,
            additional_crumbs: [
-             (@project.persisted? ? 
-               { name: @project.name, path: business_project_path(@current_business, @project) } : 
+             (@project.persisted? ?
+               { name: @project.name, path: business_project_path(@current_business, @project) } :
                { name: t('projects.form.new_title'), path: nil })
            ] %>
-<section class="bg-gray-50 dark:bg-gray-900 pt-5">
+
+<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle toast" data-section-id="project-form-basic-info" data-user-id="<%= current_user.id %>">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden p-4">
-      <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mb-4"><%= t("businesses.form.basic_information") %></h2>
-      <%= form_with model: [@current_business, @project], 
-                    local: true, 
-                    html: { multipart: true },
-                    data: { controller: "track-changes", action: "submit->track-changes#reset" } do |f| %>
-        <div class="grid grid-cols-6 gap-6">
-          <!-- Project Name -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :name, t('projects.form.name') + '*', class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_field :name, required: true,
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+      <div class="flex items-center gap-4 mb-4">
+        <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white"><%= t("businesses.form.basic_information") %></h2>
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="checkbox"
+                 id="basic-info-toggle"
+                 checked
+                 class="sr-only peer"
+                 data-action="change->toggle#toggle"
+                 data-toggle-target="switch">
+          <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+        </label>
+      </div>
+      <div data-toggle-target="content" class="transition-all duration-300">
+        <% if @project.new_record? %>
+          <%# CREATE MODE: form with create-form + track-changes %>
+          <%= form_with model: [@current_business, @project],
+                        local: true,
+                        html: { multipart: true, novalidate: true },
+                        data: { controller: "create-form track-changes", action: "submit->create-form#validate" } do |f| %>
+            <div class="grid grid-cols-6 gap-6">
+              <!-- Project Name -->
+              <div class="col-span-6 sm:col-span-3">
+                <%= f.label :name, t('projects.form.name') + '*', class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+                <%= f.text_field :name,
+                      required: true,
+                      class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
+                      data: { track_changes_target: "input", create_form_target: "input", action: "input->track-changes#markChanged" } %>
+              </div>
+              <!-- Address -->
+              <div class="col-span-6 sm:col-span-3">
+                <%= f.label :address, t('projects.form.address'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+                <%= f.text_field :address,
+                      class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
+                      data: { track_changes_target: "input", create_form_target: "input", action: "input->track-changes#markChanged" } %>
+              </div>
+              <!-- Project Manager -->
+              <div class="col-span-6 sm:col-span-3">
+                <%= f.label :project_manager, t('projects.form.project_manager'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+                <%= f.text_field :project_manager,
+                      class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
+                      data: { track_changes_target: "input", create_form_target: "input", action: "input->track-changes#markChanged" } %>
+              </div>
+              <!-- Planned Cost -->
+              <div class="col-span-6 sm:col-span-3">
+                <%= f.label :planned_cost, t('projects.form.planned_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+                <%= f.number_field :planned_cost, step: 0.01,
+                      class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
+                      data: { track_changes_target: "input", create_form_target: "input", action: "input->track-changes#markChanged" } %>
+              </div>
+              <!-- Status -->
+              <div class="col-span-6 sm:col-span-3">
+                <%= f.label :status, t('projects.form.status'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+                <%= f.select :status,
+                      Project.statuses.keys.map { |k| [I18n.t("activerecord.attributes.project.statuses.#{k}", default: k.humanize), k] },
+                      { include_blank: true },
+                      class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus-border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
+                      data: { track_changes_target: "input", create_form_target: "input", action: "change->track-changes#markChanged" } %>
+              </div>
+              <!-- Description -->
+              <div class="col-span-6">
+                <%= f.label :description, t('projects.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+                <%= f.text_area :description, rows: 4,
+                      class: "block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
+                      data: { track_changes_target: "input", create_form_target: "input", action: "input->track-changes#markChanged" } %>
+              </div>
+              <!-- Custom Fields -->
+              <div class="col-span-6">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('projects.form.custom_fields') %></h3>
+                <%= render 'partials/custom_fields', custom_fields: @project.custom_fields, model: 'project', form_mode: true %>
+              </div>
+            </div>
+              <!-- Create Button (always visible) -->
+              <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+                <%= f.submit t('projects.form.create_button'),
+                    data: { track_changes_target: "saveButton", create_form_target: "submit", turbo: false },
+                    class: "text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" %>
+              </div>
+          <% end %>
+        <% else %>
+          <%# EDIT MODE: Inline editing only, no form %>
+          <div class="grid grid-cols-6 gap-6">
+            <!-- Project Name -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <%= t('projects.form.name') %>*
+              </label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="project"
+                   data-inline-edit-field-value="name"
+                   data-inline-edit-type-value="text"
+                   data-inline-edit-url-value="<%= business_project_path(@current_business, @project) %>"
+                   data-inline-edit-original-value="<%= @project.name %>"
+                   data-inline-edit-record-updated-at-value="<%= @project.updated_at.iso8601 %>"
+                   data-inline-edit-required-value="true"
+                   data-action="dblclick->inline-edit#activate"
+                   title="<%= t('tooltips.double_click_to_edit') %>">
+                <%= @project.name %>
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <%= t('projects.form.address') %>
+              </label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="project"
+                   data-inline-edit-field-value="address"
+                   data-inline-edit-type-value="text"
+                   data-inline-edit-url-value="<%= business_project_path(@current_business, @project) %>"
+                   data-inline-edit-original-value="<%= @project.address %>"
+                   data-inline-edit-record-updated-at-value="<%= @project.updated_at.iso8601 %>"
+                   data-action="dblclick->inline-edit#activate"
+                   title="<%= t('tooltips.double_click_to_edit') %>">
+                <%= @project.address %>
+              </div>
+            </div>
+
+            <!-- Project Manager -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <%= t('projects.form.project_manager') %>
+              </label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="project"
+                   data-inline-edit-field-value="project_manager"
+                   data-inline-edit-type-value="text"
+                   data-inline-edit-url-value="<%= business_project_path(@current_business, @project) %>"
+                   data-inline-edit-original-value="<%= @project.project_manager %>"
+                   data-inline-edit-record-updated-at-value="<%= @project.updated_at.iso8601 %>"
+                   data-action="dblclick->inline-edit#activate"
+                   title="<%= t('tooltips.double_click_to_edit') %>">
+                <%= @project.project_manager %>
+              </div>
+            </div>
+
+            <!-- Planned Cost -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <%= t('projects.form.planned_cost', currency: @project.business.currency_symbol) %>
+              </label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="project"
+                   data-inline-edit-field-value="planned_cost"
+                   data-inline-edit-type-value="number"
+                   data-inline-edit-url-value="<%= business_project_path(@current_business, @project) %>"
+                   data-inline-edit-original-value="<%= @project.planned_cost %>"
+                   data-inline-edit-record-updated-at-value="<%= @project.updated_at.iso8601 %>"
+                   data-action="dblclick->inline-edit#activate"
+                   title="<%= t('tooltips.double_click_to_edit') %>">
+                <%= @project.planned_cost %>
+              </div>
+            </div>
+
+            <!-- Status -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <%= t('projects.form.status') %>
+              </label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="project"
+                   data-inline-edit-field-value="status"
+                   data-inline-edit-type-value="select"
+                   data-inline-edit-url-value="<%= business_project_path(@current_business, @project) %>"
+                   data-inline-edit-original-value="<%= @project.status %>"
+                   data-inline-edit-record-updated-at-value="<%= @project.updated_at.iso8601 %>"
+                   data-inline-edit-options-value='<%= Project.statuses.keys.index_with { |k| I18n.t("activerecord.attributes.project.statuses.#{k}", default: k.humanize) }.merge("" => "").to_json %>'
+                   data-action="dblclick->inline-edit#activate"
+                   title="<%= t('tooltips.double_click_to_edit') %>">
+                <%= I18n.t("activerecord.attributes.project.statuses.#{@project.status}", default: @project.status.humanize) %>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="col-span-6">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <%= t('projects.form.description') %>
+              </label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="project"
+                   data-inline-edit-field-value="description"
+                   data-inline-edit-type-value="textarea"
+                   data-inline-edit-url-value="<%= business_project_path(@current_business, @project) %>"
+                   data-inline-edit-original-value="<%= @project.description %>"
+                   data-inline-edit-record-updated-at-value="<%= @project.updated_at.iso8601 %>"
+                   data-action="dblclick->inline-edit#activate"
+                   title="<%= t('tooltips.double_click_to_edit') %>">
+                <%= @project.description %>
+              </div>
+            </div>
+
+            <!-- Custom Fields -->
+            <div class="col-span-6">
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('projects.form.custom_fields') %></h3>
+              <%= render 'partials/custom_fields',
+                    custom_fields: @project.custom_fields,
+                    model: 'project',
+                    record: @project,
+                    url: business_project_path(@current_business, @project),
+                    form_mode: false %>
+            </div>
           </div>
-          <!-- Address -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :address, t('projects.form.address'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_field :address, 
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+
+          <!-- Back Button (edit mode only) -->
+          <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+            <%= link_to business_projects_path(@current_business),
+                data: { controller: "track-changes", action: "click->track-changes#confirmNavigation", turbo: false },
+                class: "px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700" do %>
+              <%= t('projects.form.back_button', default: 'Back to Projects') %>
+            <% end %>
           </div>
-          <!-- Project Manager -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :project_manager, t('projects.form.project_manager'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_field :project_manager, 
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
-          </div>
-          <!-- Planned Cost -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :planned_cost, t('projects.form.planned_cost', currency: @project.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.number_field :planned_cost, step: 0.01, 
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
-          </div>
-          <!-- Status -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :status, t('projects.form.status'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.select :status,
-                  Project.statuses.keys.map { |k| [I18n.t("activerecord.attributes.project.statuses.#{k}", default: k.humanize), k] },
-                  {},
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
-                  data: { action: "change->track-changes#markChanged", track_changes_target: "input" } %>
-          </div>
-          <!-- Description -->
-          <div class="col-span-6">
-            <%= f.label :description, t('projects.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_area :description, rows: 4, 
-                  class: "block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
-          </div>
-          <!-- Custom Fields -->
-          <div class="col-span-6">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('projects.form.custom_fields') %></h3>
-            <%= render 'partials/custom_fields', custom_fields: @project.custom_fields, model: 'project' %>
-          </div>
-        </div>
-        <!-- Submit Button -->
-        <div class="flex items-center justify-end pt-6 border-t border-gray-200 rounded-b dark:border-gray-700">
-          <%= f.submit(
-                @project.persisted? ? t('projects.form.update_button') : t('projects.form.create_button'),
-                data: { track_changes_target: "saveButton", turbo: false },
-                class: "hidden text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-base px-6 py-3"
-              ) %>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
   </div>
 </section>

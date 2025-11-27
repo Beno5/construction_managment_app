@@ -1,4 +1,4 @@
-<% 
+<%
   model_name = t('tasks.form.model_name')
   paths = {
     project: business_project_path(@current_business, @project),
@@ -9,10 +9,10 @@
     delete_task: ->(task) { business_project_task_path(@current_business, @project, task) }
   }
 %>
-<%= render 'partials/header1', 
-           title: t('breadcrums.project_overview', name: @project.name), 
-           model_name: model_name, 
-           search_path: paths[:project], 
+<%= render 'partials/header1',
+           title: t('breadcrums.project_overview', name: @project.name),
+           model_name: model_name,
+           search_path: paths[:project],
            new_path: paths[:new_task],
            edit_path: edit_business_project_path(@current_business, @project),
            additional_crumbs: [
@@ -47,7 +47,7 @@
     </div>
   </div>
 </section>
-  <% 
+  <%
   model_name = "Documents"
   paths_doc = {
     new_document: new_business_project_document_path(@current_business, @project),

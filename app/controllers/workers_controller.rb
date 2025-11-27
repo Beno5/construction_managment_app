@@ -36,12 +36,71 @@ class WorkersController < ApplicationController
   end
 
   def update
+    # Check optimistic locking if record_updated_at is provided (inline editing)
+    if params[:record_updated_at].present?
+      # Parse the timestamp sent by client
+      record_updated_at = Time.parse(params[:record_updated_at])
+
+      # Truncate both timestamps to second precision to avoid microsecond comparison issues
+      record_updated_at_sec = record_updated_at.change(usec: 0)
+      worker_updated_at_sec = @worker.updated_at.change(usec: 0)
+
+      # Only flag conflict if database timestamp is NEWER (by more than 1 second)
+      # This allows the same user to edit multiple times in the same session
+      if worker_updated_at_sec > record_updated_at_sec
+        respond_to do |format|
+          format.json do
+            render json: {
+              success: false,
+              conflict: true,
+              error: 'This record was modified by another user. Please refresh the page.'
+            }, status: :conflict
+          end
+          format.html do
+            redirect_to business_workers_path(@business),
+                        alert: 'This record was modified by another user. Please refresh the page.'
+          end
+        end
+        return
+      end
+    end
+
     if @worker.update(worker_params)
       full_name = [@worker.first_name, @worker.last_name].compact.join(" ")
-      redirect_to business_workers_path(@business), notice: t('workers.messages.updated', name: full_name)
+
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: true,
+            data: {
+              id: @worker.id,
+              first_name: @worker.first_name,
+              last_name: @worker.last_name,
+              profession: @worker.profession,
+              unit_of_measure: @worker.unit_of_measure,
+              price_per_unit: @worker.price_per_unit,
+              description: @worker.description,
+              updated_at: @worker.updated_at.iso8601
+            }
+          }, status: :ok
+        end
+        format.html do
+          redirect_to business_workers_path(@business), notice: t('workers.messages.updated', name: full_name)
+        end
+      end
     else
-      flash.now[:alert] = t('workers.messages.first_name_required')
-      render :show, status: :unprocessable_entity
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: false,
+            errors: @worker.errors.full_messages
+          }, status: :unprocessable_entity
+        end
+        format.html do
+          flash.now[:alert] = t('workers.messages.first_name_required')
+          render :show, status: :unprocessable_entity
+        end
+      end
     end
   end
 
