@@ -1,9 +1,9 @@
 class SubTaskPlanningCalculator
-  DEFAULT_BPRSPD = BigDecimal("9.0") # broj radnih sati po danu
 
   def initialize(sub_task)
     @sub_task = sub_task
     @norms = sub_task.pinned_norms
+    @working_hours_per_day = sub_task.task.project.business.working_hours_per_day
   end
 
   def call(norms = false)
@@ -43,7 +43,7 @@ class SubTaskPlanningCalculator
     return if total_units_per_hour.zero?
 
     # Output po danu
-    total_units_per_day = total_units_per_hour * DEFAULT_BPRSPD
+    total_units_per_day = total_units_per_hour * @working_hours_per_day
 
     # Trajanje = količina / output po danu
     duration = (@sub_task.quantity.to_d / total_units_per_day).round(2)

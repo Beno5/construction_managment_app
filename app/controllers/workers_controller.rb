@@ -1,6 +1,7 @@
 class WorkersController < ApplicationController
   include ActionView::RecordIdentifier
 
+  before_action :require_business
   before_action :set_business
   before_action :set_worker, only: [:show, :edit, :update, :destroy]
 
@@ -116,6 +117,11 @@ class WorkersController < ApplicationController
   end
 
   private
+
+  def set_business
+    @business = current_user.businesses.find(params[:business_id])
+    @current_business = @business  # For backward compatibility with views
+  end
 
   def set_worker
     @worker = @business.workers.find(params[:id])

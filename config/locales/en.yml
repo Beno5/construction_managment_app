@@ -122,6 +122,8 @@ en:
           monthly: 'Monthly'
           per_task: 'Per task'
           pauschal: 'Flat rate'
+      business:
+        working_hours_per_day: "Working hours per day"
     errors:
       models:
         project:
@@ -218,6 +220,19 @@ en:
   devise:
     user:
       user_settings: "User Settings"
+    passwords:
+      new:
+        flash:
+          email_not_found: "Email not found. Please check and try again."
+      edit:
+        title: "Reset your password"
+        password_label: "New password"
+        password_hint: "(%{count} characters minimum)"
+        password_confirmation_label: "Confirm new password"
+        submit: "Reset password"
+        flash:
+          too_short: "Password is too short (minimum is %{count} characters)."
+          mismatch: "Passwords do not match."
     registrations:
       new:
         create_account: "Create a free account"
@@ -263,6 +278,7 @@ en:
       owner_first_name: "Owner First Name"
       owner_last_name: "Owner Last Name"
       currency: "Currency"
+      working_hours_per_day: "Working hours per day"
       update_button: "Update Business"
       create_button: "Create Business"
       basic_information: "Basic Information"
@@ -276,6 +292,7 @@ en:
         owner_first_name: "Owner First Name"
         owner_last_name: "Owner Last Name"
         currency: "Currency"
+        working_hours_per_day: "Working Hours/Day"
     messages:
       created: "Business %{name} was created successfully."
       updated: "Business %{name} was updated successfully."
@@ -285,6 +302,7 @@ en:
       not_found: "Business not found."
     errors:
       name_required: "Business name is required!"
+      no_business_selected: "You must create a business first to access this page."
       taken_for_user: "You already have a business with this name."
       validation_failed: "Please check the form for errors."
   materials:
@@ -489,7 +507,11 @@ en:
       real: "Real"
       title: "Basic Information: Subtask (%{name})"
       calculator_title: "Resource Calculator"
-      duration: "Duration (days)"
+      duration: "Duration"
+      duration_formatted_label: "Duration (formatted)"
+    duration:
+      formatted: "%{days} days and %{hours} hours"
+      not_set: "Not set"
       skilled_workers: "Skilled Workers"
       unskilled_workers: "Unskilled Workers"
       machines: "Machines"

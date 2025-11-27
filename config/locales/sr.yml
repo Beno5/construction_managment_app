@@ -114,6 +114,8 @@ sr:
           monthly: 'Mjesečno'
           per_task: 'Po zadatku'
           pauschal: 'Paušal'
+      business:
+        working_hours_per_day: "Radni sati po danu"
       task:
         unit_of_measures:
           m: 'Metar (m)'
@@ -160,6 +162,7 @@ sr:
           attributes:
             name:
               taken_for_user: "Već imate firmu sa ovim nazivom."
+            working_hours_per_day: "Radni sati po danu"
   date:
     yamlsr:
   date:
@@ -229,6 +232,19 @@ sr:
   devise:
     user:
       user_settings: "Korisnička podešavanja"
+    passwords:
+      new:
+        flash:
+          email_not_found: "Email nije pronađen. Provjerite i pokušajte ponovo."
+      edit:
+        title: "Resetujte lozinku"
+        password_label: "Nova lozinka"
+        password_hint: "(minimum %{count} karaktera)"
+        password_confirmation_label: "Potvrdite novu lozinku"
+        submit: "Resetuj lozinku"
+        flash:
+          too_short: "Lozinka je prekratka (minimum je %{count} karaktera)."
+          mismatch: "Lozinke se ne poklapaju."
     registrations:
       new:
         create_account: "Kreirajte besplatan nalog"
@@ -274,6 +290,7 @@ sr:
       owner_first_name: "Ime Vlasnika"
       owner_last_name: "Prezime Vlasnika"
       currency: "Valuta"
+      working_hours_per_day: "Radni sati po danu"
       update_button: "Ažuriraj Firmu"
       create_button: "Kreiraj Firmu"
       basic_information: "Osnovne Informacije"
@@ -287,6 +304,7 @@ sr:
         owner_first_name: "Ime vlasnika"
         owner_last_name: "Prezime vlasnika"
         currency: "Valuta"
+        working_hours_per_day: "Radni sati/dan"
     messages:
       created: "Firma %{name} je uspješno kreirana."
       updated: "Firma %{name} je uspješno ažurirana."
@@ -297,6 +315,7 @@ sr:
       name_required: "Naziv firme je obavezan!"
       taken_for_user: "Već imate firmu sa ovim nazivom."
       validation_failed: "Molimo provjerite formu za greške."
+      no_business_selected: "Prvo morate kreirati firmu da biste pristupili ovoj stranici."
   materials:
     index:
       title: "PREGLED MATERIJALA"
@@ -497,7 +516,11 @@ sr:
       real: "Realno"
       title: "Osnovne informacije: Podpozicija (%{name})"
       calculator_title: "Kalkulator Resursa"
-      duration: "Trajanje (dani)"
+      duration: "Trajanje"
+      duration_formatted_label: "Trajanje (formatirano)"
+    duration:
+      formatted: "%{days} dana i %{hours} sati"
+      not_set: "Nije postavljeno"
       skilled_workers: "Kvalifikovani Radnici"
       unskilled_workers: "Nekvalifikovani Radnici"
       machines: "Mašine"
@@ -711,5 +734,6 @@ sr:
   errors:
     messages:
       blank: "Ovo polje je obavezno"
+      not_a_number: "Mora biti broj"
       validation_failed: "Molimo ispravite greške ispod"
       required: "Ovo polje je obavezno"

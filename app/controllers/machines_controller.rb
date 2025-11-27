@@ -1,6 +1,7 @@
 class MachinesController < ApplicationController
   include ActionView::RecordIdentifier
 
+  before_action :require_business
   before_action :set_business
   before_action :set_machine, only: [:show, :edit, :update, :destroy]
 
@@ -114,6 +115,11 @@ class MachinesController < ApplicationController
   end
 
   private
+
+  def set_business
+    @business = current_user.businesses.find(params[:business_id])
+    @current_business = @business  # For backward compatibility with views
+  end
 
   def set_machine
     @machine = @business.machines.find(params[:id])

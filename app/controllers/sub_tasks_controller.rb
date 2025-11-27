@@ -1,6 +1,7 @@
 class SubTasksController < ApplicationController
   include ActionView::RecordIdentifier
 
+  before_action :require_business
   before_action :set_business
   before_action :set_project
   before_action :set_task
@@ -37,7 +38,7 @@ class SubTasksController < ApplicationController
     @sub_task.user_id = current_user.id
 
     if @sub_task.save
-      redirect_to business_project_task_sub_task_path(@business, @task.project, @task, @sub_task),
+      redirect_to business_project_path(@business, @project),
                   notice: t('subtasks.messages.created', name: @sub_task.name)
     else
       set_error_message
@@ -75,7 +76,9 @@ class SubTasksController < ApplicationController
     end
 
     if @sub_task.update(sub_task_params)
-      # Reload task to get updated values from the service
+      # Calculate planning attributes using the service
+      SubTaskPlanningCalculator.new(@sub_task).call
+      # Reload task to get updated aggregated values
       @task.reload
 
       respond_to do |format|
@@ -90,6 +93,14 @@ class SubTasksController < ApplicationController
               planned_end_date: @sub_task.planned_end_date,
               duration: @sub_task.duration,
               description: @sub_task.description,
+              quantity: @sub_task.quantity,
+              planned_cost: @sub_task.planned_cost,
+              price_per_unit: @sub_task.price_per_unit,
+              unit_of_measure: @sub_task.unit_of_measure,
+              num_workers_skilled: @sub_task.num_workers_skilled,
+              num_workers_unskilled: @sub_task.num_workers_unskilled,
+              num_machines: @sub_task.num_machines,
+              formatted_duration: view_context.formatted_duration_days_hours(@sub_task.duration, @business),
               updated_at: @sub_task.updated_at.iso8601,
               task: {
                 id: @task.id,
@@ -103,20 +114,21 @@ class SubTasksController < ApplicationController
           }, status: :ok
         end
         format.html do
-          redirect_back fallback_location: root_path,
-                        notice: "SubTask was successfully updated."
+          redirect_to business_project_path(@business, @project),
+                      notice: t('subtasks.messages.updated', name: @sub_task.name)
         end
       end
     else
       respond_to do |format|
+        format.html do
+          set_error_message
+          render :edit, status: :unprocessable_entity
+        end
         format.json do
           render json: {
             success: false,
             errors: @sub_task.errors.full_messages
           }, status: :unprocessable_entity
-        end
-        format.html do
-          render :edit, status: :unprocessable_entity
         end
       end
     end
@@ -159,6 +171,11 @@ class SubTasksController < ApplicationController
   end
 
   private
+
+  def set_business
+    @business = current_user.businesses.find(params[:business_id])
+    @current_business = @business # For backward compatibility with views
+  end
 
   def set_task
     @task = @project.tasks.find(params[:task_id])

@@ -9,11 +9,11 @@
   }
 
   # Build unit_of_measure options for inline editing (from all resource types)
-  unit_options = all_unit_options.each_with_object({}) do |(key, label), hash|
-    hash[key] = label
-  end)
-%>
+ unit_options = all_unit_options.each_with_object({}) do |(key, label), hash|
+hash[key] = label
+end
 
+%>
 <%= render 'partials/header1',
            title: t('norms.title'),
            model_name: model_name,
@@ -22,7 +22,6 @@
            additional_crumbs: [
              { name: t('norms.title'), path: paths[:norms] }
            ] %>
-
 <section class="bg-gray-50 dark:bg-gray-900 pt-5"
          data-controller="toggle toast"
          data-section-id="norms-table"
@@ -40,7 +39,7 @@
                    checked
                    class="sr-only peer"
                    data-action="change->toggle#toggle"
-                   data-toggle-target="switch">
+            data-toggle-target="switch">
             <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
           </label>
         </div>
@@ -117,10 +116,9 @@
                         data-inline-edit-record-updated-at-value="<%= norm.updated_at.iso8601 %>"
                         data-inline-edit-required-value="true"
                         data-action="dblclick->inline-edit#activate"
-                        title="<%= t('tooltips.double_click_to_edit') %>">
+                      title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= norm.name %>
                     </td>
-
                     <!-- Unit of Measure (editable select) -->
                     <td class="px-4 py-3 cursor-pointer"
                         data-controller="inline-edit"
@@ -132,10 +130,9 @@
                         data-inline-edit-record-updated-at-value="<%= norm.updated_at.iso8601 %>"
                         data-inline-edit-options-value='<%= unit_options.to_json %>'
                         data-action="dblclick->inline-edit#activate"
-                        title="<%= t('tooltips.double_click_to_edit') %>">
+                      title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= translate_unit(norm.unit_of_measure) %>
                     </td>
-
                     <!-- Norm Value (editable number) -->
                     <td class="px-4 py-3 cursor-pointer"
                         data-controller="inline-edit"
@@ -146,10 +143,9 @@
                         data-inline-edit-original-value="<%= norm.norm_value %>"
                         data-inline-edit-record-updated-at-value="<%= norm.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
-                        title="<%= t('tooltips.double_click_to_edit') %>">
+                      title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= norm.norm_value %>
                     </td>
-
                     <!-- Info (editable text) -->
                     <td class="px-4 py-3 cursor-pointer"
                         data-controller="inline-edit"
@@ -160,10 +156,9 @@
                         data-inline-edit-original-value="<%= norm.info %>"
                         data-inline-edit-record-updated-at-value="<%= norm.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
-                        title="<%= t('tooltips.double_click_to_edit') %>">
+                      title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= norm.info %>
                     </td>
-
                     <!-- Description (editable textarea) -->
                     <td class="px-4 py-3 cursor-pointer"
                         data-controller="inline-edit"
@@ -174,10 +169,9 @@
                         data-inline-edit-original-value="<%= norm.description %>"
                         data-inline-edit-record-updated-at-value="<%= norm.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
-                        title="<%= t('tooltips.double_click_to_edit') %>">
+                      title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= content_tag(:span, norm.description&.truncate(25), title: norm.description, class: "tooltip") %>
                     </td>
-
                     <!-- Actions -->
                     <td class="px-4 py-3 flex items-center justify-end">
                       <button id="<%= "norm-#{norm.id}-dropdown-button" %>"

@@ -39,7 +39,7 @@
                    action: "dblclick->inline-edit#activate"
                  },
                  class: "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 px-2 py-1 rounded",
-                 title: "Double-click to edit"
+                 title: t('tooltips.double_click_to_edit')
                )
              },
              t('businesses.index.columns.address') => ->(business) {
@@ -55,7 +55,7 @@
                    action: "dblclick->inline-edit#activate"
                  },
                  class: "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 px-2 py-1 rounded",
-                 title: "Double-click to edit"
+                 title: t('tooltips.double_click_to_edit')
                )
              },
              t('businesses.index.columns.phone_number') => ->(business) {
@@ -71,7 +71,7 @@
                    action: "dblclick->inline-edit#activate"
                  },
                  class: "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 px-2 py-1 rounded",
-                 title: "Double-click to edit"
+                 title: t('tooltips.double_click_to_edit')
                )
              },
              t('businesses.index.columns.vat_number') => ->(business) {
@@ -87,7 +87,7 @@
                    action: "dblclick->inline-edit#activate"
                  },
                  class: "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 px-2 py-1 rounded",
-                 title: "Double-click to edit"
+                 title: t('tooltips.double_click_to_edit')
                )
              },
              t('businesses.index.columns.registration_number') => ->(business) {
@@ -103,7 +103,7 @@
                    action: "dblclick->inline-edit#activate"
                  },
                  class: "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 px-2 py-1 rounded",
-                 title: "Double-click to edit"
+                 title: t('tooltips.double_click_to_edit')
                )
              },
              t('businesses.index.columns.owner_first_name') => ->(business) {
@@ -119,7 +119,7 @@
                    action: "dblclick->inline-edit#activate"
                  },
                  class: "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 px-2 py-1 rounded",
-                 title: "Double-click to edit"
+                 title: t('tooltips.double_click_to_edit')
                )
              },
              t('businesses.index.columns.owner_last_name') => ->(business) {
@@ -135,7 +135,7 @@
                    action: "dblclick->inline-edit#activate"
                  },
                  class: "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 px-2 py-1 rounded",
-                 title: "Double-click to edit"
+                 title: t('tooltips.double_click_to_edit')
                )
              },
              t('businesses.index.columns.currency') => ->(business) {
@@ -152,7 +152,23 @@
                    action: "dblclick->inline-edit#activate"
                  },
                  class: "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 px-2 py-1 rounded",
-                 title: "Double-click to edit"
+                 title: t('tooltips.double_click_to_edit')
+               )
+             },
+             t('businesses.index.columns.working_hours_per_day') => ->(business) {
+               content_tag(:div, business.working_hours_per_day,
+                 data: {
+                   controller: "inline-edit",
+                   inline_edit_model_value: "business",
+                   inline_edit_field_value: "working_hours_per_day",
+                   inline_edit_type_value: "number",
+                   inline_edit_url_value: business_path(business),
+                   inline_edit_original_value: business.working_hours_per_day,
+                   inline_edit_record_updated_at_value: business.updated_at.iso8601,
+                   action: "dblclick->inline-edit#activate"
+                 },
+                 class: "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 px-2 py-1 rounded",
+                 title: t('tooltips.double_click_to_edit')
                )
              }
            },

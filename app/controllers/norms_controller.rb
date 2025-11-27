@@ -1,6 +1,7 @@
 class NormsController < ApplicationController
   include ActionView::RecordIdentifier
 
+  before_action :require_business
   before_action :set_business
   before_action :set_norm, only: [:show, :edit, :update, :destroy]
 
@@ -164,7 +165,8 @@ class NormsController < ApplicationController
   # Before actions
   # -------------------------------------------------
   def set_business
-    @business = Business.find(params[:business_id])
+    @business = current_user.businesses.find(params[:business_id])
+    @current_business = @business  # For backward compatibility with views
   end
 
   def set_norm

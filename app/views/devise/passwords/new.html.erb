@@ -29,6 +29,10 @@
     <p class="text-base font-normal text-gray-500 dark:text-gray-400">
       <%= t('devise.passwords.new.description') %>
     </p>
+    <% email_not_found = resource.errors.details.fetch(:email, []).any? { |err| [:not_found, :not_found_in_database].include?(err[:error]) } %>
+    <% if flash[:alert].blank? && email_not_found %>
+      <% flash.now[:alert] = t('devise.passwords.new.flash.email_not_found') %>
+    <% end %>
     <!-- ✅ Modern Rails form_with -->
     <%= form_with model: resource,
                   url: password_path(resource_name, locale: I18n.locale),

@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   include ActionView::RecordIdentifier
 
+  before_action :require_business
   before_action :set_business
   before_action :set_project
   before_action :set_task, only: %i[edit update destroy]
@@ -139,12 +140,17 @@ class TasksController < ApplicationController
 
   private
 
+  def set_business
+    @business = current_user.businesses.find(params[:business_id])
+    @current_business = @business  # For backward compatibility with views
+  end
+
   def set_project
     @project = @business.projects.find(params[:project_id])
   end
 
   def set_task
-    @task = Task.find_by(id: params[:id])
+    @task = @project.tasks.find(params[:id])
   end
 
   def set_error_message

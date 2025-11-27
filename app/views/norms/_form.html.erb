@@ -7,14 +7,12 @@
              { name: t('norms.form.model_name'), path: business_norms_path(@current_business) },
              { name: (@norm.persisted? ? @norm.name : t('norms.form.new_title', default: 'Nova norma')), path: (@norm.persisted? ? business_norm_path(@current_business, @norm) : nil) }
            ] %>
-
 <section class="bg-gray-50 dark:bg-gray-900 pt-5">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden p-4">
       <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white mb-4">
         <%= t("businesses.form.basic_information") %>
       </h2>
-
       <% if @norm.new_record? %>
         <%= form_with model: [@current_business, @norm],
                       local: true,
@@ -51,10 +49,10 @@
             <div class="col-span-6 sm:col-span-3">
               <%= f.label :unit_of_measure, t('norms.form.unit_of_measure'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
               <%= f.select :unit_of_measure,
-                           options_for_select(all_unit_options, @norm.unit_of_measure),
-                           { include_blank: t('norms.form.select_unit', default: 'Odaberite jedinicu') }, { include_blank: true },
-                           class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
-                           data: { create_form_target: "input" } %>
+             options_for_select(all_unit_options, @norm.unit_of_measure),
+             { include_blank: t('norms.form.select_unit', default: 'Odaberite jedinicu') },
+             class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
+             data: { create_form_target: "input" } %>
             </div>
             <!-- Norm value -->
             <div class="col-span-6 sm:col-span-3">
@@ -106,7 +104,7 @@
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-inline-edit-required-value="true"
                  data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+              title="<%= t('tooltips.double_click_to_edit') %>">
               <%= @norm.name %>
             </div>
           </div>
@@ -123,7 +121,7 @@
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-inline-edit-options-value='<%= Norm.norm_types.keys.index_with { |k| t("activerecord.attributes.norm.norm_types.#{k}", default: k.humanize) }.merge("" => "").to_json %>'
                  data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+              title="<%= t('tooltips.double_click_to_edit') %>">
               <%= t_enum(@norm, :norm_type) %>
             </div>
           </div>
@@ -140,7 +138,7 @@
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-inline-edit-options-value='<%= Norm.subtypes.keys.index_with { |k| t("activerecord.attributes.norm.subtypes.#{k}", default: k.humanize) }.merge({ "" => "-" }).merge("" => "").to_json %>'
                  data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+              title="<%= t('tooltips.double_click_to_edit') %>">
               <%= @norm.subtype ? t("activerecord.attributes.norm.subtypes.#{@norm.subtype}", default: @norm.subtype.humanize) : "-" %>
             </div>
           </div>
@@ -157,7 +155,7 @@
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-inline-edit-options-value='<%= all_unit_options.to_h { |label, key| [key, label] }.merge("" => "").to_json %>'
                  data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+              title="<%= t('tooltips.double_click_to_edit') %>">
               <%= t_enum(@norm, :unit_of_measure) %>
             </div>
           </div>
@@ -173,7 +171,7 @@
                  data-inline-edit-original-value="<%= @norm.norm_value %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+              title="<%= t('tooltips.double_click_to_edit') %>">
               <%= @norm.norm_value %>
             </div>
           </div>
@@ -189,7 +187,7 @@
                  data-inline-edit-original-value="<%= @norm.info %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+              title="<%= t('tooltips.double_click_to_edit') %>">
               <%= @norm.info %>
             </div>
           </div>
@@ -205,7 +203,7 @@
                  data-inline-edit-original-value="<%= @norm.description %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+              title="<%= t('tooltips.double_click_to_edit') %>">
               <%= @norm.description %>
             </div>
           </div>

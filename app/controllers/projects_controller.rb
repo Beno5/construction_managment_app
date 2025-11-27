@@ -1,6 +1,7 @@
 class ProjectsController < ApplicationController
   include ActionView::RecordIdentifier
 
+  before_action :require_business
   before_action :set_business
   before_action :set_project, only: [:show, :edit, :update, :destroy]
 
@@ -254,6 +255,11 @@ class ProjectsController < ApplicationController
   end
 
   private
+
+  def set_business
+    @business = current_user.businesses.find(params[:business_id])
+    @current_business = @business  # For backward compatibility with views
+  end
 
   def set_project
     @project = @business.projects.find(params[:id])
