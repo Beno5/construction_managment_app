@@ -156,6 +156,17 @@
                         data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
                         title="<%= t('tooltips.double_click_to_edit') %>"
+                        <% elsif local_assigns[:model_name] == 'Documents' && header == t('documents.form.category') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="document"
+                          data-inline-edit-field-value="category"
+                          data-inline-edit-type-value="select"
+                          data-inline-edit-url-value="<%= document_path(item) %>"
+                          data-inline-edit-original-value="<%= item.category %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-inline-edit-options-value='<%= Document.categories.keys.index_with { |key| t("activerecord.attributes.document.categories.#{key}") }.to_json %>'
+                          data-action="dblclick->inline-edit#activate"
+                          title="<%= t('tooltips.double_click_to_edit') %>"
                         <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.unit_of_measure') %>
                           data-controller="inline-edit"
                           data-inline-edit-model-value="sub_task"

@@ -122,6 +122,14 @@ en:
           monthly: 'Monthly'
           per_task: 'Per task'
           pauschal: 'Flat rate'
+      document:
+        categories:
+          nothing: "Uncategorized"
+          plan: "Plan"
+          report: "Report"
+          doc_order: "Order"
+          offer: "Offer"
+          other: "Other"
       business:
         working_hours_per_day: "Working hours per day"
     errors:

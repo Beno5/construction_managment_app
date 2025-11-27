@@ -51,7 +51,7 @@
 
           // Apply state to all existing toggle sections immediately
           function initExistingToggles() {
-            const sections = document.querySelectorAll('[data-controller="toggle"]:not(.toggle-init)');
+            const sections = document.querySelectorAll('[data-controller~="toggle"]:not(.toggle-init)');
             sections.forEach(applyToggleState);
           }
 
@@ -61,11 +61,11 @@
               mutation.addedNodes.forEach(function(node) {
                 if (node.nodeType === 1) { // Element node
                   // Check if the node itself is a toggle section
-                  if (node.matches && node.matches('[data-controller="toggle"]:not(.toggle-init)')) {
+                  if (node.matches && node.matches('[data-controller~="toggle"]:not(.toggle-init)')) {
                     applyToggleState(node);
                   }
                   // Check descendants
-                  const sections = node.querySelectorAll && node.querySelectorAll('[data-controller="toggle"]:not(.toggle-init)');
+                  const sections = node.querySelectorAll && node.querySelectorAll('[data-controller~="toggle"]:not(.toggle-init)');
                   if (sections) sections.forEach(applyToggleState);
                 }
               });

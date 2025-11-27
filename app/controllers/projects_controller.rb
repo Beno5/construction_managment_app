@@ -22,6 +22,7 @@ class ProjectsController < ApplicationController
                      .per(10)
 
     @documents = @project.documents
+                         .with_attached_file
                          .search(params[:search])
                          .order(created_at: :desc)
                          .page(params[:document_page])

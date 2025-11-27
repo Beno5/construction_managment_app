@@ -1083,3 +1083,932 @@ If snapshot/restore functionality is required in the future:
 ---
 
 **End of Implementation Summary**
+
+---
+
+# UPDATE LOG - NOVEMBER 27, 2025
+
+**Date:** November 27, 2025
+**Status:** ✅ Inline Editing Unified & Merge Conflicts Resolved
+**Branch Merged:** `inline` → `master`
+
+## Overview
+
+This update finalizes the inline editing implementation by resolving merge conflicts and ensuring complete consistency across all models. The focus was on unifying the UX pattern, fixing critical controller logic, and adding comprehensive testing documentation.
+
+## Changes Implemented
+
+### 1. Merge Conflict Resolution ✅
+
+Successfully resolved 9 conflicted files when merging `inline` branch into `master`:
+
+#### **app/controllers/sub_tasks_controller.rb**
+**Problem:** Conflicting update logic between inline branch (optimistic locking + full JSON response) and master (SubTaskPlanningCalculator + formatted duration).
+
+**Solution - Merged Both Approaches:**
+```ruby
+if @sub_task.update(sub_task_params)
+  # Calculate planning attributes using the service (from master)
+  SubTaskPlanningCalculator.new(@sub_task).call
+  # Reload task to get updated aggregated values (from inline)
+  @task.reload
+
+  respond_to do |format|
+    format.json do
+      render json: {
+        success: true,
+        data: {
+          # Full inline editing response with all fields
+          id: @sub_task.id,
+          name: @sub_task.name,
+          position: @sub_task.position,
+          planned_start_date: @sub_task.planned_start_date,
+          planned_end_date: @sub_task.planned_end_date,
+          duration: @sub_task.duration,
+          description: @sub_task.description,
+          quantity: @sub_task.quantity,
+          planned_cost: @sub_task.planned_cost,
+          price_per_unit: @sub_task.price_per_unit,
+          unit_of_measure: @sub_task.unit_of_measure,
+          # Additional fields from master
+          num_workers_skilled: @sub_task.num_workers_skilled,
+          num_workers_unskilled: @sub_task.num_workers_unskilled,
+          num_machines: @sub_task.num_machines,
+          formatted_duration: view_context.formatted_duration_days_hours(@sub_task.duration, @business),
+          updated_at: @sub_task.updated_at.iso8601,
+          task: {
+            id: @task.id,
+            url: business_project_task_path(@business, @task.project, @task),
+            planned_start_date: @task.planned_start_date,
+            planned_end_date: @task.planned_end_date,
+            planned_cost: @task.planned_cost,
+            updated_at: @task.updated_at.iso8601
+          }
+        }
+      }, status: :ok
+    end
+    format.html do
+      redirect_to business_project_path(@business, @project),
+                  notice: t('subtasks.messages.updated', name: @sub_task.name)
+    end
+  end
+else
+  respond_to do |format|
+    format.html do
+      set_error_message  # From master - sets flash message
+      render :edit, status: :unprocessable_entity
+    end
+    format.json do
+      render json: {
+        success: false,
+        errors: @sub_task.errors.full_messages  # From inline - detailed errors
+      }, status: :unprocessable_entity
+    end
+  end
+end
+```
+
+**Why This Works:**
+- ✅ Runs planning calculator to compute worker/machine counts
+- ✅ Reloads task to get aggregated cost/date updates
+- ✅ Returns complete JSON response for inline editing
+- ✅ Includes formatted_duration and worker counts for master's features
+- ✅ Proper error handling for both HTML forms and JSON inline edits
+
+#### **app/views/businesses/index.html.erb**
+**Problem:** Master added `working_hours_per_day` column, inline branch had full inline editing markup.
+
+**Solution:** Added new column with inline editing support:
+```erb
+t('businesses.index.columns.working_hours_per_day') => ->(business) {
+  content_tag(:div, business.working_hours_per_day,
+    data: {
+      controller: "inline-edit",
+      inline_edit_model_value: "business",
+      inline_edit_field_value: "working_hours_per_day",
+      inline_edit_type_value: "number",
+      inline_edit_url_value: business_path(business),
+      inline_edit_original_value: business.working_hours_per_day,
+      inline_edit_record_updated_at_value: business.updated_at.iso8601,
+      action: "dblclick->inline-edit#activate"
+    },
+    class: "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 px-2 py-1 rounded",
+    title: t('tooltips.double_click_to_edit')
+  )
+}
+```
+
+#### **app/views/partials/_table.html.erb**
+**Resolution:** Kept inline branch version completely - contains full inline editing logic for Activities, Documents, and SubTasks in generic table partial.
+
+#### **app/views/partials/_table_expandable_task.html.erb**
+**Resolution:** Kept inline branch version - full inline editing for Task/SubTask rows with double-click activation on all editable fields.
+
+#### **app/views/partials/_table_norms.html.erb**
+**Resolution:** Kept inline branch version - maintains inline editing consistency.
+
+#### **db/schema.rb**
+**Resolution:** Took master's version (auto-generated, version `2025_11_23_120000`).
+
+#### **yarn.lock**
+**Resolution:** Master deleted this file, but inline branch needs it for npm dependencies - kept our version.
+
+#### **app/assets/builds/tailwind.css & app/assets/stylesheets/application.css**
+**Resolution:** Rebuilt Tailwind CSS from source with `bundle exec rails tailwindcss:build`.
+
+### 2. Missing Track-Changes Controller Declarations Fixed 🔧
+
+**Problem:** Forms used `track_changes_target` and `action: "input->track-changes#markChanged"` but didn't declare the `track-changes` controller!
+
+**Fixed in 4 files:**
+- `app/views/projects/_form.html.erb` (line 35)
+- `app/views/tasks/_form.html.erb` (line 33)
+- `app/views/sub_tasks/_form.html.erb` (line 40)
+- `app/views/businesses/_form.html.erb` (line 16)
+
+**Before:**
+```erb
+data: { controller: "create-form", action: "submit->create-form#validate" }
+```
+
+**After:**
+```erb
+data: { controller: "create-form track-changes", action: "submit->create-form#validate" }
+```
+
+**Impact:** Navigation protection during form creation now works correctly. Users get warned when leaving pages with unsaved changes.
+
+### 3. Removed Unused Code 🗑️
+
+**Deleted Files:**
+- `app/javascript/controllers/form_validation_controller.js` - Redundant with `create_form_controller.js`
+
+**Updated:**
+- `app/javascript/controllers/index.js` - Removed import and registration of unused controller
+
+### 4. Fixed Hardcoded Tooltips 🌐
+
+**Problem:** 19 instances of hardcoded `title="Double-click to edit"` instead of using i18n.
+
+**Fixed in 4 files:**
+- `app/views/tasks/_form.html.erb` (4 instances)
+- `app/views/materials/index.html.erb` (5 instances)
+- `app/views/machines/index.html.erb` (5 instances)
+- `app/views/workers/index.html.erb` (5 instances)
+
+**Changed to:**
+```erb
+title="<%= t('tooltips.double_click_to_edit') %>"
+```
+
+**Impact:** Proper internationalization support for Serbian/English translations.
+
+### 5. JavaScript Bundle Rebuilt ⚙️
+
+- Successfully rebuilt with ESBuild: `yarn build`
+- Bundle size: **666.7kb** (application.js) + 1.0mb (source maps)
+- All Stimulus controllers loaded correctly
+- Verified no syntax errors
+
+## Unified Inline Editing Pattern - FINAL STATE
+
+### Expected Behavior Across All Models
+
+#### **TABLE INLINE EDITING (Index Pages)**
+1. ✅ Double-click enters edit mode
+2. ✅ Save on blur (click outside) or Enter key
+3. ✅ Success → green border flash + top-right success notification
+4. ✅ Error → red border + inline validation message + top-right error notification
+5. ✅ Unsaved changes → navigation confirmation dialog
+6. ✅ Optimistic locking → conflict detection between tabs/users
+
+#### **SHOW PAGE INLINE EDITING (Form Views)**
+1. ✅ Same behavior as tables (double-click → edit → autosave)
+2. ✅ Same notifications and error handling
+3. ✅ Same unsaved changes protection
+4. ✅ Disabled fields (e.g., Task dates with subtasks) show appropriate message
+
+#### **CREATE/NEW FORMS**
+1. ✅ Normal form with "Create" button
+2. ✅ Button always enabled (validation on submit)
+3. ✅ Inline validation errors below fields
+4. ✅ Toast notification at top on validation failure
+5. ✅ Consistent styling across all models
+6. ✅ Navigation protection with unsaved changes dialog
+
+### Models with Complete Implementation
+
+| Model | Table Inline Editing | Show Page Inline Editing | Create Form | Status |
+|-------|---------------------|-------------------------|-------------|--------|
+| **Projects** | ✅ Index | ✅ Show | ✅ New | **Complete** |
+| **Tasks** | ✅ Expandable Table | ✅ Form | ✅ New | **Complete** |
+| **SubTasks** | ✅ Expandable Table + Generic Table | ✅ Form | ✅ New | **Complete** |
+| **Norms** | ✅ Index + Norms Table | ✅ Show | ✅ New | **Complete** |
+| **Materials** | ✅ Index | ✅ Show | ✅ New | **Complete** |
+| **Workers** | ✅ Index | ✅ Show | ✅ New | **Complete** |
+| **Machines** | ✅ Index | ✅ Show | ✅ New | **Complete** |
+| **Businesses** | ✅ Index | ✅ Show | ✅ New | **Complete** |
+| **User** | N/A | ✅ Edit (Devise) | N/A | **Complete** |
+| **Activities** | ✅ Generic Table (quantity, total_cost) | N/A | ✅ Modal | **Complete** |
+| **Documents** | ✅ Generic Table (name, description, file) | N/A | ✅ Modal | **Complete** |
+
+**Overall:** 11/11 models fully implemented ✅
+
+## Technical Improvements
+
+### 1. SubTaskPlanningCalculator Integration
+- Correctly runs planning calculations after updates
+- Reloads parent task to get aggregated values
+- Returns complete JSON response with computed fields
+
+### 2. Error Handling Consistency
+- HTML format: `set_error_message` + render edit with flash
+- JSON format: Detailed `errors` array for inline editing display
+- Proper HTTP status codes: 422 (validation), 409 (conflict), 200 (success)
+
+### 3. Optimistic Locking Reliability
+- Second-precision timestamp comparison prevents false conflicts
+- Works correctly across multiple sequential edits
+- Timestamp synchronization keeps all fields updated
+
+## Files Modified in This Update
+
+### Controllers
+- `app/controllers/sub_tasks_controller.rb` - Merged update logic
+
+### Views
+- `app/views/businesses/index.html.erb` - Added working_hours_per_day column
+- `app/views/businesses/_form.html.erb` - Added track-changes controller
+- `app/views/projects/_form.html.erb` - Added track-changes controller
+- `app/views/tasks/_form.html.erb` - Added track-changes controller, fixed tooltips
+- `app/views/sub_tasks/_form.html.erb` - Added track-changes controller
+- `app/views/materials/index.html.erb` - Fixed tooltips
+- `app/views/machines/index.html.erb` - Fixed tooltips
+- `app/views/workers/index.html.erb` - Fixed tooltips
+- `app/views/partials/_table.html.erb` - Kept inline version
+- `app/views/partials/_table_expandable_task.html.erb` - Kept inline version
+- `app/views/partials/_table_norms.html.erb` - Kept inline version
+
+### JavaScript
+- `app/javascript/controllers/index.js` - Removed unused controller registration
+- **Deleted:** `app/javascript/controllers/form_validation_controller.js`
+
+### Database & Assets
+- `db/schema.rb` - Updated to master's version
+- `app/assets/builds/tailwind.css` - Rebuilt
+- `app/assets/builds/application.js` - Rebuilt (666.7kb)
+
+---
+
+# TESTING GUIDE FOR PM/TESTER
+
+**Date:** November 27, 2025
+**Version:** Post-Merge Final
+**Tester:** [PM/QA Name]
+
+## Testing Overview
+
+This guide covers testing the complete inline editing system after merging the inline branch. All models now have unified inline editing behavior with consistent UX patterns.
+
+## Pre-Testing Setup
+
+### Access Test Environment
+1. Ensure you're on the latest `master` branch (post-merge)
+2. Database should have test data for all models
+3. Test with at least 2 browser tabs open (for conflict testing)
+4. Test on both desktop (Chrome/Firefox) and mobile (Safari/Chrome)
+
+### Test User Accounts
+- Create at least 2 test users for concurrent editing tests
+- Both users should have access to the same business/project data
+
+## Test Scenarios by Feature
+
+### 1. BASIC INLINE EDITING - All Models
+
+**Models to Test:** Projects, Tasks, SubTasks, Norms, Materials, Workers, Machines, Businesses
+
+#### Test Case 1.1: Double-Click Activation
+**Steps:**
+1. Navigate to any index page (e.g., `/workers`)
+2. Double-click on any editable field (name, description, price, etc.)
+
+**Expected Result:**
+- ✅ Field enters edit mode immediately
+- ✅ Input appears with blue border (2px solid)
+- ✅ Current value is pre-filled and text is selected
+- ✅ Cursor is in the input field
+- ✅ Tooltip shows "Double-click to edit" on hover before activation
+
+**Fail Conditions:**
+- ❌ Nothing happens on double-click
+- ❌ Input doesn't appear or appears incorrectly
+- ❌ Value is not pre-filled
+
+---
+
+#### Test Case 1.2: Save on Enter Key
+**Steps:**
+1. Double-click a text field
+2. Type a new value
+3. Press **Enter** key
+
+**Expected Result:**
+- ✅ Field saves immediately
+- ✅ Green border flashes for 1-2 seconds
+- ✅ Success toast appears at top-right: "Saved successfully" (green background)
+- ✅ Toast auto-dismisses after 3 seconds
+- ✅ Field exits edit mode and shows new value
+- ✅ Database updates confirmed (refresh page to verify)
+
+**Fail Conditions:**
+- ❌ Enter key doesn't save
+- ❌ No visual feedback (green flash)
+- ❌ No toast notification
+- ❌ Value doesn't persist
+
+---
+
+#### Test Case 1.3: Save on Blur (Click Outside)
+**Steps:**
+1. Double-click a field
+2. Type a new value
+3. Click anywhere outside the field
+
+**Expected Result:**
+- ✅ Same as Test Case 1.2 (save + green flash + toast)
+
+**Fail Conditions:**
+- ❌ Blur doesn't trigger save
+- ❌ Value reverts to original
+
+---
+
+#### Test Case 1.4: Cancel with ESC Key
+**Steps:**
+1. Double-click a field
+2. Type a new value (don't save)
+3. Press **ESC** key
+
+**Expected Result:**
+- ✅ Field exits edit mode immediately
+- ✅ Original value restored (new value discarded)
+- ✅ No save occurs
+- ✅ No toast notification
+
+**Fail Conditions:**
+- ❌ ESC doesn't cancel
+- ❌ New value persists incorrectly
+
+---
+
+#### Test Case 1.5: Select Dropdown - Immediate Save
+**Steps:**
+1. Find a select field (e.g., Worker profession, Material unit_of_measure)
+2. Double-click the field
+3. Dropdown appears
+4. Select a different option
+
+**Expected Result:**
+- ✅ Saves immediately on selection change (no need to press Enter)
+- ✅ Green flash + success toast
+- ✅ Dropdown closes automatically
+- ✅ New value displayed
+
+**Fail Conditions:**
+- ❌ Selection doesn't save automatically
+- ❌ Requires Enter key press
+
+---
+
+### 2. VALIDATION TESTING
+
+#### Test Case 2.1: Required Field Validation
+**Steps:**
+1. Double-click a required field (e.g., Project name, Worker first_name)
+2. Delete all text (empty field)
+3. Press Enter or click outside
+
+**Expected Result:**
+- ✅ Field shows red border (stays in edit mode)
+- ✅ Error message appears below field in red text
+- ✅ Error toast appears at top-right (red background)
+- ✅ Message should be model's validation error (e.g., "Name can't be blank")
+- ✅ Field remains editable until valid value entered
+
+**Fail Conditions:**
+- ❌ Empty value saves
+- ❌ No error message shown
+- ❌ Field exits edit mode without saving
+
+---
+
+#### Test Case 2.2: Number Field Validation
+**Steps:**
+1. Double-click a number field (e.g., price_per_unit, quantity)
+2. Type letters or special characters
+3. Press Enter
+
+**Expected Result:**
+- ✅ Browser should prevent non-numeric input (HTML5 validation)
+- ✅ If invalid number: red border + error message
+- ✅ Error toast appears
+
+**Fail Conditions:**
+- ❌ Non-numeric values accepted
+
+---
+
+#### Test Case 2.3: Date Field Validation
+**Steps:**
+1. Double-click a date field (e.g., planned_start_date)
+2. Browser date picker appears
+3. Select a date
+
+**Expected Result:**
+- ✅ Date saves in YYYY-MM-DD format
+- ✅ Display format follows locale (SR: DD.MM.YYYY, EN: MM/DD/YYYY)
+- ✅ Green flash + success toast
+
+**Fail Conditions:**
+- ❌ Invalid date accepted
+- ❌ Date format incorrect
+
+---
+
+### 3. OPTIMISTIC LOCKING (Conflict Detection)
+
+#### Test Case 3.1: Same User, Two Tabs
+**Steps:**
+1. Open same record in **two browser tabs** (e.g., Worker #5 show page)
+2. **Tab 1:** Edit field A (e.g., first_name), save → should succeed
+3. **Tab 2:** Edit field B (e.g., last_name), save → should succeed
+4. **Tab 2:** Edit field C, save → should succeed
+
+**Expected Result:**
+- ✅ First save (Tab 1) succeeds normally
+- ✅ Second save (Tab 2) succeeds because timestamp synced
+- ✅ Third save (Tab 2) succeeds - no false conflicts
+- ✅ All fields update correctly in both tabs after refresh
+
+**Fail Conditions:**
+- ❌ "Record modified by another user" error appears incorrectly
+- ❌ Second tab can't edit after first tab saves
+
+---
+
+#### Test Case 3.2: Same User, Two Tabs, Simultaneous Edit
+**Steps:**
+1. Open same record in two tabs
+2. **Tab 1:** Edit field A, save
+3. **Tab 2:** WITHOUT refreshing, immediately edit field A (same field)
+4. Try to save in Tab 2
+
+**Expected Result:**
+- ✅ Tab 2 shows conflict error
+- ✅ Alert/toast: "This record was modified by another user. Please refresh the page."
+- ✅ Status code: 409 Conflict
+- ✅ Tab 2's edit is NOT saved (prevents overwrite)
+
+**Fail Conditions:**
+- ❌ Both saves succeed (data corruption)
+- ❌ No conflict detected
+
+---
+
+#### Test Case 3.3: Two Users, Concurrent Edit
+**Steps:**
+1. **User A:** Opens Worker #5 show page
+2. **User B:** Opens same Worker #5 show page
+3. **User A:** Edits hourly_rate to "25", saves
+4. **User B:** WITHOUT refreshing, edits hourly_rate to "30", tries to save
+
+**Expected Result:**
+- ✅ User A's save succeeds (hourly_rate = 25)
+- ✅ User B gets conflict error (409)
+- ✅ User B must refresh to see current value (25)
+- ✅ User B can then edit again safely
+
+**Fail Conditions:**
+- ❌ User B's edit overwrites User A's edit silently
+- ❌ No conflict warning
+
+---
+
+### 4. NAVIGATION PROTECTION (Unsaved Changes)
+
+#### Test Case 4.1: Create Form with Unsaved Changes
+**Steps:**
+1. Navigate to new form (e.g., `/workers/new`)
+2. Fill in some fields (don't click Create button)
+3. Try to navigate away (click browser back, close tab, click a menu link)
+
+**Expected Result:**
+- ✅ Browser shows confirmation dialog: "You have unsaved changes. Are you sure you want to leave?"
+- ✅ Choosing "Cancel" keeps you on the page
+- ✅ Choosing "Leave" navigates away (data lost)
+
+**Fail Conditions:**
+- ❌ No warning appears
+- ❌ Data lost without warning
+
+---
+
+#### Test Case 4.2: Edit Form with Unsaved Changes
+**Steps:**
+1. Navigate to show page (e.g., `/workers/5`)
+2. Double-click a field, make a change
+3. DON'T save (don't press Enter or click outside)
+4. Try to navigate away
+
+**Expected Result:**
+- ✅ Same confirmation dialog as Test Case 4.1
+
+**Fail Conditions:**
+- ❌ No warning appears
+
+---
+
+#### Test Case 4.3: After Successful Save, No Warning
+**Steps:**
+1. Edit a field and save successfully
+2. Immediately navigate away
+
+**Expected Result:**
+- ✅ NO warning dialog (data is saved)
+- ✅ Navigation happens immediately
+
+**Fail Conditions:**
+- ❌ False warning appears after save
+
+---
+
+### 5. MODEL-SPECIFIC TESTS
+
+#### Test Case 5.1: SubTasks - Planning Calculator Integration
+**Steps:**
+1. Navigate to SubTask show page
+2. Edit `quantity` field, change from "10" to "20"
+3. Save
+
+**Expected Result:**
+- ✅ Save succeeds with green flash
+- ✅ JSON response includes:
+  - `duration` (calculated)
+  - `num_workers_skilled` (calculated)
+  - `num_machines` (calculated)
+  - `formatted_duration` (e.g., "2 days 4 hours")
+- ✅ Parent Task's planned_cost/dates update automatically
+
+**Fail Conditions:**
+- ❌ Calculation doesn't run
+- ❌ Parent task not updated
+- ❌ Error during save
+
+---
+
+#### Test Case 5.2: Tasks - Date Fields Disabled with SubTasks
+**Steps:**
+1. Navigate to Task that has SubTasks
+2. Try to double-click `planned_start_date` or `planned_end_date`
+
+**Expected Result:**
+- ✅ Fields are NOT editable (disabled state)
+- ✅ Tooltip or message: "Dates calculated from subtasks" or similar
+- ✅ Double-click has no effect
+
+**Fail Conditions:**
+- ❌ Dates are editable (violates business logic)
+
+---
+
+#### Test Case 5.3: Businesses - working_hours_per_day (New Column)
+**Steps:**
+1. Navigate to `/businesses` index page
+2. Find `Working Hours Per Day` column
+3. Double-click on a value (e.g., "8.0")
+4. Change to "7.5"
+5. Save
+
+**Expected Result:**
+- ✅ Field is inline-editable
+- ✅ Number input with decimal support
+- ✅ Saves successfully
+- ✅ Value persists across refresh
+
+**Fail Conditions:**
+- ❌ Column missing
+- ❌ Not editable
+- ❌ Invalid number accepted (e.g., negative)
+
+---
+
+#### Test Case 5.4: Activities - Quantity Field in Table
+**Steps:**
+1. Navigate to SubTask show page
+2. Scroll to Activities table
+3. Find `Quantity` column
+4. Double-click a quantity value
+5. Change it and save
+
+**Expected Result:**
+- ✅ Inline editing works in generic table partial
+- ✅ Save succeeds
+- ✅ SubTask planning values recalculate automatically
+
+**Fail Conditions:**
+- ❌ Not editable
+- ❌ Save fails
+
+---
+
+#### Test Case 5.5: Documents - Name & Description in Table
+**Steps:**
+1. Navigate to any page with Documents table
+2. Double-click document name
+3. Edit and save
+4. Double-click description
+5. Edit and save
+
+**Expected Result:**
+- ✅ Both fields editable inline
+- ✅ Name is required (can't be blank)
+- ✅ Description is optional (can be blank)
+- ✅ Saves successfully
+
+**Fail Conditions:**
+- ❌ Not editable
+- ❌ Required validation not working
+
+---
+
+### 6. VISUAL FEEDBACK & NOTIFICATIONS
+
+#### Test Case 6.1: Success Feedback
+**Steps:**
+1. Edit any field successfully
+
+**Expected Result:**
+- ✅ Green border flash (1-2 seconds)
+- ✅ Success toast at top-right corner
+- ✅ Toast background: green
+- ✅ Toast text: "Saved successfully" (white text)
+- ✅ Toast auto-dismisses after ~3 seconds
+
+**Fail Conditions:**
+- ❌ No visual feedback
+- ❌ Toast doesn't appear or doesn't dismiss
+
+---
+
+#### Test Case 6.2: Error Feedback
+**Steps:**
+1. Edit a field with invalid data (e.g., empty required field)
+2. Try to save
+
+**Expected Result:**
+- ✅ Red border on input (stays until fixed)
+- ✅ Error message below field (red text)
+- ✅ Error toast at top-right corner
+- ✅ Toast background: red
+- ✅ Toast text: Exact error from backend (e.g., "Name can't be blank")
+- ✅ Toast has X button to dismiss manually
+- ✅ Field stays in edit mode
+
+**Fail Conditions:**
+- ❌ No error indication
+- ❌ Field exits edit mode with invalid data
+
+---
+
+#### Test Case 6.3: Conflict Feedback
+**Steps:**
+1. Trigger optimistic locking conflict (see Test Case 3.2)
+
+**Expected Result:**
+- ✅ Red toast: "This record was modified by another user. Please refresh the page."
+- ✅ Status code 409 in network tab
+- ✅ Field stays in edit mode
+- ✅ User must refresh to continue
+
+**Fail Conditions:**
+- ❌ No conflict indication
+- ❌ Silent overwrite
+
+---
+
+### 7. MOBILE TESTING (Touch Devices)
+
+#### Test Case 7.1: Double-Tap Activation
+**Steps:**
+1. Open app on mobile device (iOS Safari, Android Chrome)
+2. Navigate to any index/show page
+3. Double-tap an editable field
+
+**Expected Result:**
+- ✅ Field enters edit mode
+- ✅ Correct keyboard appears:
+  - Text fields: standard keyboard
+  - Number fields: numeric keyboard
+  - Email fields: email keyboard (with @)
+  - Date fields: date picker
+
+**Fail Conditions:**
+- ❌ Double-tap doesn't work
+- ❌ Wrong keyboard type
+
+---
+
+#### Test Case 7.2: Touch-Friendly Buttons
+**Steps:**
+1. Check button sizes on mobile
+
+**Expected Result:**
+- ✅ All interactive elements at least 44x44px (Apple HIG guideline)
+- ✅ Easy to tap without zooming
+
+**Fail Conditions:**
+- ❌ Buttons too small
+- ❌ Accidental taps
+
+---
+
+### 8. EDGE CASES & ERROR HANDLING
+
+#### Test Case 8.1: Network Error During Save
+**Steps:**
+1. Open DevTools Network tab
+2. Edit a field
+3. Throttle network to "Offline" BEFORE saving
+4. Try to save
+
+**Expected Result:**
+- ✅ Error toast appears: "Network error" or similar
+- ✅ Field stays in edit mode
+- ✅ User can try again after reconnecting
+
+**Fail Conditions:**
+- ❌ App crashes
+- ❌ No error indication
+
+---
+
+#### Test Case 8.2: Server Error (500)
+**Steps:**
+1. Simulate server error (stop Rails server or break controller temporarily)
+2. Try to save
+
+**Expected Result:**
+- ✅ Error toast: "Server error" or "Something went wrong"
+- ✅ Field stays in edit mode
+- ✅ Error logged in browser console
+
+**Fail Conditions:**
+- ❌ Silent failure
+- ❌ App crashes
+
+---
+
+#### Test Case 8.3: Very Long Text
+**Steps:**
+1. Edit a text field
+2. Paste 10,000 characters
+3. Save
+
+**Expected Result:**
+- ✅ Backend validation limits (if any) enforced
+- ✅ If too long: validation error shown
+- ✅ If within limit: saves successfully
+
+**Fail Conditions:**
+- ❌ App hangs
+- ❌ Database error
+
+---
+
+## Regression Testing (Ensure No Breakage)
+
+### Test Case R.1: Create Forms Still Work
+**Steps:**
+1. Navigate to new form for each model
+2. Fill in required fields
+3. Click "Create" button
+
+**Expected Result:**
+- ✅ Record creates successfully
+- ✅ Redirects to appropriate page
+- ✅ Success message appears
+
+**Fail Conditions:**
+- ❌ Create button broken
+- ❌ Validation doesn't work
+
+---
+
+### Test Case R.2: Existing Features Unaffected
+**Steps:**
+1. Test non-inline-editing features:
+   - Sidebar collapse/expand
+   - Search functionality
+   - Pagination
+   - Sort by column
+   - Delete actions
+   - Turbo Stream updates
+
+**Expected Result:**
+- ✅ All features work as before
+- ✅ No JavaScript errors in console
+
+**Fail Conditions:**
+- ❌ Any feature broken
+
+---
+
+## Performance Testing
+
+### Test Case P.1: Save Speed
+**Steps:**
+1. Edit a field
+2. Measure time from pressing Enter to seeing green flash
+
+**Expected Result:**
+- ✅ Save completes in <500ms (local dev)
+- ✅ Save completes in <1000ms (production)
+
+**Fail Conditions:**
+- ❌ Takes >2 seconds
+- ❌ Loading indicator appears unnecessarily
+
+---
+
+### Test Case P.2: Page Load with Many Records
+**Steps:**
+1. Navigate to index page with 50+ records
+
+**Expected Result:**
+- ✅ Page renders in <2 seconds
+- ✅ All inline editing data attributes load correctly
+- ✅ No memory leaks (check Chrome Task Manager)
+
+**Fail Conditions:**
+- ❌ Slow page load (>5 seconds)
+- ❌ Browser becomes unresponsive
+
+---
+
+## Test Report Template
+
+After completing tests, document results:
+
+```markdown
+## Test Execution Report
+
+**Tester:** [Name]
+**Date:** [Date]
+**Environment:** [Development/Staging/Production]
+**Browser:** [Chrome 120, Firefox 121, Safari 17, etc.]
+**Device:** [Desktop/Mobile - OS version]
+
+### Summary
+- Total Test Cases: [Number]
+- Passed: [Number] ✅
+- Failed: [Number] ❌
+- Blocked: [Number] ⚠️
+
+### Failed Tests
+[List failed test cases with details]
+
+### Bugs Found
+1. **Bug Title**
+   - Severity: [Critical/High/Medium/Low]
+   - Steps to Reproduce: [...]
+   - Expected: [...]
+   - Actual: [...]
+   - Screenshot/Video: [Link]
+
+### Recommendations
+[Any suggestions for improvement]
+```
+
+---
+
+## Critical Success Criteria
+
+Before approving this release, verify:
+
+- ✅ All 11 models have working inline editing
+- ✅ No false conflict errors occur
+- ✅ Navigation protection works
+- ✅ SubTask planning calculations work correctly
+- ✅ Mobile touch interface works
+- ✅ No existing features broken
+- ✅ No JavaScript console errors
+- ✅ Validation errors display correctly
+- ✅ Tooltips use i18n (Serbian/English)
+- ✅ Create forms still work normally
+
+**If all above checked:** System is ready for production ✅
+
+---
+
+**End of Testing Guide**

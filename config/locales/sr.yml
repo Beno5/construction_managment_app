@@ -114,6 +114,14 @@ sr:
           monthly: 'Mjesečno'
           per_task: 'Po zadatku'
           pauschal: 'Paušal'
+      document:
+        categories:
+          nothing: "Bez kategorije"
+          plan: "Plan"
+          report: "Izvještaj"
+          doc_order: "Narudžbenica"
+          offer: "Ponuda"
+          other: "Ostalo"
       business:
         working_hours_per_day: "Radni sati po danu"
       task:

@@ -51,26 +51,26 @@
   /* Toggle collapse styles - prevents FOUC for collapsible sections */
 
   /* Hide content while initializing to prevent FOUC */
-  [data-controller="toggle"]:not(.toggle-init) {
+  [data-controller~="toggle"]:not(.toggle-init) {
     visibility: hidden;
   }
 
   /* Show after initialization */
-  [data-controller="toggle"].toggle-init {
+  [data-controller~="toggle"].toggle-init {
     visibility: visible;
   }
 
   /* Hide content when collapsed */
-  [data-controller="toggle"].toggle-collapsed [data-toggle-target="content"] {
+  [data-controller~="toggle"].toggle-collapsed [data-toggle-target="content"] {
     display: none;
   }
 
   /* Override the peer-checked state when parent has toggle-collapsed */
-  [data-controller="toggle"].toggle-collapsed [data-toggle-target="switch"]:checked + div {
+  [data-controller~="toggle"].toggle-collapsed [data-toggle-target="switch"]:checked + div {
     background-color: rgb(156 163 175); /* gray-400 instead of blue-600 */
   }
 
-  [data-controller="toggle"].toggle-collapsed [data-toggle-target="switch"]:checked + div:after {
+  [data-controller~="toggle"].toggle-collapsed [data-toggle-target="switch"]:checked + div:after {
     transform: translateX(0); /* Keep slider on left even when checked */
   }
 

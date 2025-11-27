@@ -6,12 +6,25 @@
            additional_crumbs: [
              (@business.persisted? ? { name: @business.name, path: business_path(@business) } : { name: t('businesses.form.new_title'), path: nil })
            ] %>
-<section class="bg-gray-50 dark:bg-gray-900 pt-5">
+<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle" data-section-id="business-basic-info" data-user-id="<%= current_user.id %>">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden p-6">
-      <% if @business.new_record? %>
-        <%= form_with(model: @business, local: true, html: { novalidate: true }, data: { controller: "create-form track-changes", action: "submit->create-form#validate" }) do |f| %>
-          <div class="grid grid-cols-6 gap-6">
+      <div class="flex items-center gap-4 mb-4">
+        <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white"><%= t("businesses.form.basic_information") %></h2>
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="checkbox"
+                 id="business-info-toggle"
+                 checked
+                 class="sr-only peer"
+                 data-action="change->toggle#toggle"
+                 data-toggle-target="switch">
+          <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+        </label>
+      </div>
+      <div data-toggle-target="content" class="transition-all duration-300">
+        <% if @business.new_record? %>
+          <%= form_with(model: @business, local: true, html: { novalidate: true }, data: { controller: "create-form track-changes", action: "submit->create-form#validate" }) do |f| %>
+            <div class="grid grid-cols-6 gap-6">
             <!-- Business Name -->
             <div class="col-span-6 sm:col-span-3">
               <%= f.label :name, t('businesses.form.name') + '*', class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
@@ -78,23 +91,23 @@
                     class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
                     data: { create_form_target: "input" } %>
             </div>
-          </div>
-          <!-- Submit Button -->
-          <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
-            <%= f.submit(
-                  t('businesses.form.create_button'),
-                  data: {
-                    track_changes_target: "saveButton",
-                    turbo: false,
-                    create_form_target: "submit",
-                    action: "click->track-changes#skipNavigationPrompt"
-                  },
-                  class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-base px-6 py-3"
-                ) %>
-          </div>
-        <% end %>
-      <% else %>
-        <div class="grid grid-cols-6 gap-6">
+            </div>
+            <!-- Submit Button -->
+            <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
+              <%= f.submit(
+                    t('businesses.form.create_button'),
+                    data: {
+                      track_changes_target: "saveButton",
+                      turbo: false,
+                      create_form_target: "submit",
+                      action: "click->track-changes#skipNavigationPrompt"
+                    },
+                    class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-base px-6 py-3"
+                  ) %>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="grid grid-cols-6 gap-6">
           <!-- Business Name -->
           <div class="col-span-6 sm:col-span-3">
             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('businesses.form.name') %></label>
@@ -241,15 +254,16 @@
               <%= @business.working_hours_per_day %>
             </div>
           </div>
-        </div>
-        <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
-          <%= link_to businesses_path,
-              data: { controller: "track-changes", action: "click->track-changes#confirmNavigation", turbo: false },
-              class: "px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700" do %>
-            <%= t('businesses.form.back_button', default: 'Back to Business') %>
-          <% end %>
-        </div>
-      <% end %>
+          </div>
+          <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+            <%= link_to businesses_path,
+                data: { controller: "track-changes", action: "click->track-changes#confirmNavigation", turbo: false },
+                class: "px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700" do %>
+              <%= t('businesses.form.back_button', default: 'Back to Business') %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 </section>

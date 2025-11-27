@@ -27,4 +27,9 @@ module ApplicationHelper
       end
     end
   end
+
+  def document_category_label(document)
+    key = document.category.presence || "nothing"
+    I18n.t("activerecord.attributes.document.categories.#{key}", default: key.to_s.humanize)
+  end
 end

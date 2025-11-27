@@ -55,6 +55,7 @@
            columns: {
              t('documents.form.name') => :name,
              t('documents.form.description') => ->(document) { content_tag(:span, document.description&.truncate(25), title: document.description, class: "tooltip") },
+             t('documents.form.category') => ->(document) { document_category_label(document) },
              t('documents.form.filename') => ->(document) { document_filename_display(document) },
              t('documents.form.created_at') => ->(document) { l(document.created_at.to_date) }
            },
