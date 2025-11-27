@@ -1,0 +1,6 @@
+/test
+/spec
+*.md
+.eslintrc.js
+.prettierrc
+.rubocop.yml
