@@ -116,7 +116,7 @@
                         data-inline-edit-record-updated-at-value="<%= material.updated_at.iso8601 %>"
                         data-inline-edit-required-value="true"
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= material.name %>
                     </td>
 
@@ -131,7 +131,7 @@
                         data-inline-edit-record-updated-at-value="<%= material.updated_at.iso8601 %>"
                         data-inline-edit-options-value='<%= unit_options.to_json %>'
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= t_enum(material, :unit_of_measure) %>
                     </td>
 
@@ -145,7 +145,7 @@
                         data-inline-edit-original-value="<%= material.price_per_unit %>"
                         data-inline-edit-record-updated-at-value="<%= material.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= "#{material.price_per_unit} #{material.business.currency_symbol}" %>
                     </td>
 
@@ -159,7 +159,7 @@
                         data-inline-edit-original-value="<%= material.description %>"
                         data-inline-edit-record-updated-at-value="<%= material.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= content_tag(:span, material.description&.truncate(25), title: material.description, class: "tooltip") %>
                     </td>
 

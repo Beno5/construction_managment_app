@@ -117,7 +117,7 @@
                         data-inline-edit-record-updated-at-value="<%= machine.updated_at.iso8601 %>"
                         data-inline-edit-required-value="true"
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= machine.name %>
                     </td>
 
@@ -132,7 +132,7 @@
                         data-inline-edit-record-updated-at-value="<%= machine.updated_at.iso8601 %>"
                         data-inline-edit-options-value='<%= unit_options.to_json %>'
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= t_enum(machine, :unit_of_measure) %>
                     </td>
 
@@ -146,7 +146,7 @@
                         data-inline-edit-original-value="<%= machine.price_per_unit %>"
                         data-inline-edit-record-updated-at-value="<%= machine.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= "#{machine.price_per_unit} #{machine.business.currency_symbol}" %>
                     </td>
 
@@ -160,7 +160,7 @@
                         data-inline-edit-original-value="<%= machine.fixed_costs %>"
                         data-inline-edit-record-updated-at-value="<%= machine.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= machine.fixed_costs %>
                     </td>
 
@@ -174,7 +174,7 @@
                         data-inline-edit-original-value="<%= machine.description %>"
                         data-inline-edit-record-updated-at-value="<%= machine.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= content_tag(:span, machine.description&.truncate(25), title: machine.description, class: "tooltip") %>
                     </td>
 

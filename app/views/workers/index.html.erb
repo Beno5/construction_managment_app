@@ -118,7 +118,7 @@
                         data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
                         data-inline-edit-required-value="true"
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= worker.first_name %>
                     </td>
 
@@ -132,7 +132,7 @@
                         data-inline-edit-original-value="<%= worker.last_name %>"
                         data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= worker.last_name %>
                     </td>
 
@@ -146,7 +146,7 @@
                         data-inline-edit-original-value="<%= worker.profession %>"
                         data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= worker.profession %>
                     </td>
 
@@ -161,7 +161,7 @@
                         data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
                         data-inline-edit-options-value='<%= unit_options.to_json %>'
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= t_enum(worker, :unit_of_measure) %>
                     </td>
 
@@ -175,7 +175,7 @@
                         data-inline-edit-original-value="<%= worker.price_per_unit %>"
                         data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= "#{worker.price_per_unit} #{worker.business.currency_symbol}" %>
                     </td>
 
@@ -189,7 +189,7 @@
                         data-inline-edit-original-value="<%= worker.description %>"
                         data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
                         data-action="dblclick->inline-edit#activate"
-                        title="Double-click to edit">
+                        title="<%= t('tooltips.double_click_to_edit') %>">
                       <%= content_tag(:span, worker.description&.truncate(25), title: worker.description, class: "tooltip") %>
                     </td>
 

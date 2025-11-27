@@ -37,7 +37,7 @@
           <%= form_with model: [@current_business, @project, @task, @sub_task],
                         local: true,
                         html: { novalidate: true },
-                        data: { controller: "create-form", action: "submit->create-form#validate" } do |f| %>
+                        data: { controller: "create-form track-changes", action: "submit->create-form#validate" } do |f| %>
           <div class="grid grid-cols-6 gap-6">
             <!-- Name -->
             <div class="col-span-6 sm:col-span-3">
