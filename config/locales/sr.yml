@@ -45,6 +45,8 @@ sr:
     value_placeholder: "Vrijednost"
     add_field: "Dodaj prilagođeno polje"
     remove: "Ukloni polje"
+    saved: "Prilagođeno polje sačuvano"
+    unsaved_changes: "Imate nesačuvane promjene u prilagođenim poljima. Želite li ipak napustiti stranicu?"
     no_fields: "Nema definisanih prilagođenih polja"
     edit_to_add: "Uredi ovaj zapis u formi da dodaš prilagođena polja"
     enter_field_name: "Unesite naziv polja:"
@@ -737,6 +739,7 @@ sr:
   loading:
     please_wait: "Učitavanje..."
   tooltips:
+    click_to_edit: "Klikni za izmjenu"
     double_click_to_edit: "Dupli klik za izmjenu"
     double_click_to_change_file: "Dupli klik za promjenu fajla"
   errors:

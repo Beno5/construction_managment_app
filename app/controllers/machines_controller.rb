@@ -76,6 +76,7 @@ class MachinesController < ApplicationController
               price_per_unit: @machine.price_per_unit,
               fixed_costs: @machine.fixed_costs,
               description: @machine.description,
+              custom_fields: @machine.custom_fields,
               updated_at: @machine.updated_at.iso8601
             }
           }, status: :ok
@@ -128,13 +129,24 @@ class MachinesController < ApplicationController
   def machine_params
     params.require(:machine).permit(
       :name, :unit_of_measure, :price_per_unit, :fixed_costs, :description,
-      custom_fields: [:key, :value]
+      custom_fields: {}
     ).tap do |whitelisted|
       if params[:machine][:custom_fields]
-        transformed_custom_fields = params[:machine][:custom_fields].to_unsafe_h.each_with_object({}) do |(_, field), hash|
-          hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
+        custom_fields_param = params[:machine][:custom_fields].to_unsafe_h
+
+        # Handle two formats:
+        # 1. Array format from forms: [{key: "name", value: "val"}, ...]
+        # 2. Hash format from inline editing: {field_name: "value"}
+        if custom_fields_param.values.first.is_a?(Hash) && custom_fields_param.values.first.key?("key")
+          # Array format from forms - replace all custom fields
+          transformed_custom_fields = custom_fields_param.each_with_object({}) do |(_, field), hash|
+            hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
+          end
+          whitelisted[:custom_fields] = transformed_custom_fields
+        else
+          # Hash format from inline editing - merge with existing custom fields
+          whitelisted[:custom_fields] = @machine.custom_fields.merge(custom_fields_param)
         end
-        whitelisted[:custom_fields] = transformed_custom_fields
       else
         whitelisted[:custom_fields] = {}
       end

@@ -123,8 +123,8 @@
                           data-inline-edit-url-value="<%= business_project_task_sub_task_activity_path(@business, @project, @task, @sub_task, item) %>"
                           data-inline-edit-original-value="<%= item.quantity %>"
                           data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
-                          data-action="dblclick->inline-edit#activate"
-                          title="<%= t('tooltips.double_click_to_edit') %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
                         <% elsif local_assigns[:model_name] == 'Activities' && header == t('resources.table.total_cost') %>
                           data-controller="inline-edit"
                           data-inline-edit-model-value="activity"
@@ -133,8 +133,8 @@
                           data-inline-edit-url-value="<%= business_project_task_sub_task_activity_path(@business, @project, @task, @sub_task, item) %>"
                           data-inline-edit-original-value="<%= item.total_cost %>"
                           data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
-                          data-action="dblclick->inline-edit#activate"
-                          title="<%= t('tooltips.double_click_to_edit') %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
                         <% elsif local_assigns[:model_name] == 'Documents' && header == t('documents.form.name') %>
                           data-controller="inline-edit"
                           data-inline-edit-model-value="document"
@@ -144,8 +144,8 @@
                           data-inline-edit-original-value="<%= item.name %>"
                           data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
                           data-inline-edit-required-value="true"
-                          data-action="dblclick->inline-edit#activate"
-                          title="<%= t('tooltips.double_click_to_edit') %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
                         <% elsif local_assigns[:model_name] == 'Documents' && header == t('documents.form.description') %>
                           data-controller="inline-edit"
                           data-inline-edit-model-value="document"
@@ -154,8 +154,8 @@
                           data-inline-edit-url-value="<%= document_path(item) %>"
                         data-inline-edit-original-value="<%= item.description %>"
                         data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
-                        data-action="dblclick->inline-edit#activate"
-                        title="<%= t('tooltips.double_click_to_edit') %>"
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>"
                         <% elsif local_assigns[:model_name] == 'Documents' && header == t('documents.form.category') %>
                           data-controller="inline-edit"
                           data-inline-edit-model-value="document"
@@ -165,8 +165,8 @@
                           data-inline-edit-original-value="<%= item.category %>"
                           data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
                           data-inline-edit-options-value='<%= Document.categories.keys.index_with { |key| t("activerecord.attributes.document.categories.#{key}") }.to_json %>'
-                          data-action="dblclick->inline-edit#activate"
-                          title="<%= t('tooltips.double_click_to_edit') %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
                         <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.unit_of_measure') %>
                           data-controller="inline-edit"
                           data-inline-edit-model-value="sub_task"
@@ -176,8 +176,8 @@
                           data-inline-edit-original-value="<%= item.unit_of_measure %>"
                           data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
                           data-inline-edit-options-value='<%= { "" => "" }.merge(SubTask.unit_of_measures.keys.index_with { |k| t("activerecord.attributes.sub_task.unit_of_measures.#{k}") }).to_json %>'
-                          data-action="dblclick->inline-edit#activate"
-                          title="<%= t('tooltips.double_click_to_edit') %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
                         <% elsif local_assigns[:model_name] == 'Documents' && header == t('documents.form.filename') %>
                           data-controller="file-upload"
                           data-file-upload-url-value="<%= document_path(item) %>"
@@ -195,8 +195,8 @@
                           data-inline-edit-original-value="<%= item.name %>"
                           data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
                           data-inline-edit-required-value="true"
-                          data-action="dblclick->inline-edit#activate"
-                          title="<%= t('tooltips.double_click_to_edit') %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
                         <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.quantity') %>
                           data-controller="inline-edit"
                           data-inline-edit-model-value="sub_task"
@@ -205,8 +205,8 @@
                           data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, item) %>"
                           data-inline-edit-original-value="<%= item.quantity %>"
                           data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
-                          data-action="dblclick->inline-edit#activate"
-                          title="<%= t('tooltips.double_click_to_edit') %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
                         <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.planned_cost', currency: (@project.business.currency_symbol rescue '')) %>
                           data-controller="inline-edit"
                           data-inline-edit-model-value="sub_task"
@@ -215,8 +215,8 @@
                           data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, item) %>"
                           data-inline-edit-original-value="<%= item.planned_cost %>"
                           data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
-                          data-action="dblclick->inline-edit#activate"
-                          title="<%= t('tooltips.double_click_to_edit') %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
                         <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.price_per_unit', currency: (@project.business.currency_symbol rescue '')) %>
                           data-controller="inline-edit"
                           data-inline-edit-model-value="sub_task"
@@ -225,8 +225,8 @@
                           data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, item) %>"
                           data-inline-edit-original-value="<%= item.price_per_unit %>"
                           data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
-                          data-action="dblclick->inline-edit#activate"
-                          title="<%= t('tooltips.double_click_to_edit') %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
                         <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.planned_start_date') %>
                           data-controller="inline-edit"
                           data-inline-edit-model-value="sub_task"
@@ -235,8 +235,8 @@
                           data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, item) %>"
                           data-inline-edit-original-value="<%= item.planned_start_date %>"
                           data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
-                          data-action="dblclick->inline-edit#activate"
-                          title="<%= t('tooltips.double_click_to_edit') %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
                         <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.planned_end_date') %>
                           data-controller="inline-edit"
                           data-inline-edit-model-value="sub_task"
@@ -245,8 +245,8 @@
                           data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, item) %>"
                           data-inline-edit-original-value="<%= item.planned_end_date %>"
                           data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
-                          data-action="dblclick->inline-edit#activate"
-                          title="<%= t('tooltips.double_click_to_edit') %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
                         <% end %>>
                       <% if attr.is_a?(Proc) %>
                         <%= attr.call(item) %>

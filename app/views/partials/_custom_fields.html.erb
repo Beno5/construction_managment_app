@@ -33,45 +33,32 @@
           <div class="flex-1 grid grid-cols-2 gap-3">
             <!-- Key Input -->
             <div>
-              <% if form_mode %>
-                <%= text_field_tag "#{model}[custom_fields][#{index}][key]",
-                      key,
-                      placeholder: t('custom_fields.field_name_placeholder', default: 'Field name'),
-                      class: "w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white dark:placeholder-gray-400",
-                      data: { action: "input->track-changes#markChanged", track_changes_target: "input" },
-                      required: true %>
-              <% else %>
-                <!-- Existing record: key is not editable, just display -->
-                <div class="w-full px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg dark:bg-gray-600 dark:border-gray-500 dark:text-white cursor-not-allowed">
-                  <%= key %>
-                </div>
-              <% end %>
+              <%= text_field_tag "#{model}[custom_fields][#{index}][key]",
+                    key,
+                    placeholder: t('custom_fields.field_name_placeholder', default: 'Field name'),
+                    class: "w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white dark:placeholder-gray-400",
+                    data: {
+                      action: form_mode ? "input->track-changes#markChanged" : "",
+                      track_changes_target: form_mode ? "input" : "",
+                      custom_field_role: "key",
+                      custom_field_original_key: key
+                    },
+                    required: true %>
             </div>
 
             <!-- Value Input -->
             <div>
-              <% if form_mode %>
-                <%= text_field_tag "#{model}[custom_fields][#{index}][value]",
-                      value,
-                      placeholder: t('custom_fields.value_placeholder', default: 'Value'),
-                      class: "w-full px-3 py-2 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white dark:placeholder-gray-400",
-                      data: { action: "input->track-changes#markChanged", track_changes_target: "input" },
-                      required: true %>
-              <% else %>
-                <!-- Existing record: value is inline editable -->
-                <div class="w-full px-3 py-2 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg dark:bg-gray-600 dark:border-gray-500 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
-                     data-controller="inline-edit"
-                     data-inline-edit-model-value="<%= model %>"
-                     data-inline-edit-field-value="custom_fields.<%= key %>"
-                     data-inline-edit-type-value="text"
-                     data-inline-edit-url-value="<%= url %>"
-                     data-inline-edit-original-value="<%= value %>"
-                     data-inline-edit-record-updated-at-value="<%= record.updated_at.iso8601 %>"
-                     data-action="dblclick->inline-edit#activate"
-                     title="<%= t('tooltips.double_click_to_edit', default: 'Double-click to edit') %>">
-                  <%= value %>
-                </div>
-              <% end %>
+              <%= text_field_tag "#{model}[custom_fields][#{index}][value]",
+                    value,
+                    placeholder: t('custom_fields.value_placeholder', default: 'Value'),
+                    class: "w-full px-3 py-2 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white dark:placeholder-gray-400",
+                    data: {
+                      action: form_mode ? "input->track-changes#markChanged" : "",
+                      track_changes_target: form_mode ? "input" : "",
+                      custom_field_role: "value",
+                      original_value: value
+                    },
+                    required: true %>
             </div>
           </div>
 
@@ -102,25 +89,12 @@
   </div>
 
   <!-- Add Field Button -->
-  <% if form_mode %>
-    <!-- New record: add field in form -->
-    <button type="button"
-            data-action="click->custom-fields#addField"
-            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-      </svg>
-      <%= t('custom_fields.add_field', default: 'Add Custom Field') %>
-    </button>
-  <% else %>
-    <!-- Existing record: add field via inline editing -->
-    <button type="button"
-            data-action="click->custom-fields#addFieldInline"
-            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-      </svg>
-      <%= t('custom_fields.add_field', default: 'Add Custom Field') %>
-    </button>
-  <% end %>
+  <button type="button"
+          data-action="click->custom-fields#addField"
+          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+    </svg>
+    <%= t('custom_fields.add_field', default: 'Add Custom Field') %>
+  </button>
 </div>

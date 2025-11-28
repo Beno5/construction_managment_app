@@ -103,8 +103,8 @@
                  data-inline-edit-original-value="<%= @norm.name %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-inline-edit-required-value="true"
-                 data-action="dblclick->inline-edit#activate"
-              title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+              title="<%= t('tooltips.click_to_edit') %>">
               <%= @norm.name %>
             </div>
           </div>
@@ -120,8 +120,8 @@
                  data-inline-edit-original-value="<%= @norm.norm_type %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-inline-edit-options-value='<%= Norm.norm_types.keys.index_with { |k| t("activerecord.attributes.norm.norm_types.#{k}", default: k.humanize) }.merge("" => "").to_json %>'
-                 data-action="dblclick->inline-edit#activate"
-              title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+              title="<%= t('tooltips.click_to_edit') %>">
               <%= t_enum(@norm, :norm_type) %>
             </div>
           </div>
@@ -137,8 +137,8 @@
                  data-inline-edit-original-value="<%= @norm.subtype %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-inline-edit-options-value='<%= Norm.subtypes.keys.index_with { |k| t("activerecord.attributes.norm.subtypes.#{k}", default: k.humanize) }.merge({ "" => "-" }).merge("" => "").to_json %>'
-                 data-action="dblclick->inline-edit#activate"
-              title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+              title="<%= t('tooltips.click_to_edit') %>">
               <%= @norm.subtype ? t("activerecord.attributes.norm.subtypes.#{@norm.subtype}", default: @norm.subtype.humanize) : "-" %>
             </div>
           </div>
@@ -154,8 +154,8 @@
                  data-inline-edit-original-value="<%= @norm.unit_of_measure %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
                  data-inline-edit-options-value='<%= all_unit_options.to_h { |label, key| [key, label] }.merge("" => "").to_json %>'
-                 data-action="dblclick->inline-edit#activate"
-              title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+              title="<%= t('tooltips.click_to_edit') %>">
               <%= t_enum(@norm, :unit_of_measure) %>
             </div>
           </div>
@@ -170,8 +170,8 @@
                  data-inline-edit-url-value="<%= business_norm_path(@current_business, @norm) %>"
                  data-inline-edit-original-value="<%= @norm.norm_value %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
-                 data-action="dblclick->inline-edit#activate"
-              title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+              title="<%= t('tooltips.click_to_edit') %>">
               <%= @norm.norm_value %>
             </div>
           </div>
@@ -186,8 +186,8 @@
                  data-inline-edit-url-value="<%= business_norm_path(@current_business, @norm) %>"
                  data-inline-edit-original-value="<%= @norm.info %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
-                 data-action="dblclick->inline-edit#activate"
-              title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+              title="<%= t('tooltips.click_to_edit') %>">
               <%= @norm.info %>
             </div>
           </div>
@@ -202,15 +202,20 @@
                  data-inline-edit-url-value="<%= business_norm_path(@current_business, @norm) %>"
                  data-inline-edit-original-value="<%= @norm.description %>"
                  data-inline-edit-record-updated-at-value="<%= @norm.updated_at.iso8601 %>"
-                 data-action="dblclick->inline-edit#activate"
-              title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+              title="<%= t('tooltips.click_to_edit') %>">
               <%= @norm.description %>
             </div>
           </div>
           <!-- Custom Fields -->
           <div class="col-span-6">
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('norms.form.custom_fields', default: 'Prilagođena polja') %></h3>
-            <%= render 'partials/custom_fields', custom_fields: @norm.custom_fields, model: 'norm' %>
+            <%= render 'partials/custom_fields',
+                  custom_fields: @norm.custom_fields,
+                  model: 'norm',
+                  record: @norm,
+                  url: business_norm_path(@current_business, @norm),
+                  form_mode: false %>
           </div>
         </div>
         <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">

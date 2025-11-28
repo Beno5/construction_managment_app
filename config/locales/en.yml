@@ -6,6 +6,8 @@ en:
     value_placeholder: "Value"
     add_field: "Add Custom Field"
     remove: "Remove field"
+    saved: "Custom field saved"
+    unsaved_changes: "You have unsaved changes in custom fields. Leave anyway?"
     no_fields: "No custom fields defined"
     edit_to_add: "Edit this record in form mode to add custom fields"
     enter_field_name: "Enter field name:"
@@ -731,6 +733,7 @@ en:
   loading:
     please_wait: "Loading..."
   tooltips:
+    click_to_edit: "Click to edit"
     double_click_to_edit: "Double-click to edit"
     double_click_to_change_file: "Double-click to change file"
   errors:

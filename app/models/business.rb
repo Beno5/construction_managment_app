@@ -1,4 +1,6 @@
 class Business < ApplicationRecord
+  include CustomFields
+
   belongs_to :user, optional: true # Opcionalna veza sa korisnikom
   has_many :projects, dependent: :destroy
   has_many :workers, dependent: :destroy

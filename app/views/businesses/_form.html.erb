@@ -91,6 +91,14 @@
                     class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
                     data: { create_form_target: "input" } %>
             </div>
+            <!-- Custom Fields -->
+            <div class="col-span-6">
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('businesses.form.custom_fields', default: 'Custom Fields') %></h3>
+              <%= render 'partials/custom_fields',
+                    custom_fields: @business.custom_fields,
+                    model: 'business',
+                    form_mode: true %>
+            </div>
             </div>
             <!-- Submit Button -->
             <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
@@ -120,8 +128,8 @@
                  data-inline-edit-original-value="<%= @business.name %>"
                  data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
                  data-inline-edit-required-value="true"
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               <%= @business.name %>
             </div>
           </div>
@@ -136,8 +144,8 @@
                  data-inline-edit-url-value="<%= business_path(@business) %>"
                  data-inline-edit-original-value="<%= @business.address %>"
                  data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               <%= @business.address %>
             </div>
           </div>
@@ -152,8 +160,8 @@
                  data-inline-edit-url-value="<%= business_path(@business) %>"
                  data-inline-edit-original-value="<%= @business.phone_number %>"
                  data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               <%= @business.phone_number %>
             </div>
           </div>
@@ -168,8 +176,8 @@
                  data-inline-edit-url-value="<%= business_path(@business) %>"
                  data-inline-edit-original-value="<%= @business.vat_number %>"
                  data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               <%= @business.vat_number %>
             </div>
           </div>
@@ -184,8 +192,8 @@
                  data-inline-edit-url-value="<%= business_path(@business) %>"
                  data-inline-edit-original-value="<%= @business.registration_number %>"
                  data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               <%= @business.registration_number %>
             </div>
           </div>
@@ -200,8 +208,8 @@
                  data-inline-edit-url-value="<%= business_path(@business) %>"
                  data-inline-edit-original-value="<%= @business.owner_first_name %>"
                  data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               <%= @business.owner_first_name %>
             </div>
           </div>
@@ -216,8 +224,8 @@
                  data-inline-edit-url-value="<%= business_path(@business) %>"
                  data-inline-edit-original-value="<%= @business.owner_last_name %>"
                  data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               <%= @business.owner_last_name %>
             </div>
           </div>
@@ -233,8 +241,8 @@
                  data-inline-edit-original-value="<%= @business.currency %>"
                  data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
                  data-inline-edit-options-value='<%= Business.currencies.keys.index_with { |c| c.capitalize }.merge("" => "").merge("" => "").to_json %>'
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               <%= @business.currency %>
             </div>
           </div>
@@ -249,10 +257,20 @@
                  data-inline-edit-url-value="<%= business_path(@business) %>"
                  data-inline-edit-original-value="<%= @business.working_hours_per_day %>"
                  data-inline-edit-record-updated-at-value="<%= @business.updated_at.iso8601 %>"
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               <%= @business.working_hours_per_day %>
             </div>
+          </div>
+          <!-- Custom Fields -->
+          <div class="col-span-6">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('businesses.form.custom_fields', default: 'Custom Fields') %></h3>
+            <%= render 'partials/custom_fields',
+                  custom_fields: @business.custom_fields,
+                  model: 'business',
+                  record: @business,
+                  url: business_path(@business),
+                  form_mode: false %>
           </div>
           </div>
           <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">

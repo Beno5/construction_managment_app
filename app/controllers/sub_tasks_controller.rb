@@ -100,6 +100,7 @@ class SubTasksController < ApplicationController
               num_workers_skilled: @sub_task.num_workers_skilled,
               num_workers_unskilled: @sub_task.num_workers_unskilled,
               num_machines: @sub_task.num_machines,
+              custom_fields: @sub_task.custom_fields,
               formatted_duration: view_context.formatted_duration_days_hours(@sub_task.duration, @business),
               updated_at: @sub_task.updated_at.iso8601,
               task: {
@@ -193,13 +194,24 @@ class SubTasksController < ApplicationController
     params.require(:sub_task).permit(
       :name, :description, :planned_start_date, :planned_end_date, :planned_cost, :price_per_unit, :unit_of_measure, :quantity,
       :duration, :num_workers_skilled, :num_workers_unskilled, :num_machines,
-      custom_fields: [:key, :value]
+      custom_fields: {}
     ).tap do |whitelisted|
       if params[:sub_task][:custom_fields]
-        transformed_custom_fields = params[:sub_task][:custom_fields].to_unsafe_h.each_with_object({}) do |(_, field), hash|
-          hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
+        custom_fields_param = params[:sub_task][:custom_fields].to_unsafe_h
+
+        # Handle two formats:
+        # 1. Array format from forms: [{key: "name", value: "val"}, ...]
+        # 2. Hash format from inline editing: {field_name: "value"}
+        if custom_fields_param.values.first.is_a?(Hash) && custom_fields_param.values.first.key?("key")
+          # Array format from forms - replace all custom fields
+          transformed_custom_fields = custom_fields_param.each_with_object({}) do |(_, field), hash|
+            hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
+          end
+          whitelisted[:custom_fields] = transformed_custom_fields
+        else
+          # Hash format from inline editing - merge with existing custom fields
+          whitelisted[:custom_fields] = @sub_task.custom_fields.merge(custom_fields_param)
         end
-        whitelisted[:custom_fields] = transformed_custom_fields
       else
         whitelisted[:custom_fields] = {}
       end

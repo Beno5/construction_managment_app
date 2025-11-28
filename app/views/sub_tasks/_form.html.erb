@@ -136,8 +136,8 @@
                    data-inline-edit-original-value="<%= @sub_task.name %>"
                    data-inline-edit-record-updated-at-value="<%= @sub_task.updated_at.iso8601 %>"
                    data-inline-edit-required-value="true"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @sub_task.name %>
               </div>
             </div>
@@ -155,8 +155,8 @@
                    data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) %>"
                    data-inline-edit-original-value="<%= @sub_task.description %>"
                    data-inline-edit-record-updated-at-value="<%= @sub_task.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @sub_task.description %>
               </div>
             </div>
@@ -174,8 +174,8 @@
                    data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) %>"
                    data-inline-edit-original-value="<%= @sub_task.quantity %>"
                    data-inline-edit-record-updated-at-value="<%= @sub_task.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @sub_task.quantity %>
               </div>
             </div>
@@ -193,8 +193,8 @@
                    data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) %>"
                    data-inline-edit-original-value="<%= @sub_task.planned_cost %>"
                    data-inline-edit-record-updated-at-value="<%= @sub_task.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @sub_task.planned_cost %>
               </div>
             </div>
@@ -212,8 +212,8 @@
                    data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) %>"
                    data-inline-edit-original-value="<%= @sub_task.price_per_unit %>"
                    data-inline-edit-record-updated-at-value="<%= @sub_task.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @sub_task.price_per_unit %>
               </div>
             </div>
@@ -232,8 +232,8 @@
                    data-inline-edit-original-value="<%= @sub_task.unit_of_measure %>"
                    data-inline-edit-record-updated-at-value="<%= @sub_task.updated_at.iso8601 %>"
                    data-inline-edit-options-value='<%= { "" => "" }.merge(unit_options).to_json %>'
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @sub_task.unit_of_measure.present? ? I18n.t("activerecord.attributes.sub_task.unit_of_measures.#{@sub_task.unit_of_measure}") : "" %>
               </div>
             </div>
@@ -251,8 +251,8 @@
                    data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) %>"
                    data-inline-edit-original-value="<%= @sub_task.planned_start_date %>"
                    data-inline-edit-record-updated-at-value="<%= @sub_task.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @sub_task.planned_start_date ? I18n.l(@sub_task.planned_start_date) : '' %>
               </div>
             </div>
@@ -270,8 +270,8 @@
                    data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, @sub_task) %>"
                    data-inline-edit-original-value="<%= @sub_task.planned_end_date %>"
                    data-inline-edit-record-updated-at-value="<%= @sub_task.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @sub_task.planned_end_date ? I18n.l(@sub_task.planned_end_date) : '' %>
               </div>
             </div>
@@ -279,7 +279,12 @@
             <!-- Custom Fields -->
             <div class="col-span-6">
               <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('subtasks.form.custom_fields') %></h3>
-              <%= render 'partials/custom_fields', custom_fields: @sub_task.custom_fields, model: 'sub_task' %>
+              <%= render 'partials/custom_fields',
+                    custom_fields: @sub_task.custom_fields,
+                    model: 'sub_task',
+                    record: @sub_task,
+                    url: business_project_task_sub_task_path(@current_business, @project, @task, @sub_task),
+                    form_mode: false %>
             </div>
           </div>
 

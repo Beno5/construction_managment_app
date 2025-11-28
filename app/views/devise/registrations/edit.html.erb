@@ -38,8 +38,8 @@
                  data-inline-edit-original-value="<%= resource.name %>"
                  data-inline-edit-record-updated-at-value="<%= resource.updated_at.iso8601 %>"
                  data-inline-edit-required-value="true"
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               <%= resource.name %>
             </div>
           </div>
@@ -56,8 +56,8 @@
                  data-inline-edit-original-value="<%= resource.email %>"
                  data-inline-edit-record-updated-at-value="<%= resource.updated_at.iso8601 %>"
                  data-inline-edit-required-value="true"
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               <%= resource.email %>
             </div>
           </div>
@@ -74,8 +74,8 @@
                  data-inline-edit-original-value="<%= resource.locale %>"
                  data-inline-edit-record-updated-at-value="<%= resource.updated_at.iso8601 %>"
                  data-inline-edit-options-value='<%= [["English", "en"], ["Srpski", "sr"]].to_h { |label, val| [val, label] }.to_json %>'
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               <%= resource.locale.present? ? (resource.locale == "sr" ? "Srpski" : "English") : "-" %>
             </div>
           </div>
@@ -92,8 +92,8 @@
                  data-inline-edit-original-value=""
                  data-inline-edit-record-updated-at-value="<%= resource.updated_at.iso8601 %>"
                  data-inline-edit-placeholder-value="<%= t('users.edit.new_password_placeholder', default: 'Unesite novu lozinku') %>"
-                 data-action="dblclick->inline-edit#activate"
-                 title="<%= t('tooltips.double_click_to_edit') %>">
+                 data-action="click->inline-edit#activate"
+                 title="<%= t('tooltips.click_to_edit') %>">
               ••••••••
             </div>
           </div>

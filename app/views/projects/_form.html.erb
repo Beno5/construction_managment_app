@@ -109,8 +109,8 @@
                    data-inline-edit-original-value="<%= @project.name %>"
                    data-inline-edit-record-updated-at-value="<%= @project.updated_at.iso8601 %>"
                    data-inline-edit-required-value="true"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @project.name %>
               </div>
             </div>
@@ -128,8 +128,8 @@
                    data-inline-edit-url-value="<%= business_project_path(@current_business, @project) %>"
                    data-inline-edit-original-value="<%= @project.address %>"
                    data-inline-edit-record-updated-at-value="<%= @project.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @project.address %>
               </div>
             </div>
@@ -147,8 +147,8 @@
                    data-inline-edit-url-value="<%= business_project_path(@current_business, @project) %>"
                    data-inline-edit-original-value="<%= @project.project_manager %>"
                    data-inline-edit-record-updated-at-value="<%= @project.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @project.project_manager %>
               </div>
             </div>
@@ -166,8 +166,8 @@
                    data-inline-edit-url-value="<%= business_project_path(@current_business, @project) %>"
                    data-inline-edit-original-value="<%= @project.planned_cost %>"
                    data-inline-edit-record-updated-at-value="<%= @project.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @project.planned_cost %>
               </div>
             </div>
@@ -186,8 +186,8 @@
                    data-inline-edit-original-value="<%= @project.status %>"
                    data-inline-edit-record-updated-at-value="<%= @project.updated_at.iso8601 %>"
                    data-inline-edit-options-value='<%= Project.statuses.keys.index_with { |k| I18n.t("activerecord.attributes.project.statuses.#{k}", default: k.humanize) }.merge("" => "").to_json %>'
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= I18n.t("activerecord.attributes.project.statuses.#{@project.status}", default: @project.status.humanize) %>
               </div>
             </div>
@@ -205,8 +205,8 @@
                    data-inline-edit-url-value="<%= business_project_path(@current_business, @project) %>"
                    data-inline-edit-original-value="<%= @project.description %>"
                    data-inline-edit-record-updated-at-value="<%= @project.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @project.description %>
               </div>
             </div>

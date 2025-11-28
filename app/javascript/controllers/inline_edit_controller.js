@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Generic inline edit controller for any model
-// Supports double-click activation, multiple field types, validation, and optimistic locking
+// Supports single-click activation, multiple field types, validation, and optimistic locking
 //
 // Usage:
 //   <div data-controller="inline-edit"
@@ -11,7 +11,7 @@ import { Controller } from "@hotwired/stimulus"
 //        data-inline-edit-url-value="/businesses/1/workers/123"
 //        data-inline-edit-original-value="<%= worker.first_name %>"
 //        data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
-//        data-action="dblclick->inline-edit#activate">
+//        data-action="click->inline-edit#activate">
 //     <%= worker.first_name %>
 //   </div>
 //
@@ -86,8 +86,8 @@ export default class extends Controller {
     this.clearDirty()
   }
 
-  // Activate edit mode on double-click
-  activate(event) {
+  // Activate edit mode on click
+  async activate(event) {
     if (this.isEditing) return
 
     // Guard: prevent activation when field is locked (e.g., auto-calculated)
@@ -100,12 +100,27 @@ export default class extends Controller {
       return
     }
 
-    // Prevent concurrent edits across different inline-edit instances
+    // If another field is being edited, save it first before activating this one
     if (window.__inlineEditActiveElement && window.__inlineEditActiveElement !== this.element) {
       event.preventDefault()
       event.stopPropagation()
-      this.showToast(this.translations.finishCurrentField, 'error')
-      return
+
+      // Get the controller of the currently active element
+      const activeController = this.application.getControllerForElementAndIdentifier(
+        window.__inlineEditActiveElement,
+        'inline-edit'
+      )
+
+      if (activeController) {
+        // Save the active field and wait for completion
+        await activeController.save()
+
+        // If the save had an error (field still in edit mode), don't proceed
+        if (activeController.isEditing) {
+          this.showToast(this.translations.finishCurrentField, 'error')
+          return
+        }
+      }
     }
 
     this.acquireGlobalLock()
@@ -404,7 +419,10 @@ export default class extends Controller {
       const field = element.dataset.inlineEditFieldValue
 
       if (elementUrl !== this.urlValue) return
-      if (!Object.prototype.hasOwnProperty.call(updatedData, field)) return
+
+      // Handle nested fields (e.g., "custom_fields.field_name")
+      const value = this.getNestedValue(updatedData, field)
+      if (value === undefined) return
 
       const type = element.dataset.inlineEditTypeValue || 'text'
       const optionsRaw = element.dataset.inlineEditOptionsValue
@@ -417,7 +435,6 @@ export default class extends Controller {
         }
       }
 
-      const value = updatedData[field]
       const display = this.formatDisplayValueForType(type, value, options)
 
       // Update visible text only if element is not currently showing an input
@@ -428,6 +445,21 @@ export default class extends Controller {
       // Keep original value in sync for next edit
       element.dataset.inlineEditOriginalValue = value
     })
+  }
+
+  // Get nested value from object using dot notation (e.g., "custom_fields.field_name")
+  getNestedValue(obj, path) {
+    const keys = path.split('.')
+    let current = obj
+
+    for (const key of keys) {
+      if (current === null || current === undefined) {
+        return undefined
+      }
+      current = current[key]
+    }
+
+    return current
   }
 
   updateRelatedRecords(updatedData) {
@@ -484,7 +516,9 @@ export default class extends Controller {
       const field = element.dataset.inlineEditFieldValue
       console.log('updateFieldsForUrl - checking field:', field)
 
-      if (!Object.prototype.hasOwnProperty.call(fields, field)) {
+      // Handle nested fields (e.g., "custom_fields.field_name")
+      const value = this.getNestedValue(fields, field)
+      if (value === undefined) {
         console.log('updateFieldsForUrl - field not in data, skipping:', field)
         return
       }
@@ -500,7 +534,6 @@ export default class extends Controller {
         }
       }
 
-      const value = fields[field]
       const display = this.formatDisplayValueForType(type, value, options)
 
       console.log('updateFieldsForUrl - updating field:', field, 'with value:', value, 'display:', display)
@@ -613,6 +646,10 @@ export default class extends Controller {
       return this.translations.unsavedChanges
     }
     window.addEventListener('beforeunload', this.boundBeforeUnload)
+
+    // Turbo navigation guard (prompts before leaving while editing)
+    this.boundTurboBeforeVisit ||= (event) => this.handleTurboBeforeVisit(event)
+    window.addEventListener('turbo:before-visit', this.boundTurboBeforeVisit)
   }
 
   clearDirty() {
@@ -621,6 +658,21 @@ export default class extends Controller {
     this.isDirty = false
     if (this.boundBeforeUnload) {
       window.removeEventListener('beforeunload', this.boundBeforeUnload)
+    }
+    if (this.boundTurboBeforeVisit) {
+      window.removeEventListener('turbo:before-visit', this.boundTurboBeforeVisit)
+    }
+  }
+
+  handleTurboBeforeVisit(event) {
+    if (!this.isDirty) return
+
+    const message = this.translations.unsavedChanges || 'You have unsaved changes. Leave anyway?'
+    if (!window.confirm(message)) {
+      event.preventDefault()
+      event.stopImmediatePropagation()
+    } else {
+      this.clearDirty()
     }
   }
 

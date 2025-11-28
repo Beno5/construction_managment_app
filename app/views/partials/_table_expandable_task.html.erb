@@ -86,7 +86,7 @@
                       data-inline-edit-original-value="<%= task.name %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
                       data-inline-edit-required-value="true"
-                      data-action="dblclick->inline-edit#activate"
+                      data-action="click->inline-edit#activate"
                       class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                       <%= task.name&.truncate(150) %>
                     </span>
@@ -101,7 +101,7 @@
                       data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
                       data-inline-edit-original-value="<%= task.description %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
-                      data-action="dblclick->inline-edit#activate"
+                      data-action="click->inline-edit#activate"
                       class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                       <%= task.description&.truncate(150) %>
                     </span>
@@ -116,7 +116,7 @@
                       data-inline-edit-original-value="<%= task.unit_of_measure %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
                       data-inline-edit-options-value='<%= { "" => "" }.merge(Task.unit_of_measures.keys.index_with { |k| t("activerecord.attributes.task.unit_of_measures.#{k}") }).to_json %>'
-                      data-action="dblclick->inline-edit#activate"
+                      data-action="click->inline-edit#activate"
                       class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                       <%= t("activerecord.attributes.task.unit_of_measures.#{task.unit_of_measure}") if task.unit_of_measure %>
                     </span>
@@ -130,7 +130,7 @@
                       data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
                       data-inline-edit-original-value="<%= task.quantity %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
-                      data-action="dblclick->inline-edit#activate"
+                      data-action="click->inline-edit#activate"
                       class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                       <%= task.quantity %>
                     </span>
@@ -144,7 +144,7 @@
                       data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
                       data-inline-edit-original-value="<%= task.planned_cost %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
-                      data-action="dblclick->inline-edit#activate"
+                      data-action="click->inline-edit#activate"
                       class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                       <%= task.planned_cost %>
                     </span>
@@ -158,7 +158,7 @@
                       data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
                       data-inline-edit-original-value="<%= task.price_per_unit %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
-                      data-action="dblclick->inline-edit#activate"
+                      data-action="click->inline-edit#activate"
                       class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                       <%= task.price_per_unit %>
                     </span>
@@ -172,7 +172,7 @@
                       data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
                       data-inline-edit-original-value="<%= task.planned_start_date %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
-                      data-action="dblclick->inline-edit#activate"
+                      data-action="click->inline-edit#activate"
                       class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                       <%= I18n.l(task.planned_start_date) if task.planned_start_date %>
                     </span>
@@ -186,7 +186,7 @@
                       data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
                       data-inline-edit-original-value="<%= task.planned_end_date %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
-                      data-action="dblclick->inline-edit#activate"
+                      data-action="click->inline-edit#activate"
                       class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                       <%= I18n.l(task.planned_end_date) if task.planned_end_date %>
                     </span>
@@ -246,7 +246,7 @@
                         data-inline-edit-original-value="<%= sub_task.name %>"
                         data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
                         data-inline-edit-required-value="true"
-                        data-action="dblclick->inline-edit#activate"
+                        data-action="click->inline-edit#activate"
                         class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                         <%= sub_task.name&.truncate(150) %>
                       </span>
@@ -261,7 +261,7 @@
                         data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
                         data-inline-edit-original-value="<%= sub_task.description %>"
                         data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
-                        data-action="dblclick->inline-edit#activate"
+                        data-action="click->inline-edit#activate"
                         class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                         <%= sub_task.description&.truncate(150) %>
                       </span>
@@ -276,7 +276,7 @@
                         data-inline-edit-original-value="<%= sub_task.unit_of_measure %>"
                         data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
                         data-inline-edit-options-value='<%= { "" => "" }.merge(SubTask.unit_of_measures.keys.index_with { |k| t("activerecord.attributes.sub_task.unit_of_measures.#{k}") }).to_json %>'
-                        data-action="dblclick->inline-edit#activate"
+                        data-action="click->inline-edit#activate"
                         class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                         <%= t_enum(sub_task, :unit_of_measure) if sub_task.unit_of_measure %>
                       </span>
@@ -290,7 +290,7 @@
                         data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
                         data-inline-edit-original-value="<%= sub_task.quantity %>"
                         data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
-                        data-action="dblclick->inline-edit#activate"
+                        data-action="click->inline-edit#activate"
                         class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                         <%= sub_task.quantity %>
                       </span>
@@ -304,7 +304,7 @@
                         data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
                         data-inline-edit-original-value="<%= sub_task.planned_cost %>"
                         data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
-                        data-action="dblclick->inline-edit#activate"
+                        data-action="click->inline-edit#activate"
                         class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                         <%= sub_task.planned_cost %>
                       </span>
@@ -318,7 +318,7 @@
                         data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
                         data-inline-edit-original-value="<%= sub_task.price_per_unit %>"
                         data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
-                        data-action="dblclick->inline-edit#activate"
+                        data-action="click->inline-edit#activate"
                         class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                         <%= sub_task.price_per_unit %>
                       </span>
@@ -332,7 +332,7 @@
                         data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
                         data-inline-edit-original-value="<%= sub_task.planned_start_date %>"
                         data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
-                        data-action="dblclick->inline-edit#activate"
+                        data-action="click->inline-edit#activate"
                         class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                         <%= I18n.l(sub_task.planned_start_date) if sub_task.planned_start_date %>
                       </span>
@@ -346,7 +346,7 @@
                         data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
                         data-inline-edit-original-value="<%= sub_task.planned_end_date %>"
                         data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
-                        data-action="dblclick->inline-edit#activate"
+                        data-action="click->inline-edit#activate"
                         class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
                         <%= I18n.l(sub_task.planned_end_date) if sub_task.planned_end_date %>
                       </span>

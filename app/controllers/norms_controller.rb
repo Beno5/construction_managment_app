@@ -75,6 +75,7 @@ class NormsController < ApplicationController
               norm_value: @norm.norm_value,
               info: @norm.info,
               description: @norm.description,
+              custom_fields: @norm.custom_fields,
               updated_at: @norm.updated_at.iso8601
             }
           }, status: :ok
@@ -187,15 +188,26 @@ class NormsController < ApplicationController
       :norm_value,
       :auto_calculate,
       tags: [],
-      custom_fields: [:key, :value]
+      custom_fields: {}
     ).tap do |whitelisted|
       if params[:norm][:custom_fields]
-        transformed_custom_fields = params[:norm][:custom_fields].to_unsafe_h.each_with_object({}) do |(_, field), hash|
-          key = field["key"].to_s.strip
-          value = field["value"].to_s.strip
-          hash[key] = value if key.present? && value.present?
+        custom_fields_param = params[:norm][:custom_fields].to_unsafe_h
+
+        # Handle two formats:
+        # 1. Array format from forms: [{key: "name", value: "val"}, ...]
+        # 2. Hash format from inline editing: {field_name: "value"}
+        if custom_fields_param.values.first.is_a?(Hash) && custom_fields_param.values.first.key?("key")
+          # Array format from forms - replace all custom fields
+          transformed_custom_fields = custom_fields_param.each_with_object({}) do |(_, field), hash|
+            key = field["key"].to_s.strip
+            value = field["value"].to_s.strip
+            hash[key] = value if key.present? && value.present?
+          end
+          whitelisted[:custom_fields] = transformed_custom_fields
+        else
+          # Hash format from inline editing - merge with existing custom fields
+          whitelisted[:custom_fields] = @norm.custom_fields.merge(custom_fields_param)
         end
-        whitelisted[:custom_fields] = transformed_custom_fields
       else
         whitelisted[:custom_fields] = {}
       end

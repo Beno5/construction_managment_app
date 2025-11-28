@@ -138,8 +138,8 @@
                    data-inline-edit-original-value="<%= @task.name %>"
                    data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
                    data-inline-edit-required-value="true"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @task.name %>
               </div>
             </div>
@@ -157,8 +157,8 @@
                    data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
                    data-inline-edit-original-value="<%= @task.description %>"
                    data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @task.description %>
               </div>
             </div>
@@ -191,8 +191,8 @@
                      data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
                      data-inline-edit-original-value="<%= @task.planned_start_date %>"
                      data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
-                     data-action="dblclick->inline-edit#activate"
-                     title="<%= t('tooltips.double_click_to_edit') %>">
+                     data-action="click->inline-edit#activate"
+                     title="<%= t('tooltips.click_to_edit') %>">
                   <%= @task.planned_start_date ? I18n.l(@task.planned_start_date) : '' %>
                 </div>
               <% end %>
@@ -226,8 +226,8 @@
                      data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
                      data-inline-edit-original-value="<%= @task.planned_end_date %>"
                      data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
-                     data-action="dblclick->inline-edit#activate"
-                     title="<%= t('tooltips.double_click_to_edit') %>">
+                     data-action="click->inline-edit#activate"
+                     title="<%= t('tooltips.click_to_edit') %>">
                   <%= @task.planned_end_date ? I18n.l(@task.planned_end_date) : '' %>
                 </div>
               <% end %>
@@ -261,8 +261,8 @@
                      data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
                      data-inline-edit-original-value="<%= @task.planned_cost %>"
                      data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
-                     data-action="dblclick->inline-edit#activate"
-                     title="<%= t('tooltips.double_click_to_edit') %>">
+                     data-action="click->inline-edit#activate"
+                     title="<%= t('tooltips.click_to_edit') %>">
                   <%= @task.planned_cost %>
                 </div>
               <% end %>
@@ -282,8 +282,8 @@
                    data-inline-edit-original-value="<%= @task.unit_of_measure %>"
                    data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
                    data-inline-edit-options-value='<%= Task.unit_of_measures.keys.index_with { |k| t("activerecord.attributes.task.unit_of_measures.#{k}") }.merge("" => "").to_json %>'
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                  <%= @task.unit_of_measure ? t("activerecord.attributes.task.unit_of_measures.#{@task.unit_of_measure}") : '' %>
                </div>
              </div>
@@ -301,8 +301,8 @@
                    data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
                    data-inline-edit-original-value="<%= @task.quantity %>"
                    data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @task.quantity %>
               </div>
             </div>
@@ -320,8 +320,8 @@
                    data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
                    data-inline-edit-original-value="<%= @task.price_per_unit %>"
                    data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @task.price_per_unit %>
               </div>
             </div>
@@ -331,7 +331,10 @@
               <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('tasks.form.custom_fields') %></h3>
               <%= render 'partials/custom_fields',
                     custom_fields: @task.custom_fields,
-                    model: 'task' %>
+                    model: 'task',
+                    record: @task,
+                    url: business_project_task_path(@current_business, @project, @task),
+                    form_mode: false %>
             </div>
           </div>
 

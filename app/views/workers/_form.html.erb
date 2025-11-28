@@ -105,8 +105,8 @@
                    data-inline-edit-original-value="<%= @worker.first_name %>"
                    data-inline-edit-record-updated-at-value="<%= @worker.updated_at.iso8601 %>"
                    data-inline-edit-required-value="true"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @worker.first_name %>
               </div>
             </div>
@@ -123,8 +123,8 @@
                    data-inline-edit-url-value="<%= business_worker_path(@current_business, @worker) %>"
                    data-inline-edit-original-value="<%= @worker.last_name %>"
                    data-inline-edit-record-updated-at-value="<%= @worker.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @worker.last_name %>
               </div>
             </div>
@@ -141,8 +141,8 @@
                    data-inline-edit-url-value="<%= business_worker_path(@current_business, @worker) %>"
                    data-inline-edit-original-value="<%= @worker.profession %>"
                    data-inline-edit-record-updated-at-value="<%= @worker.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @worker.profession %>
               </div>
             </div>
@@ -160,8 +160,8 @@
                    data-inline-edit-original-value="<%= @worker.unit_of_measure %>"
                    data-inline-edit-record-updated-at-value="<%= @worker.updated_at.iso8601 %>"
                    data-inline-edit-options-value='<%= Worker.unit_of_measures.keys.index_with { |k| I18n.t("activerecord.attributes.worker.unit_of_measures.#{k}") }.merge("" => "").to_json %>'
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= t_enum(@worker, :unit_of_measure) %>
               </div>
             </div>
@@ -178,8 +178,8 @@
                    data-inline-edit-url-value="<%= business_worker_path(@current_business, @worker) %>"
                    data-inline-edit-original-value="<%= @worker.price_per_unit %>"
                    data-inline-edit-record-updated-at-value="<%= @worker.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= "#{@worker.price_per_unit} #{@worker.business.currency_symbol}" %>
               </div>
             </div>
@@ -196,15 +196,19 @@
                    data-inline-edit-url-value="<%= business_worker_path(@current_business, @worker) %>"
                    data-inline-edit-original-value="<%= @worker.description %>"
                    data-inline-edit-record-updated-at-value="<%= @worker.updated_at.iso8601 %>"
-                   data-action="dblclick->inline-edit#activate"
-                   title="<%= t('tooltips.double_click_to_edit') %>">
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
                 <%= @worker.description %>
               </div>
             </div>
             <!-- Custom Fields -->
             <div class="col-span-6">
               <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('workers.form.custom_fields') %></h3>
-              <%= render 'partials/custom_fields', custom_fields: @worker.custom_fields, model: 'worker' %>
+              <%= render 'partials/custom_fields',
+                  custom_fields: @worker.custom_fields,
+                  model: 'worker',
+                  record: @worker,
+                  url: business_worker_path(@current_business, @worker) %>
             </div>
           </div>
           <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">

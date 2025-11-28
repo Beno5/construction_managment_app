@@ -95,6 +95,7 @@ class ProjectsController < ApplicationController
               real_end_date: @project.real_end_date,
               real_cost: @project.real_cost,
               status: @project.status,
+              custom_fields: @project.custom_fields,
               updated_at: @project.updated_at.iso8601
             }
           }, status: :ok
@@ -277,13 +278,24 @@ class ProjectsController < ApplicationController
       :description,
       :status,
       documents: [],
-      custom_fields: [:key, :value]
+      custom_fields: {}
     ).tap do |whitelisted|
       if params[:project][:custom_fields]
-        transformed_custom_fields = params[:project][:custom_fields].to_unsafe_h.each_with_object({}) do |(_, field), hash|
-          hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
+        custom_fields_param = params[:project][:custom_fields].to_unsafe_h
+
+        # Handle two formats:
+        # 1. Array format from forms: [{key: "name", value: "val"}, ...]
+        # 2. Hash format from inline editing: {field_name: "value"}
+        if custom_fields_param.values.first.is_a?(Hash) && custom_fields_param.values.first.key?("key")
+          # Array format from forms - replace all custom fields
+          transformed_custom_fields = custom_fields_param.each_with_object({}) do |(_, field), hash|
+            hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
+          end
+          whitelisted[:custom_fields] = transformed_custom_fields
+        else
+          # Hash format from inline editing - merge with existing custom fields
+          whitelisted[:custom_fields] = @project.custom_fields.merge(custom_fields_param)
         end
-        whitelisted[:custom_fields] = transformed_custom_fields
       else
         whitelisted[:custom_fields] = {}
       end

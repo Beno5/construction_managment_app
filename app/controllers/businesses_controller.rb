@@ -70,6 +70,7 @@ class BusinessesController < ApplicationController
               owner_first_name: @business.owner_first_name,
               owner_last_name: @business.owner_last_name,
               currency: @business.currency,
+              custom_fields: @business.custom_fields,
               updated_at: @business.updated_at.iso8601
             }
           }, status: :ok
@@ -121,8 +122,31 @@ class BusinessesController < ApplicationController
   private
 
   def business_params
-    params.require(:business).permit(:name, :address, :phone_number, :vat_number, :registration_number,
-                                     :owner_first_name, :owner_last_name, :currency, :working_hours_per_day)
+    params.require(:business).permit(
+      :name, :address, :phone_number, :vat_number, :registration_number,
+      :owner_first_name, :owner_last_name, :currency, :working_hours_per_day,
+      custom_fields: {}
+    ).tap do |whitelisted|
+      if params[:business][:custom_fields]
+        custom_fields_param = params[:business][:custom_fields].to_unsafe_h
+
+        # Handle two formats:
+        # 1. Array format from forms: [{key: "name", value: "val"}, ...]
+        # 2. Hash format from inline editing: {field_name: "value"}
+        if custom_fields_param.values.first.is_a?(Hash) && custom_fields_param.values.first.key?("key")
+          # Array format from forms - replace all custom fields
+          transformed_custom_fields = custom_fields_param.each_with_object({}) do |(_, field), hash|
+            hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
+          end
+          whitelisted[:custom_fields] = transformed_custom_fields
+        else
+          # Hash format from inline editing - merge with existing custom fields
+          whitelisted[:custom_fields] = (@business.custom_fields || {}).merge(custom_fields_param)
+        end
+      else
+        whitelisted[:custom_fields] = {}
+      end
+    end
   end
 
   def load_business
