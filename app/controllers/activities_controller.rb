@@ -49,18 +49,77 @@ class ActivitiesController < ApplicationController
   end
 
   def update
-    @activity = @sub_task.activities.find(params[:activity][:activity_id])
+    # Handle both inline editing (params[:id]) and modal editing (params[:activity][:activity_id])
+    activity_id = params[:id] || params.dig(:activity, :activity_id)
+    @activity = @sub_task.activities.find(activity_id)
 
-    if @activity.update(params_mapped)
-      redirect_to project_task_sub_task_path(
-        @sub_task.task.project,
-        @sub_task.task,
-        @sub_task
-      ), notice: t('activities.messages.updated', name: @activity.activityable&.name || "Aktivnost")
+    # Check optimistic locking if record_updated_at is provided (inline editing)
+    if params[:record_updated_at].present?
+      record_updated_at = Time.parse(params[:record_updated_at])
+      record_updated_at_sec = record_updated_at.change(usec: 0)
+      activity_updated_at_sec = @activity.updated_at.change(usec: 0)
 
+      if activity_updated_at_sec > record_updated_at_sec
+        respond_to do |format|
+          format.json do
+            render json: {
+              success: false,
+              conflict: true,
+              error: t('activities.messages.conflict')
+            }, status: :conflict
+          end
+          format.html do
+            redirect_to business_project_task_sub_task_path(@business, @project, @task, @sub_task),
+                        alert: t('activities.messages.conflict')
+          end
+        end
+        return
+      end
+    end
+
+    # Determine update parameters (inline editing vs modal)
+    update_params = if params[:record_updated_at].present?
+                      # Inline editing - only update the changed field
+                      activity_params
+                    else
+                      # Modal editing - use mapped params
+                      params_mapped
+                    end
+
+    if @activity.update(update_params)
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: true,
+            data: {
+              id: @activity.id,
+              quantity: @activity.quantity,
+              total_cost: @activity.total_cost,
+              updated_at: @activity.updated_at.iso8601
+            }
+          }, status: :ok
+        end
+        format.html do
+          redirect_to project_task_sub_task_path(
+            @sub_task.task.project,
+            @sub_task.task,
+            @sub_task
+          ), notice: t('activities.messages.updated', name: @activity.activityable&.name || "Aktivnost")
+        end
+      end
     else
-      flash.now[:alert] = t('activities.messages.update_error')
-      render :edit
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: false,
+            errors: @activity.errors.full_messages
+          }, status: :unprocessable_entity
+        end
+        format.html do
+          flash.now[:alert] = t('activities.messages.update_error')
+          render :edit
+        end
+      end
     end
   end
 

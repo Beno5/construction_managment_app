@@ -166,7 +166,7 @@ class AiExcelAnalyzerService
 
     Rails.logger.info "✅ [AIAnalyzer] Chunk #{chunk_number}/#{total_chunks} completed in #{chunk_duration}s"
     result
-  rescue Timeout::Error => e
+  rescue Timeout::Error
     @metrics[:chunks_failed].increment
     error_msg = "Chunk timeout after #{CHUNK_TIMEOUT} seconds"
     Rails.logger.error "⏱️ [AIAnalyzer] #{error_msg}"
@@ -437,6 +437,8 @@ class AiExcelAnalyzerService
     Rails.logger.info "  - Chunks failed: #{failed}"
     Rails.logger.info "  - Retries: #{retries}"
     Rails.logger.info "  - Cache hits: #{cache_hits}"
-    Rails.logger.info "  - Average time per chunk: #{(@metrics[:total_time] / processed.to_f).round(2)}s" if processed > 0
+    return unless processed > 0
+
+    Rails.logger.info "  - Average time per chunk: #{(@metrics[:total_time] / processed.to_f).round(2)}s"
   end
 end

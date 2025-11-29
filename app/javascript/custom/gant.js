@@ -93,22 +93,102 @@ document.addEventListener("turbo:load", function () {
   });
 
 
-  // Grid kolone
-  gantt.config.columns = [
-    { name: "position", label: "ID", width: 80, tree: true },
-    { name: "name", label: "Task name", width: 120 },
-    { name: "start_date", label: "Start Date", width: 120, align: "center" },
-    { name: "end_date", label: "End Date", width: 120, align: "center" },
-    {
-      name: "duration",
-      label: "Duration",
-      align: "center",
-      width: 90,
-      template: function (task) {
-        return task.unscheduled ? 0 : task.duration;
-      }
+  // ========================================
+  // RESPONSIVE COLUMNS CONFIGURATION
+  // ========================================
+
+  // Helper: Detect if device is in portrait mobile mode
+  function isMobilePortrait() {
+    return window.innerWidth <= 768 &&
+           window.matchMedia("(orientation: portrait)").matches;
+  }
+
+  // Helper: Get columns based on screen size/orientation
+  function getResponsiveColumns() {
+    if (isMobilePortrait()) {
+      // Mobile portrait: Show only ID and Name
+      return [
+        { name: "position", label: "ID", width: 60, tree: true },
+        { name: "name", label: "Task name", width: 140 }
+      ];
+    } else {
+      // Desktop, tablet, or landscape: Show all columns
+      return [
+        { name: "position", label: "ID", width: 80, tree: true },
+        { name: "name", label: "Task name", width: 120 },
+        { name: "start_date", label: "Start Date", width: 120, align: "center" },
+        { name: "end_date", label: "End Date", width: 120, align: "center" },
+        {
+          name: "duration",
+          label: "Duration",
+          align: "center",
+          width: 90,
+          template: function (task) {
+            return task.unscheduled ? 0 : task.duration;
+          }
+        }
+      ];
     }
-  ];
+  }
+
+  // Set columns based on current screen
+  gantt.config.columns = getResponsiveColumns();
+
+  // Set grid_width explicitly based on initial viewport
+  if (isMobilePortrait()) {
+    gantt.config.grid_width = 200;
+  } else {
+    gantt.config.grid_width = 530;
+  }
+
+  // Function to properly resize Gantt (fixes white canvas issue)
+  function resizeGantt() {
+    const newColumns = getResponsiveColumns();
+
+    // Update columns
+    gantt.config.columns = newColumns;
+
+    // CRITICAL: Set grid_width explicitly based on viewport
+    // The Gantt library uses this to calculate timeline canvas width
+    if (isMobilePortrait()) {
+      gantt.config.grid_width = 200;  // Match CSS: ID (60px) + Name (140px)
+    } else {
+      gantt.config.grid_width = 530;  // Match CSS: Sum of all desktop column widths
+    }
+
+    // Force complete re-render to recalculate canvas size
+    gantt.clearAll();
+
+    // Reload data from API
+    const ganttElement = document.getElementById("gantt_here");
+    if (ganttElement) {
+      const projectId = ganttElement.dataset.projectId;
+      gantt.load(`/api/gantt/project/${projectId}/data`, function () {
+        if (typeof gantt.openAll === "function") {
+          gantt.openAll();
+        }
+
+        // Wait for DOM to update, then force layout recalculation
+        setTimeout(function() {
+          gantt.setSizes();
+          gantt.render();
+        }, 50);
+      });
+    }
+  }
+
+  // Listen for orientation/resize changes
+  let resizeTimeout;
+  window.addEventListener("resize", function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(resizeGantt, 300); // Debounce for 300ms
+  });
+
+  // Also listen specifically for orientation changes (iOS Safari fix)
+  window.addEventListener("orientationchange", function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(resizeGantt, 500); // Slightly longer delay for orientation
+  });
 
 
   // Sakrivamo tekst unutar barova
@@ -125,6 +205,17 @@ document.addEventListener("turbo:load", function () {
     if (typeof gantt.openAll === "function") {
       gantt.openAll();
     }
+
+    // CRITICAL FIX: Force proper sizing after initial load
+    // Especially important if page loads in mobile portrait mode
+    setTimeout(function() {
+      gantt.setSizes();
+
+      // If in mobile portrait, ensure canvas is properly sized
+      if (isMobilePortrait()) {
+        gantt.render();
+      }
+    }, 100);
   });
   let selectedLinkId = null;
 

@@ -1,6 +1,7 @@
 class NormsController < ApplicationController
   include ActionView::RecordIdentifier
 
+  before_action :require_business
   before_action :set_business
   before_action :set_norm, only: [:show, :edit, :update, :destroy]
 
@@ -34,13 +35,68 @@ class NormsController < ApplicationController
   end
 
   def update
+    # Check optimistic locking if record_updated_at is provided (inline editing)
+    if params[:record_updated_at].present?
+      # Parse the timestamp sent by client
+      record_updated_at = Time.parse(params[:record_updated_at])
+
+      # Truncate both timestamps to second precision to avoid microsecond comparison issues
+      record_updated_at_sec = record_updated_at.change(usec: 0)
+      norm_updated_at_sec = @norm.updated_at.change(usec: 0)
+
+      # Only flag conflict if database timestamp is NEWER (by more than 1 second)
+      if norm_updated_at_sec > record_updated_at_sec
+        respond_to do |format|
+          format.json do
+            render json: {
+              success: false,
+              conflict: true,
+              error: t("norms.messages.conflict")
+            }, status: :conflict
+          end
+          format.html do
+            redirect_back fallback_location: root_path,
+                          alert: t("norms.messages.conflict")
+          end
+        end
+        return
+      end
+    end
+
     if @norm.update(norm_params)
-      update_norms_in_sub_tasks(@norm) if @norm.auto_calculate?
-      redirect_to business_norms_path(@business),
-                  notice: t("norms.messages.updated", name: @norm.name)
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: true,
+            data: {
+              id: @norm.id,
+              name: @norm.name,
+              unit_of_measure: @norm.unit_of_measure,
+              norm_value: @norm.norm_value,
+              info: @norm.info,
+              description: @norm.description,
+              custom_fields: @norm.custom_fields,
+              updated_at: @norm.updated_at.iso8601
+            }
+          }, status: :ok
+        end
+        format.html do
+          redirect_back fallback_location: root_path,
+                        notice: t("norms.messages.updated", name: @norm.name)
+        end
+      end
     else
-      flash.now[:alert] = t("norms.messages.validation_error")
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: false,
+            errors: @norm.errors.full_messages
+          }, status: :unprocessable_entity
+        end
+        format.html do
+          render :edit, status: :unprocessable_entity
+        end
+      end
     end
   end
 
@@ -110,7 +166,8 @@ class NormsController < ApplicationController
   # Before actions
   # -------------------------------------------------
   def set_business
-    @business = Business.find(params[:business_id])
+    @business = current_user.businesses.find(params[:business_id])
+    @current_business = @business  # For backward compatibility with views
   end
 
   def set_norm
@@ -131,15 +188,26 @@ class NormsController < ApplicationController
       :norm_value,
       :auto_calculate,
       tags: [],
-      custom_fields: [:key, :value]
+      custom_fields: {}
     ).tap do |whitelisted|
       if params[:norm][:custom_fields]
-        transformed_custom_fields = params[:norm][:custom_fields].to_unsafe_h.each_with_object({}) do |(_, field), hash|
-          key = field["key"].to_s.strip
-          value = field["value"].to_s.strip
-          hash[key] = value if key.present? && value.present?
+        custom_fields_param = params[:norm][:custom_fields].to_unsafe_h
+
+        # Handle two formats:
+        # 1. Array format from forms: [{key: "name", value: "val"}, ...]
+        # 2. Hash format from inline editing: {field_name: "value"}
+        if custom_fields_param.values.first.is_a?(Hash) && custom_fields_param.values.first.key?("key")
+          # Array format from forms - replace all custom fields
+          transformed_custom_fields = custom_fields_param.each_with_object({}) do |(_, field), hash|
+            key = field["key"].to_s.strip
+            value = field["value"].to_s.strip
+            hash[key] = value if key.present? && value.present?
+          end
+          whitelisted[:custom_fields] = transformed_custom_fields
+        else
+          # Hash format from inline editing - merge with existing custom fields
+          whitelisted[:custom_fields] = @norm.custom_fields.merge(custom_fields_param)
         end
-        whitelisted[:custom_fields] = transformed_custom_fields
       else
         whitelisted[:custom_fields] = {}
       end

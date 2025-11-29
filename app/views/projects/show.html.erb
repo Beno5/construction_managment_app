@@ -1,4 +1,4 @@
-<% 
+<%
   model_name = t('tasks.form.model_name')
   paths = {
     project: business_project_path(@current_business, @project),
@@ -9,10 +9,10 @@
     delete_task: ->(task) { business_project_task_path(@current_business, @project, task) }
   }
 %>
-<%= render 'partials/header1', 
-           title: t('breadcrums.project_overview', name: @project.name), 
-           model_name: model_name, 
-           search_path: paths[:project], 
+<%= render 'partials/header1',
+           title: t('breadcrums.project_overview', name: @project.name),
+           model_name: model_name,
+           search_path: paths[:project],
            new_path: paths[:new_task],
            edit_path: edit_business_project_path(@current_business, @project),
            additional_crumbs: [
@@ -47,31 +47,24 @@
     </div>
   </div>
 </section>
-  <% 
-  model_name = "Documents"
-  paths_doc = {
-    new_document: new_business_project_document_path(@current_business, @project),
-    edit_document: ->(document) { edit_business_project_document_path(@current_business, @project, document) },
-    show_document: ->(document) { business_project_document_path(@current_business, @project, document) },
-    delete_document: ->(document) { business_project_document_path(@current_business, @project, document) }
-  }
-%>
+  <%
+    model_name = "Documents"
+  %>
   <%= render 'partials/table',
-           collection: @documents,
-           columns: {
+             collection: @documents || Document.none,
+             columns: {
              t('documents.form.name') => :name,
              t('documents.form.description') => ->(document) { content_tag(:span, document.description&.truncate(25), title: document.description, class: "tooltip") },
-             t('documents.form.category') => ->(document) { document.category.humanize },
-             t('documents.form.size') => ->(document) { document.file.attached? ? "#{document.file.byte_size / 1024} KB" : t('documents.form.no_file') },
+             t('documents.form.category') => ->(document) { document_category_label(document) },
+             t('documents.form.filename') => ->(document) { document_filename_display(document) },
              t('documents.form.created_at') => ->(document) { l(document.created_at.to_date) }
            },
-           turbo_frame_id: "documents-frame",
-           model_name: model_name,
-           context: "project",
-           search_path: paths_doc[:documents],
-           new_path: paths_doc[:new_document],
-           edit_path: paths_doc[:edit_document],
-           show_path: paths_doc[:show_document],
-           delete_path: paths_doc[:delete_document],
-           actions: [] %>
+             turbo_frame_id: "documents-frame",
+             model_name: model_name,
+             context: "project",
+             new_path: (@project.persisted? ? new_business_project_document_path(@current_business, @project) : nil),
+             edit_path: ->(_) { "" },
+             show_path: ->(_) { "" },
+             delete_path: ->(document) { @project.persisted? ? document_path(document) : "" },
+             actions: [] %>
   <%= render "modals/modal_documents"%>

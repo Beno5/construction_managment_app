@@ -117,7 +117,8 @@ class AiImportJob < ApplicationJob
     Rails.cache.delete(cache_key)
 
     # Send timeout error notification
-    send_error_notification(user_id, "AI import prekoračio vremensko ograničenje (15 minuta). Pokušajte sa manjim fajlom.")
+    send_error_notification(user_id,
+                            "AI import prekoračio vremensko ograničenje (15 minuta). Pokušajte sa manjim fajlom.")
   rescue JSON::ParserError => e
     Rails.logger.error "❌ [AIImportJob] Invalid JSON from AI: #{e.message}"
 
@@ -126,7 +127,8 @@ class AiImportJob < ApplicationJob
     Rails.cache.delete(cache_key)
 
     # Send error notification
-    send_error_notification(user_id, "AI nije mogao parsirati dokument. Molimo pokušajte sa drugačije formatiranim fajlom.")
+    send_error_notification(user_id,
+                            "AI nije mogao parsirati dokument. Molimo pokušajte sa drugačije formatiranim fajlom.")
   rescue StandardError => e
     Rails.logger.error "💥 [AIImportJob] Unexpected error: #{e.class} - #{e.message}"
     Rails.logger.error e.backtrace.take(10).join("\n")

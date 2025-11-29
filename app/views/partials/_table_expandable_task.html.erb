@@ -81,18 +81,120 @@
                   <td class="px-4 py-3 font-bold" data-task-drag-target="taskPosition"><%= task.position %></td>
                   <!-- Fixed width task name cell with text wrapping and tooltip -->
                   <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.name %>">
-                    <%= task.name&.truncate(150) %>
+                    <span
+                      data-controller="inline-edit"
+                      data-inline-edit-model-value="task"
+                      data-inline-edit-field-value="name"
+                      data-inline-edit-type-value="text"
+                      data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
+                      data-inline-edit-original-value="<%= task.name %>"
+                      data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
+                      data-inline-edit-required-value="true"
+                      data-action="click->inline-edit#activate"
+                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <%= task.name&.truncate(150) %>
+                    </span>
                   </td>
                   <!-- Fixed width task description cell with text wrapping and tooltip -->
                   <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.description %>">
-                    <%= task.description&.truncate(150) %>
+                    <span
+                      data-controller="inline-edit"
+                      data-inline-edit-model-value="task"
+                      data-inline-edit-field-value="description"
+                      data-inline-edit-type-value="textarea"
+                      data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
+                      data-inline-edit-original-value="<%= task.description %>"
+                      data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
+                      data-action="click->inline-edit#activate"
+                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <%= task.description&.truncate(150) %>
+                    </span>
                   </td>
-                  <td class="px-4 py-3 font-bold"></td>
-                  <td class="px-4 py-3 font-bold"></td>
-                  <td class="px-4 py-3 font-bold"></td>
-                  <td class="px-4 py-3 font-bold"></td>
-                  <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_start_date) if task.planned_start_date %></td>
-                  <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_end_date) if task.planned_end_date %></td>
+                  <td class="px-4 py-3 font-bold">
+                    <span
+                      data-controller="inline-edit"
+                      data-inline-edit-model-value="task"
+                      data-inline-edit-field-value="unit_of_measure"
+                      data-inline-edit-type-value="select"
+                      data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
+                      data-inline-edit-original-value="<%= task.unit_of_measure %>"
+                      data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
+                      data-inline-edit-options-value='<%= { "" => "" }.merge(Task.unit_of_measures.keys.index_with { |k| t("activerecord.attributes.task.unit_of_measures.#{k}") }).to_json %>'
+                      data-action="click->inline-edit#activate"
+                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <%= t("activerecord.attributes.task.unit_of_measures.#{task.unit_of_measure}") if task.unit_of_measure %>
+                    </span>
+                  </td>
+                  <td class="px-4 py-3 font-bold">
+                    <span
+                      data-controller="inline-edit"
+                      data-inline-edit-model-value="task"
+                      data-inline-edit-field-value="quantity"
+                      data-inline-edit-type-value="number"
+                      data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
+                      data-inline-edit-original-value="<%= task.quantity %>"
+                      data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
+                      data-action="click->inline-edit#activate"
+                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <%= task.quantity %>
+                    </span>
+                  </td>
+                  <td class="px-4 py-3 font-bold">
+                    <span
+                      data-controller="inline-edit"
+                      data-inline-edit-model-value="task"
+                      data-inline-edit-field-value="planned_cost"
+                      data-inline-edit-type-value="number"
+                      data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
+                      data-inline-edit-original-value="<%= task.planned_cost %>"
+                      data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
+                      data-action="click->inline-edit#activate"
+                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <%= task.planned_cost %>
+                    </span>
+                  </td>
+                  <td class="px-4 py-3 font-bold">
+                    <span
+                      data-controller="inline-edit"
+                      data-inline-edit-model-value="task"
+                      data-inline-edit-field-value="price_per_unit"
+                      data-inline-edit-type-value="number"
+                      data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
+                      data-inline-edit-original-value="<%= task.price_per_unit %>"
+                      data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
+                      data-action="click->inline-edit#activate"
+                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <%= task.price_per_unit %>
+                    </span>
+                  </td>
+                  <td class="px-4 py-3 font-bold">
+                    <span
+                      data-controller="inline-edit"
+                      data-inline-edit-model-value="task"
+                      data-inline-edit-field-value="planned_start_date"
+                      data-inline-edit-type-value="date"
+                      data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
+                      data-inline-edit-original-value="<%= task.planned_start_date %>"
+                      data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
+                      data-action="click->inline-edit#activate"
+                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <%= I18n.l(task.planned_start_date) if task.planned_start_date %>
+                    </span>
+                  </td>
+                  <td class="px-4 py-3 font-bold">
+                    <span
+                      data-controller="inline-edit"
+                      data-inline-edit-model-value="task"
+                      data-inline-edit-field-value="planned_end_date"
+                      data-inline-edit-type-value="date"
+                      data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
+                      data-inline-edit-original-value="<%= task.planned_end_date %>"
+                      data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
+                      data-action="click->inline-edit#activate"
+                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <%= I18n.l(task.planned_end_date) if task.planned_end_date %>
+                    </span>
+                  </td>
                   <td class="px-4 py-3">
                     <%= link_to new_business_project_task_sub_task_path(@business, @project, task),
             data: { turbo: false },
@@ -140,18 +242,120 @@
                     <td class="px-4 py-3 pl-8 text-gray-500" data-task-drag-target="subtaskPosition"><%= sub_task.show_position %></td>
                     <!-- Fixed width subtask name cell with text wrapping and tooltip -->
                     <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.name %>">
-                      <%= sub_task.name&.truncate(150) %>
+                      <span
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="sub_task"
+                        data-inline-edit-field-value="name"
+                        data-inline-edit-type-value="text"
+                        data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
+                        data-inline-edit-original-value="<%= sub_task.name %>"
+                        data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
+                        data-inline-edit-required-value="true"
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                        <%= sub_task.name&.truncate(150) %>
+                      </span>
                     </td>
                     <!-- Fixed width subtask description cell with text wrapping and tooltip -->
                     <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.description %>">
-                      <%= sub_task.description&.truncate(150) %>
+                      <span
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="sub_task"
+                        data-inline-edit-field-value="description"
+                        data-inline-edit-type-value="textarea"
+                        data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
+                        data-inline-edit-original-value="<%= sub_task.description %>"
+                        data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                        <%= sub_task.description&.truncate(150) %>
+                      </span>
                     </td>
-                    <td class="px-4 py-3"><%= t_enum(sub_task, :unit_of_measure) if sub_task.unit_of_measure %></td>
-                    <td class="px-4 py-3"><%= sub_task.quantity %></td>
-                    <td class="px-4 py-3"><%= sub_task.planned_cost %></td>
-                    <td class="px-4 py-3"><%= sub_task.price_per_unit %></td>
-                    <td class="px-4 py-3"><%= I18n.l(sub_task.planned_start_date) if sub_task.planned_start_date %></td>
-                    <td class="px-4 py-3"><%= I18n.l(sub_task.planned_end_date) if sub_task.planned_end_date %></td>
+                    <td class="px-4 py-3">
+                      <span
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="sub_task"
+                        data-inline-edit-field-value="unit_of_measure"
+                        data-inline-edit-type-value="select"
+                        data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
+                        data-inline-edit-original-value="<%= sub_task.unit_of_measure %>"
+                        data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
+                        data-inline-edit-options-value='<%= { "" => "" }.merge(SubTask.unit_of_measures.keys.index_with { |k| t("activerecord.attributes.sub_task.unit_of_measures.#{k}") }).to_json %>'
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                        <%= t_enum(sub_task, :unit_of_measure) if sub_task.unit_of_measure %>
+                      </span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="sub_task"
+                        data-inline-edit-field-value="quantity"
+                        data-inline-edit-type-value="number"
+                        data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
+                        data-inline-edit-original-value="<%= sub_task.quantity %>"
+                        data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                        <%= sub_task.quantity %>
+                      </span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="sub_task"
+                        data-inline-edit-field-value="planned_cost"
+                        data-inline-edit-type-value="number"
+                        data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
+                        data-inline-edit-original-value="<%= sub_task.planned_cost %>"
+                        data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                        <%= sub_task.planned_cost %>
+                      </span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="sub_task"
+                        data-inline-edit-field-value="price_per_unit"
+                        data-inline-edit-type-value="number"
+                        data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
+                        data-inline-edit-original-value="<%= sub_task.price_per_unit %>"
+                        data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                        <%= sub_task.price_per_unit %>
+                      </span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="sub_task"
+                        data-inline-edit-field-value="planned_start_date"
+                        data-inline-edit-type-value="date"
+                        data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
+                        data-inline-edit-original-value="<%= sub_task.planned_start_date %>"
+                        data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                        <%= I18n.l(sub_task.planned_start_date) if sub_task.planned_start_date %>
+                      </span>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="sub_task"
+                        data-inline-edit-field-value="planned_end_date"
+                        data-inline-edit-type-value="date"
+                        data-inline-edit-url-value="<%= business_project_task_sub_task_path(@business, @project, task, sub_task) %>"
+                        data-inline-edit-original-value="<%= sub_task.planned_end_date %>"
+                        data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                        <%= I18n.l(sub_task.planned_end_date) if sub_task.planned_end_date %>
+                      </span>
+                    </td>
                     <td class="px-4 py-3"></td>
                     <td class="px-4 py-3 flex items-center justify-end">
                       <td class="px-4 py-3 flex items-center justify-end">

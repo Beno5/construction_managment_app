@@ -6,14 +6,9 @@
   <%= render "partials/turbo_notification", message: t('businesses.messages.deleted', name: @business.name) %>
 <% end %>
 
-<%# If the deleted business was the current business, reload the page to update navbar/sidebar %>
+<%# If the deleted business was the current business, refresh the sidebar to update state %>
 <% if @was_current_business %>
-  <%= turbo_stream.append "flash-messages" do %>
-    <script>
-      // Reload page after a short delay to allow flash message to display
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
-    </script>
+  <%= turbo_stream.replace "sidebar" do %>
+    <%= render "partials/sidebar" %>
   <% end %>
 <% end %>

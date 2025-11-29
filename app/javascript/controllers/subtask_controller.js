@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["duration", "skilled", "unskilled", "machines"]
+  static targets = ["duration", "skilled", "unskilled", "machines", "formattedDuration"]
   static values = {
     updateUrl: String
   }
@@ -43,6 +43,9 @@ export default class extends Controller {
           this.skilledTarget.value = data.num_workers_skilled;
           this.unskilledTarget.value = data.num_workers_unskilled;
           this.machinesTarget.value = data.num_machines;
+          if (this.hasFormattedDurationTarget && data.formatted_duration) {
+            this.formattedDurationTarget.textContent = data.formatted_duration;
+          }
 
           if (data.planned_start_date) {
             document.querySelector('[data-subtask-target="plannedStart"]').textContent =

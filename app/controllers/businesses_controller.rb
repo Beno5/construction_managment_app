@@ -1,8 +1,7 @@
 class BusinessesController < ApplicationController
   include ActionView::RecordIdentifier
 
-  before_action :set_business, only: [:show, :update, :destroy]
-  skip_before_action :set_current_business, only: [:select]
+  before_action :load_business, only: [:show, :update, :destroy]
 
   def index
     @businesses = current_user.businesses.search(params[:search]).page(params[:business_page]).per(10)
@@ -21,9 +20,10 @@ class BusinessesController < ApplicationController
 
   def create
     @business = current_user.businesses.new(business_params)
-    @business.user_id = current_user.id
 
     if @business.save
+      # Auto-select this business (especially important for first business)
+      session[:current_business_id] = @business.id
       redirect_to businesses_path, notice: t('businesses.messages.created', name: @business.name)
     else
       set_error_message
@@ -32,25 +32,80 @@ class BusinessesController < ApplicationController
   end
 
   def update
+    # Check optimistic locking if record_updated_at is provided (inline editing)
+    if params[:record_updated_at].present?
+      record_updated_at = Time.parse(params[:record_updated_at])
+      record_updated_at_sec = record_updated_at.change(usec: 0)
+      business_updated_at_sec = @business.updated_at.change(usec: 0)
+
+      if business_updated_at_sec > record_updated_at_sec
+        respond_to do |format|
+          format.json do
+            render json: {
+              success: false,
+              conflict: true,
+              error: 'This record was modified by another user. Please refresh the page.'
+            }, status: :conflict
+          end
+          format.html do
+            redirect_to businesses_path, alert: 'This record was modified by another user. Please refresh the page.'
+          end
+        end
+        return
+      end
+    end
+
     if @business.update(business_params)
-      redirect_to businesses_path, notice: t('businesses.messages.updated', name: @business.name)
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: true,
+            data: {
+              id: @business.id,
+              name: @business.name,
+              address: @business.address,
+              phone_number: @business.phone_number,
+              vat_number: @business.vat_number,
+              registration_number: @business.registration_number,
+              owner_first_name: @business.owner_first_name,
+              owner_last_name: @business.owner_last_name,
+              currency: @business.currency,
+              custom_fields: @business.custom_fields,
+              updated_at: @business.updated_at.iso8601
+            }
+          }, status: :ok
+        end
+        format.html do
+          redirect_to businesses_path, notice: t('businesses.messages.updated', name: @business.name)
+        end
+      end
     else
-      set_error_message
-      render :show, status: :unprocessable_entity
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: false,
+            errors: @business.errors.full_messages
+          }, status: :unprocessable_entity
+        end
+        format.html do
+          set_error_message
+          render :show, status: :unprocessable_entity
+        end
+      end
     end
   end
 
   def destroy
     name = @business.name
-    business_id = @business.id
-
-    # Check if the deleted business is the current business
-    @was_current_business = (session[:current_business_id] == business_id)
-
-    # Clear current business from session if it's being deleted
-    session[:current_business_id] = nil if @was_current_business
+    was_current = (session[:current_business_id] == @business.id)
 
     @business.destroy
+
+    # If deleted business was current, clear session and let current_business helper auto-select next one
+    if was_current
+      session[:current_business_id] = nil
+      @was_current_business = true # Used in turbo_stream partial
+    end
 
     respond_to do |format|
       format.turbo_stream # uses destroy.turbo_stream.erb
@@ -59,23 +114,42 @@ class BusinessesController < ApplicationController
   end
 
   def select
-    business = current_user.businesses.find_by(id: params[:id])
-    if business
-      session[:current_business_id] = business.id
-      redirect_to root_path, notice: t("businesses.messages.selected", name: business.name)
-    else
-      redirect_to businesses_path, alert: t('businesses.messages.not_found')
-    end
+    @business = current_user.businesses.find(params[:id])
+    session[:current_business_id] = @business.id
+    redirect_to root_path, notice: t('businesses.messages.selected', name: @business.name)
   end
 
   private
 
   def business_params
-    params.require(:business).permit(:name, :address, :phone_number, :vat_number, :registration_number,
-                                     :owner_first_name, :owner_last_name, :currency)
+    params.require(:business).permit(
+      :name, :address, :phone_number, :vat_number, :registration_number,
+      :owner_first_name, :owner_last_name, :currency, :working_hours_per_day,
+      custom_fields: {}
+    ).tap do |whitelisted|
+      if params[:business][:custom_fields]
+        custom_fields_param = params[:business][:custom_fields].to_unsafe_h
+
+        # Handle two formats:
+        # 1. Array format from forms: [{key: "name", value: "val"}, ...]
+        # 2. Hash format from inline editing: {field_name: "value"}
+        if custom_fields_param.values.first.is_a?(Hash) && custom_fields_param.values.first.key?("key")
+          # Array format from forms - replace all custom fields
+          transformed_custom_fields = custom_fields_param.each_with_object({}) do |(_, field), hash|
+            hash[field["key"]] = field["value"] if field["key"].present? && field["value"].present?
+          end
+          whitelisted[:custom_fields] = transformed_custom_fields
+        else
+          # Hash format from inline editing - merge with existing custom fields
+          whitelisted[:custom_fields] = (@business.custom_fields || {}).merge(custom_fields_param)
+        end
+      else
+        whitelisted[:custom_fields] = {}
+      end
+    end
   end
 
-  def set_business
+  def load_business
     @business = current_user.businesses.find(params[:id])
   end
 

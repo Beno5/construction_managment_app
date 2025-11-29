@@ -7,6 +7,11 @@
     edit_machine: ->(machine) { edit_business_machine_path(@current_business, machine) },
     delete_machine: ->(machine) { business_machine_path(@current_business, machine) }
   }
+
+  # Build unit_of_measure options for inline editing
+  unit_options = { "" => "" }.merge(Machine.unit_of_measures.keys.each_with_object({}) do |key, hash|
+    hash[key] = I18n.t("activerecord.attributes.machine.unit_of_measures.#{key}")
+  end)
 %>
 
 <%= render 'partials/header1',
@@ -18,21 +23,200 @@
              { name: t('machines.form.model_name'), path: paths[:machines] }
            ] %>
 
-<%= render 'partials/table', 
-           collection: @machines, 
-           columns: {
-             t('machines.form.name') => :name, 
-             t('machines.form.description') => ->(machine) { content_tag(:span, machine.description.truncate(25), title: machine.description, class: "tooltip") },
-             t('machines.form.unit_of_measure') => ->(machine) { t_enum(machine, :unit_of_measure) },
-             t('machines.form.price_per_unit', currency: @current_business.currency_symbol) => ->(machine) { "#{machine.price_per_unit} #{machine.business.currency_symbol}" }, 
-             t('machines.form.fixed_costs', currency: @current_business.currency_symbol) => :fixed_costs,
-             t('machines.form.custom_fields') => :custom_fields
-           },
-           turbo_frame_id: "machines-frame",
-           model_name: model_name, 
-           search_path: paths[:machines], 
-           new_path: paths[:new_machine],
-           show_path: paths[:show_machine],
-           edit_path: paths[:edit_machine],
-           delete_path: paths[:delete_machine],
-           actions: [] %>
+<section class="bg-gray-50 dark:bg-gray-900 pt-5"
+         data-controller="toggle toast"
+         data-section-id="machines-table"
+         data-user-id="<%= current_user.id %>">
+  <div class="mx-auto">
+    <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
+      <div class="p-4">
+        <div class="flex items-center gap-4 mb-4">
+          <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white">
+            <%= t("machines.index.section_title") %>
+          </h2>
+          <label class="inline-flex items-center cursor-pointer">
+            <input type="checkbox"
+                   id="machines-toggle"
+                   checked
+                   class="sr-only peer"
+                   data-action="change->toggle#toggle"
+                   data-toggle-target="switch">
+            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+          </label>
+        </div>
+      </div>
+      <div data-toggle-target="content" class="transition-all duration-300">
+        <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4 pt-0">
+          <div class="w-full md:w-1/2">
+            <form action="<%= paths[:machines] %>"
+                  method="GET"
+                  data-turbo-frame="machines-frame"
+                  class="lg:pr-3"
+                  data-controller="search">
+              <label for="search" class="sr-only">Search</label>
+              <div class="relative mt-1 lg:w-64 xl:w-96">
+                <input type="text"
+                       name="search"
+                       id="search"
+                       placeholder="<%= t("table.search.machine") %>..."
+                       class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                              focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5
+                              dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                              dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                       data-action="input->search#performSearch">
+              </div>
+            </form>
+          </div>
+          <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+            <%= button_to paths[:new_machine],
+                method: :get,
+                data: { turbo: false },
+                class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white
+                        bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300
+                        dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 rounded-lg" do %>
+              <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+              </svg>
+              <%= t("table.new.machine") %>
+            <% end %>
+          </div>
+        </div>
+        <turbo-frame id="machines-frame">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" class="px-4 py-3"><%= t('machines.form.name') %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('machines.form.unit_of_measure') %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('machines.form.price_per_unit', currency: @current_business.currency_symbol) %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('machines.form.fixed_costs', currency: @current_business.currency_symbol) %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('machines.form.description') %></th>
+                  <th scope="col" class="px-4 py-3">
+                    <span class="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if @machines.empty? %>
+                  <tr>
+                    <td colspan="6" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
+                      <p class="mb-4"><%= t("table.empty.machine") %></p>
+                    </td>
+                  </tr>
+                <% end %>
+                <% @machines.each do |machine| %>
+                  <tr id="<%= dom_id(machine) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <!-- Name (editable) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="machine"
+                        data-inline-edit-field-value="name"
+                        data-inline-edit-type-value="text"
+                        data-inline-edit-url-value="<%= business_machine_path(@current_business, machine) %>"
+                        data-inline-edit-original-value="<%= machine.name %>"
+                        data-inline-edit-record-updated-at-value="<%= machine.updated_at.iso8601 %>"
+                        data-inline-edit-required-value="true"
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>">
+                      <%= machine.name %>
+                    </td>
+
+                    <!-- Unit of Measure (editable select) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="machine"
+                        data-inline-edit-field-value="unit_of_measure"
+                        data-inline-edit-type-value="select"
+                        data-inline-edit-url-value="<%= business_machine_path(@current_business, machine) %>"
+                        data-inline-edit-original-value="<%= machine.unit_of_measure %>"
+                        data-inline-edit-record-updated-at-value="<%= machine.updated_at.iso8601 %>"
+                        data-inline-edit-options-value='<%= unit_options.to_json %>'
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>">
+                      <%= t_enum(machine, :unit_of_measure) %>
+                    </td>
+
+                    <!-- Price Per Unit (editable number) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="machine"
+                        data-inline-edit-field-value="price_per_unit"
+                        data-inline-edit-type-value="number"
+                        data-inline-edit-url-value="<%= business_machine_path(@current_business, machine) %>"
+                        data-inline-edit-original-value="<%= machine.price_per_unit %>"
+                        data-inline-edit-record-updated-at-value="<%= machine.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>">
+                      <%= "#{machine.price_per_unit} #{machine.business.currency_symbol}" %>
+                    </td>
+
+                    <!-- Fixed Costs (editable number) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="machine"
+                        data-inline-edit-field-value="fixed_costs"
+                        data-inline-edit-type-value="number"
+                        data-inline-edit-url-value="<%= business_machine_path(@current_business, machine) %>"
+                        data-inline-edit-original-value="<%= machine.fixed_costs %>"
+                        data-inline-edit-record-updated-at-value="<%= machine.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>">
+                      <%= machine.fixed_costs %>
+                    </td>
+
+                    <!-- Description (editable textarea) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="machine"
+                        data-inline-edit-field-value="description"
+                        data-inline-edit-type-value="textarea"
+                        data-inline-edit-url-value="<%= business_machine_path(@current_business, machine) %>"
+                        data-inline-edit-original-value="<%= machine.description %>"
+                        data-inline-edit-record-updated-at-value="<%= machine.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>">
+                      <%= content_tag(:span, machine.description&.truncate(25), title: machine.description, class: "tooltip") %>
+                    </td>
+
+                    <!-- Actions -->
+                    <td class="px-4 py-3 flex items-center justify-end">
+                      <button id="<%= "machine-#{machine.id}-dropdown-button" %>"
+                              data-dropdown-toggle="<%= "machine-#{machine.id}-dropdown" %>"
+                              class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                              type="button">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                        </svg>
+                      </button>
+                      <div id="<%= "machine-#{machine.id}-dropdown" %>" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "machine-#{machine.id}-dropdown-button" %>">
+                          <li>
+                            <%= link_to t("table.actions.show.machine"), paths[:show_machine].call(machine),
+                                data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                          </li>
+                          <li>
+                            <%= link_to t("table.actions.delete.machine"),
+                                paths[:delete_machine].call(machine), method: :delete,
+                                data: {
+                                  turbo_confirm: t('confirmations.delete', name: machine.name),
+                                  turbo_method: :delete,
+                                  item_id: machine.id,
+                                  item_type: machine.model_name
+                                },
+                                class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+          <%= render "partials/nav_pages", collection: @machines, model_name: model_name %>
+        </turbo-frame>
+      </div>
+    </div>
+  </div>
+</section>
+<%= render 'modals/delete_modal' %> %>

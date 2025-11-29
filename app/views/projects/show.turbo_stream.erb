@@ -12,12 +12,34 @@
           <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" class="px-4 py-3"></th>
-              <th scope="col" class="px-4 py-3"><%= t('tasks.table.id') %></th>
-              <th scope="col" class="px-4 py-3 w-88"><%= t('tasks.table.name') %></th>
-              <th scope="col" class="px-4 py-3 w-88"><%= t('tasks.table.description') %></th>
-              <th scope="col" class="px-4 py-3"><%= t('tasks.table.planned_start_date') %></th>
-              <th scope="col" class="px-4 py-3"><%= t('tasks.table.planned_end_date') %></th>
-              <th scope="col" class="px-4 py-3"></th>
+              <th scope="col" class="px-4 py-3">
+                <div class="flex items-center gap-1">
+                  <span><%= t('tasks.table.id') %></span>
+                </div>
+              </th>
+              <th scope="col" class="px-4 py-3 w-88">
+                <div class="flex items-center gap-1">
+                  <span><%= t('tasks.table.name') %></span>
+                </div>
+              </th>
+              <th scope="col" class="px-4 py-3 w-88">
+                <div class="flex items-center gap-1">
+                  <span><%= t('tasks.table.description') %></span>
+                </div>
+              </th>
+              <th scope="col" class="px-4 py-3">
+                <div class="flex items-center gap-1">
+                  <span><%= t('tasks.table.planned_start_date') %></span>
+                </div>
+              </th>
+              <th scope="col" class="px-4 py-3">
+                <div class="flex items-center gap-1">
+                  <span><%= t('tasks.table.planned_end_date') %></span>
+                </div>
+              </th>
+              <th scope="col" class="px-4 py-3">
+                <span class="sr-only"><%= t('subtasks.form.actions', default: 'Actions') %></span>
+              </th>
               <th scope="col" class="px-4 py-3">
                 <span class="sr-only"><%= t('tasks.table.actions') %></span>
               </th>

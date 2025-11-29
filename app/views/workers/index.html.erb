@@ -7,6 +7,11 @@
     edit_worker: ->(worker) { edit_business_worker_path(@current_business, worker) },
     delete_worker: ->(worker) { business_worker_path(@current_business, worker) }
   }
+
+  # Build unit_of_measure options for inline editing
+  unit_options = { "" => "" }.merge(Worker.unit_of_measures.keys.each_with_object({}) do |key, hash|
+    hash[key] = I18n.t("activerecord.attributes.worker.unit_of_measures.#{key}")
+  end)
 %>
 
 <%= render 'partials/header1',
@@ -18,21 +23,216 @@
              { name: t('workers.form.model_name'), path: paths[:workers] }
            ] %>
 
-<%= render 'partials/table', 
-           collection: @workers, 
-           columns: {
-             t('workers.form.first_name') => :first_name,
-             t('workers.form.last_name') => :last_name,
-             t('workers.form.profession') => :profession,
-             t('workers.form.unit_of_measure') => ->(worker) { t_enum(worker, :unit_of_measure) },
-             t('workers.form.price_per_unit', currency: @current_business.currency_symbol) => ->(worker) { "#{worker.price_per_unit} #{worker.business.currency_symbol}" },
-             t('workers.form.description') => ->(worker) { content_tag(:span, worker.description.truncate(25), title: worker.description, class: "tooltip") }
-           },
-           turbo_frame_id: "workers-frame",
-           model_name: model_name, 
-           search_path: paths[:workers], 
-           new_path: paths[:new_worker],
-           show_path: paths[:show_worker],
-           edit_path: paths[:edit_worker],
-           delete_path: paths[:delete_worker]
-           %>
+<section class="bg-gray-50 dark:bg-gray-900 pt-5"
+         data-controller="toggle toast"
+         data-section-id="workers-table"
+         data-user-id="<%= current_user.id %>">
+  <div class="mx-auto">
+    <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
+      <div class="p-4">
+        <div class="flex items-center gap-4 mb-4">
+          <h2 class="text-l font-semibold text-gray-900 sm:text-2xl dark:text-white">
+            <%= t("workers.index.section_title") %>
+          </h2>
+          <label class="inline-flex items-center cursor-pointer">
+            <input type="checkbox"
+                   id="workers-toggle"
+                   checked
+                   class="sr-only peer"
+                   data-action="change->toggle#toggle"
+                   data-toggle-target="switch">
+            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+          </label>
+        </div>
+      </div>
+      <div data-toggle-target="content" class="transition-all duration-300">
+        <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4 pt-0">
+          <div class="w-full md:w-1/2">
+            <form action="<%= paths[:workers] %>"
+                  method="GET"
+                  data-turbo-frame="workers-frame"
+                  class="lg:pr-3"
+                  data-controller="search">
+              <label for="search" class="sr-only">Search</label>
+              <div class="relative mt-1 lg:w-64 xl:w-96">
+                <input type="text"
+                       name="search"
+                       id="search"
+                       placeholder="<%= t("table.search.worker") %>..."
+                       class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                              focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5
+                              dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+                              dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                       data-action="input->search#performSearch">
+              </div>
+            </form>
+          </div>
+          <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+            <%= button_to paths[:new_worker],
+                method: :get,
+                data: { turbo: false },
+                class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white
+                        bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300
+                        dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 rounded-lg" do %>
+              <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6 a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+              </svg>
+              <%= t("table.new.worker") %>
+            <% end %>
+          </div>
+        </div>
+        <turbo-frame id="workers-frame">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" class="px-4 py-3"><%= t('workers.form.first_name') %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('workers.form.last_name') %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('workers.form.profession') %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('workers.form.unit_of_measure') %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('workers.form.price_per_unit', currency: @current_business.currency_symbol) %></th>
+                  <th scope="col" class="px-4 py-3"><%= t('workers.form.description') %></th>
+                  <th scope="col" class="px-4 py-3">
+                    <span class="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if @workers.empty? %>
+                  <tr>
+                    <td colspan="7" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
+                      <p class="mb-4"><%= t("table.empty.worker") %></p>
+                    </td>
+                  </tr>
+                <% end %>
+                <% @workers.each do |worker| %>
+                  <tr id="<%= dom_id(worker) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <!-- First Name (editable) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="worker"
+                        data-inline-edit-field-value="first_name"
+                        data-inline-edit-type-value="text"
+                        data-inline-edit-url-value="<%= business_worker_path(@current_business, worker) %>"
+                        data-inline-edit-original-value="<%= worker.first_name %>"
+                        data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
+                        data-inline-edit-required-value="true"
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>">
+                      <%= worker.first_name %>
+                    </td>
+
+                    <!-- Last Name (editable) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="worker"
+                        data-inline-edit-field-value="last_name"
+                        data-inline-edit-type-value="text"
+                        data-inline-edit-url-value="<%= business_worker_path(@current_business, worker) %>"
+                        data-inline-edit-original-value="<%= worker.last_name %>"
+                        data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>">
+                      <%= worker.last_name %>
+                    </td>
+
+                    <!-- Profession (editable) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="worker"
+                        data-inline-edit-field-value="profession"
+                        data-inline-edit-type-value="text"
+                        data-inline-edit-url-value="<%= business_worker_path(@current_business, worker) %>"
+                        data-inline-edit-original-value="<%= worker.profession %>"
+                        data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>">
+                      <%= worker.profession %>
+                    </td>
+
+                    <!-- Unit of Measure (editable select) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="worker"
+                        data-inline-edit-field-value="unit_of_measure"
+                        data-inline-edit-type-value="select"
+                        data-inline-edit-url-value="<%= business_worker_path(@current_business, worker) %>"
+                        data-inline-edit-original-value="<%= worker.unit_of_measure %>"
+                        data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
+                        data-inline-edit-options-value='<%= unit_options.to_json %>'
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>">
+                      <%= t_enum(worker, :unit_of_measure) %>
+                    </td>
+
+                    <!-- Price Per Unit (editable number) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="worker"
+                        data-inline-edit-field-value="price_per_unit"
+                        data-inline-edit-type-value="number"
+                        data-inline-edit-url-value="<%= business_worker_path(@current_business, worker) %>"
+                        data-inline-edit-original-value="<%= worker.price_per_unit %>"
+                        data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>">
+                      <%= "#{worker.price_per_unit} #{worker.business.currency_symbol}" %>
+                    </td>
+
+                    <!-- Description (editable textarea) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="worker"
+                        data-inline-edit-field-value="description"
+                        data-inline-edit-type-value="textarea"
+                        data-inline-edit-url-value="<%= business_worker_path(@current_business, worker) %>"
+                        data-inline-edit-original-value="<%= worker.description %>"
+                        data-inline-edit-record-updated-at-value="<%= worker.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>">
+                      <%= content_tag(:span, worker.description&.truncate(25), title: worker.description, class: "tooltip") %>
+                    </td>
+
+                    <!-- Actions -->
+                    <td class="px-4 py-3 flex items-center justify-end">
+                      <button id="<%= "worker-#{worker.id}-dropdown-button" %>"
+                              data-dropdown-toggle="<%= "worker-#{worker.id}-dropdown" %>"
+                              class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                              type="button">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                        </svg>
+                      </button>
+                      <div id="<%= "worker-#{worker.id}-dropdown" %>" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="<%= "worker-#{worker.id}-dropdown-button" %>">
+                          <li>
+                            <%= link_to t("table.actions.show.worker"), paths[:show_worker].call(worker),
+                                data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                          </li>
+                          <li>
+                            <% item_name = "#{worker.first_name} #{worker.last_name}".strip %>
+                            <%= link_to t("table.actions.delete.worker"),
+                                paths[:delete_worker].call(worker), method: :delete,
+                                data: {
+                                  turbo_confirm: t('confirmations.delete', name: item_name),
+                                  turbo_method: :delete,
+                                  item_id: worker.id,
+                                  item_type: worker.model_name
+                                },
+                                class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+          <%= render "partials/nav_pages", collection: @workers, model_name: model_name %>
+        </turbo-frame>
+      </div>
+    </div>
+  </div>
+</section>
+<%= render 'modals/delete_modal' %>

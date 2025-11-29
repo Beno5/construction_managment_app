@@ -42,17 +42,52 @@
       </div>
       <turbo-frame id="real_resources-frame">
         <div class="overflow-x-auto">
-          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" data-controller="sort">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-4 py-3"></th>
-                <th scope="col" class="px-4 py-3"><%= t('resources.table.name') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('resources.table.type') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('resources.table.description') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('resources.table.quantity') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('resources.table.unit_of_measure') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('resources.table.price_per_unit') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('resources.table.total_cost') %></th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="1">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('resources.table.name') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="1">↕</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="2">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('resources.table.type') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="2">↕</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="3">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('resources.table.description') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="3">↕</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="4">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('resources.table.quantity') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="4">↕</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="5">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('resources.table.unit_of_measure') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="5">↕</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="6">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('resources.table.price_per_unit') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="6">↕</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="7">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('resources.table.total_cost') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="7">↕</span>
+                  </div>
+                </th>
                 <th scope="col" class="px-4 py-3">
                   <span class="sr-only"><%= t('resources.table.actions') %></span>
                 </th>
@@ -60,21 +95,21 @@
             </thead>
             <tbody>
               <% @activities.each_with_index do |activity, index| %>
-                <tr id="real-<%= dom_id(activity) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <td class="px-4 py-3">
+                <tr id="real-<%= dom_id(activity) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700" data-sort-parent="true" data-sort-group="activity-<%= activity.id %>">
+                  <td class="px-4 py-3" data-sort-value="<%= index %>">
                     <button type="button" class="toggle-real-activities" data-target="#real-activities-<%= index %>">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 chevron-icon" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                       </svg>
                     </button>
                   </td>
-                  <td class="px-4 py-3"><%= activity.activityable.name %></td>
-                  <td class="px-4 py-3"><%= activity.activity_type %></td>
-                  <td class="px-4 py-3"><%= activity.activityable.description %></td>
-                  <td class="px-4 py-3"><%= activity.quantity %></td>
-                  <td class="px-4 py-3"><%= t_enum(activity.activityable, :unit_of_measure) %></td>
-                  <td class="px-4 py-3"><%= activity.activityable.price_per_unit %></td>
-                  <td class="px-4 py-3"><%= activity.total_cost %></td>
+                  <td class="px-4 py-3" data-sort-value="<%= activity.activityable.name.to_s.downcase %>"><%= activity.activityable.name %></td>
+                  <td class="px-4 py-3" data-sort-value="<%= activity.activity_type.to_s.downcase %>"><%= activity.activity_type %></td>
+                  <td class="px-4 py-3" data-sort-value="<%= activity.activityable.description.to_s.downcase %>"><%= activity.activityable.description %></td>
+                  <td class="px-4 py-3" data-sort-value="<%= activity.quantity.to_s.downcase %>"><%= activity.quantity %></td>
+                  <td class="px-4 py-3" data-sort-value="<%= t_enum(activity.activityable, :unit_of_measure).to_s.downcase %>"><%= t_enum(activity.activityable, :unit_of_measure) %></td>
+                  <td class="px-4 py-3" data-sort-value="<%= activity.activityable.price_per_unit.to_s.downcase %>"><%= activity.activityable.price_per_unit %></td>
+                  <td class="px-4 py-3" data-sort-value="<%= activity.total_cost.to_s.downcase %>"><%= activity.total_cost %></td>
                   <td class="px-4 py-3 flex items-center justify-end">
                     <button type="button" data-target="real_resource-modal" data-activity-id="<%= activity.id %>" data-business-id="<%= @business.id %>" data-project-id="<%= @project.id %>" data-task-id="<%= @task.id %>" data-sub-task-id="<%= @sub_task.id %>" class="real-resources-modal open-modal inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                       <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -85,18 +120,48 @@
                   </td>
                 </tr>
                 <!-- Hidden row for Real Activities -->
-                <tr id="real-activities-<%= index %>" class="hidden">
+                <tr id="real-activities-<%= index %>" class="hidden" data-sort-child="true" data-sort-group="activity-<%= activity.id %>">
                   <td colspan="9">
                     <div class="overflow-x-auto">
-                      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" data-controller="sort">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                           <tr>
-                            <th scope="col" class="px-4 py-3"><%= t('real_resources.table.start_date') %></th>
-                            <th scope="col" class="px-4 py-3"><%= t('real_resources.table.end_date') %></th>
-                            <th scope="col" class="px-4 py-3"><%= t('real_resources.table.quantity') %></th>
-                            <th scope="col" class="px-4 py-3"><%= t('real_resources.table.unit_of_measure') %></th>
-                            <th scope="col" class="px-4 py-3"><%= t('real_resources.table.price_per_unit') %></th>
-                            <th scope="col" class="px-4 py-3"><%= t('real_resources.table.total_cost') %></th>
+                            <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="0">
+                              <div class="flex items-center gap-1 cursor-pointer select-none">
+                                <span><%= t('real_resources.table.start_date') %></span>
+                                <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="0">↕</span>
+                              </div>
+                            </th>
+                            <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="1">
+                              <div class="flex items-center gap-1 cursor-pointer select-none">
+                                <span><%= t('real_resources.table.end_date') %></span>
+                                <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="1">↕</span>
+                              </div>
+                            </th>
+                            <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="2">
+                              <div class="flex items-center gap-1 cursor-pointer select-none">
+                                <span><%= t('real_resources.table.quantity') %></span>
+                                <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="2">↕</span>
+                              </div>
+                            </th>
+                            <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="3">
+                              <div class="flex items-center gap-1 cursor-pointer select-none">
+                                <span><%= t('real_resources.table.unit_of_measure') %></span>
+                                <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="3">↕</span>
+                              </div>
+                            </th>
+                            <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="4">
+                              <div class="flex items-center gap-1 cursor-pointer select-none">
+                                <span><%= t('real_resources.table.price_per_unit') %></span>
+                                <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="4">↕</span>
+                              </div>
+                            </th>
+                            <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="5">
+                              <div class="flex items-center gap-1 cursor-pointer select-none">
+                                <span><%= t('real_resources.table.total_cost') %></span>
+                                <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="5">↕</span>
+                              </div>
+                            </th>
                             <th scope="col" class="px-4 py-3">
                               <span class="sr-only"><%= t('real_resources.table.actions') %></span>
                             </th>
@@ -105,12 +170,12 @@
                         <tbody>
                           <% activity.real_activities.each do |real_activity| %>
                             <tr id="<%= dom_id(real_activity) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
-                              <td class="px-4 py-3"><%= real_activity.start_date %></td>
-                              <td class="px-4 py-3"><%= real_activity.end_date %></td>
-                              <td class="px-4 py-3"><%= real_activity.quantity %></td>
-                              <td class="px-4 py-3"><%= t_enum(real_activity.activity.activityable, :unit_of_measure) %></td>
-                              <td class="px-4 py-3"><%= real_activity.activity.activityable.price_per_unit %></td>
-                              <td class="px-4 py-3"><%= real_activity.total_cost %></td>
+                              <td class="px-4 py-3" data-sort-value="<%= real_activity.start_date.to_s.downcase %>"><%= real_activity.start_date %></td>
+                              <td class="px-4 py-3" data-sort-value="<%= real_activity.end_date.to_s.downcase %>"><%= real_activity.end_date %></td>
+                              <td class="px-4 py-3" data-sort-value="<%= real_activity.quantity.to_s.downcase %>"><%= real_activity.quantity %></td>
+                              <td class="px-4 py-3" data-sort-value="<%= t_enum(real_activity.activity.activityable, :unit_of_measure).to_s.downcase %>"><%= t_enum(real_activity.activity.activityable, :unit_of_measure) %></td>
+                              <td class="px-4 py-3" data-sort-value="<%= real_activity.activity.activityable.price_per_unit.to_s.downcase %>"><%= real_activity.activity.activityable.price_per_unit %></td>
+                              <td class="px-4 py-3" data-sort-value="<%= real_activity.total_cost.to_s.downcase %>"><%= real_activity.total_cost %></td>
                               <td class="px-4 py-3 flex items-center justify-end">
                                 <button id="<%= "real_activites-#{real_activity.id}-dropdown-button" %>" 
                                   data-dropdown-toggle="<%= "real_activites-#{real_activity.id}-dropdown" %>" 

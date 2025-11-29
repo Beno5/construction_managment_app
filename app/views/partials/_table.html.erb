@@ -1,4 +1,4 @@
-<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle" data-section-id="<%= local_assigns[:context] ? "#{local_assigns[:context]}-#{local_assigns[:model_name]&.parameterize}" : (local_assigns[:model_name]&.parameterize || 'table') %>" data-user-id="<%= current_user.id %>">
+<section class="bg-gray-50 dark:bg-gray-900 pt-5" data-controller="toggle <%= 'toast' if local_assigns[:model_name] == 'Activities' || local_assigns[:model_name] == 'Documents' %>" data-section-id="<%= local_assigns[:context] ? "#{local_assigns[:context]}-#{local_assigns[:model_name]&.parameterize}" : (local_assigns[:model_name]&.parameterize || 'table') %>" data-user-id="<%= current_user.id %>">
   <div class="mx-auto">
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow">
       <div class="p-4">
@@ -111,8 +111,143 @@
               <% end %>
               <% collection.each do |item| %>
                 <tr id="<%= dom_id(item) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <% columns.each do |_, attr| %>
-                    <td class="px-4 py-3">
+                  <% columns.each do |header, attr| %>
+                    <td class="px-4 py-3 <%= 'cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20' if local_assigns[:model_name] == 'Activities' && (header == t('resources.table.quantity') || header == t('resources.table.total_cost')) %>
+                                           <%= 'cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20' if local_assigns[:model_name] == 'Documents' && (header == t('documents.form.name') || header == t('documents.form.description') || header == t('documents.form.filename')) %>
+                                           <%= 'cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20' if local_assigns[:model_name] == 'SubTasks' && [t('subtasks.form.name'), t('subtasks.form.quantity'), t('subtasks.form.planned_cost', currency: (@project.business.currency_symbol rescue '')), t('subtasks.form.price_per_unit', currency: (@project.business.currency_symbol rescue '')), t('subtasks.form.planned_start_date'), t('subtasks.form.planned_end_date')].include?(header) %>"
+                        <% if local_assigns[:model_name] == 'Activities' && header == t('resources.table.quantity') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="activity"
+                          data-inline-edit-field-value="quantity"
+                          data-inline-edit-type-value="number"
+                          data-inline-edit-url-value="<%= business_project_task_sub_task_activity_path(@business, @project, @task, @sub_task, item) %>"
+                          data-inline-edit-original-value="<%= item.quantity %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
+                        <% elsif local_assigns[:model_name] == 'Activities' && header == t('resources.table.total_cost') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="activity"
+                          data-inline-edit-field-value="total_cost"
+                          data-inline-edit-type-value="number"
+                          data-inline-edit-url-value="<%= business_project_task_sub_task_activity_path(@business, @project, @task, @sub_task, item) %>"
+                          data-inline-edit-original-value="<%= item.total_cost %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
+                        <% elsif local_assigns[:model_name] == 'Documents' && header == t('documents.form.name') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="document"
+                          data-inline-edit-field-value="name"
+                          data-inline-edit-type-value="text"
+                          data-inline-edit-url-value="<%= document_path(item) %>"
+                          data-inline-edit-original-value="<%= item.name %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-inline-edit-required-value="true"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
+                        <% elsif local_assigns[:model_name] == 'Documents' && header == t('documents.form.description') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="document"
+                          data-inline-edit-field-value="description"
+                          data-inline-edit-type-value="textarea"
+                          data-inline-edit-url-value="<%= document_path(item) %>"
+                        data-inline-edit-original-value="<%= item.description %>"
+                        data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                        data-action="click->inline-edit#activate"
+                        title="<%= t('tooltips.click_to_edit') %>"
+                        <% elsif local_assigns[:model_name] == 'Documents' && header == t('documents.form.category') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="document"
+                          data-inline-edit-field-value="category"
+                          data-inline-edit-type-value="select"
+                          data-inline-edit-url-value="<%= document_path(item) %>"
+                          data-inline-edit-original-value="<%= item.category %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-inline-edit-options-value='<%= Document.categories.keys.index_with { |key| t("activerecord.attributes.document.categories.#{key}") }.to_json %>'
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
+                        <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.unit_of_measure') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="sub_task"
+                          data-inline-edit-field-value="unit_of_measure"
+                          data-inline-edit-type-value="select"
+                          data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, item) %>"
+                          data-inline-edit-original-value="<%= item.unit_of_measure %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-inline-edit-options-value='<%= { "" => "" }.merge(SubTask.unit_of_measures.keys.index_with { |k| t("activerecord.attributes.sub_task.unit_of_measures.#{k}") }).to_json %>'
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
+                        <% elsif local_assigns[:model_name] == 'Documents' && header == t('documents.form.filename') %>
+                          data-controller="file-upload"
+                          data-file-upload-url-value="<%= document_path(item) %>"
+                          data-file-upload-document-id-value="<%= item.id %>"
+                          data-file-upload-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-file-upload-target="display"
+                          data-action="dblclick->file-upload#activate"
+                          title="<%= t('tooltips.double_click_to_change_file') %>"
+                        <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.name') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="sub_task"
+                          data-inline-edit-field-value="name"
+                          data-inline-edit-type-value="text"
+                          data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, item) %>"
+                          data-inline-edit-original-value="<%= item.name %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-inline-edit-required-value="true"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
+                        <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.quantity') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="sub_task"
+                          data-inline-edit-field-value="quantity"
+                          data-inline-edit-type-value="number"
+                          data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, item) %>"
+                          data-inline-edit-original-value="<%= item.quantity %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
+                        <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.planned_cost', currency: (@project.business.currency_symbol rescue '')) %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="sub_task"
+                          data-inline-edit-field-value="planned_cost"
+                          data-inline-edit-type-value="number"
+                          data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, item) %>"
+                          data-inline-edit-original-value="<%= item.planned_cost %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
+                        <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.price_per_unit', currency: (@project.business.currency_symbol rescue '')) %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="sub_task"
+                          data-inline-edit-field-value="price_per_unit"
+                          data-inline-edit-type-value="number"
+                          data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, item) %>"
+                          data-inline-edit-original-value="<%= item.price_per_unit %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
+                        <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.planned_start_date') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="sub_task"
+                          data-inline-edit-field-value="planned_start_date"
+                          data-inline-edit-type-value="date"
+                          data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, item) %>"
+                          data-inline-edit-original-value="<%= item.planned_start_date %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
+                        <% elsif local_assigns[:model_name] == 'SubTasks' && header == t('subtasks.form.planned_end_date') %>
+                          data-controller="inline-edit"
+                          data-inline-edit-model-value="sub_task"
+                          data-inline-edit-field-value="planned_end_date"
+                          data-inline-edit-type-value="date"
+                          data-inline-edit-url-value="<%= business_project_task_sub_task_path(@current_business, @project, @task, item) %>"
+                          data-inline-edit-original-value="<%= item.planned_end_date %>"
+                          data-inline-edit-record-updated-at-value="<%= item.updated_at.iso8601 %>"
+                          data-action="click->inline-edit#activate"
+                          title="<%= t('tooltips.click_to_edit') %>"
+                        <% end %>>
                       <% if attr.is_a?(Proc) %>
                         <%= attr.call(item) %>
                       <% elsif attr == :custom_fields && item.custom_fields.present? %>
@@ -157,11 +292,6 @@
                               rails_blob_path(item.file, disposition: "attachment"),
                               class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white",
                               target: "_blank" %>
-                          </li>
-                          <li>
-                            <%= link_to t("table.actions.edit.#{local_assigns[:model_name].singularize.downcase}"), '#',
-                              class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white open-modal",
-                              data: { target: 'documents-modal', turbo: false, mode: 'edit', id: item.id, controller: "edit-document", action: "click->edit-document#loadDocument"} %>
                           </li>
                           <li>
                             <%= link_to t("table.actions.delete.#{local_assigns[:model_name].singularize.downcase}"), document_path(item), method: :delete, data: { turbo_confirm: t('confirmations.delete', name: item.name), turbo_method: :delete }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>

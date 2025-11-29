@@ -74,7 +74,7 @@
                   <td class="px-4 py-3"><%= norm.norm_value %></td>
                   <td class="px-4 py-3"><%= t_enum(norm, :norm_type) %></td>
                   <td class="px-4 py-3"><%= t_enum(norm, :subtype) %></td>
-                  <td class="px-4 py-3"><%= norm.unit_of_measure %></td>
+                  <td class="px-4 py-3"><%= translate_unit(norm.unit_of_measure) %></td>
                   <td class="px-4 py-3"><%= norm.info %></td>
                 </tr>
               <% end %>

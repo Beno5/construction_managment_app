@@ -23,61 +23,167 @@
         </label>
       </div>
       <div data-toggle-target="content" class="transition-all duration-300">
-      <%= form_with model: [@current_business, @machine], 
-                    local: true, 
-                    data: { controller: "track-changes", action: "submit->track-changes#reset" } do |f| %>
-        <div class="grid grid-cols-6 gap-6">
-          <!-- Name -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :name, t('machines.form.name') + '*', class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_field :name,  required: true,
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
+        <% if @machine.new_record? %>
+          <%= form_with model: [@current_business, @machine], 
+                        local: true, 
+                        html: { novalidate: true },
+                        data: { controller: "create-form", action: "submit->create-form#validate" } do |f| %>
+            <div class="grid grid-cols-6 gap-6">
+              <!-- Name -->
+              <div class="col-span-6 sm:col-span-3">
+                <%= f.label :name, t('machines.form.name') + '*', class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+                <%= f.text_field :name, required: true,
+                      class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
+                      data: { create_form_target: "input" } %>
+              </div>
+              <!-- Unit of Measure -->
+              <div class="col-span-6 sm:col-span-3">
+                <%= f.label :unit_of_measure, t('machines.form.unit_of_measure'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+                <%= f.select :unit_of_measure,
+                      Machine.unit_of_measures.keys.map { |key| [I18n.t("activerecord.attributes.machine.unit_of_measures.#{key}"), key] },
+                      { include_blank: true },
+                      class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
+                      data: { create_form_target: "input" } %>
+              </div>
+              <!-- Price Per Unit -->
+              <div class="col-span-6 sm:col-span-3">
+                <%= f.label :price_per_unit, t('machines.form.price_per_unit', currency: @machine.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+                <%= f.number_field :price_per_unit, step: 0.01, 
+                      class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
+                      data: { create_form_target: "input" } %>
+              </div>
+              <!-- Fixed Costs -->
+              <div class="col-span-6 sm:col-span-3">
+                <%= f.label :fixed_costs, t('machines.form.fixed_costs', currency: @machine.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+                <%= f.number_field :fixed_costs, step: 0.01, 
+                      class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
+                      data: { create_form_target: "input" } %>
+              </div>
+              <!-- Description -->
+              <div class="col-span-6">
+                <%= f.label :description, t('machines.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+                <%= f.text_area :description, rows: 4, 
+                      class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
+                      data: { create_form_target: "input" } %>
+              </div>
+              <!-- Custom Fields -->
+              <div class="col-span-6">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('machines.form.custom_fields') %></h3>
+                <%= render 'partials/custom_fields', custom_fields: @machine.custom_fields, model: 'machine' %>
+              </div>
+            </div>
+            <!-- Submit Button -->
+            <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
+              <%= f.submit(
+                    t('machines.form.create_button'),
+                    data: { turbo: false, create_form_target: "submit" },
+                    class: "text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-base px-6 py-3"
+                  ) %>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="grid grid-cols-6 gap-6">
+            <!-- Name -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.name') %></label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="machine"
+                   data-inline-edit-field-value="name"
+                   data-inline-edit-type-value="text"
+                   data-inline-edit-url-value="<%= business_machine_path(@current_business, @machine) %>"
+                   data-inline-edit-original-value="<%= @machine.name %>"
+                   data-inline-edit-record-updated-at-value="<%= @machine.updated_at.iso8601 %>"
+                   data-inline-edit-required-value="true"
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
+                <%= @machine.name %>
+              </div>
+            </div>
+            <!-- Unit of Measure -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.unit_of_measure') %></label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="machine"
+                   data-inline-edit-field-value="unit_of_measure"
+                   data-inline-edit-type-value="select"
+                   data-inline-edit-url-value="<%= business_machine_path(@current_business, @machine) %>"
+                   data-inline-edit-original-value="<%= @machine.unit_of_measure %>"
+                   data-inline-edit-record-updated-at-value="<%= @machine.updated_at.iso8601 %>"
+                   data-inline-edit-options-value='<%= Machine.unit_of_measures.keys.index_with { |k| I18n.t("activerecord.attributes.machine.unit_of_measures.#{k}") }.merge("" => "").to_json %>'
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
+                <%= t_enum(@machine, :unit_of_measure) %>
+              </div>
+            </div>
+            <!-- Price Per Unit -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.price_per_unit', currency: @machine.business.currency_symbol) %></label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="machine"
+                   data-inline-edit-field-value="price_per_unit"
+                   data-inline-edit-type-value="number"
+                   data-inline-edit-url-value="<%= business_machine_path(@current_business, @machine) %>"
+                   data-inline-edit-original-value="<%= @machine.price_per_unit %>"
+                   data-inline-edit-record-updated-at-value="<%= @machine.updated_at.iso8601 %>"
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
+                <%= "#{@machine.price_per_unit} #{@machine.business.currency_symbol}" %>
+              </div>
+            </div>
+            <!-- Fixed Costs -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.fixed_costs', currency: @machine.business.currency_symbol) %></label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="machine"
+                   data-inline-edit-field-value="fixed_costs"
+                   data-inline-edit-type-value="number"
+                   data-inline-edit-url-value="<%= business_machine_path(@current_business, @machine) %>"
+                   data-inline-edit-original-value="<%= @machine.fixed_costs %>"
+                   data-inline-edit-record-updated-at-value="<%= @machine.updated_at.iso8601 %>"
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
+                <%= "#{@machine.fixed_costs} #{@machine.business.currency_symbol}" %>
+              </div>
+            </div>
+            <!-- Description -->
+            <div class="col-span-6">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('machines.form.description') %></label>
+              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                   data-controller="inline-edit"
+                   data-inline-edit-model-value="machine"
+                   data-inline-edit-field-value="description"
+                   data-inline-edit-type-value="textarea"
+                   data-inline-edit-url-value="<%= business_machine_path(@current_business, @machine) %>"
+                   data-inline-edit-original-value="<%= @machine.description %>"
+                   data-inline-edit-record-updated-at-value="<%= @machine.updated_at.iso8601 %>"
+                   data-action="click->inline-edit#activate"
+                   title="<%= t('tooltips.click_to_edit') %>">
+                <%= @machine.description %>
+              </div>
+            </div>
+            <!-- Custom Fields -->
+            <div class="col-span-6">
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('machines.form.custom_fields') %></h3>
+              <%= render 'partials/custom_fields',
+                    custom_fields: @machine.custom_fields,
+                    model: 'machine',
+                    record: @machine,
+                    url: business_machine_path(@current_business, @machine),
+                    form_mode: false %>
+            </div>
           </div>
-          <!-- Unit of Measure -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :unit_of_measure, t('machines.form.unit_of_measure'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.select :unit_of_measure,
-                  Machine.unit_of_measures.keys.map { |key| [I18n.t("activerecord.attributes.machine.unit_of_measures.#{key}"), key] }, {},
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
-                  data: { action: "change->track-changes#markChanged", track_changes_target: "input" } %>
+          <div class="flex items-center justify-end gap-3 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+            <%= link_to business_machines_path(@current_business),
+                data: { controller: "track-changes", action: "click->track-changes#confirmNavigation", turbo: false },
+                class: "px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700" do %>
+              <%= t('machines.form.back_button', default: 'Back to Machines') %>
+            <% end %>
           </div>
-          <!-- Price Per Unit -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :price_per_unit, t('machines.form.price_per_unit', currency: @machine.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.number_field :price_per_unit, step: 0.01, 
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
-          </div>
-          <!-- Fixed Costs -->
-          <div class="col-span-6 sm:col-span-3">
-            <%= f.label :fixed_costs, t('machines.form.fixed_costs', currency: @machine.business.currency_symbol), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.number_field :fixed_costs, step: 0.01, 
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
-          </div>
-          <!-- Description -->
-          <div class="col-span-6">
-            <%= f.label :description, t('machines.form.description'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
-            <%= f.text_area :description, rows: 4, 
-                  class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
-                  data: { action: "input->track-changes#markChanged", track_changes_target: "input" } %>
-          </div>
-          <!-- Custom Fields -->
-          <div class="col-span-6">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('machines.form.custom_fields') %></h3>
-            <%= render 'partials/custom_fields', custom_fields: @machine.custom_fields, model: 'machine' %>
-          </div>
-        </div>
-        <!-- Submit Button -->
-        <div class="flex items-center justify-end pt-6 border-gray-200 rounded-b dark:border-gray-700">
-          <%= f.submit(
-                @machine.persisted? ? t('machines.form.update_button') : t('machines.form.create_button'),
-                data: { track_changes_target: "saveButton", turbo: false },
-                class: "hidden text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-base px-6 py-3"
-              ) %>
-        </div>
-      <% end %>
+        <% end %>
       </div>
     </div>
   </div>

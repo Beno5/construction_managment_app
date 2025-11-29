@@ -35,12 +35,62 @@ class DocumentsController < ApplicationController
   end
 
   def update
+    # Check optimistic locking if record_updated_at is provided (inline editing)
+    if params[:record_updated_at].present?
+      record_updated_at = Time.parse(params[:record_updated_at])
+      record_updated_at_sec = record_updated_at.change(usec: 0)
+      document_updated_at_sec = @document.updated_at.change(usec: 0)
+
+      if document_updated_at_sec > record_updated_at_sec
+        respond_to do |format|
+          format.json do
+            render json: {
+              success: false,
+              conflict: true,
+              error: t('documents.messages.conflict')
+            }, status: :conflict
+          end
+          format.html do
+            redirect_to parent_path(@document),
+                        alert: t('documents.messages.conflict')
+          end
+        end
+        return
+      end
+    end
+
     if @document.update(document_params)
-      redirect_to parent_path(@document),
-                  notice: t('documents.messages.updated', name: @document.name)
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: true,
+            data: {
+              id: @document.id,
+              name: @document.name,
+              description: @document.description,
+              file_size: @document.file.attached? ? @document.file.byte_size : nil,
+              updated_at: @document.updated_at.iso8601
+            }
+          }, status: :ok
+        end
+        format.html do
+          redirect_to parent_path(@document),
+                      notice: t('documents.messages.updated', name: @document.name)
+        end
+      end
     else
-      flash.now[:alert] = t('documents.messages.update_error')
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.json do
+          render json: {
+            success: false,
+            errors: @document.errors.full_messages
+          }, status: :unprocessable_entity
+        end
+        format.html do
+          flash.now[:alert] = t('documents.messages.update_error')
+          render :edit, status: :unprocessable_entity
+        end
+      end
     end
   end
 
@@ -132,14 +182,8 @@ class DocumentsController < ApplicationController
     params.require(:document).permit(:name, :description, :category, :file)
   end
 
-  def parent_path(document)
-    case document
-    when SubTask
-      business_project_task_sub_task_document_path(@business, @project, @task, @sub_task, document)
-    when Task
-      business_project_task_document_path(@business, @project, @task, document)
-    when Project
-      business_project_document_path(@business, @project, document)
-    end
+  def parent_path(_document)
+    # Redirect back to the owning parent rather than the document itself
+    appropriate_path
   end
 end
