@@ -171,6 +171,16 @@ class SubTasksController < ApplicationController
     end
   end
 
+  def reorder
+    target_task = @project.tasks.find(params[:task_id])
+    service = SubTaskReorderService.new(target_task, reorder_params[:sub_tasks])
+    service.call
+
+    render json: { success: true }
+  rescue StandardError => e
+    render json: { success: false, error: e.message }, status: :unprocessable_entity
+  end
+
   private
 
   def set_business
@@ -226,5 +236,9 @@ class SubTasksController < ApplicationController
                         else
                           t('subtasks.errors.validation_failed')
                         end
+  end
+
+  def reorder_params
+    params.permit(:task_id, sub_tasks: %i[id position])
   end
 end

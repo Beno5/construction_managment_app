@@ -138,6 +138,15 @@ class TasksController < ApplicationController
     end
   end
 
+  def reorder
+    service = TaskReorderService.new(@project, reorder_params[:order])
+    service.call
+
+    render json: { success: true }
+  rescue StandardError => e
+    render json: { success: false, error: e.message }, status: :unprocessable_entity
+  end
+
   private
 
   def set_business
@@ -190,5 +199,9 @@ class TasksController < ApplicationController
         whitelisted[:custom_fields] = {}
       end
     end
+  end
+
+  def reorder_params
+    params.permit(order: %i[id position])
   end
 end
