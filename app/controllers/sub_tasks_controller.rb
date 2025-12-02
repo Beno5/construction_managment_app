@@ -136,7 +136,6 @@ class SubTasksController < ApplicationController
   end
 
   def destroy
-    @sub_task = @task.sub_tasks.find(params[:id])
     # Store name and ID before destroying
     @deleted_item_name = @sub_task.name
     @deleted_item_id = dom_id(@sub_task)
@@ -197,7 +196,14 @@ class SubTasksController < ApplicationController
   end
 
   def set_sub_task
-    @sub_task = @task.sub_tasks.find(params[:id])
+    # When deleting from project view after drag-and-drop, the URL task_id might be stale
+    # Find subtask directly and update @task to the correct parent
+    if params[:delete_from_project] == "true" && params[:action] == "destroy"
+      @sub_task = SubTask.find(params[:id])
+      @task = @sub_task.task
+    else
+      @sub_task = @task.sub_tasks.find(params[:id])
+    end
   end
 
   def sub_task_params
