@@ -301,21 +301,29 @@ export default class extends Controller {
   }
 
   showDropIndicator(referenceRow, sampleRow) {
+    // Clear existing indicator first
+    this.clearDropIndicator()
+
     const indicator = this.buildDropIndicator(sampleRow)
     const parent = (referenceRow && referenceRow.parentNode) || this.element
+
+    // Ensure indicator is visible
+    indicator.style.display = 'table-row'
+    indicator.style.visibility = 'visible'
+
     parent.insertBefore(indicator, referenceRow)
   }
 
   buildDropIndicator(sampleRow) {
-    if (!this.dropIndicatorRow) {
-      this.dropIndicatorRow = document.createElement("tr")
-      this.dropIndicatorRow.classList.add("task-drop-indicator")
-      const td = document.createElement("td")
-      td.colSpan = sampleRow ? sampleRow.children.length : 12
-      this.dropIndicatorRow.appendChild(td)
-    } else if (sampleRow) {
-      this.dropIndicatorRow.firstElementChild.colSpan = sampleRow.children.length
-    }
+    // Always create a fresh indicator
+    this.dropIndicatorRow = document.createElement("tr")
+    this.dropIndicatorRow.classList.add("task-drop-indicator")
+
+    const td = document.createElement("td")
+    td.colSpan = sampleRow ? sampleRow.children.length : 12
+    td.style.cssText = 'padding: 0; height: 4px; border: 0;'
+
+    this.dropIndicatorRow.appendChild(td)
     return this.dropIndicatorRow
   }
 
