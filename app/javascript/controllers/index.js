@@ -22,6 +22,7 @@ import SearchController from "./search_controller"
 import SidebarController from "./sidebar_controller"
 import SortController from "./sort_controller"
 import SubtaskController from "./subtask_controller"
+import TaskDragController from "./task_drag_controller"
 import ToastController from "./toast_controller"
 import ToggleController from "./toggle_controller"
 import TrackChangesController from "./track_changes_controller"
@@ -47,6 +48,7 @@ application.register("search", SearchController)
 application.register("sidebar", SidebarController)
 application.register("sort", SortController)
 application.register("subtask", SubtaskController)
+application.register("task-drag", TaskDragController)
 application.register("toast", ToastController)
 application.register("toggle", ToggleController)
 application.register("track-changes", TrackChangesController)

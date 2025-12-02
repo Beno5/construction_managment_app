@@ -8,38 +8,37 @@
   <%= turbo_stream.replace "tasks-frame" do %>
     <turbo-frame id="tasks-frame" data-turbo-cache="false">
       <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" data-controller="sort">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" class="px-4 py-3"></th>
-              <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="1">
-                <div class="flex items-center gap-1 cursor-pointer select-none">
+              <th scope="col" class="px-4 py-3">
+                <div class="flex items-center gap-1">
                   <span><%= t('tasks.table.id') %></span>
-                  <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="1">↕</span>
                 </div>
               </th>
-              <th scope="col" class="px-4 py-3 w-88" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="2">
-                <div class="flex items-center gap-1 cursor-pointer select-none">
+              <th scope="col" class="px-4 py-3 w-88">
+                <div class="flex items-center gap-1">
                   <span><%= t('tasks.table.name') %></span>
-                  <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="2">↕</span>
                 </div>
               </th>
-              <th scope="col" class="px-4 py-3 w-88" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="3">
-                <div class="flex items-center gap-1 cursor-pointer select-none">
+              <th scope="col" class="px-4 py-3 w-88">
+                <div class="flex items-center gap-1">
                   <span><%= t('tasks.table.description') %></span>
-                  <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="3">↕</span>
                 </div>
               </th>
-              <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="4">
-                <div class="flex items-center gap-1 cursor-pointer select-none">
+              <th scope="col" class="px-4 py-3"><%= t('subtasks.form.unit_of_measure') %></th>
+              <th scope="col" class="px-4 py-3"><%= t('subtasks.form.quantity') %></th>
+              <th scope="col" class="px-4 py-3"><%= t('subtasks.form.planned_cost', currency: @project.business.currency_symbol) %></th>
+              <th scope="col" class="px-4 py-3"><%= t('subtasks.form.price_per_unit', currency: @project.business.currency_symbol) %></th>
+              <th scope="col" class="px-4 py-3">
+                <div class="flex items-center gap-1">
                   <span><%= t('tasks.table.planned_start_date') %></span>
-                  <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="4">↕</span>
                 </div>
               </th>
-              <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="5">
-                <div class="flex items-center gap-1 cursor-pointer select-none">
+              <th scope="col" class="px-4 py-3">
+                <div class="flex items-center gap-1">
                   <span><%= t('tasks.table.planned_end_date') %></span>
-                  <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="5">↕</span>
                 </div>
               </th>
               <th scope="col" class="px-4 py-3">
@@ -50,11 +49,15 @@
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody
+            data-controller="task-drag"
+            data-task-drag-tasks-url-value="<%= reorder_business_project_tasks_path(@business, @project) %>"
+            data-task-drag-subtasks-url-template-value="<%= reorder_business_project_task_sub_tasks_path(@business, @project, 'TASK_ID') %>">
             <% @tasks.ordered_by_position.each_with_index do |task, index| %>
               <!-- TASK ROW -->
-              <tr id="<%= dom_id(task) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700" data-sort-parent="true" data-sort-group="task-<%= task.id %>">
-                <td class="px-4 py-3" data-sort-value="<%= index %>">
+              <tr id="<%= dom_id(task) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  data-task-id="<%= task.id %>" data-task-index="<%= index %>" draggable="true">
+                <td class="px-4 py-3">
                   <% if task.sub_tasks.any? %>
                     <button type="button" class="toggle-sub-tasks" data-target=".sub-tasks-of-<%= index %>">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 chevron-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -63,16 +66,22 @@
                     </button>
                   <% end %>
                 </td>
-                <td class="px-4 py-3 font-bold" data-sort-value="<%= task.position.to_s.downcase %>"><%= task.position %></td>
-                <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.name %>" data-sort-value="<%= task.name.to_s.downcase %>">
+                <td class="px-4 py-3 font-bold" data-task-drag-target="taskPosition"><%= task.position %></td>
+                <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.name %>">
                   <%= task.name&.truncate(150) %>
                 </td>
-                <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.description %>" data-sort-value="<%= task.description.to_s.downcase %>">
+                <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.description %>">
                   <%= task.description&.truncate(150) %>
                 </td>
-                <td class="px-4 py-3 font-bold" data-sort-value="<%= task.planned_start_date.to_s.downcase %>"><%= I18n.l(task.planned_start_date) if task.planned_start_date %></td>
-                <td class="px-4 py-3 font-bold" data-sort-value="<%= task.planned_end_date.to_s.downcase %>"><%= I18n.l(task.planned_end_date) if task.planned_end_date %></td>
-                <td class="px-4 py-3" data-sort-value="">
+                <td class="px-4 py-3 font-bold">
+                  <%= t("activerecord.attributes.task.unit_of_measures.#{task.unit_of_measure}") if task.unit_of_measure %>
+                </td>
+                <td class="px-4 py-3 font-bold"><%= task.quantity %></td>
+                <td class="px-4 py-3 font-bold"><%= task.planned_cost %></td>
+                <td class="px-4 py-3 font-bold"><%= task.price_per_unit %></td>
+                <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_start_date) if task.planned_start_date %></td>
+                <td class="px-4 py-3 font-bold"><%= I18n.l(task.planned_end_date) if task.planned_end_date %></td>
+                <td class="px-4 py-3">
                   <%= link_to new_business_project_task_sub_task_path(@business, @project, task),
                               data: { turbo: false },
                               class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-800 bg-gray-200 rounded-lg hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 transition" do %>
@@ -82,7 +91,7 @@
                     <%= t('subtasks.actions.add_new') %>
                   <% end %>
                 </td>
-                <td class="px-4 py-3 flex items-center justify-end" data-sort-value="">
+                <td class="px-4 py-3 flex items-center justify-end">
                   <button id="<%= "task-#{task.id}-dropdown-button" %>"
                           data-dropdown-toggle="<%= "task-#{task.id}-dropdown" %>"
                           class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
@@ -111,19 +120,26 @@
               </tr>
               <!-- SUBTASK ROWS -->
               <% task.sub_tasks.ordered_by_position.each do |sub_task| %>
-              <tr id="<%= dom_id(sub_task) %>" class="sub-tasks-of-<%= index %> border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700" data-sort-child="true" data-sort-group="task-<%= task.id %>">
-                <td class="px-4 py-3" data-sort-value=""></td>
-                <td class="px-4 py-3 pl-8 text-gray-500" data-sort-value="<%= sub_task.show_position.to_s.downcase %>"><%= sub_task.show_position %></td>
-                <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.name %>" data-sort-value="<%= sub_task.name.to_s.downcase %>">
-                  <%= sub_task.name&.truncate(150) %>
-                </td>
-                <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.description %>" data-sort-value="<%= sub_task.description.to_s.downcase %>">
-                  <%= sub_task.description&.truncate(150) %>
-                </td>
-                <td class="px-4 py-3" data-sort-value="<%= sub_task.planned_start_date.to_s.downcase %>"><%= I18n.l(sub_task.planned_start_date) if sub_task.planned_start_date %></td>
-                <td class="px-4 py-3" data-sort-value="<%= sub_task.planned_end_date.to_s.downcase %>"><%= I18n.l(sub_task.planned_end_date) if sub_task.planned_end_date %></td>
-                <td class="px-4 py-3" data-sort-value=""></td>
-                <td class="px-4 py-3 flex items-center justify-end" data-sort-value="">
+                <tr id="<%= dom_id(sub_task) %>" class="sub-tasks-of-<%= index %> border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    data-subtask-id="<%= sub_task.id %>" data-parent-task-id="<%= task.id %>" draggable="true">
+                  <td class="px-4 py-3"></td>
+                  <td class="px-4 py-3 pl-8 text-gray-500" data-task-drag-target="subtaskPosition"><%= sub_task.show_position %></td>
+                  <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.name %>">
+                    <%= sub_task.name&.truncate(150) %>
+                  </td>
+                  <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.description %>">
+                    <%= sub_task.description&.truncate(150) %>
+                  </td>
+                  <td class="px-4 py-3">
+                    <%= t_enum(sub_task, :unit_of_measure) if sub_task.unit_of_measure %>
+                  </td>
+                  <td class="px-4 py-3"><%= sub_task.quantity %></td>
+                  <td class="px-4 py-3"><%= sub_task.planned_cost %></td>
+                  <td class="px-4 py-3"><%= sub_task.price_per_unit %></td>
+                  <td class="px-4 py-3"><%= I18n.l(sub_task.planned_start_date) if sub_task.planned_start_date %></td>
+                  <td class="px-4 py-3"><%= I18n.l(sub_task.planned_end_date) if sub_task.planned_end_date %></td>
+                  <td class="px-4 py-3"></td>
+                  <td class="px-4 py-3 flex items-center justify-end">
                     <button id="<%= "sub-task-#{sub_task.id}-dropdown-button" %>"
                             data-dropdown-toggle="<%= "sub-task-#{sub_task.id}-dropdown" %>"
                             class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"

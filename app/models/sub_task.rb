@@ -18,8 +18,8 @@ class SubTask < ApplicationRecord
   validate :end_date_after_start_date
 
   before_create :assign_position
-  after_destroy :trigger_update_service
   after_destroy :reorder_sub_tasks
+  after_destroy :trigger_update_service
   after_save :trigger_update_service
 
   scope :ordered_by_position, -> { order(:position) }

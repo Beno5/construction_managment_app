@@ -26,11 +26,13 @@ Rails.application.routes.draw do
     end
 
     resources :projects do
-        post :import_ai, on: :collection
-        get :import_status, on: :collection
-        delete :cancel_import, on: :collection
+      post :import_ai, on: :collection
+      get :import_status, on: :collection
+      delete :cancel_import, on: :collection
       resources :tasks do
+        patch :reorder, on: :collection
         resources :sub_tasks do
+          patch :reorder, on: :collection
           post "pinned_norms/:norm_id", to: "pinned_norms#create"
           delete "pinned_norms/:norm_id", to: "pinned_norms#destroy"
           resources :custom_resources, only: [:new, :create, :edit, :update, :destroy]

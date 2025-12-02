@@ -61,10 +61,14 @@
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody
+              data-controller="task-drag"
+              data-task-drag-tasks-url-value="<%= reorder_business_project_tasks_path(@business, @project) %>"
+              data-task-drag-subtasks-url-template-value="<%= reorder_business_project_task_sub_tasks_path(@business, @project, 'TASK_ID') %>">
               <% @tasks.ordered_by_position.each_with_index do |task, index| %>
                 <!-- TASK ROW -->
-                <tr id="<%= dom_id(task) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                <tr id="<%= dom_id(task) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    data-task-id="<%= task.id %>" data-task-index="<%= index %>" draggable="true">
                   <td class="px-4 py-3">
                     <% if task.sub_tasks.any? %>
                       <button type="button" class="toggle-sub-tasks" data-target=".sub-tasks-of-<%= index %>">
@@ -74,7 +78,7 @@
                       </button>
                     <% end %>
                   </td>
-                  <td class="px-4 py-3 font-bold"><%= task.position %></td>
+                  <td class="px-4 py-3 font-bold" data-task-drag-target="taskPosition"><%= task.position %></td>
                   <!-- Fixed width task name cell with text wrapping and tooltip -->
                   <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.name %>">
                     <span
@@ -232,9 +236,10 @@
                 </tr>
                 <!-- SUBTASK ROWS -->
                 <% task.sub_tasks.ordered_by_position.each do |sub_task| %>
-                  <tr id="<%= dom_id(sub_task) %>" class="sub-tasks-of-<%= index %> border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <tr id="<%= dom_id(sub_task) %>" class="sub-tasks-of-<%= index %> border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      data-subtask-id="<%= sub_task.id %>" data-parent-task-id="<%= task.id %>" draggable="true">
                     <td class="px-4 py-3"></td>
-                    <td class="px-4 py-3 pl-8 text-gray-500"><%= sub_task.show_position %></td>
+                    <td class="px-4 py-3 pl-8 text-gray-500" data-task-drag-target="subtaskPosition"><%= sub_task.show_position %></td>
                     <!-- Fixed width subtask name cell with text wrapping and tooltip -->
                     <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.name %>">
                       <span

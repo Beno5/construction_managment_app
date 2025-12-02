@@ -136,7 +136,6 @@ class SubTasksController < ApplicationController
   end
 
   def destroy
-    @sub_task = @task.sub_tasks.find(params[:id])
     # Store name and ID before destroying
     @deleted_item_name = @sub_task.name
     @deleted_item_id = dom_id(@sub_task)
@@ -171,6 +170,16 @@ class SubTasksController < ApplicationController
     end
   end
 
+  def reorder
+    target_task = @project.tasks.find(params[:task_id])
+    service = SubTaskReorderService.new(target_task, reorder_params[:sub_tasks])
+    service.call
+
+    render json: { success: true }
+  rescue StandardError => e
+    render json: { success: false, error: e.message }, status: :unprocessable_entity
+  end
+
   private
 
   def set_business
@@ -187,7 +196,14 @@ class SubTasksController < ApplicationController
   end
 
   def set_sub_task
-    @sub_task = @task.sub_tasks.find(params[:id])
+    # When deleting from project view after drag-and-drop, the URL task_id might be stale
+    # Find subtask directly and update @task to the correct parent
+    if params[:delete_from_project] == "true" && params[:action] == "destroy"
+      @sub_task = SubTask.find(params[:id])
+      @task = @sub_task.task
+    else
+      @sub_task = @task.sub_tasks.find(params[:id])
+    end
   end
 
   def sub_task_params
@@ -226,5 +242,9 @@ class SubTasksController < ApplicationController
                         else
                           t('subtasks.errors.validation_failed')
                         end
+  end
+
+  def reorder_params
+    params.permit(:task_id, sub_tasks: %i[id position])
   end
 end
