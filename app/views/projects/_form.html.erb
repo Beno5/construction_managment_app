@@ -63,6 +63,14 @@
                       class: "shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white",
                       data: { track_changes_target: "input", create_form_target: "input", action: "input->track-changes#markChanged" } %>
               </div>
+              <!-- Planned Cost from Resources (Read-only, calculated from tasks) -->
+              <div class="col-span-6 sm:col-span-3">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('projects.form.planned_cost_from_resources', currency: @project.business.currency_symbol) %></label>
+                <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5
+                            dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed">
+                  <%= number_with_precision(@project.planned_cost_from_resources || 0, precision: 2) %> <%= @project.business.currency_symbol %>
+                </div>
+              </div>
               <!-- Status -->
               <div class="col-span-6 sm:col-span-3">
                 <%= f.label :status, t('projects.form.status'), class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
@@ -169,6 +177,16 @@
                    data-action="click->inline-edit#activate"
                    title="<%= t('tooltips.click_to_edit') %>">
                 <%= @project.planned_cost %>
+              </div>
+            </div>
+
+            <!-- Planned Cost from Resources (Read-only, calculated from tasks) -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <%= t('projects.form.planned_cost_from_resources', currency: @project.business.currency_symbol) %>
+              </label>
+              <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed">
+                <%= number_with_precision(@project.planned_cost_from_resources || 0, precision: 2) %> <%= @project.business.currency_symbol %>
               </div>
             </div>
 

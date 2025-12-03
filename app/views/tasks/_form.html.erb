@@ -76,6 +76,14 @@
                             focus:ring-primary-500 focus-border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
                     data: { create_form_target: "input", track_changes_target: "input", action: "input->track-changes#markChanged" } %>
             </div>
+            <!-- Planned Cost from Resources (Read-only, calculated from subtasks) -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('tasks.form.planned_cost_from_resources', currency: @project.business.currency_symbol) %></label>
+              <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5
+                          dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed">
+                <%= number_with_precision(@task.planned_cost_from_resources || 0, precision: 2) %> <%= @project.business.currency_symbol %>
+              </div>
+            </div>
             <!-- Unit of Measure -->
             <div class="col-span-6 sm:col-span-3">
               <%= f.label :unit_of_measure, t('tasks.form.unit_of_measure'),
@@ -122,7 +130,7 @@
             </div>
         <% end %>
         <% else %>
-          <div class="grid grid-cols-6 gap-6">
+          <div id="task-form-fields" class="grid grid-cols-6 gap-6">
             <!-- Name -->
             <div class="col-span-6 sm:col-span-3">
               <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -267,43 +275,86 @@
               <% end %>
             </div>
 
+            <!-- Planned Cost from Resources (Read-only, calculated from subtasks) -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <%= t('tasks.form.planned_cost_from_resources', currency: @project.business.currency_symbol) %>
+              </label>
+              <div class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed">
+                <%= number_with_precision(@task.planned_cost_from_resources || 0, precision: 2) %> <%= @project.business.currency_symbol %>
+              </div>
+            </div>
+
             <!-- Unit of Measure -->
             <div class="col-span-6 sm:col-span-3">
               <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 <%= t('tasks.form.unit_of_measure') %>
               </label>
-              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
-                   data-controller="inline-edit"
-                   data-inline-edit-model-value="task"
-                   data-inline-edit-field-value="unit_of_measure"
-                   data-inline-edit-type-value="select"
-                   data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
-                   data-inline-edit-original-value="<%= @task.unit_of_measure %>"
-                   data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
-                   data-inline-edit-options-value='<%= Task.unit_of_measures.keys.index_with { |k| t("activerecord.attributes.task.unit_of_measures.#{k}") }.merge("" => "").to_json %>'
-                   data-action="click->inline-edit#activate"
-                   title="<%= t('tooltips.click_to_edit') %>">
-                 <%= @task.unit_of_measure ? t("activerecord.attributes.task.unit_of_measures.#{@task.unit_of_measure}") : '' %>
-               </div>
-             </div>
+              <% if @task.sub_tasks.any? %>
+                <div class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed"
+                     data-controller="inline-edit"
+                     data-inline-edit-model-value="task"
+                     data-inline-edit-field-value="unit_of_measure"
+                     data-inline-edit-type-value="select"
+                     data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
+                     data-inline-edit-original-value="<%= @task.unit_of_measure %>"
+                     data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
+                     data-inline-edit-options-value='<%= Task.unit_of_measures.keys.index_with { |k| t("activerecord.attributes.task.unit_of_measures.#{k}") }.merge("" => "").to_json %>'
+                     data-inline-edit-disabled-value="true"
+                     data-inline-edit-disabled-message-value="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                     title="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>">
+                  <%= @task.unit_of_measure ? t("activerecord.attributes.task.unit_of_measures.#{@task.unit_of_measure}") : '' %>
+                </div>
+              <% else %>
+                <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                     data-controller="inline-edit"
+                     data-inline-edit-model-value="task"
+                     data-inline-edit-field-value="unit_of_measure"
+                     data-inline-edit-type-value="select"
+                     data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
+                     data-inline-edit-original-value="<%= @task.unit_of_measure %>"
+                     data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
+                     data-inline-edit-options-value='<%= Task.unit_of_measures.keys.index_with { |k| t("activerecord.attributes.task.unit_of_measures.#{k}") }.merge("" => "").to_json %>'
+                     data-action="click->inline-edit#activate"
+                     title="<%= t('tooltips.click_to_edit') %>">
+                  <%= @task.unit_of_measure ? t("activerecord.attributes.task.unit_of_measures.#{@task.unit_of_measure}") : '' %>
+                </div>
+              <% end %>
+            </div>
 
             <!-- Quantity -->
             <div class="col-span-6 sm:col-span-3">
               <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 <%= t('tasks.form.quantity') %>
               </label>
-              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
-                   data-controller="inline-edit"
-                   data-inline-edit-model-value="task"
-                   data-inline-edit-field-value="quantity"
-                   data-inline-edit-type-value="number"
-                   data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
-                   data-inline-edit-original-value="<%= @task.quantity %>"
-                   data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
-                   data-action="click->inline-edit#activate"
-                   title="<%= t('tooltips.click_to_edit') %>">
-                <%= @task.quantity %>
-              </div>
+              <% if @task.sub_tasks.any? %>
+                <div class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed"
+                     data-controller="inline-edit"
+                     data-inline-edit-model-value="task"
+                     data-inline-edit-field-value="quantity"
+                     data-inline-edit-type-value="number"
+                     data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
+                     data-inline-edit-original-value="<%= @task.quantity %>"
+                     data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
+                     data-inline-edit-disabled-value="true"
+                     data-inline-edit-disabled-message-value="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                     title="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>">
+                  <%= @task.quantity %>
+                </div>
+              <% else %>
+                <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                     data-controller="inline-edit"
+                     data-inline-edit-model-value="task"
+                     data-inline-edit-field-value="quantity"
+                     data-inline-edit-type-value="number"
+                     data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
+                     data-inline-edit-original-value="<%= @task.quantity %>"
+                     data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
+                     data-action="click->inline-edit#activate"
+                     title="<%= t('tooltips.click_to_edit') %>">
+                  <%= @task.quantity %>
+                </div>
+              <% end %>
             </div>
 
             <!-- Price per Unit -->
@@ -311,18 +362,34 @@
               <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 <%= t('tasks.form.price_per_unit', currency: @project.business.currency_symbol) %>
               </label>
-              <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
-                   data-controller="inline-edit"
-                   data-inline-edit-model-value="task"
-                   data-inline-edit-field-value="price_per_unit"
-                   data-inline-edit-type-value="number"
-                   data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
-                   data-inline-edit-original-value="<%= @task.price_per_unit %>"
-                   data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
-                   data-action="click->inline-edit#activate"
-                   title="<%= t('tooltips.click_to_edit') %>">
-                <%= @task.price_per_unit %>
-              </div>
+              <% if @task.sub_tasks.any? %>
+                <div class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed"
+                     data-controller="inline-edit"
+                     data-inline-edit-model-value="task"
+                     data-inline-edit-field-value="price_per_unit"
+                     data-inline-edit-type-value="number"
+                     data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
+                     data-inline-edit-original-value="<%= @task.price_per_unit %>"
+                     data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
+                     data-inline-edit-disabled-value="true"
+                     data-inline-edit-disabled-message-value="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                     title="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>">
+                  <%= @task.price_per_unit %>
+                </div>
+              <% else %>
+                <div class="shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600"
+                     data-controller="inline-edit"
+                     data-inline-edit-model-value="task"
+                     data-inline-edit-field-value="price_per_unit"
+                     data-inline-edit-type-value="number"
+                     data-inline-edit-url-value="<%= business_project_task_path(@current_business, @project, @task) %>"
+                     data-inline-edit-original-value="<%= @task.price_per_unit %>"
+                     data-inline-edit-record-updated-at-value="<%= @task.updated_at.iso8601 %>"
+                     data-action="click->inline-edit#activate"
+                     title="<%= t('tooltips.click_to_edit') %>">
+                  <%= @task.price_per_unit %>
+                </div>
+              <% end %>
             </div>
 
             <!-- Custom Fields -->

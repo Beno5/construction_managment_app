@@ -105,12 +105,12 @@
                             block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
                     data: { create_form_target: "input", track_changes_target: "input", action: "change->track-changes#markChanged" } %>
             </div>
-            <!-- Total Cost (Read-only, calculated from activities) -->
+            <!-- Planned Cost from Resources (Read-only, calculated from activities) -->
             <div class="col-span-6 sm:col-span-3">
-              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.total_cost') %></label>
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.planned_cost_from_resources', currency: @project.business.currency_symbol) %></label>
               <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5
                           dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed">
-                <%= @sub_task.total_cost || 0 %>
+                <%= number_with_precision(@sub_task.planned_cost_from_resources || 0, precision: 2) %> <%= @project.business.currency_symbol %>
               </div>
             </div>
             <!-- Custom Fields -->
@@ -283,13 +283,13 @@
               </div>
             </div>
 
-            <!-- Total Cost (Read-only, calculated from activities) -->
+            <!-- Planned Cost from Resources (Read-only, calculated from activities) -->
             <div class="col-span-6 sm:col-span-3">
               <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                <%= t('subtasks.form.total_cost') %>
+                <%= t('subtasks.form.planned_cost_from_resources', currency: @project.business.currency_symbol) %>
               </label>
               <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed">
-                <%= @sub_task.total_cost || 0 %>
+                <%= number_with_precision(@sub_task.planned_cost_from_resources || 0, precision: 2) %> <%= @project.business.currency_symbol %>
               </div>
             </div>
 

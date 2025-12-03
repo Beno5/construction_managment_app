@@ -101,6 +101,7 @@ class SubTasksController < ApplicationController
               description: @sub_task.description,
               quantity: @sub_task.quantity,
               planned_cost: @sub_task.planned_cost,
+              planned_cost_from_resources: @sub_task.planned_cost_from_resources,
               price_per_unit: @sub_task.price_per_unit,
               unit_of_measure: @sub_task.unit_of_measure,
               num_workers_skilled: @sub_task.num_workers_skilled,

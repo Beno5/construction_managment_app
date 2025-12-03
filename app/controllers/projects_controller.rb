@@ -91,6 +91,7 @@ class ProjectsController < ApplicationController
               planned_start_date: @project.planned_start_date,
               planned_end_date: @project.planned_end_date,
               planned_cost: @project.planned_cost,
+              planned_cost_from_resources: @project.planned_cost_from_resources,
               real_start_date: @project.real_start_date,
               real_end_date: @project.real_end_date,
               real_cost: @project.real_cost,

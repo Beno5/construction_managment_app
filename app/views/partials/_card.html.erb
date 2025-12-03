@@ -116,6 +116,12 @@
       </span>
     </p>
     <p>
+      <span class="font-semibold"><%= t('projects.form.planned_cost_from_resources', currency: project.business.currency_symbol) %>:</span>
+      <span class="px-1 rounded inline-block min-w-[100px] min-h-[24px] text-gray-600 dark:text-gray-400">
+        <%= project.planned_cost_from_resources ? "#{number_with_precision(project.planned_cost_from_resources, precision: 2)} #{project.business.currency_symbol}" : "0.00 #{project.business.currency_symbol}" %>
+      </span>
+    </p>
+    <p>
       <span class="font-semibold"><%= t('projects.form.status') %>:</span>
       <span data-controller="inline-edit"
             data-inline-edit-model-value="project"

@@ -421,7 +421,8 @@ en:
       project_manager: "Project Manager"
       planned_start_date: "Planned Start Date"
       planned_end_date: "Planned End Date"
-      planned_cost: "Estimated Cost (%{currency})"
+      planned_cost: "Planned Cost (%{currency})"
+      planned_cost_from_resources: "Planned Cost from Resources (%{currency})"
       real_start_date: "Actual Start Date"
       real_end_date: "Actual End Date"
       real_cost: "Actual Cost (%{currency})"
@@ -488,6 +489,7 @@ en:
       planned_start_date: "Planned Start Date"
       planned_end_date: "Planned End Date"
       planned_cost: "Planned Cost (%{currency})"
+      planned_cost_from_resources: "Planned Cost from Resources (%{currency})"
       unit_of_measure: "Unit of Measure"
       quantity: "Quantity"
       price_per_unit: "Price per Unit (%{currency})"
@@ -535,6 +537,7 @@ en:
       quantity: "Quantity"
       price_per_unit: "Price per Unit (%{currency})"
       total_cost: Total Cost
+      planned_cost_from_resources: "Planned Cost from Resources (%{currency})"
     actions:
       show: "Show Subtask"
       add_new: "Add New Subtask"

@@ -88,6 +88,7 @@ class TasksController < ApplicationController
               planned_start_date: @task.planned_start_date,
               planned_end_date: @task.planned_end_date,
               planned_cost: @task.planned_cost,
+              planned_cost_from_resources: @task.planned_cost_from_resources,
               description: @task.description,
               custom_fields: @task.custom_fields,
               updated_at: @task.updated_at.iso8601

@@ -40,9 +40,9 @@ class UpdateDynamicAttributesService
   # Updating SubTask entity – dynamic calculation for planned attributes
   def update_sub_task
     sub_task = @record
-    total_cost = sub_task.activities.sum(:total_cost)
+    planned_cost_from_resources = sub_task.activities.sum(:total_cost)
 
-    sub_task.update_columns(total_cost: total_cost)
+    sub_task.update_columns(planned_cost_from_resources: planned_cost_from_resources)
   rescue ActiveRecord::ActiveRecordError => e
     log_error("sub_task", e)
   rescue StandardError => e
@@ -61,9 +61,13 @@ class UpdateDynamicAttributesService
       planned_start_date: sub_tasks.minimum(:planned_start_date),
       planned_end_date: sub_tasks.maximum(:planned_end_date),
       planned_cost: sub_tasks.sum(:planned_cost),
+      planned_cost_from_resources: sub_tasks.sum(:planned_cost_from_resources),
       real_start_date: sub_tasks.minimum(:real_start_date),
       real_end_date: sub_tasks.maximum(:real_end_date),
-      real_cost: sub_tasks.sum(:real_cost)
+      real_cost: sub_tasks.sum(:real_cost),
+      quantity: nil,
+      unit_of_measure: nil,
+      price_per_unit: nil
     }
 
     task.update_columns(attributes)
@@ -84,6 +88,7 @@ class UpdateDynamicAttributesService
       planned_start_date: tasks.minimum(:planned_start_date),
       planned_end_date: tasks.maximum(:planned_end_date),
       planned_cost: tasks.sum(:planned_cost),
+      planned_cost_from_resources: tasks.sum(:planned_cost_from_resources),
       real_start_date: tasks.minimum(:real_start_date),
       real_end_date: tasks.maximum(:real_end_date),
       real_cost: tasks.sum(:real_cost)

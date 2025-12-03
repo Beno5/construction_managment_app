@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_11_26_220000) do
+ActiveRecord::Schema[7.0].define(version: 2025_12_03_131431) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -184,6 +184,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_26_220000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "business_id", null: false
+    t.decimal "planned_cost_from_resources"
     t.index ["business_id"], name: "index_projects_on_business_id"
     t.index ["user_id"], name: "index_projects_on_user_id"
   end
@@ -233,11 +234,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_26_220000) do
     t.decimal "price_per_unit", precision: 10, scale: 2
     t.integer "unit_of_measure"
     t.integer "quantity"
-    t.decimal "total_cost"
     t.decimal "duration", precision: 10, scale: 2
     t.decimal "num_workers_skilled", precision: 10, scale: 2
     t.decimal "num_workers_unskilled", precision: 10, scale: 2
     t.decimal "num_machines", precision: 10, scale: 2
+    t.decimal "planned_cost_from_resources"
     t.index ["task_id"], name: "index_sub_tasks_on_task_id"
   end
 
@@ -261,6 +262,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_11_26_220000) do
     t.integer "unit_of_measure"
     t.integer "quantity"
     t.decimal "price_per_unit", precision: 10, scale: 2
+    t.decimal "planned_cost_from_resources"
     t.index ["project_id"], name: "index_tasks_on_project_id"
     t.index ["user_id"], name: "index_tasks_on_user_id"
   end
