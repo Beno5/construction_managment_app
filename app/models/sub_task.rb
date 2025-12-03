@@ -41,7 +41,12 @@ class SubTask < ApplicationRecord
   scope :search, lambda { |query|
     return all unless query.present?
 
-    where("name ILIKE ? OR description ILIKE ?", "%#{query}%", "%#{query}%")
+    searchable_columns = column_names - %w[created_at updated_at task_id]
+    conditions = searchable_columns.map do |column|
+      "unaccent(#{table_name}.#{column}::text) ILIKE unaccent(:q)"
+    end.join(" OR ")
+
+    where(conditions, q: "%#{query}%")
   }
 
   def calculate_duration

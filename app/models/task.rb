@@ -8,8 +8,6 @@ class Task < ApplicationRecord
 
   # Validacije
   validates :name, presence: true
-
-  # Validacija za datume
   validate :end_date_after_start_date
 
   before_create :assign_position
@@ -18,21 +16,31 @@ class Task < ApplicationRecord
   after_save :trigger_update_service
 
   enum :unit_of_measure, {
-    m: 0,
-    m2: 1,
-    m3: 2,
-    kg: 3,
-    ton: 4,
-    pieces: 5,
-    liters: 6,
-    roll: 7,
-    bag: 8,
-    set: 9,
-    hours: 10,
-    pauschal: 11
+    m: 0, m2: 1, m3: 2, kg: 3, ton: 4, pieces: 5, liters: 6,
+    roll: 7, bag: 8, set: 9, hours: 10, pauschal: 11
   }
 
   scope :ordered_by_position, -> { order(:position) }
+
+  scope :search, ->(query) {
+    return all unless query.present?
+
+    searchable_task_columns = column_names - %w[created_at updated_at]
+    searchable_sub_task_columns = SubTask.column_names - %w[created_at updated_at task_id]
+
+    task_conditions = searchable_task_columns.map do |column|
+      "unaccent(tasks.#{column}::text) ILIKE unaccent(:q)"
+    end
+    sub_task_conditions = searchable_sub_task_columns.map do |column|
+      "unaccent(sub_tasks.#{column}::text) ILIKE unaccent(:q)"
+    end
+
+    all_conditions = (task_conditions + sub_task_conditions).join(" OR ")
+
+    left_outer_joins(:sub_tasks)
+      .where(all_conditions, q: "%#{query}%")
+      .distinct
+  }
 
   def name_with_position
     "#{position}. #{name}"
