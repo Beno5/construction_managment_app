@@ -324,9 +324,10 @@
                              data: { turbo: false }, class: "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                           </li>
                           <li>
-                            <% has_dependencies =
-                              (item.respond_to?(:activities) && item.activities.exists?) ||
-                              (item.respond_to?(:sub_tasks) && item.sub_tasks.exists?) %>
+                            <% # Only check dependencies for Workers, Machines, Materials, and Norms %>
+                            <% has_dependencies = ["Workers", "Machines", "Materials", "Norms"].include?(model_name) &&
+                              ((item.respond_to?(:activities) && item.activities.exists?) ||
+                               (item.respond_to?(:sub_tasks) && item.sub_tasks.exists?)) %>
                             <% link_class = "block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" %>
                             <% link_class += " delete-item-link" if has_dependencies %>
                             <% item_name = model_name == "Workers" ? "#{item.first_name} #{item.last_name}".strip : item.name %>
