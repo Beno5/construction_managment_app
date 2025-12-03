@@ -38,7 +38,7 @@ class AiImportBuilderService
           unit_of_measure: map_unit(subtask_data["unit_of_measure"]),
           quantity: subtask_data["quantity"],
           price_per_unit: subtask_data["price_per_unit"],
-          total_cost: subtask_data["total_cost"],
+          planned_cost: subtask_data["planned_cost"],
           planned_start_date: subtask_data["planned_start_date"],
           planned_end_date: subtask_data["planned_end_date"],
           custom_fields: subtask_data["custom_fields"],

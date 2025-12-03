@@ -350,8 +350,8 @@ class AiExcelAnalyzerService
                   "description": "Tekstualno: svi redovi ispod tog rada — npr. materijali, spratovi, količine, napomene...",
                   "unit_of_measure": "npr. m, m2, m3, kom, kg, l, set, null ako ne postoji",
                   "quantity": "npr. 279, null ako nema",
-                  "unit_price": "cena po jedinici ako postoji (broj ili null)",
-                  "total_cost": "ukupna vrednost ako postoji (broj ili null)",
+                  "price_per_unit": "cena po jedinici ako postoji (broj ili null)",
+                  "planned_cost": "ukupna vrednost ako postoji (broj ili null)",
                   "custom_fields": {
                     "hitno": "DA/NE ili null ako ne postoji",
                     "napomena": "tekst ako postoji"
@@ -369,7 +369,7 @@ class AiExcelAnalyzerService
       - Sve ispod subtaska (materijali, spratovi, količine...) ide u njegov `description`.
       - Prepoznaj `unit_of_measure` iz oznaka ("m", "m2", "m3", "kom", "kg", "set"…).
       - `quantity` = broj uz jedinicu (npr. "41 m3", "1,00 kom").
-      - Ako vidiš "cena", "ukupno", "€" → koristi za `unit_price` i `total_cost`.
+      - Ako vidiš "cena", "ukupno", "€" → koristi za `price_per_unit` i `planned_cost`.
       - Ako postoji "HITNO", "ROK", "NAPOMENA" → stavi u `custom_fields`.
       - **OBAVEZNO: Svaki `name` i `description` mora počinjati velikim slovom. Npr: "geodetska merenja" → "Geodetska merenja"**
 

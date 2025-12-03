@@ -22,7 +22,9 @@
           <form action="<%= business_project_path(@current_business, @project) %>" method="GET" data-turbo-frame="tasks-frame" class="lg:pr-3" data-controller="search">
             <label for="search" class="sr-only">Search</label>
             <div class="relative mt-1 lg:w-64 xl:w-96">
-              <input type="text" name="search" id="search" placeholder="<%= t('table.search.task', default: t('table.search.default')) %>"
+              <input type="text" name="search" id="search"
+                     value="<%= params[:search] %>"
+                     placeholder="<%= t('table.search.task', default: t('table.search.default')) %>"
                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                      data-action="input->search#performSearch">
             </div>
@@ -291,7 +293,24 @@
                   </td>
                 </tr>
                 <!-- SUBTASK ROWS -->
-                <% task.sub_tasks.ordered_by_position.each do |sub_task| %>
+                <%
+                  # Determine which subtasks to show based on search logic:
+                  # - If task itself matches: show ALL subtasks
+                  # - If only subtasks match: show ONLY matching subtasks
+                  if params[:search].present?
+                    if task.matches_search?(params[:search])
+                      # Task matches - show all its subtasks
+                      sub_tasks = task.sub_tasks.ordered_by_position
+                    else
+                      # Task doesn't match - show only matching subtasks
+                      sub_tasks = task.sub_tasks.search(params[:search]).ordered_by_position
+                    end
+                  else
+                    # No search - show all subtasks
+                    sub_tasks = task.sub_tasks.ordered_by_position
+                  end
+                %>
+                <% sub_tasks.each do |sub_task| %>
                   <tr id="<%= dom_id(sub_task) %>" class="sub-tasks-of-<%= index %> border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
                       data-subtask-id="<%= sub_task.id %>" data-parent-task-id="<%= task.id %>" draggable="true"
                       data-sort-child="true" data-sort-group="task-<%= task.id %>">

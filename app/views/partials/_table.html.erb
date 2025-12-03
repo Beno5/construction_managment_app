@@ -34,16 +34,17 @@
       data-controller="search">
             <label for="search" class="sr-only">Search</label>
             <div class="relative mt-1 lg:w-64 xl:w-96">
-              <input type="text" 
-           name="search" 
-           id="search" 
-           placeholder="<%= t("table.search.#{local_assigns[:model_name].singularize.downcase}") %>..." 
+              <input type="text"
+           name="search"
+           id="search"
+           value="<%= params[:search] %>"
+           placeholder="<%= t("table.search.#{local_assigns[:model_name].singularize.downcase}") %>..."
 <%= "disabled" if (defined?(@sub_task) && @sub_task.new_record?) || (defined?(@task) && @task.new_record?) %>
-           class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg 
-                  block w-full p-2.5 
+           class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                  block w-full p-2.5
                   dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-                  <%= (defined?(@sub_task) && @sub_task.new_record?) || (defined?(@task) && @task.new_record?) ? 
-                        'cursor-not-allowed bg-gray-200 dark:bg-gray-600' : 
+                  <%= (defined?(@sub_task) && @sub_task.new_record?) || (defined?(@task) && @task.new_record?) ?
+                        'cursor-not-allowed bg-gray-200 dark:bg-gray-600' :
                         'focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500' %>"
            data-action="<%= 'input->search#performSearch' unless defined?(@sub_task) && @sub_task.new_record? %>">
             </div>

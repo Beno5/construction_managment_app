@@ -46,6 +46,23 @@ class Task < ApplicationRecord
     "#{position}. #{name}"
   end
 
+  # Check if this task itself matches the search query (not just its subtasks)
+  def matches_search?(query)
+    return true if query.blank?
+
+    searchable_columns = self.class.column_names - %w[created_at updated_at]
+
+    searchable_columns.any? do |column|
+      value = send(column)
+      next false if value.nil?
+
+      # Use unaccent and case-insensitive comparison like the scope
+      normalized_value = value.to_s.downcase
+      normalized_query = query.to_s.downcase
+      normalized_value.include?(normalized_query)
+    end
+  end
+
   private
 
   def assign_position
