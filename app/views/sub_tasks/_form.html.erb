@@ -106,6 +106,14 @@
                             block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600",
                     data: { create_form_target: "input", track_changes_target: "input", action: "change->track-changes#markChanged" } %>
             </div>
+            <!-- Total Cost (Read-only, calculated from activities) -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"><%= t('subtasks.form.total_cost') %></label>
+              <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg p-2.5
+                          dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed">
+                <%= @sub_task.total_cost || 0 %>
+              </div>
+            </div>
             <!-- Custom Fields -->
             <div class="col-span-6">
               <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4"><%= t('subtasks.form.custom_fields') %></h3>
@@ -273,6 +281,16 @@
                    data-action="click->inline-edit#activate"
                    title="<%= t('tooltips.click_to_edit') %>">
                 <%= @sub_task.planned_end_date ? I18n.l(@sub_task.planned_end_date) : '' %>
+              </div>
+            </div>
+
+            <!-- Total Cost (Read-only, calculated from activities) -->
+            <div class="col-span-6 sm:col-span-3">
+              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <%= t('subtasks.form.total_cost') %>
+              </label>
+              <div class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white cursor-not-allowed">
+                <%= @sub_task.total_cost || 0 %>
               </div>
             </div>
 
