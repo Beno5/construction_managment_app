@@ -1,5 +1,4 @@
 class SubTaskPlanningCalculator
-
   def initialize(sub_task)
     @sub_task = sub_task
     @norms = sub_task.pinned_norms

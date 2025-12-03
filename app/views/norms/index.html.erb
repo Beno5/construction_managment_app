@@ -8,10 +8,11 @@
     delete_norm: ->(norm) { business_norm_path(@current_business, norm) }
   }
 
-  # Build unit_of_measure options for inline editing (from all resource types)
+ # Build unit_of_measure options for inline editing (from all resource types)
  unit_options = all_unit_options.each_with_object({}) do |(key, label), hash|
 hash[key] = label
 end
+  has_norms = @current_business.norms.exists?
 
 %>
 <%= render 'partials/header1',
@@ -124,7 +125,9 @@ end
                 <% if @norms.empty? %>
                   <tr>
                     <td colspan="6" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
-                      <p class="mb-4"><%= t("table.empty.norm", default: "No norms found") %></p>
+                      <p class="mb-4">
+                        <%= has_norms ? t("norms.empty.no_search_results") : t("norms.empty.no_records") %>
+                      </p>
                     </td>
                   </tr>
                 <% end %>

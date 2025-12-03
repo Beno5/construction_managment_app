@@ -1,3 +1,5 @@
+<% has_subtasks = @task.sub_tasks.exists? %>
+<% has_task_documents = @task.documents.exists? %>
 <!-- Editable Task Form -->
 <%= render "form", project: @project, task: @task %>
 <!-- Subtasks table -->
@@ -11,11 +13,12 @@
              t('subtasks.form.quantity') => :quantity,
              t('subtasks.form.planned_cost', currency: @project.business.currency_symbol) => :planned_cost,
              t('subtasks.form.price_per_unit', currency: @project.business.currency_symbol) => :price_per_unit,
-             t('subtasks.form.planned_start_date') => ->(subtask) { I18n.l(subtask.planned_start_date) if subtask.planned_start_date },
-             t('subtasks.form.planned_end_date') => ->(subtask) { I18n.l(subtask.planned_end_date) if subtask.planned_end_date }
-                        },
+           t('subtasks.form.planned_start_date') => ->(subtask) { I18n.l(subtask.planned_start_date) if subtask.planned_start_date },
+            t('subtasks.form.planned_end_date') => ->(subtask) { I18n.l(subtask.planned_end_date) if subtask.planned_end_date }
+                       },
            turbo_frame_id: "subtasks-frame",
            model_name: "SubTasks",
+           has_records: has_subtasks,
            search_path: @task.new_record? ? "#" : business_project_task_path(@current_business, @project, @task),
            new_path: @task.new_record? ? "#" : new_business_project_task_sub_task_path(@current_business, @project, @task),
            show_path: ->(subtask) { @task.new_record? ? "#" : business_project_task_sub_task_path(@current_business, @project, @task, subtask) },
@@ -57,10 +60,11 @@
              t('documents.form.description') => ->(document) { content_tag(:span, document.description&.truncate(25), title: document.description, class: "tooltip") },
              t('documents.form.category') => ->(document) { document_category_label(document) },
              t('documents.form.filename') => ->(document) { document_filename_display(document) },
-             t('documents.form.created_at') => ->(document) { l(document.created_at.to_date) }
-           },
+           t('documents.form.created_at') => ->(document) { l(document.created_at.to_date) }
+          },
            turbo_frame_id: "documents-frame",
            model_name: "Documents",
+           has_records: has_task_documents,
            context: "task",
            new_path: (@task.persisted? ? new_business_project_task_document_path(@current_business, @project, @task) : nil),
            edit_path: ->(_) { "" },

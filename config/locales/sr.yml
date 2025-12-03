@@ -333,6 +333,9 @@ sr:
       deleted: "Firma %{name} je uspješno obrisana."
       selected: "%{name} je sada odabrana."
       name_required: "Naziv firme je obavezan."
+    empty:
+      no_records: "Nemate kreiranu firmu. Kreirajte novu firmu da započnete."
+      no_search_results: "Nema firmi koje odgovaraju uslovima pretrage."
     errors:
       name_required: "Naziv firme je obavezan!"
       taken_for_user: "Već imate firmu sa ovim nazivom."
@@ -359,6 +362,9 @@ sr:
       updated: "Materijal %{name} je uspješno ažuriran."
       deleted: "Materijal %{name} je uspješno obrisan."
       name_required: "Naziv materijala je obavezan."
+    empty:
+      no_records: "Nemate kreiran materijal. Kreirajte novi materijal da započnete."
+      no_search_results: "Nema materijala koji odgovaraju uslovima pretrage."
   machines:
     index:
       title: "PREGLED MAŠINA"
@@ -380,6 +386,9 @@ sr:
       updated: "Mašina %{name} je uspješno ažurirana."
       deleted: "Mašina %{name} je uspješno obrisana."
       name_required: "Naziv mašine je obavezan."
+    empty:
+      no_records: "Nemate kreiranu mašinu. Kreirajte novu mašinu da započnete."
+      no_search_results: "Nema mašina koje odgovaraju uslovima pretrage."
   workers:
     index:
       title: "PREGLED RADNIKA"
@@ -403,6 +412,9 @@ sr:
       updated: "Radnik %{name} je uspješno ažuriran."
       deleted: "Radnik %{name} je uspješno obrisan."
       first_name_required: "Ime radnika je obavezno."
+    empty:
+      no_records: "Nemate kreiranog radnika. Kreirajte novog radnika da započnete."
+      no_search_results: "Nema radnika koji odgovaraju uslovima pretrage."
   projects:
     import:
       in_progress: "AI import u toku..."
@@ -453,6 +465,9 @@ sr:
       name_required: "Naziv projekta je obavezan."
       ai_import_completed: "✅ AI import projekta '%{project_name}' je završen!"
       view_project_link: "Pogledaj Projekat →"
+    empty:
+      no_records: "Nemate kreiran projekat. Kreirajte novi projekat da započnete."
+      no_search_results: "Nema projekata koji odgovaraju uslovima pretrage."
     inline_edit:
       locked_due_to_tasks: "Vrednosti se računaju iz pozicija. Izmenite ili uklonite pozicije da biste ih promenili."
   tasks:
@@ -497,6 +512,9 @@ sr:
       deleted: "Pozicija %{name} je uspješno obrisana."
       name_required: "Naziv pozicije je obavezan."
       conflict: "Ovaj zapis je izmijenio drugi korisnik. Molimo osvježite stranicu."
+    empty:
+      no_records: "Nemate kreiranu poziciju. Kreirajte novu poziciju da započnete."
+      no_search_results: "Nema pozicija koje odgovaraju uslovima pretrage."
     inline_edit:
       locked_due_to_subtasks: "Vrednosti se računaju iz podpozicija. Izmenite podpozicije da biste ih promenili."
     errors:
@@ -532,6 +550,9 @@ sr:
       edit: "Izmeni Podpoziciju"
       delete: "Obriši Podpoziciju"
       confirm_delete: "Da li ste sigurni da želite obrisati ovu podpoziciju?"
+    empty:
+      no_records: "Nemate kreiranu podpoziciju. Kreirajte novu podpoziciju da započnete."
+      no_search_results: "Nema podpozicija koje odgovaraju uslovima pretrage."
     show:
       info_communication: "Info i Komunikacija"
       planned: "Planirano"
@@ -565,6 +586,9 @@ sr:
       create_error: "Greška pri kreiranju resursa."
       update_error: "Greška pri ažuriranju resursa."
       conflict: "Ovaj zapis je izmijenio drugi korisnik. Molimo osvježite stranicu."
+    empty:
+      no_records: "Nemate kreiranih aktivnosti. Kreirajte novu aktivnost da započnete."
+      no_search_results: "Nema aktivnosti koje odgovaraju uslovima pretrage."
   resources:
     form:
       model_name: "Resurs"
@@ -579,6 +603,9 @@ sr:
       standard: "Standardni Resurs"
       custom: "Prilagođeni Resurs"
       close: "Zatvori"
+    empty:
+      no_records: "Nemate kreiran resurs. Kreirajte novi resurs da započnete."
+      no_search_results: "Nema resursa koji odgovaraju uslovima pretrage."
     table:
       name: "Ime"
       first_name: "Ime"
@@ -641,6 +668,9 @@ sr:
       add_document: "Kreiraj novi dokument"
       edit_document: "Ažuriraj dokument"
       upload: "Kreiraj"
+    empty:
+      no_records: "Nemate kreiran dokument. Kreirajte novi dokument da započnete."
+      no_search_results: "Nema dokumenata koji odgovaraju uslovima pretrage."
       choose_file: "Izaberi fajl"
       no_file_selected: "Nema fajla"
     messages:
@@ -670,6 +700,9 @@ sr:
       deleted: "Norma %{name} je uspješno obrisana."
       validation_error: "Molimo provjerite obavezna polja."
       conflict: "Ovaj zapis je izmijenio drugi korisnik. Molimo osvježite stranicu."
+    empty:
+      no_records: "Nemate kreiranu normu. Kreirajte novu normu da započnete."
+      no_search_results: "Nema normi koje odgovaraju uslovima pretrage."
   table:
     new:
       project: Kreiraj projekat

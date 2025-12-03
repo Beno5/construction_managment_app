@@ -12,6 +12,7 @@
   unit_options = { "" => "" }.merge(Material.unit_of_measures.keys.each_with_object({}) do |key, hash|
     hash[key] = I18n.t("activerecord.attributes.material.unit_of_measures.#{key}")
   end)
+  has_materials = @current_business.materials.exists?
 %>
 
 <%= render 'partials/header1',
@@ -119,7 +120,9 @@
                 <% if @materials.empty? %>
                   <tr>
                     <td colspan="5" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
-                      <p class="mb-4"><%= t("table.empty.material") %></p>
+                      <p class="mb-4">
+                        <%= has_materials ? t("materials.empty.no_search_results") : t("materials.empty.no_records") %>
+                      </p>
                     </td>
                   </tr>
                 <% end %>

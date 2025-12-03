@@ -156,7 +156,7 @@ class TasksController < ApplicationController
 
   def set_business
     @business = current_user.businesses.find(params[:business_id])
-    @current_business = @business  # For backward compatibility with views
+    @current_business = @business # For backward compatibility with views
   end
 
   def set_project

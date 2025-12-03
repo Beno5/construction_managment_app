@@ -12,6 +12,7 @@
   unit_options = { "" => "" }.merge(Machine.unit_of_measures.keys.each_with_object({}) do |key, hash|
     hash[key] = I18n.t("activerecord.attributes.machine.unit_of_measures.#{key}")
   end)
+  has_machines = @current_business.machines.exists?
 %>
 
 <%= render 'partials/header1',
@@ -125,7 +126,9 @@
                 <% if @machines.empty? %>
                   <tr>
                     <td colspan="6" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
-                      <p class="mb-4"><%= t("table.empty.machine") %></p>
+                      <p class="mb-4">
+                        <%= has_machines ? t("machines.empty.no_search_results") : t("machines.empty.no_records") %>
+                      </p>
                     </td>
                   </tr>
                 <% end %>

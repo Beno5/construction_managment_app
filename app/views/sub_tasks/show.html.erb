@@ -6,6 +6,8 @@
     update_activity: ->(activity) { url_for([@current_business, activity.activityable]) },
     delete_activity: ->(activity) { url_for([@current_business, activity.activityable]) }
   }
+  has_activities = @sub_task.activities.exists?
+  has_documents = @sub_task.documents.exists?
 %>
 <%= render "partials/table_norms",
            norms: @norms,
@@ -98,6 +100,7 @@
            },
            turbo_frame_id: "activities-frame",
            model_name: model_name,
+           has_records: has_activities,
            edit_path: "",
            show_path: "",
            delete_path: "",
@@ -151,6 +154,7 @@
              turbo_frame_id: "documents-frame",
              model_name: model_name,
              context: "subtask",
+             has_records: has_documents,
              search_path: paths_doc[:documents],
              new_path: (@readonly_mode ? nil : paths_doc[:new_document]),
              edit_path: paths_doc[:edit_document],

@@ -107,10 +107,14 @@
               </tr>
             </thead>
             <tbody>
+              <% has_records = local_assigns.key?(:has_records) ? local_assigns[:has_records] : collection.any? %>
               <% if collection.empty? %>
                 <tr>
                   <td colspan="<%= columns.size + 1 %>" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
-                    <p class="mb-4"> <%= t("table.empty.#{local_assigns[:model_name].singularize.downcase}") %></p>
+                    <% empty_scope = local_assigns[:model_name].to_s.downcase %>
+                    <p class="mb-4">
+                      <%= has_records ? t("#{empty_scope}.empty.no_search_results") : t("#{empty_scope}.empty.no_records") %>
+                    </p>
                   </td>
                 </tr>
               <% end %>

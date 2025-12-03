@@ -1,7 +1,16 @@
+<% has_projects = @business.projects.exists? %>
 <%= turbo_stream.replace "projects-frame" do %>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">
-    <% @projects.each do |project| %>
-      <%= render partial: "partials/card", locals: { project: project } %>
-    <% end %>
-  </div>
+  <% if @projects.any? %>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 dark:bg-gray-900">
+      <% @projects.each do |project| %>
+        <%= render partial: "partials/card", locals: { project: project } %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-12 px-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+      <p class="text-gray-600 dark:text-gray-300 mb-4 text-lg pt-2">
+        <%= has_projects ? t('projects.empty.no_search_results') : t('projects.empty.no_records') %>
+      </p>
+    </div>
+  <% end %>
 <% end %>

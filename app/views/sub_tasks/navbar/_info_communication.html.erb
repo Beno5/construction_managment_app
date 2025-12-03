@@ -37,6 +37,7 @@
     show_document: ->(document) { "" },
     delete_document: ->(document) { document_path(document) }
   }
+  has_documents = @sub_task.documents.exists?
 %>
 
 <%= render 'partials/table', 
@@ -51,6 +52,7 @@
            },
            turbo_frame_id: "documents-frame",
            model_name: model_name, 
+           has_records: has_documents,
            search_path: paths_doc[:documents], 
            new_path: paths_doc[:new_document],
            edit_path: paths_doc[:edit_document],

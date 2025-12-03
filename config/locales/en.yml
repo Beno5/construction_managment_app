@@ -322,6 +322,9 @@ en:
       selected: "%{name} is now selected."
       name_required: "Business name is required."
       not_found: "Business not found."
+    empty:
+      no_records: "You don't have any businesses. Add a new business to get started."
+      no_search_results: "No businesses found matching your search criteria."
     errors:
       name_required: "Business name is required!"
       no_business_selected: "You must create a business first to access this page."
@@ -348,6 +351,9 @@ en:
       updated: "Material %{name} was updated successfully."
       deleted: "Material %{name} was deleted successfully."
       name_required: "Material name is required."
+    empty:
+      no_records: "You don't have any materials. Add a new material to get started."
+      no_search_results: "No materials found matching your search criteria."
   machines:
     index:
       title: "MACHINES OVERVIEW"
@@ -369,6 +375,9 @@ en:
       updated: "Machine %{name} was updated successfully."
       deleted: "Machine %{name} was deleted successfully."
       name_required: "Machine name is required."
+    empty:
+      no_records: "You don't have any machines. Add a new machine to get started."
+      no_search_results: "No machines found matching your search criteria."
   workers:
     index:
       title: "WORKERS OVERVIEW"
@@ -392,6 +401,9 @@ en:
       updated: "Worker %{name} was updated successfully."
       deleted: "Worker %{name} was deleted successfully."
       first_name_required: "Worker first name is required."
+    empty:
+      no_records: "You don't have any workers. Add a new worker to get started."
+      no_search_results: "No workers found matching your search criteria."
   projects:
     import:
       in_progress: "AI import in progress..."
@@ -444,6 +456,9 @@ en:
       name_required: "Project name is required."
       ai_import_completed: "✅ AI import of project '%{project_name}' completed!"
       view_project_link: "View Project →"
+    empty:
+      no_records: "You don't have any projects. Add a new project to get started."
+      no_search_results: "No projects found matching your search criteria."
     inline_edit:
       locked_due_to_tasks: "This value is calculated from tasks. Edit or remove tasks to change it."
   tasks:
@@ -488,6 +503,9 @@ en:
       deleted: "Task %{name} was deleted successfully."
       name_required: "Task name is required."
       conflict: "This record was modified by another user. Please refresh the page."
+    empty:
+      no_records: "You don't have any tasks. Add a new task to get started."
+      no_search_results: "No tasks found matching your search criteria."
     inline_edit:
       locked_due_to_subtasks: "This value is calculated from subtasks. Edit or remove subtasks to change it."
     errors:
@@ -523,6 +541,9 @@ en:
       edit: "Edit Subtask"
       delete: "Delete Subtask"
       confirm_delete: "Are you sure you want to delete this task?"
+    empty:
+      no_records: "You don't have any subtasks. Add a new subtask to get started."
+      no_search_results: "No subtasks found matching your search criteria."
     show:
       info_communication: "Info and Communication"
       planned: "Planned"
@@ -555,6 +576,9 @@ en:
       deleted: "Resource %{name} was deleted successfully."
       create_error: "Error creating resource."
       update_error: "Error updating resource."
+    empty:
+      no_records: "You don't have any activities. Add a new activity to get started."
+      no_search_results: "No activities found matching your search criteria."
       conflict: "This record was modified by another user. Please refresh the page."
   resources:
     form:
@@ -575,6 +599,9 @@ en:
       first_name: "First Name"
       last_name: "Last Name"
       profession: "Profession"
+    empty:
+      no_records: "You don't have any resources. Add a new resource to get started."
+      no_search_results: "No resources found matching your search criteria."
       type: "Type"
       description: "Description"
       category: "Category"
@@ -631,6 +658,9 @@ en:
       close: "Close"
       add_document: "Add New Document"
       edit_document: "Edit Document"
+    empty:
+      no_records: "You don't have any documents. Add a new document to get started."
+      no_search_results: "No documents found matching your search criteria."
       update_button: "Update Document"
       no_file_selected: "No file selected"
       choose_file: "Choose File"
@@ -667,6 +697,9 @@ en:
       deleted: "Norm %{name} was deleted successfully."
       validation_error: "Please check the required fields."
       conflict: "This record was modified by another user. Please refresh the page."
+    empty:
+      no_records: "You don't have any norms. Add a new norm to get started."
+      no_search_results: "No norms found matching your search criteria."
   table:
     new:
       project: "Add New Project"

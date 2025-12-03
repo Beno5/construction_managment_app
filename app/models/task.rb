@@ -22,7 +22,7 @@ class Task < ApplicationRecord
 
   scope :ordered_by_position, -> { order(:position) }
 
-  scope :search, ->(query) {
+  scope :search, lambda { |query|
     return all unless query.present?
 
     searchable_task_columns = column_names - %w[created_at updated_at]
