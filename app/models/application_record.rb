@@ -5,7 +5,7 @@ class ApplicationRecord < ActiveRecord::Base
     return all if query.blank?
 
     where(
-      searchable_columns.map { |col| "#{col}::text ILIKE :query" }.join(' OR '),
+      searchable_columns.map { |col| "unaccent(#{table_name}.#{col}::text) ILIKE unaccent(:query)" }.join(' OR '),
       query: "%#{query}%"
     )
   end
