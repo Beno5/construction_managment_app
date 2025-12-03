@@ -110,6 +110,16 @@
               data-controller="task-drag"
               data-task-drag-tasks-url-value="<%= reorder_business_project_tasks_path(@business, @project) %>"
               data-task-drag-subtasks-url-template-value="<%= reorder_business_project_task_sub_tasks_path(@business, @project, 'TASK_ID') %>">
+              <% has_tasks = @project.tasks.exists? %>
+              <% if @tasks.empty? %>
+                <tr>
+                  <td colspan="12" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
+                    <p class="mb-4">
+                      <%= has_tasks ? t("tasks.empty.no_search_results") : t("tasks.empty.no_records") %>
+                    </p>
+                  </td>
+                </tr>
+              <% end %>
               <% @tasks.ordered_by_position.each_with_index do |task, index| %>
                 <!-- TASK ROW -->
                 <tr id="<%= dom_id(task) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
