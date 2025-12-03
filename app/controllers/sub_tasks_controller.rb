@@ -38,11 +38,17 @@ class SubTasksController < ApplicationController
     @sub_task.user_id = current_user.id
 
     if @sub_task.save
-      redirect_to business_project_path(@business, @project),
-                  notice: t('subtasks.messages.created', name: @sub_task.name)
+      respond_to do |format|
+        format.turbo_stream
+        format.html do
+          redirect_to business_project_path(@business, @project),
+                      notice: t('subtasks.messages.created', name: @sub_task.name)
+        end
+      end
     else
       set_error_message
-      render :show, status: :unprocessable_entity
+      @readonly_mode = true
+      render :new, status: :unprocessable_entity
     end
   end
 

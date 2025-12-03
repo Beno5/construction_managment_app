@@ -28,7 +28,6 @@
       <div data-toggle-target="content" class="transition-all duration-300">
         <% if @task.new_record? %>
           <%= form_with model: [@current_business, @project, @task],
-                        local: true,
                         html: { novalidate: true },
                         data: { controller: "create-form track-changes", action: "submit->create-form#validate" } do |f| %>
           <div class="grid grid-cols-6 gap-6">
@@ -118,7 +117,7 @@
           <!-- Create Button (always enabled) -->
             <div class="flex items-center justify-end pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
               <%= f.submit t('tasks.form.create_button'),
-                    data: { turbo: false, track_changes_target: "saveButton" },
+                    data: { track_changes_target: "saveButton" },
                     class: "text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" %>
             </div>
         <% end %>

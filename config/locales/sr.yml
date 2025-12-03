@@ -287,6 +287,18 @@ sr:
       title: "Brisanje nije moguće"
       message: "Ovaj element nije moguće obrisati jer se koristi u ovim podpozicijama."
       ok_button: "U redu"
+  modals:
+    post_creation:
+      title: "Šta želite dalje?"
+      message: "Uspješno ste kreirali %{name}. Želite li nastaviti sa uređivanjem ili se vratiti na pregled projekta?"
+      stay_and_edit: "Ostani i uredi"
+      go_back: "Vrati se na projekat"
+      task:
+        title: "Pozicija kreirana!"
+        message: "Uspješno ste kreirali poziciju '%{name}'. Želite li nastaviti sa uređivanjem ili se vratiti na pregled projekta?"
+      subtask:
+        title: "Podpozicija kreirana!"
+        message: "Uspješno ste kreirali podpoziciju '%{name}'. Želite li nastaviti sa uređivanjem ili se vratiti na pregled projekta?"
   businesses:
     form:
       edit_title: "Izmeni %{name}"

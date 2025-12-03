@@ -112,6 +112,8 @@
          style="top: 1rem;">
       <%# Real-time notifications append here %>
     </div>
+    <%# Modal container for dynamic modals %>
+    <div id="modal-container"></div>
     <!-- Glavni wrapper za sadržaj -->
     <main class="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col">
       <% if controller_name.in?(["sessions", "passwords"]) || 

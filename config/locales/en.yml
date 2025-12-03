@@ -275,6 +275,18 @@ en:
       title: "Cannot Delete"
       message: "This item cannot be deleted because it is currently used in related sub-tasks."
       ok_button: "OK"
+  modals:
+    post_creation:
+      title: "What's next?"
+      message: "You have successfully created %{name}. Would you like to continue editing or return to the project overview?"
+      stay_and_edit: "Stay and edit"
+      go_back: "Go back to project"
+      task:
+        title: "Task created!"
+        message: "You have successfully created task '%{name}'. Would you like to continue editing or return to the project overview?"
+      subtask:
+        title: "Sub-task created!"
+        message: "You have successfully created sub-task '%{name}'. Would you like to continue editing or return to the project overview?"
   businesses:
     form:
       edit_title: "Edit %{name}"

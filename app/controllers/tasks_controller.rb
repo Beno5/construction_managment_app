@@ -34,8 +34,13 @@ class TasksController < ApplicationController
     @task.user_id = current_user.id
 
     if @task.save
-      redirect_to business_project_path(@business, @project),
-                  notice: t('tasks.messages.created', name: @task.name)
+      respond_to do |format|
+        format.turbo_stream
+        format.html do
+          redirect_to business_project_path(@business, @project),
+                      notice: t('tasks.messages.created', name: @task.name)
+        end
+      end
     else
       set_error_message
       render :new, status: :unprocessable_entity

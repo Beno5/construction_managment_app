@@ -1,0 +1,29 @@
+<!-- Post-Creation Modal: Appears after creating a Task or SubTask -->
+<div id="post-creation-modal"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
+  <div class="relative w-full max-w-xl h-auto bg-white rounded-lg shadow-lg dark:bg-gray-800">
+    <!-- Modal Header -->
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
+        <%= local_assigns[:title] || t('modals.post_creation.title') %>
+      </h2>
+    </div>
+    <!-- Modal Body -->
+    <div class="p-6">
+      <p class="text-base leading-relaxed text-gray-600 dark:text-gray-400">
+        <%= local_assigns[:message] || t('modals.post_creation.message') %>
+      </p>
+    </div>
+    <!-- Modal Footer (Buttons) -->
+    <div class="flex justify-end p-4 border-t border-gray-200 dark:border-gray-700 space-x-3">
+      <a href="<%= local_assigns[:stay_path] %>"
+         class="px-5 py-2.5 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+        <%= local_assigns[:stay_text] || t('modals.post_creation.stay_and_edit') %>
+      </a>
+      <a href="<%= local_assigns[:back_path] %>"
+         class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
+        <%= local_assigns[:back_text] || t('modals.post_creation.go_back') %>
+      </a>
+    </div>
+  </div>
+</div>
