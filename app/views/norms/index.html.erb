@@ -82,14 +82,39 @@ end
         </div>
         <turbo-frame id="norms-frame">
           <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" data-controller="sort">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" class="px-4 py-3"><%= t('norms.form.name') %></th>
-                  <th scope="col" class="px-4 py-3"><%= t('norms.form.unit_of_measure') %></th>
-                  <th scope="col" class="px-4 py-3"><%= t('norms.form.norm_value') %></th>
-                  <th scope="col" class="px-4 py-3"><%= t('norms.form.info') %></th>
-                  <th scope="col" class="px-4 py-3"><%= t('norms.form.description') %></th>
+                  <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="0">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= t('norms.form.name') %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="0">↕</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="1">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= t('norms.form.unit_of_measure') %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="1">↕</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="2">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= t('norms.form.norm_value') %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="2">↕</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="3">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= t('norms.form.info') %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="3">↕</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="4">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= t('norms.form.description') %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="4">↕</span>
+                    </div>
+                  </th>
                   <th scope="col" class="px-4 py-3">
                     <span class="sr-only">Actions</span>
                   </th>
@@ -107,6 +132,7 @@ end
                   <tr id="<%= dom_id(norm) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                     <!-- Name (editable) -->
                     <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= norm.name.to_s.downcase %>"
                         data-controller="inline-edit"
                         data-inline-edit-model-value="norm"
                         data-inline-edit-field-value="name"
@@ -121,6 +147,7 @@ end
                     </td>
                     <!-- Unit of Measure (editable select) -->
                     <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= norm.unit_of_measure.to_s %>"
                         data-controller="inline-edit"
                         data-inline-edit-model-value="norm"
                         data-inline-edit-field-value="unit_of_measure"
@@ -135,6 +162,7 @@ end
                     </td>
                     <!-- Norm Value (editable number) -->
                     <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= norm.norm_value.to_s %>"
                         data-controller="inline-edit"
                         data-inline-edit-model-value="norm"
                         data-inline-edit-field-value="norm_value"
@@ -148,6 +176,7 @@ end
                     </td>
                     <!-- Info (editable text) -->
                     <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= norm.info.to_s.downcase %>"
                         data-controller="inline-edit"
                         data-inline-edit-model-value="norm"
                         data-inline-edit-field-value="info"
@@ -161,6 +190,7 @@ end
                     </td>
                     <!-- Description (editable textarea) -->
                     <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= norm.description.to_s.downcase %>"
                         data-controller="inline-edit"
                         data-inline-edit-model-value="norm"
                         data-inline-edit-field-value="description"

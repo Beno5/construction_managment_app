@@ -83,15 +83,45 @@
         </div>
         <turbo-frame id="workers-frame">
           <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" data-controller="sort">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" class="px-4 py-3"><%= t('workers.form.first_name') %></th>
-                  <th scope="col" class="px-4 py-3"><%= t('workers.form.last_name') %></th>
-                  <th scope="col" class="px-4 py-3"><%= t('workers.form.profession') %></th>
-                  <th scope="col" class="px-4 py-3"><%= t('workers.form.unit_of_measure') %></th>
-                  <th scope="col" class="px-4 py-3"><%= t('workers.form.price_per_unit', currency: @current_business.currency_symbol) %></th>
-                  <th scope="col" class="px-4 py-3"><%= t('workers.form.description') %></th>
+                  <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="0">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= t('workers.form.first_name') %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="0">↕</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="1">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= t('workers.form.last_name') %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="1">↕</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="2">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= t('workers.form.profession') %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="2">↕</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="3">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= t('workers.form.unit_of_measure') %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="3">↕</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="4">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= t('workers.form.price_per_unit', currency: @current_business.currency_symbol) %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="4">↕</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="5">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= t('workers.form.description') %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="5">↕</span>
+                    </div>
+                  </th>
                   <th scope="col" class="px-4 py-3">
                     <span class="sr-only">Actions</span>
                   </th>
@@ -109,6 +139,7 @@
                   <tr id="<%= dom_id(worker) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
                     <!-- First Name (editable) -->
                     <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= worker.first_name.to_s.downcase %>"
                         data-controller="inline-edit"
                         data-inline-edit-model-value="worker"
                         data-inline-edit-field-value="first_name"
@@ -124,6 +155,7 @@
 
                     <!-- Last Name (editable) -->
                     <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= worker.last_name.to_s.downcase %>"
                         data-controller="inline-edit"
                         data-inline-edit-model-value="worker"
                         data-inline-edit-field-value="last_name"
@@ -138,6 +170,7 @@
 
                     <!-- Profession (editable) -->
                     <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= worker.profession.to_s.downcase %>"
                         data-controller="inline-edit"
                         data-inline-edit-model-value="worker"
                         data-inline-edit-field-value="profession"
@@ -152,6 +185,7 @@
 
                     <!-- Unit of Measure (editable select) -->
                     <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= worker.unit_of_measure.to_s %>"
                         data-controller="inline-edit"
                         data-inline-edit-model-value="worker"
                         data-inline-edit-field-value="unit_of_measure"
@@ -167,6 +201,7 @@
 
                     <!-- Price Per Unit (editable number) -->
                     <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= worker.price_per_unit.to_s %>"
                         data-controller="inline-edit"
                         data-inline-edit-model-value="worker"
                         data-inline-edit-field-value="price_per_unit"
@@ -181,6 +216,7 @@
 
                     <!-- Description (editable textarea) -->
                     <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= worker.description.to_s.downcase %>"
                         data-controller="inline-edit"
                         data-inline-edit-model-value="worker"
                         data-inline-edit-field-value="description"

@@ -40,21 +40,66 @@
       <!-- Table - Disable caching to ensure fresh renders -->
       <turbo-frame id="tasks-frame" data-turbo-cache="false">
         <div class="overflow-x-auto">
-          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" data-controller="sort">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-4 py-3"></th>
-                <th scope="col" class="px-4 py-3"><%= t('tasks.table.id') %></th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="1">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('tasks.table.id') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="1">↕</span>
+                  </div>
+                </th>
                 <!-- Fixed width column for Name -->
-                <th scope="col" class="px-4 py-3 w-88"><%= t('tasks.table.name') %></th>
+                <th scope="col" class="px-4 py-3 w-88" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="2">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('tasks.table.name') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="2">↕</span>
+                  </div>
+                </th>
                 <!-- Fixed width column for Description -->
-                <th scope="col" class="px-4 py-3 w-88"><%= t('tasks.table.description') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('subtasks.form.unit_of_measure') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('subtasks.form.quantity') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('subtasks.form.planned_cost', currency: @project.business.currency_symbol) %></th>
-                <th scope="col" class="px-4 py-3"><%= t('subtasks.form.price_per_unit', currency: @project.business.currency_symbol) %></th>
-                <th scope="col" class="px-4 py-3"><%= t('tasks.table.planned_start_date') %></th>
-                <th scope="col" class="px-4 py-3"><%= t('tasks.table.planned_end_date') %></th>
+                <th scope="col" class="px-4 py-3 w-88" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="3">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('tasks.table.description') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="3">↕</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="4">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('subtasks.form.unit_of_measure') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="4">↕</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="5">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('subtasks.form.quantity') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="5">↕</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="6">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('subtasks.form.planned_cost', currency: @project.business.currency_symbol) %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="6">↕</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="7">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('subtasks.form.price_per_unit', currency: @project.business.currency_symbol) %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="7">↕</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="8">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('tasks.table.planned_start_date') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="8">↕</span>
+                  </div>
+                </th>
+                <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="9">
+                  <div class="flex items-center gap-1 cursor-pointer select-none">
+                    <span><%= t('tasks.table.planned_end_date') %></span>
+                    <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="9">↕</span>
+                  </div>
+                </th>
                 <th scope="col" class="px-4 py-3"></th>
                 <th scope="col" class="px-4 py-3">
                   <span class="sr-only"><%= t('tasks.table.actions') %></span>
@@ -68,8 +113,9 @@
               <% @tasks.ordered_by_position.each_with_index do |task, index| %>
                 <!-- TASK ROW -->
                 <tr id="<%= dom_id(task) %>" class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    data-task-id="<%= task.id %>" data-task-index="<%= index %>" draggable="true">
-                  <td class="px-4 py-3">
+                    data-task-id="<%= task.id %>" data-task-index="<%= index %>" draggable="true"
+                    data-sort-parent="true" data-sort-group="task-<%= task.id %>">
+                  <td class="px-4 py-3" data-sort-value="">
                     <% if task.sub_tasks.any? %>
                       <button type="button" class="toggle-sub-tasks" data-target=".sub-tasks-of-<%= index %>">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 chevron-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -78,9 +124,9 @@
                       </button>
                     <% end %>
                   </td>
-                  <td class="px-4 py-3 font-bold" data-task-drag-target="taskPosition"><%= task.position %></td>
+                  <td class="px-4 py-3 font-bold" data-task-drag-target="taskPosition" data-sort-value="<%= task.position %>"><%= task.position %></td>
                   <!-- Fixed width task name cell with text wrapping and tooltip -->
-                  <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.name %>">
+                  <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.name %>" data-sort-value="<%= task.name.to_s.downcase %>">
                     <span
                       data-controller="inline-edit"
                       data-inline-edit-model-value="task"
@@ -96,7 +142,7 @@
                     </span>
                   </td>
                   <!-- Fixed width task description cell with text wrapping and tooltip -->
-                  <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.description %>">
+                  <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.description %>" data-sort-value="<%= task.description.to_s.downcase %>">
                     <span
                       data-controller="inline-edit"
                       data-inline-edit-model-value="task"
@@ -110,7 +156,7 @@
                       <%= task.description&.truncate(150) %>
                     </span>
                   </td>
-                  <td class="px-4 py-3 font-bold">
+                  <td class="px-4 py-3 font-bold" data-sort-value="<%= task.unit_of_measure.to_s %>">
                     <span
                       data-controller="inline-edit"
                       data-inline-edit-model-value="task"
@@ -125,7 +171,7 @@
                       <%= t("activerecord.attributes.task.unit_of_measures.#{task.unit_of_measure}") if task.unit_of_measure %>
                     </span>
                   </td>
-                  <td class="px-4 py-3 font-bold">
+                  <td class="px-4 py-3 font-bold" data-sort-value="<%= task.quantity.to_s %>">
                     <span
                       data-controller="inline-edit"
                       data-inline-edit-model-value="task"
@@ -139,7 +185,7 @@
                       <%= task.quantity %>
                     </span>
                   </td>
-                  <td class="px-4 py-3 font-bold">
+                  <td class="px-4 py-3 font-bold" data-sort-value="<%= task.planned_cost.to_s %>">
                     <span
                       data-controller="inline-edit"
                       data-inline-edit-model-value="task"
@@ -153,7 +199,7 @@
                       <%= task.planned_cost %>
                     </span>
                   </td>
-                  <td class="px-4 py-3 font-bold">
+                  <td class="px-4 py-3 font-bold" data-sort-value="<%= task.price_per_unit.to_s %>">
                     <span
                       data-controller="inline-edit"
                       data-inline-edit-model-value="task"
@@ -167,7 +213,7 @@
                       <%= task.price_per_unit %>
                     </span>
                   </td>
-                  <td class="px-4 py-3 font-bold">
+                  <td class="px-4 py-3 font-bold" data-sort-value="<%= task.planned_start_date.to_s %>">
                     <span
                       data-controller="inline-edit"
                       data-inline-edit-model-value="task"
@@ -181,7 +227,7 @@
                       <%= I18n.l(task.planned_start_date) if task.planned_start_date %>
                     </span>
                   </td>
-                  <td class="px-4 py-3 font-bold">
+                  <td class="px-4 py-3 font-bold" data-sort-value="<%= task.planned_end_date.to_s %>">
                     <span
                       data-controller="inline-edit"
                       data-inline-edit-model-value="task"
@@ -237,11 +283,12 @@
                 <!-- SUBTASK ROWS -->
                 <% task.sub_tasks.ordered_by_position.each do |sub_task| %>
                   <tr id="<%= dom_id(sub_task) %>" class="sub-tasks-of-<%= index %> border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      data-subtask-id="<%= sub_task.id %>" data-parent-task-id="<%= task.id %>" draggable="true">
-                    <td class="px-4 py-3"></td>
-                    <td class="px-4 py-3 pl-8 text-gray-500" data-task-drag-target="subtaskPosition"><%= sub_task.show_position %></td>
+                      data-subtask-id="<%= sub_task.id %>" data-parent-task-id="<%= task.id %>" draggable="true"
+                      data-sort-child="true" data-sort-group="task-<%= task.id %>">
+                    <td class="px-4 py-3" data-sort-value=""></td>
+                    <td class="px-4 py-3 pl-8 text-gray-500" data-task-drag-target="subtaskPosition" data-sort-value="<%= sub_task.show_position %>"><%= sub_task.show_position %></td>
                     <!-- Fixed width subtask name cell with text wrapping and tooltip -->
-                    <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.name %>">
+                    <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.name %>" data-sort-value="<%= sub_task.name.to_s.downcase %>">
                       <span
                         data-controller="inline-edit"
                         data-inline-edit-model-value="sub_task"
@@ -257,7 +304,7 @@
                       </span>
                     </td>
                     <!-- Fixed width subtask description cell with text wrapping and tooltip -->
-                    <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.description %>">
+                    <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.description %>" data-sort-value="<%= sub_task.description.to_s.downcase %>">
                       <span
                         data-controller="inline-edit"
                         data-inline-edit-model-value="sub_task"
@@ -271,7 +318,7 @@
                         <%= sub_task.description&.truncate(150) %>
                       </span>
                     </td>
-                    <td class="px-4 py-3">
+                    <td class="px-4 py-3" data-sort-value="<%= sub_task.unit_of_measure.to_s %>">
                       <span
                         data-controller="inline-edit"
                         data-inline-edit-model-value="sub_task"
@@ -286,7 +333,7 @@
                         <%= t_enum(sub_task, :unit_of_measure) if sub_task.unit_of_measure %>
                       </span>
                     </td>
-                    <td class="px-4 py-3">
+                    <td class="px-4 py-3" data-sort-value="<%= sub_task.quantity.to_s %>">
                       <span
                         data-controller="inline-edit"
                         data-inline-edit-model-value="sub_task"
@@ -300,7 +347,7 @@
                         <%= sub_task.quantity %>
                       </span>
                     </td>
-                    <td class="px-4 py-3">
+                    <td class="px-4 py-3" data-sort-value="<%= sub_task.planned_cost.to_s %>">
                       <span
                         data-controller="inline-edit"
                         data-inline-edit-model-value="sub_task"
@@ -314,7 +361,7 @@
                         <%= sub_task.planned_cost %>
                       </span>
                     </td>
-                    <td class="px-4 py-3">
+                    <td class="px-4 py-3" data-sort-value="<%= sub_task.price_per_unit.to_s %>">
                       <span
                         data-controller="inline-edit"
                         data-inline-edit-model-value="sub_task"
@@ -328,7 +375,7 @@
                         <%= sub_task.price_per_unit %>
                       </span>
                     </td>
-                    <td class="px-4 py-3">
+                    <td class="px-4 py-3" data-sort-value="<%= sub_task.planned_start_date.to_s %>">
                       <span
                         data-controller="inline-edit"
                         data-inline-edit-model-value="sub_task"
@@ -342,7 +389,7 @@
                         <%= I18n.l(sub_task.planned_start_date) if sub_task.planned_start_date %>
                       </span>
                     </td>
-                    <td class="px-4 py-3">
+                    <td class="px-4 py-3" data-sort-value="<%= sub_task.planned_end_date.to_s %>">
                       <span
                         data-controller="inline-edit"
                         data-inline-edit-model-value="sub_task"
@@ -356,7 +403,7 @@
                         <%= I18n.l(sub_task.planned_end_date) if sub_task.planned_end_date %>
                       </span>
                     </td>
-                    <td class="px-4 py-3"></td>
+                    <td class="px-4 py-3" data-sort-value=""></td>
                     <td class="px-4 py-3 flex items-center justify-end">
                       <td class="px-4 py-3 flex items-center justify-end">
                         <button id="<%= "sub-task-#{sub_task.id}-dropdown-button" %>" 
