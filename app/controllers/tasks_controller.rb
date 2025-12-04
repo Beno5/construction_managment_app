@@ -16,6 +16,19 @@ class TasksController < ApplicationController
     @subtasks = @task.sub_tasks.search(params[:search]).order(:position).page(params[:subtask_page]).per(10)
     @documents = @task.documents.with_attached_file.search(params[:search]).order(created_at: :desc).page(params[:document_page]).per(10)
     @readonly_mode = false
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: {
+          id: @task.id,
+          planned_start_date: @task.planned_start_date,
+          planned_end_date: @task.planned_end_date,
+          planned_cost: @task.planned_cost,
+          updated_at: @task.updated_at.iso8601
+        }
+      end
+    end
   end
 
   def new
@@ -77,6 +90,9 @@ class TasksController < ApplicationController
     end
 
     if @task.update(task_params)
+      # Broadcast refresh-gantt event after successful update
+      broadcast_refresh_gantt_event
+
       respond_to do |format|
         format.json do
           render json: {
@@ -209,5 +225,21 @@ class TasksController < ApplicationController
 
   def reorder_params
     params.permit(order: %i[id position])
+  end
+
+  def broadcast_refresh_gantt_event
+    # Broadcast to project-level Gantt (projects/show)
+    Turbo::StreamsChannel.broadcast_append_to(
+      "project_#{@project.id}_gantt",
+      target: "gantt-events",
+      html: "<script>document.dispatchEvent(new CustomEvent('refresh-gantt'));</script>"
+    )
+
+    # Broadcast to task-level Gantt (tasks/show)
+    Turbo::StreamsChannel.broadcast_append_to(
+      "task_#{@task.id}_gantt",
+      target: "gantt-events",
+      html: "<script>document.dispatchEvent(new CustomEvent('refresh-gantt'));</script>"
+    )
   end
 end

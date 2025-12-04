@@ -20,7 +20,7 @@ module Api
 
         if task.planned_start_date && task.planned_end_date
           task_data[:start_date] = task.planned_start_date.strftime("%Y-%m-%d")
-          task_data[:end_date]   = task.planned_end_date.strftime("%Y-%m-%d")
+          task_data[:duration] = task.calculate_duration
         else
           task_data[:unscheduled] = true
           task_data[:duration] = 0
@@ -38,7 +38,7 @@ module Api
 
           if sub_task.planned_start_date && sub_task.planned_end_date
             sub_data[:start_date] = sub_task.planned_start_date.strftime("%Y-%m-%d")
-            sub_data[:end_date]   = sub_task.planned_end_date.strftime("%Y-%m-%d")
+            sub_data[:duration] = sub_task.calculate_duration
           else
             sub_data[:unscheduled] = true
             sub_data[:duration] = 0
@@ -68,6 +68,7 @@ module Api
     def move_update
       raw_id = params[:id].to_s
 
+      # Identify record type
       if raw_id.start_with?("t_")
         record = Task.find(raw_id.sub("t_", ""))
       elsif raw_id.start_with?("st_")
@@ -76,13 +77,25 @@ module Api
         return render json: { action: "error", errors: ["Invalid ID format"] }, status: :unprocessable_entity
       end
 
-      attrs = {
-        planned_start_date: params[:start_date].present? ? Date.parse(params[:start_date]) : nil,
-        planned_end_date: params[:end_date].present? ? Date.parse(params[:end_date]) : nil,
-        duration: params[:duration]
-      }.compact
+      # Parse incoming params
+      start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : nil
+      duration   = params[:duration].to_i if params[:duration].present?
 
-      if record.update(attrs)
+      # Apply inclusive logic:
+      # end_date = start_date + (duration - 1)
+      end_date = nil
+      end_date = start_date + (duration - 1).days if start_date && duration && duration > 0
+
+      # Update record
+      if record.update(planned_start_date: start_date,
+                       planned_end_date: end_date,
+                       duration: duration)
+
+        # Broadcast updates to gantt, table, forms
+        broadcast_refresh_gantt_event(record)
+        broadcast_table_refresh(record)
+        broadcast_form_refresh(record)
+
         render json: { action: "updated", record: record }
       else
         render json: { action: "error", errors: record.errors.full_messages }, status: :unprocessable_entity
@@ -90,6 +103,71 @@ module Api
     end
 
     private
+
+    def broadcast_refresh_gantt_event(record)
+      project = record.is_a?(Task) ? record.project : record.task.project
+
+      # Broadcast to project-level Gantt (projects/show)
+      Turbo::StreamsChannel.broadcast_append_to(
+        "project_#{project.id}_gantt",
+        target: "gantt-events",
+        html: "<script>document.dispatchEvent(new CustomEvent('refresh-gantt'));</script>"
+      )
+
+      # Broadcast to task-level Gantt (tasks/show) if it's a SubTask
+      return unless record.is_a?(SubTask)
+
+      Turbo::StreamsChannel.broadcast_append_to(
+        "task_#{record.task.id}_gantt",
+        target: "gantt-events",
+        html: "<script>document.dispatchEvent(new CustomEvent('refresh-gantt'));</script>"
+      )
+
+      # Broadcast to subtask-level Gantt (sub_tasks/show)
+      Turbo::StreamsChannel.broadcast_append_to(
+        "sub_task_#{record.id}_gantt",
+        target: "gantt-events",
+        html: "<script>document.dispatchEvent(new CustomEvent('refresh-gantt'));</script>"
+      )
+    end
+
+    def broadcast_table_refresh(record)
+      project = record.is_a?(Task) ? record.project : record.task.project
+
+      # Broadcast to project-level table (projects/show - tasks table)
+      Turbo::StreamsChannel.broadcast_append_to(
+        "project_#{project.id}_table",
+        target: "gantt-events",
+        html: "<script>document.dispatchEvent(new CustomEvent('refresh-table'));</script>"
+      )
+
+      # Broadcast to task-level table (tasks/show - subtasks table) if it's a SubTask
+      return unless record.is_a?(SubTask)
+
+      Turbo::StreamsChannel.broadcast_append_to(
+        "task_#{record.task.id}_table",
+        target: "gantt-events",
+        html: "<script>document.dispatchEvent(new CustomEvent('refresh-table'));</script>"
+      )
+    end
+
+    def broadcast_form_refresh(record)
+      if record.is_a?(Task)
+        # Broadcast to task-level form (tasks/show)
+        Turbo::StreamsChannel.broadcast_append_to(
+          "task_#{record.id}_gantt",
+          target: "gantt-events",
+          html: "<script>document.dispatchEvent(new CustomEvent('refresh-form'));</script>"
+        )
+      elsif record.is_a?(SubTask)
+        # Broadcast to subtask-level form (sub_tasks/show)
+        Turbo::StreamsChannel.broadcast_append_to(
+          "sub_task_#{record.id}_gantt",
+          target: "gantt-events",
+          html: "<script>document.dispatchEvent(new CustomEvent('refresh-form'));</script>"
+        )
+      end
+    end
 
     def permitted_params
       # Mapiramo iz Gantt formata u naše kolone

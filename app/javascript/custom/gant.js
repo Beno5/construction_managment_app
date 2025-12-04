@@ -194,11 +194,13 @@ document.addEventListener("turbo:load", function () {
   // Sakrivamo tekst unutar barova
   gantt.templates.task_text = function () { return ""; };
 
-  // Inicijalizacija
-  if (gantt.$container) {
+  // Inicijalizacija - prevent duplicate init
+  if (!gantt.$container) {
+    gantt.init("gantt_here");
+  } else if (gantt.$container && gantt.$container.id !== "gantt_here") {
     gantt.clearAll();
+    gantt.init("gantt_here");
   }
-  gantt.init("gantt_here");
 
   const projectId = ganttElement.dataset.projectId;
   gantt.load(`/api/gantt/project/${projectId}/data`, function () {
@@ -254,7 +256,6 @@ document.addEventListener("turbo:load", function () {
       },
       body: JSON.stringify({
         start_date: gantt.date.date_to_str("%Y-%m-%d")(task.start_date),
-        end_date: gantt.date.date_to_str("%Y-%m-%d")(task.end_date),
         duration: task.duration
       })
     })
@@ -304,14 +305,182 @@ function buildTooltip(id, start, end) {
   return html;
 }
 
+// Debounce flags to prevent duplicate refreshes
+let ganttRefreshTimeout = null;
+let tableRefreshTimeout = null;
+let isGanttRefreshing = false;
+
 document.addEventListener("refresh-gantt", function () {
-  const ganttElement = document.getElementById("gantt_here");
-  if (!ganttElement) return;
+  // Prevent duplicate refreshes within 500ms
+  if (ganttRefreshTimeout) {
+    clearTimeout(ganttRefreshTimeout);
+  }
 
-  const projectId = ganttElement.dataset.projectId;
+  ganttRefreshTimeout = setTimeout(function() {
+    const ganttElement = document.getElementById("gantt_here");
+    if (!ganttElement || isGanttRefreshing) return;
 
-  gantt.clearAll();
-  gantt.load(`/api/gantt/project/${projectId}/data`, function () {
-    if (typeof gantt.openAll === "function") gantt.openAll();
-  });
+    isGanttRefreshing = true;
+    const projectId = ganttElement.dataset.projectId;
+
+    gantt.clearAll();
+    gantt.load(`/api/gantt/project/${projectId}/data`, function () {
+      if (typeof gantt.openAll === "function") gantt.openAll();
+      isGanttRefreshing = false;
+    });
+
+    ganttRefreshTimeout = null;
+  }, 100);
+});
+
+document.addEventListener("refresh-table", function () {
+  // Prevent duplicate refreshes within 500ms
+  if (tableRefreshTimeout) {
+    clearTimeout(tableRefreshTimeout);
+  }
+
+  tableRefreshTimeout = setTimeout(function() {
+    // Try to find either tasks-frame or subtasks-frame
+    const tasksFrame = document.getElementById("tasks-frame");
+    const subtasksFrame = document.getElementById("subtasks-frame");
+    const targetFrame = tasksFrame || subtasksFrame;
+
+    if (!targetFrame) return;
+
+    const frameId = targetFrame.id;
+
+    // Fetch the content directly without triggering Turbo navigation
+    const currentUrl = window.location.href;
+    const url = new URL(currentUrl);
+
+    const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
+
+    fetch(url.pathname + url.search, {
+      headers: {
+        "Accept": "text/html",
+        "Turbo-Frame": frameId,
+        "X-CSRF-Token": csrfToken || ""
+      }
+    })
+      .then(response => response.text())
+      .then(html => {
+        // Parse the HTML and extract just the frame content
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const newFrameContent = doc.getElementById(frameId);
+
+        if (newFrameContent) {
+          // Update only the frame's innerHTML
+          targetFrame.innerHTML = newFrameContent.innerHTML;
+
+          // Reinitialize Flowbite dropdowns after content is replaced
+          setTimeout(function() {
+            reinitializeFlowbite();
+          }, 50);
+        }
+      })
+      .catch(error => {
+        console.error("❌ Error refreshing table:", error);
+      });
+
+    tableRefreshTimeout = null;
+  }, 100);
+});
+
+// Refresh form fields when Gantt changes
+document.addEventListener("refresh-form", function () {
+  const currentUrl = window.location.href;
+  const url = new URL(currentUrl);
+  const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
+
+  // Fetch fresh data from backend
+  fetch(url.pathname, {
+    headers: {
+      "Accept": "application/json",
+      "X-CSRF-Token": csrfToken || ""
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      // Update Task form fields (tasks/show)
+      updateFormField('task', 'planned_start_date', data.planned_start_date);
+      updateFormField('task', 'planned_end_date', data.planned_end_date);
+
+      // Update SubTask form fields (sub_tasks/show)
+      updateFormField('sub_task', 'planned_start_date', data.planned_start_date);
+      updateFormField('sub_task', 'planned_end_date', data.planned_end_date);
+      updateFormField('sub_task', 'duration', data.duration);
+    })
+    .catch(error => {
+      console.error("❌ Error refreshing form:", error);
+    });
+});
+
+// Helper function to update form fields
+function updateFormField(model, field, value) {
+  if (!value) return;
+
+  // Find inline-edit div for the field
+  const inlineEditDiv = document.querySelector(
+    `[data-inline-edit-model-value="${model}"][data-inline-edit-field-value="${field}"]`
+  );
+
+  if (inlineEditDiv) {
+    // Update the displayed value
+    if (field === 'planned_start_date' || field === 'planned_end_date') {
+      const date = new Date(value);
+      const formattedDate = date.toLocaleDateString('sr-RS', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+      inlineEditDiv.textContent = formattedDate;
+    } else if (field === 'duration') {
+      inlineEditDiv.textContent = value;
+    }
+
+    // Update the data attribute for inline-edit
+    inlineEditDiv.setAttribute('data-inline-edit-original-value', value);
+  }
+
+  // Also update regular form fields (for new record forms)
+  const formField = document.getElementById(`${model}_${field}`);
+  if (formField) {
+    formField.value = value;
+  }
+}
+
+// Reinitialize Flowbite dropdowns after content is replaced
+function reinitializeFlowbite() {
+  // Reinitialize all dropdowns
+  if (typeof window.initFlowbite === 'function') {
+    window.initFlowbite();
+  } else if (typeof Flowbite !== 'undefined') {
+    // Alternative: manually reinitialize dropdowns
+    document.querySelectorAll('[data-dropdown-toggle]').forEach(button => {
+      const dropdownId = button.getAttribute('data-dropdown-toggle');
+      const dropdown = document.getElementById(dropdownId);
+      if (dropdown && !dropdown.classList.contains('initialized')) {
+        dropdown.classList.add('initialized');
+      }
+    });
+  }
+}
+
+// Ensure loading overlay stops after frame refreshes
+document.addEventListener("turbo:frame-load", function(event) {
+  // If it's the tasks-frame or subtasks-frame loading, ensure spinner stops
+  if (event.target.id === "tasks-frame" || event.target.id === "subtasks-frame") {
+    // Force stop any lingering loading state
+    setTimeout(function() {
+      const loadingOverlay = document.querySelector('[data-controller="loading"]');
+      if (loadingOverlay && loadingOverlay.classList.contains('flex')) {
+        loadingOverlay.classList.add('hidden');
+        loadingOverlay.classList.remove('flex');
+      }
+
+      // Reinitialize Flowbite dropdowns after frame refresh
+      reinitializeFlowbite();
+    }, 100);
+  }
 });

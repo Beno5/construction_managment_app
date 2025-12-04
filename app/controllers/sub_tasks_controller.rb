@@ -24,6 +24,20 @@ class SubTasksController < ApplicationController
     @norms = Kaminari.paginate_array(combined_norms).page(params[:norm_page]).per(10)
 
     @readonly_mode = false
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: {
+          id: @sub_task.id,
+          planned_start_date: @sub_task.planned_start_date,
+          planned_end_date: @sub_task.planned_end_date,
+          duration: @sub_task.duration,
+          planned_cost: @sub_task.planned_cost,
+          updated_at: @sub_task.updated_at.iso8601
+        }
+      end
+    end
   end
 
   def new
@@ -86,6 +100,9 @@ class SubTasksController < ApplicationController
       SubTaskPlanningCalculator.new(@sub_task).call
       # Reload task to get updated aggregated values
       @task.reload
+
+      # Broadcast refresh-gantt event after successful update
+      broadcast_refresh_gantt_event
 
       respond_to do |format|
         format.json do
@@ -253,5 +270,28 @@ class SubTasksController < ApplicationController
 
   def reorder_params
     params.permit(:task_id, sub_tasks: %i[id position])
+  end
+
+  def broadcast_refresh_gantt_event
+    # Broadcast to project-level Gantt (projects/show)
+    Turbo::StreamsChannel.broadcast_append_to(
+      "project_#{@project.id}_gantt",
+      target: "gantt-events",
+      html: "<script>document.dispatchEvent(new CustomEvent('refresh-gantt'));</script>"
+    )
+
+    # Broadcast to task-level Gantt (tasks/show)
+    Turbo::StreamsChannel.broadcast_append_to(
+      "task_#{@task.id}_gantt",
+      target: "gantt-events",
+      html: "<script>document.dispatchEvent(new CustomEvent('refresh-gantt'));</script>"
+    )
+
+    # Broadcast to subtask-level Gantt (sub_tasks/show)
+    Turbo::StreamsChannel.broadcast_append_to(
+      "sub_task_#{@sub_task.id}_gantt",
+      target: "gantt-events",
+      html: "<script>document.dispatchEvent(new CustomEvent('refresh-gantt'));</script>"
+    )
   end
 end

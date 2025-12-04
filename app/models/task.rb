@@ -63,6 +63,12 @@ class Task < ApplicationRecord
     end
   end
 
+    def calculate_duration
+    return unless planned_start_date.present? && planned_end_date.present?
+
+    (planned_end_date - planned_start_date).to_i + 1
+  end
+
   private
 
   def assign_position
