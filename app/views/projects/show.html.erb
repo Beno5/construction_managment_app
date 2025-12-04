@@ -1,3 +1,10 @@
+<%# Turbo Stream subscriptions for Gantt and table synchronization %>
+<%= turbo_stream_from "project_#{@project.id}_gantt" %>
+<%= turbo_stream_from "project_#{@project.id}_table" %>
+
+<%# Hidden container for Gantt event scripts %>
+<div id="gantt-events" style="display: none;"></div>
+
 <%
   model_name = t('tasks.form.model_name')
   paths = {

@@ -52,7 +52,7 @@ class SubTask < ApplicationRecord
   def calculate_duration
     return unless planned_start_date.present? && planned_end_date.present?
 
-    ((planned_end_date.year * 12) + planned_end_date.month) - ((planned_start_date.year * 12) + planned_start_date.month)
+    (planned_end_date - planned_start_date).to_i + 1
   end
 
   def show_position

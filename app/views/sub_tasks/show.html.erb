@@ -1,3 +1,9 @@
+<%# Turbo Stream subscriptions for Gantt synchronization %>
+<%= turbo_stream_from "sub_task_#{@sub_task.id}_gantt" %>
+
+<%# Hidden container for Gantt event scripts %>
+<div id="gantt-events" style="display: none;"></div>
+
 <%= render "form", project: @project, task: @task, sub_task: @sub_task %>
 <%
   model_name = "Activities"

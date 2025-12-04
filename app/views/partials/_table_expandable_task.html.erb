@@ -178,8 +178,15 @@
                       data-inline-edit-original-value="<%= task.unit_of_measure %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
                       data-inline-edit-options-value='<%= { "" => "" }.merge(Task.unit_of_measures.keys.index_with { |k| t("activerecord.attributes.task.unit_of_measures.#{k}") }).to_json %>'
-                      data-action="click->inline-edit#activate"
-                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <% if task.sub_tasks.any? %>
+                        data-inline-edit-disabled-value="true"
+                        data-inline-edit-disabled-message-value="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                        class="cursor-not-allowed px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+                        title="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                      <% else %>
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+                      <% end %>>
                       <%= t("activerecord.attributes.task.unit_of_measures.#{task.unit_of_measure}") if task.unit_of_measure %>
                     </span>
                   </td>
@@ -192,8 +199,15 @@
                       data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
                       data-inline-edit-original-value="<%= task.quantity %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
-                      data-action="click->inline-edit#activate"
-                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <% if task.sub_tasks.any? %>
+                        data-inline-edit-disabled-value="true"
+                        data-inline-edit-disabled-message-value="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                        class="cursor-not-allowed px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+                        title="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                      <% else %>
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+                      <% end %>>
                       <%= task.quantity %>
                     </span>
                   </td>
@@ -206,8 +220,15 @@
                       data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
                       data-inline-edit-original-value="<%= task.planned_cost %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
-                      data-action="click->inline-edit#activate"
-                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <% if task.sub_tasks.any? %>
+                        data-inline-edit-disabled-value="true"
+                        data-inline-edit-disabled-message-value="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                        class="cursor-not-allowed px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+                        title="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                      <% else %>
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+                      <% end %>>
                       <%= task.planned_cost %>
                     </span>
                   </td>
@@ -220,8 +241,15 @@
                       data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
                       data-inline-edit-original-value="<%= task.price_per_unit %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
-                      data-action="click->inline-edit#activate"
-                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <% if task.sub_tasks.any? %>
+                        data-inline-edit-disabled-value="true"
+                        data-inline-edit-disabled-message-value="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                        class="cursor-not-allowed px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+                        title="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                      <% else %>
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+                      <% end %>>
                       <%= task.price_per_unit %>
                     </span>
                   </td>
@@ -234,8 +262,15 @@
                       data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
                       data-inline-edit-original-value="<%= task.planned_start_date %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
-                      data-action="click->inline-edit#activate"
-                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <% if task.sub_tasks.any? %>
+                        data-inline-edit-disabled-value="true"
+                        data-inline-edit-disabled-message-value="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                        class="cursor-not-allowed px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+                        title="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                      <% else %>
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+                      <% end %>>
                       <%= I18n.l(task.planned_start_date) if task.planned_start_date %>
                     </span>
                   </td>
@@ -248,8 +283,15 @@
                       data-inline-edit-url-value="<%= business_project_task_path(@business, @project, task) %>"
                       data-inline-edit-original-value="<%= task.planned_end_date %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
-                      data-action="click->inline-edit#activate"
-                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
+                      <% if task.sub_tasks.any? %>
+                        data-inline-edit-disabled-value="true"
+                        data-inline-edit-disabled-message-value="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                        class="cursor-not-allowed px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+                        title="<%= t('tasks.inline_edit.locked_due_to_subtasks') %>"
+                      <% else %>
+                        data-action="click->inline-edit#activate"
+                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]"
+                      <% end %>>
                       <%= I18n.l(task.planned_end_date) if task.planned_end_date %>
                     </span>
                   </td>

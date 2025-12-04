@@ -1,3 +1,10 @@
+<%# Turbo Stream subscriptions for Gantt and subtasks table synchronization %>
+<%= turbo_stream_from "task_#{@task.id}_gantt" %>
+<%= turbo_stream_from "task_#{@task.id}_table" %>
+
+<%# Hidden container for Gantt event scripts %>
+<div id="gantt-events" style="display: none;"></div>
+
 <% has_subtasks = @task.sub_tasks.exists? %>
 <% has_task_documents = @task.documents.exists? %>
 <!-- Editable Task Form -->
