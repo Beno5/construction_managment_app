@@ -88,6 +88,61 @@
     content: '\00a0';
   }
 
+  /* Empty state placeholder box for inline-editable cells */
+  /* Applied to span elements with inline-edit controller and inline-edit-cell class */
+  .inline-edit-cell[data-controller~="inline-edit"].inline-edit-empty,
+  span[data-controller~="inline-edit"].inline-edit-empty {
+    @apply bg-white border border-gray-300 dark:bg-gray-700 dark:border-gray-600;
+    position: relative;
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    min-width: 80px;
+    min-height: 24px;
+  }
+
+  /* For legacy table cells with direct controller (backward compatibility) */
+  td[data-controller~="inline-edit"].inline-edit-empty,
+  th[data-controller~="inline-edit"].inline-edit-empty {
+    display: table-cell;
+  }
+
+  /* Inner content wrapper for legacy table cells with empty state */
+  td[data-controller~="inline-edit"].inline-edit-empty::after,
+  th[data-controller~="inline-edit"].inline-edit-empty::after {
+    content: '';
+    display: inline-block;
+    min-width: 80px;
+    min-height: 24px;
+    background: white;
+    border: 1px solid rgb(209, 213, 219); /* gray-300 */
+    border-radius: 0.25rem;
+  }
+
+  /* Dark mode for legacy table cell empty state */
+  .dark td[data-controller~="inline-edit"].inline-edit-empty::after,
+  .dark th[data-controller~="inline-edit"].inline-edit-empty::after {
+    background: rgb(55, 65, 81); /* gray-700 */
+    border-color: rgb(75, 85, 99); /* gray-600 */
+  }
+
+  /* Hover effect on empty cells to indicate they're clickable */
+  .inline-edit-cell[data-controller~="inline-edit"].inline-edit-empty:hover,
+  span[data-controller~="inline-edit"].inline-edit-empty:hover {
+    @apply border-gray-400 dark:border-gray-500;
+  }
+
+  /* Hover effect for legacy table cells */
+  td[data-controller~="inline-edit"].inline-edit-empty:hover::after,
+  th[data-controller~="inline-edit"].inline-edit-empty:hover::after {
+    border-color: rgb(156, 163, 175); /* gray-400 */
+  }
+
+  .dark td[data-controller~="inline-edit"].inline-edit-empty:hover::after,
+  .dark th[data-controller~="inline-edit"].inline-edit-empty:hover::after {
+    border-color: rgb(107, 114, 128); /* gray-500 */
+  }
+
   /* Gantt view tweaks */
   .gantt_grid_head_add,
   .gantt_add {

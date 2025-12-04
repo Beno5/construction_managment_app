@@ -72,6 +72,9 @@ export default class extends Controller {
       finishCurrentField: this.t('inline_edit.finish_current_field', 'Please finish editing the current field first.'),
       unsavedChanges: this.t('inline_edit.unsaved_changes', 'You have unsaved changes. Leave anyway?')
     }
+
+    // Set initial empty state
+    this.updateEmptyState()
   }
 
   disconnect() {
@@ -330,6 +333,9 @@ export default class extends Controller {
     this.clearDirty()
     this.releaseGlobalLock()
     this.element.dataset.inlineEditActive = 'false'
+
+    // Update empty state after canceling
+    this.updateEmptyState()
   }
 
   handleSuccess(newValue, updatedData) {
@@ -389,6 +395,9 @@ export default class extends Controller {
     }, 2000)
 
     this.clearError()
+
+    // Update empty state after successful save
+    this.updateEmptyState()
   }
 
   updateAllFieldsTimestamp(newTimestamp) {
@@ -444,6 +453,12 @@ export default class extends Controller {
 
       // Keep original value in sync for next edit
       element.dataset.inlineEditOriginalValue = value
+
+      // Update empty state for this field
+      const controller = this.application.getControllerForElementAndIdentifier(element, 'inline-edit')
+      if (controller) {
+        controller.updateEmptyState()
+      }
     })
   }
 
@@ -545,6 +560,12 @@ export default class extends Controller {
       element.dataset.inlineEditOriginalValue = value
       if (updatedAt) {
         element.dataset.inlineEditRecordUpdatedAtValue = updatedAt
+      }
+
+      // Update empty state for this field
+      const controller = this.application.getControllerForElementAndIdentifier(element, 'inline-edit')
+      if (controller) {
+        controller.updateEmptyState()
       }
     })
   }
@@ -808,6 +829,24 @@ export default class extends Controller {
 
     current[parts[parts.length - 1]] = value
     return result
+  }
+
+  // Update empty state styling - adds visible placeholder box to empty cells
+  updateEmptyState() {
+    // Don't update empty state while editing
+    if (this.isEditing) return
+
+    // Check if cell content is empty (ignoring whitespace, nbsp, and password placeholders)
+    const textContent = this.element.textContent || ''
+    const trimmedContent = textContent.replace(/[\s\u00a0•]/g, '') // Remove spaces, nbsp, and bullet chars
+
+    if (trimmedContent === '') {
+      // Cell is empty - add placeholder box
+      this.element.classList.add('inline-edit-empty')
+    } else {
+      // Cell has content - remove placeholder box
+      this.element.classList.remove('inline-edit-empty')
+    }
   }
 
   get csrfToken() {
