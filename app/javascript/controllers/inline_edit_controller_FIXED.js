@@ -145,9 +145,6 @@ export default class extends Controller {
     this.originalContent = this.element.innerHTML
     this.element.dataset.inlineEditActive = 'true'
 
-    // Remove empty state class to hide the white box during editing
-    this.element.classList.remove('inline-edit-empty')
-
     // Store original value if not set
     if (!this.hasOriginalValue) {
       this.originalValue = this.element.textContent.trim()

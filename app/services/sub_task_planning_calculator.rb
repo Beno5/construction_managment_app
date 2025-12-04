@@ -7,12 +7,18 @@ class SubTaskPlanningCalculator
 
   def call(norms = false)
     if @norms.empty? || @sub_task.quantity.blank?
-      return @sub_task.update(
+      # Use update_columns to avoid touching updated_at and triggering after_save
+      # This prevents optimistic locking conflicts during inline-edit
+      @sub_task.update_columns(
         duration: 0.to_d,
         num_workers_skilled: 0.to_d,
         num_workers_unskilled: 0.to_d,
         num_machines: 0.to_d
       )
+
+      # Manually propagate changes to parent Task/Project
+      propagate_to_parents
+      return
     end
 
     if (duration_changed? && !norms) || dates_changed?
@@ -20,6 +26,9 @@ class SubTaskPlanningCalculator
     else
       forward_calculate_duration
     end
+
+    # Manually propagate changes to parent Task/Project after all calculations
+    propagate_to_parents
   end
 
   private
@@ -47,7 +56,8 @@ class SubTaskPlanningCalculator
     # Trajanje = količina / output po danu
     duration = (@sub_task.quantity.to_d / total_units_per_day).round(2)
 
-    @sub_task.update(
+    # Use update_columns to avoid touching updated_at and triggering after_save
+    @sub_task.update_columns(
       duration: duration,
       num_workers_skilled: num_skilled,
       num_workers_unskilled: num_unskilled,
@@ -71,7 +81,8 @@ class SubTaskPlanningCalculator
     num_unskilled = @sub_task.num_workers_unskilled
     num_machines  = @sub_task.num_machines
 
-    @sub_task.update(
+    # Use update_columns to avoid touching updated_at and triggering after_save
+    @sub_task.update_columns(
       num_workers_skilled: (num_skilled * ratio).round(2),
       num_workers_unskilled: (num_unskilled * ratio).round(2),
       num_machines: (num_machines * ratio).round(2)
@@ -84,19 +95,32 @@ class SubTaskPlanningCalculator
     return unless @sub_task.planned_start_date.present? && @sub_task.planned_end_date.present?
 
     new_duration = (@sub_task.planned_end_date - @sub_task.planned_start_date).to_i + 1
-    @sub_task.update(duration: new_duration.to_d)
+    # Use update_columns to avoid touching updated_at and triggering after_save
+    @sub_task.update_columns(duration: new_duration.to_d)
   end
 
   def update_dates_from_duration(new_duration)
+    # Use update_columns to avoid touching updated_at and triggering after_save
     if @sub_task.planned_start_date.present?
-      @sub_task.update(
+      @sub_task.update_columns(
         planned_end_date: @sub_task.planned_start_date + (new_duration.to_i - 1)
       )
     elsif @sub_task.planned_end_date.present?
-      @sub_task.update(
+      @sub_task.update_columns(
         planned_start_date: @sub_task.planned_end_date - (new_duration.to_i - 1)
       )
     end
+  end
+
+  # Manually propagate changes to parent Task and Project
+  # This replaces the automatic after_save callback that we're now skipping
+  def propagate_to_parents
+    # Get the parent Task
+    task = @sub_task.task
+    return unless task
+
+    # Update parent Task aggregated values
+    UpdateDynamicAttributesService.new(task).update_all!
   end
 
   def duration_changed?

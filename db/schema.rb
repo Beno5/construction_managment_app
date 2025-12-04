@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_12_03_131431) do
+ActiveRecord::Schema[7.0].define(version: 2025_12_04_204339) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -152,7 +152,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_03_131431) do
     t.string "name", null: false
     t.text "description"
     t.string "info"
-    t.integer "norm_type", default: 0, null: false
+    t.integer "norm_type"
     t.integer "subtype"
     t.string "unit_of_measure"
     t.decimal "norm_value", precision: 10, scale: 4
@@ -163,6 +163,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_12_03_131431) do
     t.bigint "user_id"
     t.jsonb "custom_fields", default: {}
     t.boolean "auto_calculate"
+    t.boolean "info_norm", default: false
     t.index ["business_id"], name: "index_norms_on_business_id"
     t.index ["user_id"], name: "index_norms_on_user_id"
   end

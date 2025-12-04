@@ -112,8 +112,14 @@ end
                   </th>
                   <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="4">
                     <div class="flex items-center gap-1 cursor-pointer select-none">
-                      <span><%= t('norms.form.description') %></span>
+                      <span><%= t('norms.form.info_norm', default: 'Info Norm') %></span>
                       <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="4">↕</span>
+                    </div>
+                  </th>
+                  <th scope="col" class="px-4 py-3" role="button" data-action="click->sort#sort" data-sort-target="header" data-sort-index="5">
+                    <div class="flex items-center gap-1 cursor-pointer select-none">
+                      <span><%= t('norms.form.description') %></span>
+                      <span class="text-gray-400" aria-hidden="true" data-sort-target="arrow" data-sort-index="5">↕</span>
                     </div>
                   </th>
                   <th scope="col" class="px-4 py-3">
@@ -124,7 +130,7 @@ end
               <tbody>
                 <% if @norms.empty? %>
                   <tr>
-                    <td colspan="6" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
+                    <td colspan="7" class="px-4 py-6 text-center text-gray-500 dark:text-gray-400">
                       <p class="mb-4">
                         <%= has_norms ? t("norms.empty.no_search_results") : t("norms.empty.no_records") %>
                       </p>
@@ -190,6 +196,21 @@ end
                         data-action="click->inline-edit#activate"
                       title="<%= t('tooltips.click_to_edit') %>">
                       <%= norm.info %>
+                    </td>
+                    <!-- Info Norm (editable select) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= norm.info_norm.to_s %>"
+                        data-controller="inline-edit"
+                        data-inline-edit-model-value="norm"
+                        data-inline-edit-field-value="info_norm"
+                        data-inline-edit-type-value="select"
+                        data-inline-edit-url-value="<%= business_norm_path(@current_business, norm) %>"
+                        data-inline-edit-original-value="<%= norm.info_norm.to_s %>"
+                        data-inline-edit-record-updated-at-value="<%= norm.updated_at.iso8601 %>"
+                        data-inline-edit-options-value='{"false":"No","true":"Yes"}'
+                        data-action="click->inline-edit#activate"
+                      title="<%= t('tooltips.click_to_edit') %>">
+                      <%= norm.info_norm ? "Yes" : "No" %>
                     </td>
                     <!-- Description (editable textarea) -->
                     <td class="px-4 py-3 cursor-pointer"

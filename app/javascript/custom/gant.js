@@ -17,6 +17,25 @@ document.addEventListener("turbo:load", function () {
 
   gantt.config.date_format = "%Y-%m-%d %H:%i:%s";
 
+  // Enable auto-scroll when dragging tasks near edges
+  gantt.config.autoscroll = true;
+  gantt.config.autoscroll_speed = 50;
+
+  // CRITICAL: Enable horizontal scrollbar (required for autoscroll to work)
+  gantt.config.scroll_size = 20;
+
+  // Extend timeline beyond tasks to create scrollable area
+  gantt.config.fit_tasks = false;
+  gantt.config.auto_scheduling = false;
+  gantt.config.auto_scheduling_strict = false;
+
+  // Set timeline date range to extend beyond tasks (creates scrollable space)
+  gantt.attachEvent("onBeforeGanttReady", function() {
+    const today = new Date();
+    gantt.config.start_date = new Date(today.getFullYear(), today.getMonth() - 2, 1); // 2 months before
+    gantt.config.end_date = new Date(today.getFullYear(), today.getMonth() + 6, 1);   // 6 months after
+  });
+
   // Skala - gore mjeseci, ispod dani
   gantt.config.scales = [
     { unit: "month", step: 1, format: "%F %Y" }, // npr. August 2025
@@ -117,7 +136,22 @@ document.addEventListener("turbo:load", function () {
         { name: "position", label: "ID", width: 80, tree: true },
         { name: "name", label: "Task name", width: 120 },
         { name: "start_date", label: "Start Date", width: 120, align: "center" },
-        { name: "end_date", label: "End Date", width: 120, align: "center" },
+        {
+          name: "end_date",
+          label: "End Date",
+          width: 120,
+          align: "center",
+          template: function (task) {
+            // Fix: Backend uses inclusive duration (end = start + duration - 1)
+            // Gantt calculates exclusive end (end = start + duration)
+            // So we subtract 1 day to display the correct inclusive end date
+            if (task.unscheduled || !task.start_date || !task.duration) {
+              return "";
+            }
+            const inclusiveEnd = gantt.date.add(task.start_date, task.duration - 1, "day");
+            return gantt.date.date_to_str(gantt.config.date_grid)(inclusiveEnd);
+          }
+        },
         {
           name: "duration",
           label: "Duration",

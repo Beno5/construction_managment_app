@@ -74,6 +74,7 @@ class NormsController < ApplicationController
               unit_of_measure: @norm.unit_of_measure,
               norm_value: @norm.norm_value,
               info: @norm.info,
+              info_norm: @norm.info_norm,
               description: @norm.description,
               custom_fields: @norm.custom_fields,
               updated_at: @norm.updated_at.iso8601
@@ -182,6 +183,7 @@ class NormsController < ApplicationController
       :name,
       :description,
       :info,
+      :info_norm,
       :norm_type,
       :subtype,
       :unit_of_measure,

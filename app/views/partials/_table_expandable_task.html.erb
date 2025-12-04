@@ -150,12 +150,12 @@
                       data-inline-edit-required-value="true"
                       data-action="click->inline-edit#activate"
                       class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
-                      <%= task.name&.truncate(150) %>
+                      <%= task.name&.truncate(30) %>
                     </span>
                   </td>
-                  <!-- Fixed width task description cell with text wrapping and tooltip -->
-                  <td class="px-4 py-3 font-bold w-88 break-words" title="<%= task.description %>" data-sort-value="<%= task.description.to_s.downcase %>">
-                    <span
+                  <!-- Description (editable textarea) -->
+                  <td class="px-4 py-3 cursor-pointer"
+                      data-sort-value="<%= task.description.to_s.downcase %>"
                       data-controller="inline-edit"
                       data-inline-edit-model-value="task"
                       data-inline-edit-field-value="description"
@@ -164,9 +164,8 @@
                       data-inline-edit-original-value="<%= task.description %>"
                       data-inline-edit-record-updated-at-value="<%= task.updated_at.iso8601 %>"
                       data-action="click->inline-edit#activate"
-                      class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
-                      <%= task.description&.truncate(150) %>
-                    </span>
+                      title="<%= t('tooltips.click_to_edit') %>">
+                    <%= content_tag(:span, task.description&.truncate(30), title: task.description, class: "tooltip") %>
                   </td>
                   <td class="px-4 py-3 font-bold" data-sort-value="<%= task.unit_of_measure.to_s %>">
                     <span
@@ -371,12 +370,12 @@
                         data-inline-edit-required-value="true"
                         data-action="click->inline-edit#activate"
                         class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
-                        <%= sub_task.name&.truncate(150) %>
+                        <%= sub_task.name&.truncate(30) %>
                       </span>
                     </td>
-                    <!-- Fixed width subtask description cell with text wrapping and tooltip -->
-                    <td class="px-4 py-3 w-88 break-words" title="<%= sub_task.description %>" data-sort-value="<%= sub_task.description.to_s.downcase %>">
-                      <span
+                    <!-- Description (editable textarea) -->
+                    <td class="px-4 py-3 cursor-pointer"
+                        data-sort-value="<%= sub_task.description.to_s.downcase %>"
                         data-controller="inline-edit"
                         data-inline-edit-model-value="sub_task"
                         data-inline-edit-field-value="description"
@@ -385,9 +384,8 @@
                         data-inline-edit-original-value="<%= sub_task.description %>"
                         data-inline-edit-record-updated-at-value="<%= sub_task.updated_at.iso8601 %>"
                         data-action="click->inline-edit#activate"
-                        class="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-1 rounded inline-block min-w-[100px] min-h-[24px]">
-                        <%= sub_task.description&.truncate(150) %>
-                      </span>
+                        title="<%= t('tooltips.click_to_edit') %>">
+                      <%= content_tag(:span, sub_task.description&.truncate(30), title: sub_task.description, class: "tooltip") %>
                     </td>
                     <td class="px-4 py-3" data-sort-value="<%= sub_task.unit_of_measure.to_s %>">
                       <span

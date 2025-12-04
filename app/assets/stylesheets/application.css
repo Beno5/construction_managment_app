@@ -134,6 +134,39 @@ tr.task-drop-indicator td::after {
 }
 
 /* ===================================================
+   DESKTOP - GANTT CHART AUTO-SCROLL
+   =================================================== */
+
+/* Minimal CSS: Let DHTMLX Gantt manage its own layout */
+/* Only prevent page-level horizontal scrolling */
+@media only screen and (min-width: 769px) {
+  /* Prevent page container from creating additional horizontal scrollbar */
+  /* Gantt's internal .gantt_task will have its own scrollbar */
+  #main-content {
+    overflow-x: clip;  /* Clip horizontal overflow but allow internal scrolling */
+  }
+
+  /* Optional: Style the Gantt's scrollbar for better UX */
+  .gantt_task::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  .gantt_task::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .gantt_task::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+  }
+
+  .gantt_task::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+/* ===================================================
    MOBILE RESPONSIVE - GANTT CHART
    =================================================== */
 

@@ -19,7 +19,7 @@ module Api
         }
 
         if task.planned_start_date && task.planned_end_date
-          task_data[:start_date] = task.planned_start_date.strftime("%Y-%m-%d")
+          task_data[:start_date] = task.planned_start_date.to_time.strftime("%Y-%m-%d %H:%M:%S")
           task_data[:duration] = task.calculate_duration
         else
           task_data[:unscheduled] = true
@@ -37,7 +37,7 @@ module Api
           }
 
           if sub_task.planned_start_date && sub_task.planned_end_date
-            sub_data[:start_date] = sub_task.planned_start_date.strftime("%Y-%m-%d")
+            sub_data[:start_date] = sub_task.planned_start_date.to_time.strftime("%Y-%m-%d %H:%M:%S")
             sub_data[:duration] = sub_task.calculate_duration
           else
             sub_data[:unscheduled] = true

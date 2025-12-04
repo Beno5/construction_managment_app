@@ -81,6 +81,12 @@
     @apply min-h-[40px] min-w-[120px];
   }
 
+  /* Remove min-width/min-height when actively editing to prevent white box artifact */
+  [data-controller~="inline-edit"][data-inline-edit-active="true"] {
+    min-width: 0 !important;
+    min-height: 0 !important;
+  }
+
   /* Add placeholder space when empty so padding renders consistently */
   [data-controller~="inline-edit"]:empty::before,
   [data-inline-edit-field-value]:empty::before,
@@ -147,6 +153,33 @@
   .gantt_grid_head_add,
   .gantt_add {
     display: none !important;
+  }
+
+  /* Desktop: Enable auto-scroll during drag */
+  /* Minimal CSS: Let DHTMLX Gantt manage its own layout */
+  @media only screen and (min-width: 769px) {
+    /* Prevent page container from creating additional horizontal scrollbar */
+    #main-content {
+      overflow-x: clip;  /* Clip horizontal overflow but allow internal scrolling */
+    }
+
+    /* Optional: Style the Gantt's scrollbar */
+    .gantt_task::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+
+    .gantt_task::-webkit-scrollbar-track {
+      @apply bg-gray-100 dark:bg-gray-700;
+    }
+
+    .gantt_task::-webkit-scrollbar-thumb {
+      @apply bg-gray-400 dark:bg-gray-500 rounded;
+    }
+
+    .gantt_task::-webkit-scrollbar-thumb:hover {
+      @apply bg-gray-600 dark:bg-gray-300;
+    }
   }
 
   .gantt_task_line.task-red {

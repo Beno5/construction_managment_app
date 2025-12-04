@@ -7,7 +7,8 @@
               t('norms.form.norm_value') => ->(norm) { norm.norm_value.to_s },
               t('norms.form.norm_type') => ->(norm) { I18n.t("activerecord.attributes.norm.norm_types.#{norm.norm_type}", default: norm.norm_type.to_s.humanize) },
               t('norms.form.subtype')   => ->(norm) { norm.subtype ? I18n.t("activerecord.attributes.norm.subtypes.#{norm.subtype}", default: norm.subtype.to_s.humanize) : '-' },
-              t('norms.form.info') => :info
+              t('norms.form.info') => :info,
+              t('norms.form.info_norm', default: 'Info Norm') => ->(norm) { norm.info_norm ? "Yes" : "No" }
             },
   turbo_frame_id: "norms-frame",
   edit_path: ->(norm) { edit_business_norm_path(@current_business, norm) },
