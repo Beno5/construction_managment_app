@@ -279,4 +279,27 @@
       background-position: -200% 0;
     }
   }
+
+  /* Global UI scaling to 80% - simulates browser zoom */
+  #app-scale-wrapper {
+    transform: scale(0.8);
+    transform-origin: top left;
+    width: 125%; /* Compensate for 0.8 scale (1 / 0.8 = 1.25) */
+    height: 125%;
+  }
+
+  /* Ensure body allows scrolling after scale transformation */
+  body {
+    overflow-x: hidden; /* Prevent horizontal scrollbar from scale compensation */
+    overflow-y: auto;   /* Allow vertical scrolling */
+  }
+
+  /* Optional: Media query to disable scaling on small screens */
+  @media (max-width: 768px) {
+    #app-scale-wrapper {
+      transform: none;
+      width: 100%;
+      height: 100%;
+    }
+  }
 }

@@ -91,47 +91,50 @@
         })();
       </script>
     <% end %>
-    <%# Global loading overlay %>
-    <%= render "partials/loading_overlay" %>
+    <%# Global scale wrapper for 80% UI scaling %>
+    <div id="app-scale-wrapper">
+      <%# Global loading overlay %>
+      <%= render "partials/loading_overlay" %>
 
-    <%# Subscribe to Turbo Stream notifications %>
-    <% if user_signed_in? %>
-      <%= turbo_stream_from "notifications_#{current_user.id}" %>
-    <% end %>
-    <%# Regular server-side flash messages %>
-    <div id="flash-messages"
-         class="fixed left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500"
-         style="top: 1rem;">
-      <%= render "partials/flash_messages" %>
-    </div>
-    <%# Toast controller anchor to ensure global listener connects %>
-    <div data-controller="toast"></div>
-    <%# Turbo Stream notifications container (real-time broadcasts) %>
-    <div id="turbo-notifications"
-         class="fixed left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500"
-         style="top: 1rem;">
-      <%# Real-time notifications append here %>
-    </div>
-    <%# Modal container for dynamic modals %>
-    <div id="modal-container"></div>
-    <!-- Glavni wrapper za sadržaj -->
-    <main class="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col">
-      <% if controller_name.in?(["sessions", "passwords"]) || 
-     (controller_name == "registrations" && !action_name.in?(["edit", "update"])) %>
-      <div class="flex items-center justify-center flex-grow px-6">
-        <div class="w-full flex flex-col items-center justify-center px-6 pt-8 mx-auto md:h-screen pt:mt-0 dark:bg-gray-900">
-          <%= yield %>
-        </div>
+      <%# Subscribe to Turbo Stream notifications %>
+      <% if user_signed_in? %>
+        <%= turbo_stream_from "notifications_#{current_user.id}" %>
+      <% end %>
+      <%# Regular server-side flash messages %>
+      <div id="flash-messages"
+           class="fixed left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500"
+           style="top: 1rem;">
+        <%= render "partials/flash_messages" %>
       </div>
-    <% else %>
-      <%= render "partials/navbar" %>
-      <div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
-        <%= render "partials/sidebar" %>
-        <div id="main-content" class="relative w-full h-full overflow-y-auto bg-gray-50 dark:bg-gray-900 p-6">
-          <%= yield %>
-        </div>
+      <%# Toast controller anchor to ensure global listener connects %>
+      <div data-controller="toast"></div>
+      <%# Turbo Stream notifications container (real-time broadcasts) %>
+      <div id="turbo-notifications"
+           class="fixed left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-500"
+           style="top: 1rem;">
+        <%# Real-time notifications append here %>
       </div>
-    <% end %>
-  </main>
+      <%# Modal container for dynamic modals %>
+      <div id="modal-container"></div>
+      <!-- Glavni wrapper za sadržaj -->
+      <main class="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col">
+        <% if controller_name.in?(["sessions", "passwords"]) ||
+       (controller_name == "registrations" && !action_name.in?(["edit", "update"])) %>
+        <div class="flex items-center justify-center flex-grow px-6">
+          <div class="w-full flex flex-col items-center justify-center px-6 pt-8 mx-auto md:h-screen pt:mt-0 dark:bg-gray-900">
+            <%= yield %>
+          </div>
+        </div>
+      <% else %>
+        <%= render "partials/navbar" %>
+        <div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
+          <%= render "partials/sidebar" %>
+          <div id="main-content" class="relative w-full h-full overflow-y-auto bg-gray-50 dark:bg-gray-900 p-6">
+            <%= yield %>
+          </div>
+        </div>
+      <% end %>
+    </main>
+    </div><%# End app-scale-wrapper %>
 </body>
 </html>

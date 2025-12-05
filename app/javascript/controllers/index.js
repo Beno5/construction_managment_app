@@ -18,6 +18,7 @@ import LoadingController from "./loading_controller"
 import ModalController from "./modal_contoller"
 import NormsController from "./norms_controller"
 import RealResourcesController from "./real_resources_controller"
+import ScaleController from "./scale_controller"
 import SearchController from "./search_controller"
 import SidebarController from "./sidebar_controller"
 import SortController from "./sort_controller"
@@ -44,6 +45,7 @@ application.register("loading", LoadingController)
 application.register("modal", ModalController)
 application.register("norms", NormsController)
 application.register("real-resources", RealResourcesController)
+application.register("scale", ScaleController)
 application.register("search", SearchController)
 application.register("sidebar", SidebarController)
 application.register("sort", SortController)
